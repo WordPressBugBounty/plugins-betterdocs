@@ -9,7 +9,8 @@
             $attributes = betterdocs()->template_helper->get_html_attributes( [
                 'htags'       => "{$htags}",
                 'hierarchy'   => "{$hierarchy}",
-                'list_number' => "{$list_number}"
+                'list_number' => "{$list_number}",
+                'collapsible_on_mobile' => false
             ] );
 
             echo do_shortcode( "[betterdocs_toc " . $attributes . "]" );

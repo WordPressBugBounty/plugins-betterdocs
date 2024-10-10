@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.6
 Requires PHP: 7.0
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -218,6 +218,20 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.7.1 - 10/10/2024 =
+
+- Added: Hamburger navigation for Sidebar and Table of Contents on mobile and tablet devices.
+- Added: Option to enable/disable the Author Box for single docs in the Customizer.
+- Fixed: CSS conflict with ordered/unordered lists in single docs content.
+- Fixed: Docs not displaying in the admin dashboard when a large number of users are present.
+- Fixed: Archive List block appearing blank in the FSE doc-category template.
+- Fixed: Privacy protection malfunction in the admin dashboard’s Docs quick edit.
+- Fixed: "Docs Sidebar" widget in Elementor single docs templates not working in certain cases.
+- Fixed: Layout changes made in the BetterDocs UI not displaying assigned docs properly.
+- Fixed: "Explore More" button hover effect not working in the Category Grid block.
+- Added: Notice for block-based themes regarding issues with the customizer not working.
+- Few minor bug fixes and improvements
 
 = 3.7.0 - 01/10/2024 =
 

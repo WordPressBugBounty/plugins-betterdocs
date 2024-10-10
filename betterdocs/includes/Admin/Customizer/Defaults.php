@@ -195,6 +195,10 @@ class Defaults extends Base {
             'betterdocs_doc_page_explore_btn_hover_bg_color'                      => '#528ffe',
             'betterdocs_doc_page_explore_btn_hover_color'                         => '#fff',
             'betterdocs_doc_page_explore_btn_hover_border_color'                  => '#528ffe',
+            'betterdocs_doc_author_section'                                       => '',
+            'betterdocs_doc_author_enable'                                        => false,
+            'betterdocs_doc_author_enable_layout_9'                               => true,
+            'betterdocs_doc_author_date'                                          => true,
             'betterdocs_doc_estimate_reading_time_section'                        => '',
             'betterdocs_doc_single_content_est_reading_bg_color'                  => '#FFFFFF',
             'betterdocs_doc_single_content_est_reading_bg_color_layout_8_9'       => '#F9FAFB',
@@ -981,6 +985,7 @@ class Defaults extends Base {
             'search_modal_content_tabs_docs_list_font_size' => '16',
             'search_modal_content_tabs_docs_list_color' => '#1d2939',
             'search_modal_content_tabs_docs_list_background_color' => '#fff',
+            'search_modal_content_tabs_docs_list_background_color_hover' => '#F6FEF9',
             'search_modal_content_tabs_docs_list_padding' => [
                 'input1' => 16,
                 'input2' => 24,

@@ -8,12 +8,24 @@ class CategoryField extends BaseAPI {
      * @return mixed
      */
     public function register() {
+        $this->register_field( 'doc_category', 'doc_category_order', [
+            'get_callback' => [$this, 'doc_category_order']
+        ] );
         $this->register_field( 'doc_category', 'thumbnail', [
             'get_callback' => [$this, 'thumbnail_image']
         ] );
         $this->register_field( 'doc_category', 'handbookthumbnail', [
             'get_callback' => [$this, 'handbook_thumbnail_image']
         ] );
+    }
+
+    public function doc_category_order( $object ) {
+        $doc_category_order = get_term_meta( $object['id'], 'doc_category_order', true );
+        if ( ! $doc_category_order ) {
+            return;
+        }
+
+        return $doc_category_order;
     }
 
     public function thumbnail_image( $object ) {

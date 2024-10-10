@@ -3565,6 +3565,27 @@ class LiveSearch extends Section {
         );
     }
 
+    public function search_modal_content_tabs_docs_list_background_color_hover() {
+        $this->customizer->add_setting( 'search_modal_content_tabs_docs_list_background_color_hover', [
+            'default'           => $this->defaults['search_modal_content_tabs_docs_list_background_color_hover'],
+            'capability'        => 'edit_theme_options',
+            'sanitize_callback' => [$this->sanitizer, 'rgba']
+        ] );
+
+        $this->customizer->add_control(
+            new AlphaColorControl(
+                $this->customizer,
+                'search_modal_content_tabs_docs_list_background_color_hover',
+                [
+                    'label'    => __( 'Hover Background Color', 'betterdocs' ),
+                    'priority' => 644,
+                    'section'  => 'betterdocs_live_search_settings',
+                    'settings' => 'search_modal_content_tabs_docs_list_background_color_hover',
+                ]
+            )
+        );
+    }
+
     public function search_modal_content_tabs_docs_list_padding() {
         $this->customizer->add_setting( 'search_modal_content_tabs_docs_list_padding', [
             'default'    => $this->defaults['search_modal_content_tabs_docs_list_padding'],

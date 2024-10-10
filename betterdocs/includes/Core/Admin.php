@@ -110,6 +110,12 @@ class Admin extends Base {
         add_filter( 'manage_docs_posts_columns', [$this, 'set_custom_edit_action_columns'] );
         add_filter( 'manage_docs_posts_custom_column', [$this, 'manage_custom_columns'], 10, 2 );
 
+        /**
+         * Add New Column
+         */
+        add_filter( 'manage_users_columns', [$this, 'add_users_total_docs_column'], 10, 1 );
+        add_filter( 'manage_users_custom_column', [$this, 'popular_users_docs_data'], 10, 3 );
+
         if ( $this->settings->get( 'enable_estimated_reading_time' ) ) {
             add_action( 'add_meta_boxes', [$this, 'reading_meta_box_'], 10 );
         }
@@ -124,6 +130,22 @@ class Admin extends Base {
         } catch ( Exception $e ) {
             unset( $e );
         }
+    }
+
+    public function add_users_total_docs_column( $columns ) {
+        $new_column = [
+            'docs' => __( 'Docs', 'betterdocs' )
+        ];
+        $columns = array_merge( $columns, $new_column );
+        return $columns;
+    }
+
+    public function popular_users_docs_data( $output, $column_name, $user_id ) {
+        if ( $column_name == 'docs' ) {
+            $total_count = count_user_posts( $user_id, 'docs', true );
+            return '<a href="edit.php?post_type=docs&author=' . $user_id . '" class="edit"><span aria-hidden="true">' . $total_count . '</span></a>';
+        }
+        return $output;
     }
 
     public function reading_meta_box_() {
@@ -283,7 +305,7 @@ class Admin extends Base {
             $notices->add( 'migration', $_migration_notice, [
                 'start'       => $notices->time(),
                 'recurrence'  => false,
-                'dismissible' => true,
+                'dismissible' => true
                 //'display_if'  => current_user_can( 'delete_users' )
             ] );
         }
@@ -484,9 +506,9 @@ class Admin extends Base {
             ] );
 
             $this->assets->localize( 'betterdocs-switcher', 'betterdocsSwitcher', [
-                'menu_title'            => __( 'Switch to BetterDocs UI', 'betterdocs' ),
-                'site_address'          => get_bloginfo( 'url' ),
-                'betterdocs_pro_plugin' => betterdocs()->is_pro_active(),
+                'menu_title'             => __( 'Switch to BetterDocs UI', 'betterdocs' ),
+                'site_address'           => get_bloginfo( 'url' ),
+                'betterdocs_pro_plugin'  => betterdocs()->is_pro_active(),
                 'betterdocs_pro_version' => betterdocs()->pro_version()
             ] );
 
@@ -522,7 +544,7 @@ class Admin extends Base {
             'ia_preview'                 => betterdocs()->settings->get( 'ia_enable_preview', false ),
             'multiple_kb'                => betterdocs()->settings->get( 'multiple_kb' ),
             'previewMode'                => betterdocs()->settings->get( 'ia_enable_preview', false ),
-            'dashboard_mode'             => get_option('dashboard_mode'),
+            'dashboard_mode'             => get_option( 'dashboard_mode' ),
             'betterdocs_pro_plugin'      => betterdocs()->is_pro_active(),
             'betterdocs_pro_version'     => betterdocs()->pro_version(),
             'analytics_older'            => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' )

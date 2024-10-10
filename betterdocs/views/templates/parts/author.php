@@ -12,5 +12,9 @@
             echo '<span>' . get_the_author_meta('display_name', $author_id) . '</span>';
         ?>
     </div>
-    <?php betterdocs()->views->get( 'template-parts/update-date' ); ?>
+    <?php
+        if ( isset( $updated_date ) && $updated_date == true ) {
+            betterdocs()->views->get( 'template-parts/update-date' );
+        }
+    ?>
 </div>

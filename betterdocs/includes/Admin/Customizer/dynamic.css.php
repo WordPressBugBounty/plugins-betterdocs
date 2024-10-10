@@ -1320,36 +1320,36 @@ $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdo
 //Single Doc Layout 5 TOC Content Area Padding Top | Right | Bottom | Left
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'padding-top' => 'betterdocs_doc_single_toc_padding_top'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'padding-right' => 'betterdocs_doc_single_toc_padding_right'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'padding-bottom' => 'betterdocs_doc_single_toc_padding_bottom'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'padding-left' => 'betterdocs_doc_single_toc_padding_left'
-] ) );
+], 'px' ) );
 
 //Single Doc Layout 5 TOC Content Area Margin Top | Right | Bottom | Left
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'margin-top' => 'betterdocs_doc_single_toc_margin_top'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'margin-right' => 'betterdocs_doc_single_toc_margin_right'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'margin-bottom' => 'betterdocs_doc_single_toc_margin_bottom'
-] ) );
+], 'px' ) );
 
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc', $css->properties( [
     'margin-left' => 'betterdocs_doc_single_toc_margin_left'
-] ) );
+], 'px' ) );
 
 //Single Doc Layout 5 TOC Title Color
 $css->add_rule( '.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-toc > .toc-title', $css->properties( [
@@ -5117,6 +5117,10 @@ $css->add_rule( '#betterdocs-search-modal .betterdocs-search-wrapper .betterdocs
 
 $css->add_rule( '#betterdocs-search-modal .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-content .betterdocs-search-items-wrapper .betterdocs-search-item-content .betterdocs-search-item-list', $css->properties( [
     'background-color' => 'search_modal_content_tabs_docs_list_background_color'
+] ) );
+
+$css->add_rule( '#betterdocs-search-modal .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-content .betterdocs-search-items-wrapper .betterdocs-search-item-content .betterdocs-search-item-list:hover', $css->properties( [
+    'background-color' => 'search_modal_content_tabs_docs_list_background_color_hover'
 ] ) );
 
 $css->add_rule( '#betterdocs-search-modal .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-content .betterdocs-search-items-wrapper .betterdocs-search-item-content .betterdocs-search-item-list', $css->properties( [

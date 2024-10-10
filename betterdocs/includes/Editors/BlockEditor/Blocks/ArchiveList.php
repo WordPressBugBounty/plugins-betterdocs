@@ -82,13 +82,14 @@ class ArchiveList extends Block {
         return [
             'term'               => $term,
             'nested_subcategory' => (bool) $this->attributes['nested_subcategory'],
-            'list_icon_name'     =>! empty( $this->attributes['listIconImageUrl'] ) ? ['value' => ['url' => str_replace( 'blob:', '', $this->attributes['listIconImageUrl'] )]] : ( ! empty( $this->attributes['list_icon'] ) ? ['value' => ['url' => $this->attributes['list_icon']]] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? ['value' => ['url' => betterdocs()->settings->get( 'docs_list_icon' )['url']]] : [] ) ),
+            'list_icon_name'     => ! empty( $this->attributes['listIconImageUrl'] ) ? ['value' => ['url' => str_replace( 'blob:', '', $this->attributes['listIconImageUrl'] )]] : ( ! empty( $this->attributes['list_icon'] ) ? ['value' => ['url' => $this->attributes['list_icon']]] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? ['value' => ['url' => betterdocs()->settings->get( 'docs_list_icon' )['url']]] : [] ) ),
             'query_args'         => betterdocs()->query->docs_query_args( $_docs_query ),
             'title_tag'          => 'h2',
             'layout'             => betterdocs()->is_pro_active() ? $this->attributes['layout'] : 'layout-1',
             'posts_per_page'     => $this->attributes['postsPerPageLayoutTwo'],
             'list_icon_url'      => '',
-            'layout_type'        => 'block'
+            'layout_type'        => 'block',
+            'archive_layout'     => 'layout-1'
         ];
     }
 }

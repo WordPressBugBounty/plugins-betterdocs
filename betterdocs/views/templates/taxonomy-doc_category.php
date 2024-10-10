@@ -34,6 +34,10 @@
         <div id="main" class="betterdocs-content-area">
             <div class="betterdocs-content-inner-area">
                 <?php
+                    $view_object->get( 'templates/parts/mobile-nav', [
+                        'mobile_sidebar' => true,
+                        'mobile_toc' => false
+                    ] );
                     /**
                      * Breadcrumbs
                      */

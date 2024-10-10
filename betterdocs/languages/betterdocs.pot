@@ -9,13 +9,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-09-30T04:56:03+00:00\n"
+"POT-Creation-Date: 2024-10-09T07:42:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: betterdocs\n"
 
 #. Plugin Name of the plugin
-#: includes/Admin/Customizer/Customizer.php:65
+#: includes/Admin/Customizer/Customizer.php:64
 #: includes/Core/PostType.php:596
 #: includes/Editors/BlockEditor.php:43
 #: includes/Editors/Elementor.php:597
@@ -44,36 +44,40 @@ msgstr ""
 msgid "BetterDocs Analytics"
 msgstr ""
 
-#: includes/Admin/Customizer/Customizer.php:66
+#: includes/Admin/Customizer/Customizer.php:65
 msgid "Controls the design settings for the theme."
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:278
+#. translators: 1: Link to your documentation, 2: Link to Site Editor
+#: includes/Admin/Customizer/Customizer.php:102
+msgid "BetterDocs Customizer options are not compatible with block-based themes and will not function as expected. Please use the <a href=\"%2$s\">Site Editor</a> to customize your site. <a href=\"%1$s\">Learn more</a>"
+msgstr ""
+
+#: includes/Admin/Customizer/Defaults.php:281
 #: includes/Editors/Elementor/Widget/DocShare.php:489
 #: includes/Shortcodes/SocialShare.php:33
 msgid "Share This Article :"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:416
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:196
+#: includes/Admin/Customizer/Defaults.php:419
 msgid "How can we help you?"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:532
+#: includes/Admin/Customizer/Defaults.php:535
 #: includes/Core/Settings.php:912
 msgid "Popular Docs"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:580
+#: includes/Admin/Customizer/Defaults.php:583
 #: includes/Editors/BlockEditor/Blocks/Reactions.php:31
 msgid "What are your feelings"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:581
+#: includes/Admin/Customizer/Defaults.php:584
 msgid "Was it helpful ?"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:590
+#: includes/Admin/Customizer/Defaults.php:593
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:79
 #: includes/Shortcodes/FaqList.php:38
 msgid "Frequently Asked Questions"
@@ -89,23 +93,25 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:58
 #: includes/Admin/Customizer/Sections/DocsPage.php:67
-#: includes/Utils/Views.php:43
+#: includes/Utils/Views.php:31
 msgid "Sleek Layout"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:62
 #: includes/Admin/Customizer/Sections/DocsPage.php:91
 #: includes/Admin/Customizer/Sections/FaqBuilder.php:122
-#: includes/Admin/Customizer/Sections/LiveSearch.php:58
+#: includes/Admin/Customizer/Sections/LiveSearch.php:63
 #: includes/Admin/Customizer/Sections/SingleDoc.php:60
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:63
-#: includes/Utils/Views.php:39
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:64
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:101
+#: includes/Utils/Views.php:43
 msgid "Classic Layout"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:66
 #: includes/Admin/Customizer/Sections/FaqBuilder.php:114
 #: includes/Admin/Customizer/Sections/SingleDoc.php:64
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:62
 msgid "Abstract Layout"
 msgstr ""
 
@@ -113,7 +119,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:85
 #: includes/Admin/Customizer/Sections/FaqBuilder.php:118
 #: includes/Admin/Customizer/Sections/SingleDoc.php:69
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:62
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:63
 msgid "Modern Layout"
 msgstr ""
 
@@ -160,19 +166,19 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArchiveList.php:327
 #: includes/Editors/Elementor/Widget/ArchiveList.php:435
 #: includes/Editors/Elementor/Widget/ArchiveList.php:796
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:577
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:604
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:899
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2216
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2371
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:593
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:620
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:915
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2236
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2391
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:576
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:831
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1204
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1358
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:462
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:510
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:654
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:702
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:461
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:509
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:653
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:701
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:371
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:421
 #: includes/Editors/Elementor/Widget/DocShare.php:584
@@ -501,42 +507,42 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2187
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2312
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2554
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2952
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3056
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3292
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3395
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3602
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3705
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3809
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3912
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4995
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5098
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5202
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5305
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5614
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5721
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5850
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5957
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6247
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6352
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6495
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6602
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6731
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6838
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7129
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7234
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7377
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7484
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7613
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7720
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7930
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8035
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8178
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8285
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8414
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8521
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8731
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8836
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2954
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3058
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3294
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3397
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3604
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3707
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3811
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3914
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4950
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5053
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5157
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5260
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5569
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5676
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5805
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5912
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6202
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6307
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6450
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6557
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6686
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6793
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7084
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7189
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7332
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7439
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7568
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7675
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7885
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7990
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8133
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8240
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8369
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8476
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8686
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8791
 msgid "Top"
 msgstr ""
 
@@ -600,42 +606,42 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2207
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2332
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2575
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2972
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3077
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3312
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3415
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3622
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3725
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3829
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3932
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5015
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5118
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5222
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5325
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5635
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5742
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5871
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5978
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6268
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6373
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6516
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6623
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6752
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6859
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7150
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7255
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7398
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7505
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7634
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7741
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7951
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8056
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8199
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8306
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8435
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8542
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8752
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8857
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2974
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3079
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3314
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3417
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3624
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3727
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3831
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3934
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4970
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5073
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5177
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5280
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5590
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5697
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5826
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5933
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6223
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6328
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6471
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6578
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6707
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6814
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7105
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7210
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7353
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7460
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7589
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7696
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7906
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8011
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8154
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8261
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8390
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8497
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8707
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8812
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1633
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1658
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:155
@@ -715,42 +721,42 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2227
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2352
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2596
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2992
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3098
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3332
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3435
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3642
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3745
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3849
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3952
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5035
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5138
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5242
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5345
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5656
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5763
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5892
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5998
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6288
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6393
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6537
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6644
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6773
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6879
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7170
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7275
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7419
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7526
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7655
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7761
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7971
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8076
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8220
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8327
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8456
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8562
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8772
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8877
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2994
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3100
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3334
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3437
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3644
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3747
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3851
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3954
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4990
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5093
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5197
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5300
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5611
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5718
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5847
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5953
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6243
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6348
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6492
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6599
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6728
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6834
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7125
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7230
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7374
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7481
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7610
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7716
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7926
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8031
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8175
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8282
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8411
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8517
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8727
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8832
 msgid "Bottom"
 msgstr ""
 
@@ -814,42 +820,42 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2247
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2372
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2617
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3012
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3119
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3352
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3455
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3662
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3765
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3869
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3972
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5055
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5158
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5262
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5365
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5677
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5784
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5913
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6018
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6308
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6413
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6558
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6665
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6794
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6899
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7190
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7295
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7440
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7547
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7676
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7781
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7991
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8096
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8241
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8348
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8477
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8582
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8792
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8897
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3014
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3121
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3354
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3457
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3664
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3767
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3871
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3974
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5010
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5113
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5217
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5320
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5632
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5739
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5868
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5973
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6263
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6368
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6513
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6620
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6749
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6854
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7145
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7250
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7395
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7502
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7631
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7736
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7946
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8051
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8196
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8303
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8432
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8537
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8747
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8852
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1625
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1650
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:147
@@ -903,29 +909,29 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:1341
 #: includes/Admin/Customizer/Sections/SingleDoc.php:837
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2291
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2931
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3374
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3581
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3684
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4974
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5077
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2933
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3376
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3583
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3686
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4929
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5032
 #: includes/Editors/Elementor/Widget/ArchiveList.php:162
 #: includes/Editors/Elementor/Widget/ArchiveList.php:201
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:253
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1664
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1744
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1847
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1927
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2031
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2122
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:269
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1684
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1764
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1867
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1947
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2051
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2142
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:314
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:607
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:792
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:147
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:261
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:370
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:272
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:337
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:271
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:336
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:180
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:320
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:151
@@ -961,27 +967,27 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:1440
 #: includes/Admin/Customizer/Sections/Sidebar.php:2190
 #: includes/Admin/Customizer/Sections/SingleDoc.php:901
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3035
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3271
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3788
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3891
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5181
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5284
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3037
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3273
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3790
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3893
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5136
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5239
 #: includes/Editors/Elementor/Widget/ArchiveList.php:150
 #: includes/Editors/Elementor/Widget/ArchiveList.php:189
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:241
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:666
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1270
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1676
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1756
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1859
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1939
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2043
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2134
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2253
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2312
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2408
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2467
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:257
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:682
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1286
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1696
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1776
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1879
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1959
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2063
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2154
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2273
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2332
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2428
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2487
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:302
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:595
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:778
@@ -989,9 +995,9 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:135
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:249
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:358
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:254
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:319
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1181
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:253
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:318
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1180
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:168
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:308
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:139
@@ -1069,23 +1075,18 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3238
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3326
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3559
-#: includes/Admin/Customizer/Sections/SearchModal.php:67
-#: includes/Admin/Customizer/Sections/SearchModal.php:172
-#: includes/Admin/Customizer/Sections/SearchModal.php:374
-#: includes/Admin/Customizer/Sections/SearchModal.php:462
-#: includes/Admin/Customizer/Sections/SearchModal.php:695
 #: includes/Admin/Customizer/Sections/Sidebar.php:51
 #: includes/Admin/Customizer/Sections/Sidebar.php:712
 #: includes/Admin/Customizer/Sections/Sidebar.php:1118
 #: includes/Admin/Customizer/Sections/Sidebar.php:2096
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1396
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2037
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2730
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2752
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2732
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2754
 #: includes/Editors/Elementor/Widget/ArchiveList.php:583
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2064
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2155
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:739
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2084
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2175
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:738
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:253
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:121
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:219
@@ -1192,8 +1193,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:949
 #: includes/Admin/Customizer/Sections/DocsPage.php:974
 #: includes/Admin/Customizer/Sections/DocsPage.php:1000
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3647
-#: includes/Admin/Customizer/Sections/SearchModal.php:783
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3668
 #: includes/Admin/Customizer/Sections/Sidebar.php:321
 #: includes/Admin/Customizer/Sections/Sidebar.php:1316
 #: includes/Admin/Customizer/Sections/Sidebar.php:1706
@@ -1251,7 +1251,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:1791
 #: includes/Admin/Customizer/Sections/DocsPage.php:1850
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1249
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1265
 msgid "Last Updated Time"
 msgstr ""
 
@@ -1265,17 +1265,13 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3261
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3348
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3511
-#: includes/Admin/Customizer/Sections/SearchModal.php:283
-#: includes/Admin/Customizer/Sections/SearchModal.php:397
-#: includes/Admin/Customizer/Sections/SearchModal.php:484
-#: includes/Admin/Customizer/Sections/SearchModal.php:647
 #: includes/Admin/Customizer/Sections/Sidebar.php:802
 #: includes/Admin/Customizer/Sections/Sidebar.php:2165
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1081
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1157
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2844
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3158
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3223
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2846
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3160
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3225
 #: includes/Editors/Elementor/Widget/ArchiveList.php:658
 msgid "Font Size"
 msgstr ""
@@ -1288,12 +1284,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3216
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3304
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3537
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3699
-#: includes/Admin/Customizer/Sections/SearchModal.php:261
-#: includes/Admin/Customizer/Sections/SearchModal.php:352
-#: includes/Admin/Customizer/Sections/SearchModal.php:440
-#: includes/Admin/Customizer/Sections/SearchModal.php:673
-#: includes/Admin/Customizer/Sections/SearchModal.php:835
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3720
 #: includes/Admin/Customizer/Sections/Sidebar.php:780
 #: includes/Admin/Customizer/Sections/Sidebar.php:2143
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1106
@@ -1306,18 +1297,18 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArchiveList.php:634
 #: includes/Editors/Elementor/Widget/ArchiveList.php:742
 #: includes/Editors/Elementor/Widget/ArchiveList.php:785
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:806
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:837
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:945
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1015
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1122
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1192
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1299
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1347
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2543
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2577
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2642
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2676
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:822
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:853
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:961
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1031
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1138
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1208
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1315
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1363
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2563
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2597
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2662
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2696
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:653
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:727
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1112
@@ -1328,14 +1319,14 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1571
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:281
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:399
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:499
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:536
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:691
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:728
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:856
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:941
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1001
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1210
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:498
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:535
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:690
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:727
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:855
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:940
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1000
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1209
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:360
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:410
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:184
@@ -1506,8 +1497,8 @@ msgid "Category Title Tag"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:2762
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2752
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2811
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2772
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2831
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:7361
 msgid "Description Color"
@@ -1646,12 +1637,12 @@ msgid "Grid Layout"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:75
-#: includes/Utils/Views.php:31
+#: includes/Utils/Views.php:35
 msgid "Box Layout"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:79
-#: includes/Utils/Views.php:35
+#: includes/Utils/Views.php:39
 msgid "Card Layout"
 msgstr ""
 
@@ -1768,7 +1759,7 @@ msgid "Category Description Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:1477
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:492
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:508
 msgid "Border Bottom Hover"
 msgstr ""
 
@@ -1830,9 +1821,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:2259
 #: includes/Core/Settings.php:1062
 #: includes/Editors/Elementor/Widget/ArchiveList.php:84
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:776
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2514
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2613
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:792
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2534
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2633
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:626
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1254
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:168
@@ -2033,16 +2024,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3095
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3378
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3411
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3585
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3618
-#: includes/Admin/Customizer/Sections/SearchModal.php:93
-#: includes/Admin/Customizer/Sections/SearchModal.php:126
-#: includes/Admin/Customizer/Sections/SearchModal.php:198
-#: includes/Admin/Customizer/Sections/SearchModal.php:231
-#: includes/Admin/Customizer/Sections/SearchModal.php:514
-#: includes/Admin/Customizer/Sections/SearchModal.php:547
-#: includes/Admin/Customizer/Sections/SearchModal.php:721
-#: includes/Admin/Customizer/Sections/SearchModal.php:754
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3606
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3639
 msgid "top"
 msgstr ""
 
@@ -2059,16 +2042,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3096
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3379
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3412
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3586
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3619
-#: includes/Admin/Customizer/Sections/SearchModal.php:94
-#: includes/Admin/Customizer/Sections/SearchModal.php:127
-#: includes/Admin/Customizer/Sections/SearchModal.php:199
-#: includes/Admin/Customizer/Sections/SearchModal.php:232
-#: includes/Admin/Customizer/Sections/SearchModal.php:515
-#: includes/Admin/Customizer/Sections/SearchModal.php:548
-#: includes/Admin/Customizer/Sections/SearchModal.php:722
-#: includes/Admin/Customizer/Sections/SearchModal.php:755
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3607
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3640
 msgid "right"
 msgstr ""
 
@@ -2085,16 +2060,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3097
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3380
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3413
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3587
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3620
-#: includes/Admin/Customizer/Sections/SearchModal.php:95
-#: includes/Admin/Customizer/Sections/SearchModal.php:128
-#: includes/Admin/Customizer/Sections/SearchModal.php:200
-#: includes/Admin/Customizer/Sections/SearchModal.php:233
-#: includes/Admin/Customizer/Sections/SearchModal.php:516
-#: includes/Admin/Customizer/Sections/SearchModal.php:549
-#: includes/Admin/Customizer/Sections/SearchModal.php:723
-#: includes/Admin/Customizer/Sections/SearchModal.php:756
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3608
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3641
 msgid "bottom"
 msgstr ""
 
@@ -2111,16 +2078,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3098
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3381
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3414
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3588
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3621
-#: includes/Admin/Customizer/Sections/SearchModal.php:96
-#: includes/Admin/Customizer/Sections/SearchModal.php:129
-#: includes/Admin/Customizer/Sections/SearchModal.php:201
-#: includes/Admin/Customizer/Sections/SearchModal.php:234
-#: includes/Admin/Customizer/Sections/SearchModal.php:517
-#: includes/Admin/Customizer/Sections/SearchModal.php:550
-#: includes/Admin/Customizer/Sections/SearchModal.php:724
-#: includes/Admin/Customizer/Sections/SearchModal.php:757
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3609
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3642
 msgid "left"
 msgstr ""
 
@@ -2201,7 +2160,8 @@ msgstr ""
 msgid "Select Search Layout"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/LiveSearch.php:62
+#: includes/Admin/Customizer/Sections/LiveSearch.php:58
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:102
 msgid "Modal Layout"
 msgstr ""
 
@@ -2373,29 +2333,20 @@ msgid "Item Background Hover Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2910
-#: includes/Admin/Customizer/Sections/SearchModal.php:46
 msgid "Modal Wrapper"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2952
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3057
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3406
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3580
-#: includes/Admin/Customizer/Sections/SearchModal.php:88
-#: includes/Admin/Customizer/Sections/SearchModal.php:193
-#: includes/Admin/Customizer/Sections/SearchModal.php:542
-#: includes/Admin/Customizer/Sections/SearchModal.php:716
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3601
 msgid "Padding (PX)"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2985
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3090
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3373
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3613
-#: includes/Admin/Customizer/Sections/SearchModal.php:121
-#: includes/Admin/Customizer/Sections/SearchModal.php:226
-#: includes/Admin/Customizer/Sections/SearchModal.php:509
-#: includes/Admin/Customizer/Sections/SearchModal.php:749
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3634
 msgid "Margin (PX)"
 msgstr ""
 
@@ -2404,7 +2355,6 @@ msgid "Modal Search Field"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3173
-#: includes/Admin/Customizer/Sections/SearchModal.php:309
 msgid "Maginifier Icon Size"
 msgstr ""
 
@@ -2417,34 +2367,33 @@ msgid "Modal Content Tabs"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3439
-#: includes/Admin/Customizer/Sections/SearchModal.php:575
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5387
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:337
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:463
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:643
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:719
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:957
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1036
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1134
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1213
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1311
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1368
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1706
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1716
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1786
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1796
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1889
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1899
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1969
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1979
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2084
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2094
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2166
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2176
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2269
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2328
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2424
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2483
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5342
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:353
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:479
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:659
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:735
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:973
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1052
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1150
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1229
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1327
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1384
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1726
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1736
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1806
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1816
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1909
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1919
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1989
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1999
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2104
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2114
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2186
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2196
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2289
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2348
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2444
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2503
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:377
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:424
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:511
@@ -2458,11 +2407,11 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1596
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:301
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:327
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:916
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:976
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1109
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1173
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1283
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:915
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:975
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1108
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1172
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1282
 #: includes/Editors/Elementor/Widget/DocShare.php:165
 #: includes/Editors/Elementor/Widget/DocShare.php:342
 #: includes/Editors/Elementor/Widget/Reactions.php:174
@@ -2499,28 +2448,23 @@ msgid "Border"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3444
-#: includes/Admin/Customizer/Sections/SearchModal.php:580
 msgid "border top"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3445
-#: includes/Admin/Customizer/Sections/SearchModal.php:581
 msgid "border right"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3446
-#: includes/Admin/Customizer/Sections/SearchModal.php:582
 msgid "border bottom"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3447
-#: includes/Admin/Customizer/Sections/SearchModal.php:583
 msgid "border left"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:3473
-#: includes/Admin/Customizer/Sections/SearchModal.php:609
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:547
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:546
 #: includes/Editors/Elementor/Widget/Sidebar.php:1173
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13153
@@ -2533,48 +2477,28 @@ msgstr ""
 msgid "Modal Content Docs List"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3673
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3721
-#: includes/Admin/Customizer/Sections/SearchModal.php:809
-#: includes/Admin/Customizer/Sections/SearchModal.php:857
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3580
+#: includes/Editors/Elementor/Widget/Reactions.php:620
+#: includes/Editors/Elementor/Widget/Reactions.php:698
+#: includes/Editors/Elementor/Widget/Reactions.php:776
+msgid "Hover Background Color"
+msgstr ""
+
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3694
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3742
 msgid "List Category Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3743
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3764
 msgid "Search Modal Query"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3764
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3785
 msgid "Initial Number Of Docs"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/LiveSearch.php:3786
+#: includes/Admin/Customizer/Sections/LiveSearch.php:3807
 msgid "Initial Number Of FAQ's"
-msgstr ""
-
-#: includes/Admin/Customizer/Sections/SearchModal.php:27
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:774
-msgid "Search Modal"
-msgstr ""
-
-#: includes/Admin/Customizer/Sections/SearchModal.php:150
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:364
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:567
-#: assets/blocks/editor.js:1
-#: assets/blocks/editor.js:13063
-msgid "Search Field"
-msgstr ""
-
-#: includes/Admin/Customizer/Sections/SearchModal.php:331
-msgid "Search Categories"
-msgstr ""
-
-#: includes/Admin/Customizer/Sections/SearchModal.php:418
-msgid "Content Tabs"
-msgstr ""
-
-#: includes/Admin/Customizer/Sections/SearchModal.php:626
-msgid "Content Docs List"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:35
@@ -2644,10 +2568,10 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:842
 #: includes/Admin/Customizer/Sections/Sidebar.php:2305
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6203
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7085
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7886
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8687
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6158
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7040
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7841
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8642
 #: includes/Editors/Elementor/Widget/ArchiveList.php:392
 msgid "List Background Color"
 msgstr ""
@@ -2808,40 +2732,56 @@ msgstr ""
 msgid "Active Item Border Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2709
-#: includes/Core/Admin.php:130
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2634
+#: includes/Editors/Elementor/Widget/DocAuthor.php:107
+#: assets/admin/js/dashboard.js:1
+#: assets/admin/js/dashboard.js:9197
+msgid "Author"
+msgstr ""
+
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2652
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2672
+msgid "Enable Author Info"
+msgstr ""
+
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2692
+msgid "Updated Date"
+msgstr ""
+
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2711
+#: includes/Core/Admin.php:152
 #: includes/Core/Settings.php:1203
 msgid "Estimated Reading Time"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2773
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2775
 #: includes/Editors/Elementor/Widget/ReadingTime.php:217
 msgid "Clock Icon Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2796
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2798
 msgid "Clock Icon Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2821
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3184
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3249
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2823
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3186
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3251
 msgid "Font Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2870
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:345
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:471
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:651
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:728
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:965
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1044
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1142
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1221
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1319
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1376
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2277
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2432
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2872
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:361
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:487
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:667
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:744
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:981
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1060
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1158
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1237
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1335
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1392
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2297
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2452
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:385
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:432
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:519
@@ -2852,9 +2792,9 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1038
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1502
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1604
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:478
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:670
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:750
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:477
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:669
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:749
 #: includes/Editors/Elementor/Widget/DocShare.php:173
 #: includes/Editors/Elementor/Widget/DocShare.php:350
 #: includes/Editors/Elementor/Widget/Reactions.php:182
@@ -2874,292 +2814,290 @@ msgstr ""
 msgid "Border Radius"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3136
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3201
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3138
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3203
 msgid "Entry Content"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3473
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3475
 #: includes/blocks.php:106
 msgid "Social Share"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3492
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3494
 msgid "Enable Social Sharing?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3514
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3516
 msgid "Social Sharing Title"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3537
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3559
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3539
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3561
 msgid "Title Text Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3990
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3992
 msgid "Facebook Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4008
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4010
 msgid "Twitter Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4025
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4027
 msgid "Linkedin Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4041
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4043
 msgid "Pinterest Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4057
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4059
 msgid "Entry Footer"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4079
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4081
 msgid "Feedback Icon Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4102
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4104
 msgid "Feedback Icon"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4121
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4123
 msgid "Feedback Link Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4142
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4144
 msgid "Feedback Link Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4165
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4167
 msgid "Feedback Link Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4190
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4192
 msgid "Feedback Form Title Tag"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4223
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4225
 msgid "Feedback Form Title Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4249
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4251
 msgid "Feedback Form Title Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4271
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4390
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4273
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4392
 msgid "Navigation Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4294
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4413
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4296
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4415
 msgid "Navigation Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4319
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4438
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4321
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4440
 msgid "Navigation Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4341
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4460
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4343
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4462
 msgid "Navigation Arrow Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4364
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4483
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4366
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4485
 msgid "Navigation Arrow Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4509
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4558
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4511
 msgid "Last Updated Time Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4532
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4581
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4534
 msgid "Last Updated Time Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4607
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4562
 msgid "Powered by Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4630
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4585
 msgid "Powered By Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4656
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4611
 msgid "Powered By Link Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4673
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4628
 #: includes/blocks.php:90
-#: includes/Core/Admin.php:370
+#: includes/Core/Admin.php:392
 #: views/admin/analytics.php:16
 #: views/admin/email/analytics/leading-docs.php:29
 msgid "Reactions"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4690
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4645
 msgid "Enable Reactions?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4711
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4733
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4666
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4688
 msgid "Reactions Title"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4756
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4886
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4908
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4711
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4841
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4863
 msgid "Reactions Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4778
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4930
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4733
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4885
 msgid "Reactions Text Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4800
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4952
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4755
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4907
 msgid "Reactions Icon Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4822
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4777
 msgid "Reactions Icon Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4843
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4798
 msgid "Reactions Icon Hover Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4864
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4819
 msgid "Reactions Icon Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5408
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5363
 msgid "Border Top"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5428
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5383
 msgid "Border Right"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5448
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:368
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5403
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:384
 msgid "Border Bottom"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5468
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5423
 msgid "Border Left"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5549
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6430
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5504
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6385
 msgid "Attachments"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5570
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6451
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7333
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8134
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5525
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6406
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7288
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8089
 msgid "Content Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5593
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6474
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7356
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8157
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5548
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6429
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7311
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8112
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:7895
 msgid "Content Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5700
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6581
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7463
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8264
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5655
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6536
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7418
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8219
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:7903
 msgid "Content Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5806
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6687
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7569
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8370
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5761
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6642
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7524
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8325
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:11046
 msgid "Label Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5829
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6710
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7592
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8393
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5784
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6665
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7547
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8348
 msgid "Label Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5936
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6817
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7699
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8500
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5891
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6772
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7654
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8455
 msgid "Label Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6041
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6922
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7804
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8605
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5996
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6877
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7759
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8560
 msgid "List Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6100
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6981
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6055
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6936
 msgid "Extension Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6122
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7004
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6077
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6959
 msgid "Extension Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6181
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7063
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7864
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8665
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6136
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7018
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7819
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8620
 #: includes/Editors/Elementor/Widget/ToC.php:652
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:14965
 msgid "List Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6226
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7108
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7909
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8710
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6181
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7063
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7864
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8665
 #: includes/Editors/Elementor/Widget/Reactions.php:817
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:14993
 msgid "List Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6331
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7213
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8014
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8815
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6286
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7168
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7969
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8770
 #: includes/Editors/Elementor/Widget/Reactions.php:829
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:15003
 msgid "List Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7312
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8113
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7267
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8068
 msgid "Related Docs"
 msgstr ""
 
@@ -3346,100 +3284,124 @@ msgstr ""
 msgid "Betterdocs Print"
 msgstr ""
 
-#: includes/Core/Admin.php:161
+#: includes/Core/Admin.php:137
+#: includes/Core/PostType.php:597
+#: includes/Core/Settings.php:177
+#: includes/Core/Settings.php:203
+#: includes/Core/Settings.php:634
+#: includes/Core/Settings.php:882
+#: includes/Core/Settings.php:2136
+#: includes/Core/SetupWizard.php:202
+#: includes/Editors/BlockEditor/Blocks/CategoryBox.php:46
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:220
+#: views/widgets/breadcrumbs.php:14
+#: assets/blocks/editor.js:1
+#: assets/elementor/js/category-grid.js:1
+#: assets/search-modal/js/index.js:1
+#: assets/shortcodes/js/search-modal.js:1
+#: assets/blocks/editor.js:3118
+#: assets/elementor/js/category-grid.js:582
+#: assets/search-modal/js/index.js:582
+#: assets/search-modal/js/SearchField.js:427
+#: assets/search-modal/js/SearchModal.js:4306
+#: assets/shortcodes/js/search-modal.js:582
+msgid "Docs"
+msgstr ""
+
+#: includes/Core/Admin.php:183
 msgid "Want to help make <strong>BetterDocs</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage."
 msgstr ""
 
-#: includes/Core/Admin.php:162
+#: includes/Core/Admin.php:184
 msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
 msgstr ""
 
-#: includes/Core/Admin.php:193
+#: includes/Core/Admin.php:215
 msgid "We hope you're enjoying BetterDocs! Could you please do us a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: includes/Core/Admin.php:202
+#: includes/Core/Admin.php:224
 msgid "Sure, you deserve it!"
 msgstr ""
 
-#: includes/Core/Admin.php:206
+#: includes/Core/Admin.php:228
 msgid "I already did"
 msgstr ""
 
-#: includes/Core/Admin.php:213
-#: includes/Core/Admin.php:266
+#: includes/Core/Admin.php:235
+#: includes/Core/Admin.php:288
 msgid "Maybe Later"
 msgstr ""
 
-#: includes/Core/Admin.php:225
+#: includes/Core/Admin.php:247
 msgid "I need help"
 msgstr ""
 
-#: includes/Core/Admin.php:229
-#: includes/Core/Admin.php:274
+#: includes/Core/Admin.php:251
+#: includes/Core/Admin.php:296
 msgid "Never show again"
 msgstr ""
 
-#: includes/Core/Admin.php:258
+#: includes/Core/Admin.php:280
 #: includes/Core/KBMigration.php:46
 #: includes/Core/KBMigration.php:187
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Core/Admin.php:369
+#: includes/Core/Admin.php:391
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:9317
 msgid "Word Count"
 msgstr ""
 
-#: includes/Core/Admin.php:487
-#: includes/Core/Admin.php:511
+#: includes/Core/Admin.php:509
+#: includes/Core/Admin.php:533
 msgid "Switch to BetterDocs UI"
 msgstr ""
 
-#: includes/Core/Admin.php:513
+#: includes/Core/Admin.php:535
 msgid "Copied!"
 msgstr ""
 
-#: includes/Core/Admin.php:514
+#: includes/Core/Admin.php:536
 msgid "Test Report!"
 msgstr ""
 
-#: includes/Core/Admin.php:515
+#: includes/Core/Admin.php:537
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:579
+#: includes/Core/Admin.php:601
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:580
+#: includes/Core/Admin.php:602
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:8517
 #: assets/admin/js/dashboard.js:8542
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:682
+#: includes/Core/Admin.php:704
 #: includes/Core/PostType.php:603
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:7776
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:683
+#: includes/Core/Admin.php:705
 #: includes/Core/FAQBuilder.php:93
 #: includes/Core/PostType.php:598
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:684
+#: includes/Core/Admin.php:706
 #: includes/Core/FAQBuilder.php:59
 #: includes/Core/PostType.php:661
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:685
+#: includes/Core/Admin.php:707
 #: includes/Core/PostType.php:812
 #: includes/Core/Settings.php:1156
 #: assets/admin/js/dashboard.js:1
@@ -3448,37 +3410,37 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:686
-#: includes/Core/Admin.php:762
+#: includes/Core/Admin.php:708
+#: includes/Core/Admin.php:784
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:3970
 #: assets/blocks/editor.js:5696
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:690
+#: includes/Core/Admin.php:712
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:694
+#: includes/Core/Admin.php:716
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:701
+#: includes/Core/Admin.php:723
 #: includes/Core/PostType.php:700
 #: includes/Core/Settings.php:2138
 msgid "Glossaries"
 msgstr ""
 
-#: includes/Core/Admin.php:752
+#: includes/Core/Admin.php:774
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:797
+#: includes/Core/Admin.php:819
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:807
+#: includes/Core/Admin.php:829
 msgid "Visit Encyclopedia"
 msgstr ""
 
@@ -3661,29 +3623,6 @@ msgstr ""
 msgid "Invalid object or term ID."
 msgstr ""
 
-#: includes/Core/PostType.php:597
-#: includes/Core/Settings.php:177
-#: includes/Core/Settings.php:203
-#: includes/Core/Settings.php:634
-#: includes/Core/Settings.php:882
-#: includes/Core/Settings.php:2136
-#: includes/Core/SetupWizard.php:202
-#: includes/Editors/BlockEditor/Blocks/CategoryBox.php:46
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:204
-#: views/widgets/breadcrumbs.php:14
-#: assets/blocks/editor.js:1
-#: assets/elementor/js/category-grid.js:1
-#: assets/search-modal/js/index.js:1
-#: assets/shortcodes/js/search-modal.js:1
-#: assets/blocks/editor.js:3118
-#: assets/elementor/js/category-grid.js:582
-#: assets/search-modal/js/index.js:582
-#: assets/search-modal/js/SearchField.js:427
-#: assets/search-modal/js/SearchModal.js:4306
-#: assets/shortcodes/js/search-modal.js:582
-msgid "Docs"
-msgstr ""
-
 #: includes/Core/PostType.php:599
 #: views/admin/docs-ui/grid-partials/add-item.php:1
 #: assets/admin/js/dashboard.js:1
@@ -3857,14 +3796,14 @@ msgid "Search..."
 msgstr ""
 
 #: includes/Core/Settings.php:189
-#: views/templates/taxonomy-doc_tag.php:89
+#: views/templates/taxonomy-doc_tag.php:93
 msgid "Sorry, no docs were found."
 msgstr ""
 
 #: includes/Core/Settings.php:204
 #: includes/Core/Settings.php:889
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:47
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:218
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:234
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:3122
 msgid "Doc"
@@ -5422,7 +5361,6 @@ msgid "Select layout"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:71
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:101
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:59
 #: includes/Editors/Elementor/Widget/DocShare.php:478
 #: includes/Editors/Elementor/Widget/Navigation.php:64
@@ -5434,7 +5372,6 @@ msgid "Layout 1"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:72
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:102
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:60
 #: includes/Editors/Elementor/Widget/DocShare.php:479
 #: includes/Editors/Elementor/Widget/Navigation.php:65
@@ -5448,12 +5385,12 @@ msgid "Layout 2"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:116
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:116
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:128
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:163
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:175
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:370
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:494
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:132
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:144
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:179
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:191
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:386
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:510
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:157
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:169
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:184
@@ -5479,12 +5416,12 @@ msgid "Show"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:117
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:117
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:129
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:164
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:176
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:371
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:495
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:133
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:145
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:180
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:192
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:387
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:511
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:158
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:170
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:185
@@ -5515,7 +5452,7 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:139
 #: includes/Editors/Elementor/Widget/ArchiveList.php:178
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:233
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:249
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:294
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:127
 #: assets/blocks/editor.js:1
@@ -5546,8 +5483,8 @@ msgid "List Item Spacing"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:303
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:555
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:595
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:571
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:611
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:478
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1171
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1180
@@ -5577,14 +5514,14 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:350
 #: includes/Editors/Elementor/Widget/ArchiveList.php:814
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:681
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:817
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:916
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1093
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2554
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2588
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2653
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2687
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:697
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:833
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:932
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1109
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2574
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2608
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2673
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2707
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1223
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1302
 #: includes/Editors/Elementor/Widget/DocShare.php:560
@@ -5646,7 +5583,7 @@ msgstr ""
 msgid "Box Column"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:114
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:130
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:167
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1407
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:78
@@ -5658,7 +5595,7 @@ msgstr ""
 msgid "Show Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:126
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:142
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:182
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4001
@@ -5666,7 +5603,7 @@ msgstr ""
 msgid "Show Title"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:138
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:154
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:197
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:58
 #: assets/blocks/editor.js:1
@@ -5675,7 +5612,7 @@ msgstr ""
 msgid "Select Tag"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:142
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:158
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:201
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:62
 #: includes/Editors/Elementor/Widget/Sidebar.php:227
@@ -5688,7 +5625,7 @@ msgstr ""
 msgid "H1"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:143
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:159
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:202
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:63
 #: includes/Editors/Elementor/Widget/Sidebar.php:228
@@ -5701,7 +5638,7 @@ msgstr ""
 msgid "H2"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:144
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:160
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:203
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:64
 #: includes/Editors/Elementor/Widget/Sidebar.php:229
@@ -5714,7 +5651,7 @@ msgstr ""
 msgid "H3"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:145
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:161
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:204
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:65
 #: includes/Editors/Elementor/Widget/Sidebar.php:230
@@ -5727,7 +5664,7 @@ msgstr ""
 msgid "H4"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:146
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:162
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:205
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:66
 #: includes/Editors/Elementor/Widget/Sidebar.php:231
@@ -5740,7 +5677,7 @@ msgstr ""
 msgid "H5"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:147
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:163
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:206
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:67
 #: includes/Editors/Elementor/Widget/Sidebar.php:232
@@ -5752,25 +5689,25 @@ msgstr ""
 msgid "H6"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:148
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:164
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:207
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:68
 msgid "Span"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:149
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:165
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:208
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:69
 msgid "P"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:150
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:166
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:209
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:70
 msgid "Div"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:161
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:177
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:221
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:90
 #: includes/Editors/Elementor/Widget/Sidebar.php:270
@@ -5780,29 +5717,29 @@ msgstr ""
 msgid "Show Count"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:173
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:189
 msgid "Show Category Description"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:188
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:204
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4031
 msgid "Prefix"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:201
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:217
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4040
 msgid "Suffix"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:215
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:231
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4049
 msgid "Suffix Singular"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:278
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:294
 #: includes/Editors/Elementor/Widget/ToC.php:139
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4065
@@ -5810,7 +5747,7 @@ msgstr ""
 msgid "Box"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:292
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:308
 #: includes/Editors/Elementor/Widget/DocShare.php:220
 #: includes/Editors/Elementor/Widget/DocShare.php:450
 #: assets/blocks/editor.js:1
@@ -5820,7 +5757,7 @@ msgstr ""
 msgid "Box Margin"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:304
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:320
 #: includes/Editors/Elementor/Widget/DocShare.php:152
 #: includes/Editors/Elementor/Widget/DocShare.php:208
 #: includes/Editors/Elementor/Widget/DocShare.php:329
@@ -5836,27 +5773,27 @@ msgstr ""
 msgid "Box Padding"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:321
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:624
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:800
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:939
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1116
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1293
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1657
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1840
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2024
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2235
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2390
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2536
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2635
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2726
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:337
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:640
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:816
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:955
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1132
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1309
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1677
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1860
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2044
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2255
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2410
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2556
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2655
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2746
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:352
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:492
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:647
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:854
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1462
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:294
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1139
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1138
 #: includes/Editors/Elementor/Widget/Sidebar.php:438
 #: includes/Editors/Elementor/Widget/Sidebar.php:642
 #: includes/Editors/Elementor/Widget/Sidebar.php:871
@@ -5875,35 +5812,35 @@ msgstr ""
 msgid "Normal"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:383
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:399
 msgid "Border Bottom Size"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:409
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:425
 msgid "Border Bottom Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:425
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:702
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:831
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:987
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1164
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1341
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1737
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1920
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2115
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2293
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2448
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2570
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2669
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2785
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:441
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:718
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:847
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1003
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1180
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1357
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1757
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1940
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2135
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2313
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2468
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2590
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2689
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2805
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:399
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:533
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:721
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:958
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1542
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:320
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1223
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1222
 #: includes/Editors/Elementor/Widget/Sidebar.php:485
 #: includes/Editors/Elementor/Widget/Sidebar.php:755
 #: includes/Editors/Elementor/Widget/Sidebar.php:940
@@ -5916,14 +5853,14 @@ msgstr ""
 msgid "Hover"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:431
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:743
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:848
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:993
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1170
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:447
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:759
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:864
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1009
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1186
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:964
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1548
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1229
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1228
 #: includes/Editors/Elementor/Widget/Sidebar.php:491
 #: includes/Editors/Elementor/Widget/Sidebar.php:803
 #: includes/Editors/Elementor/Widget/Sidebar.php:968
@@ -5934,25 +5871,25 @@ msgstr ""
 msgid "Transition"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:507
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:523
 msgid "Border Bottom Size Hover"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:533
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:549
 msgid "Border Color Hover"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:569
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:585
 #: includes/Editors/Elementor/Widget/Reactions.php:573
 #: includes/Editors/Elementor/Widget/Reactions.php:668
 #: includes/Editors/Elementor/Widget/Reactions.php:746
 msgid "Area"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:878
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1072
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:894
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1088
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:812
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1291
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1290
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:247
 #: includes/Editors/Elementor/Widget/Sidebar.php:1387
 #: includes/Editors/Elementor/Widget/Sidebar.php:1656
@@ -5965,20 +5902,20 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1643
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1826
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1663
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1846
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:4214
 #: assets/blocks/editor.js:6272
 msgid "Wrapper"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1688
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1768
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1871
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1951
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2055
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2146
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1708
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1788
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1891
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1971
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2075
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2166
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:310
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:336
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:383
@@ -5996,12 +5933,12 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1725
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1805
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1908
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1988
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2103
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2185
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1745
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1825
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1928
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2008
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2123
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2205
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:368
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:415
 #: assets/blocks/editor.js:1
@@ -6009,23 +5946,23 @@ msgstr ""
 msgid "Box Shadow"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2010
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2030
 msgid "Taxonomy"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2205
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2360
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2225
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2380
 #: views/admin/taxonomy/add.php:12
 #: views/admin/taxonomy/edit.php:27
 msgid "Category Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2336
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2491
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2356
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2511
 msgid "Icon Border Radius"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2712
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2732
 #: includes/Editors/Elementor/Widget/Feedback.php:60
 #: includes/Editors/Elementor/Widget/ReadingTime.php:48
 #: assets/blocks/editor.js:1
@@ -6034,11 +5971,11 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2733
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2753
 msgid "Article Count Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2792
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2812
 msgid "Article Count Hover Color"
 msgstr ""
 
@@ -6119,8 +6056,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:860
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:988
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:180
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:386
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:589
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:385
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:588
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:113
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:231
 #: includes/Editors/Elementor/Widget/Feedback.php:345
@@ -6222,10 +6159,6 @@ msgstr ""
 msgid "Button Alignment"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:64
-msgid "New Layout"
-msgstr ""
-
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:74
 msgid "FAQ Section"
 msgstr ""
@@ -6311,89 +6244,100 @@ msgstr ""
 msgid "Placeholder"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:203
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:202
 msgid "Search Subheading"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:234
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:299
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:233
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:298
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:12929
 #: assets/blocks/editor.js:13041
 msgid "Search Box"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:375
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:578
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:805
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:363
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:566
+#: assets/blocks/editor.js:1
+#: assets/blocks/editor.js:13063
+msgid "Search Field"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:374
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:577
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:804
 #: includes/Editors/Elementor/Widget/Sidebar.php:2433
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13077
 msgid "Field Background Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:405
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:608
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:404
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:607
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13101
 msgid "Field Padding"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:417
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:835
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:416
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:834
 #: includes/Editors/Elementor/Widget/Sidebar.php:2463
 msgid "Field Placeholder Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:428
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:620
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:427
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:619
 msgid "Search Box Margin"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:440
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:632
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:439
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:631
 msgid "Search Box Padding"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:454
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:646
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:453
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:645
 msgid "Search Box Border"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:490
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:682
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:489
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:681
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13118
 msgid "Search Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:527
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:526
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13140
 msgid "Close Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:719
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:718
 msgid "Search Button"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:794
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:773
+msgid "Search Modal"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:793
 #: includes/Editors/Elementor/Widget/Sidebar.php:2422
 msgid "Magnifier Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:824
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:823
 #: includes/Editors/Elementor/Widget/Sidebar.php:2452
 msgid "Field Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1044
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1043
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13164
 msgid "Search Result Box"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1055
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1054
 #: includes/Editors/Elementor/Widget/DocShare.php:80
 #: includes/Editors/Elementor/Widget/DocShare.php:257
 #: includes/Editors/Elementor/Widget/Feedback.php:188
@@ -6410,32 +6354,32 @@ msgstr ""
 msgid "Width"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1077
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1076
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13176
 msgid "Max Width"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1126
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1125
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13205
 msgid "Search Result List"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1145
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1251
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1144
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1250
 msgid "Item"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1161
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1271
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1300
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1160
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1270
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1299
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:13214
 msgid "Item Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1193
+#: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1192
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:10038
 #: assets/admin/js/dashboard.js:10758
@@ -6534,12 +6478,6 @@ msgstr ""
 #: assets/blocks/editor.js:4563
 #: assets/blocks/editor.js:9099
 msgid "Doc Author"
-msgstr ""
-
-#: includes/Editors/Elementor/Widget/DocAuthor.php:107
-#: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:9197
-msgid "Author"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/DocAuthor.php:135
@@ -6671,12 +6609,6 @@ msgstr ""
 #: assets/blocks/editor.js:3208
 #: assets/blocks/editor.js:13589
 msgid "Layout 3"
-msgstr ""
-
-#: includes/Editors/Elementor/Widget/Reactions.php:620
-#: includes/Editors/Elementor/Widget/Reactions.php:698
-#: includes/Editors/Elementor/Widget/Reactions.php:776
-msgid "Hover Background Color"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ReadingTime.php:25
@@ -7004,7 +6936,7 @@ msgstr ""
 msgid "Key cannot be empty."
 msgstr ""
 
-#: includes/Utils/Views.php:125
+#: includes/Utils/Views.php:129
 msgid "View file not exists."
 msgstr ""
 
