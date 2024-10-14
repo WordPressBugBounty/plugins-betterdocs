@@ -228,7 +228,7 @@ class Install extends Base {
             set_theme_mod( 'betterdocs_select_faq_template', 'layout-1' );
         }
 
-        if ( get_options('betterdocs_settings') && betterdocs()->settings->get( 'enable_estimated_reading_time' ) == false ) {
+        if ( get_option('betterdocs_settings') && betterdocs()->settings->get( 'enable_estimated_reading_time' ) == false ) {
             betterdocs()->settings->save( 'enable_estimated_reading_time', false );
         }
 
