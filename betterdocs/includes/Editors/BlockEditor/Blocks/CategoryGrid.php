@@ -35,7 +35,7 @@ class CategoryGrid extends Block {
     public function register_scripts() {
         //when thrive editor mode is active, do not enqueue this script, this causes an issue with thrive edit mode
         $check_for_thrive = isset( $_GET['action'] ) ? $_GET['action'] : '';
-        
+
         //when thrive editor mode is active, do not enqueue this script, this causes an issue with thrive edit mode
         if( $check_for_thrive == 'architect' )  {
             return;
@@ -44,7 +44,7 @@ class CategoryGrid extends Block {
         $this->assets_manager->enqueue(
             'betterdocs-categorygrid',
             'blocks/categorygrid/frontend.js',
-            ['moment', 'masonry']
+            ['masonry']
         );
     }
 
