@@ -687,19 +687,21 @@ class PostType extends Base {
     }
 
     public function register_glossaries_taxonomy() {
+        $encyclopedia_root_slug = betterdocs()->settings->get('encyclopedia_root_slug', 'encyclopedia');
+    
         $labels = [
-            'name'              => __( 'Glossaries Terms', 'betterdocs' ),
-            'singular_name'     => __( 'Glossaries Term', 'betterdocs' ),
-            'all_items'         => __( 'Glossaries Terms', 'betterdocs' ),
-            'parent_item'       => __( 'Parent Glossaries Term', 'betterdocs' ),
-            'parent_item_colon' => __( 'Parent Glossaries Term:', 'betterdocs' ),
-            'edit_item'         => __( 'Edit Term', 'betterdocs' ),
-            'update_item'       => __( 'Update Glossary', 'betterdocs' ),
-            'add_new_item'      => __( 'Add New Glossaries Term', 'betterdocs' ),
-            'new_item_name'     => __( 'New Glossaries Term Name', 'betterdocs' ),
-            'menu_name'         => __( 'Glossaries', 'betterdocs' )
+            'name'              => __('Glossaries Terms', 'betterdocs'),
+            'singular_name'     => __('Glossaries Term', 'betterdocs'),
+            'all_items'         => __('Glossaries Terms', 'betterdocs'),
+            'parent_item'       => __('Parent Glossaries Term', 'betterdocs'),
+            'parent_item_colon' => __('Parent Glossaries Term:', 'betterdocs'),
+            'edit_item'         => __('Edit Term', 'betterdocs'),
+            'update_item'       => __('Update Glossary', 'betterdocs'),
+            'add_new_item'      => __('Add New Glossaries Term', 'betterdocs'),
+            'new_item_name'     => __('New Glossaries Term Name', 'betterdocs'),
+            'menu_name'         => __('Glossaries', 'betterdocs')
         ];
-
+    
         $args = [
             'hierarchical'      => true,
             'public'            => true,
@@ -710,10 +712,10 @@ class PostType extends Base {
             'query_var'         => true,
             'show_in_rest'      => true,
             'has_archive'       => true,
-            'rewrite'           => array(
-                'slug'       => $this->glossaries,
+            'rewrite'           => [
+                'slug'       => $encyclopedia_root_slug,
                 'with_front' => false,
-            ),
+            ],
             'capabilities'      => [
                 'manage_terms' => 'manage_doc_terms',
                 'edit_terms'   => 'edit_doc_terms',
@@ -721,13 +723,18 @@ class PostType extends Base {
                 'assign_terms' => 'edit_docs'
             ]
         ];
-
-        register_taxonomy( $this->glossaries, [$this->post_type], $args );
-
-        // Change the rewrite rules for the custom taxonomy
+    
+        // Register the custom taxonomy
+        register_taxonomy($this->glossaries, [$this->post_type], $args);
+    
+        // Customize rewrite rules for the custom taxonomy
         global $wp_rewrite;
-        $wp_rewrite->extra_permastructs[$this->glossaries]['struct'] = '/'.$this->glossaries.'/%glossaries%';
+        $wp_rewrite->extra_permastructs[$this->glossaries]['struct'] = '/'.$encyclopedia_root_slug.'/%'.$this->glossaries.'%';
+    
+        // Flush rewrite rules to ensure the new structure takes effect
+        add_action('init', 'flush_rewrite_rules', 999);
     }
+    
     public function add_glossary_term_fields($taxonomy) {
         ?>
         <div class="form-field term-custom-field-wrap">

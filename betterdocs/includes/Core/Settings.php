@@ -236,6 +236,7 @@ class Settings extends Base {
             'enable_credit'                 => false,
             'enable_archive_sidebar'        => true,
             'archive_nested_subcategory'    => true,
+            'archive_enable_pagination'     => false,
             'enable_content_restriction'    => false,
             'enable_reporting'              => false,
             'enable_sample_data'            => false,
@@ -250,7 +251,8 @@ class Settings extends Base {
             'enable_glossaries'             => false,
             'show_glossary_suggestions'     => true,
             'estimated_reading_time_title'  => __( '', 'betterdocs' ),
-            'estimated_reading_time_text'   => __( 'min read', 'betterdocs' )
+            'estimated_reading_time_text'   => __( 'min read', 'betterdocs' ),
+            'singular_estimated_reading_time_text' => __('min read', 'betterdocs')
         ];
 
         $_default = apply_filters( 'betterdocs_default_settings', $_default );
@@ -1220,6 +1222,14 @@ class Settings extends Base {
                                                                     'default'  => __( 'min read', 'betterdocs' ),
                                                                     'priority' => 12,
                                                                     'rules'    => Rules::is( 'enable_estimated_reading_time', true )
+                                                                ],
+                                                                'singular_estimated_reading_time_text'   => [
+                                                                    'name'     => 'singular_estimated_reading_time_text',
+                                                                    'type'     => 'text',
+                                                                    'label'    => __( 'Estimated Reading Time Text Singular', 'betterdocs' ),
+                                                                    'default'  => __( 'min read', 'betterdocs' ),
+                                                                    'priority' => 13,
+                                                                    'rules'    => Rules::is( 'enable_estimated_reading_time', true )
                                                                 ]
                                                             ]
                                                         ],
@@ -1492,6 +1502,14 @@ class Settings extends Base {
                                                     'enable_disable_text_active' => true,
                                                     'default'                    => 1,
                                                     'priority'                   => 32
+                                                ],
+                                                'archive_enable_pagination' => [
+                                                    'name'                       => 'archive_enable_pagination',
+                                                    'type'                       => 'toggle',
+                                                    'label'                      => __( 'Enable Pagination', 'betterdocs' ),
+                                                    'enable_disable_text_active' => true,
+                                                    'default'                    => false,
+                                                    'priority'                   => 33
                                                 ]
                                             ]
                                         ]

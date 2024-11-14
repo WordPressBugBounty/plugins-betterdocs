@@ -3773,6 +3773,9 @@ $css->add_rule( '.betterdocs-sidebar.betterdocs-sidebar-layout-3 .betterdocs-sin
 $css->add_rule( '.betterdocs-sidebar.betterdocs-sidebar-layout-7 .betterdocs-sidebar-content', $css->properties( [
     'background-color' => 'betterdocs_sidebar_bg_color_layout_7'
 ] ) );
+$css->add_rule( '.betterdocs-wrapper.betterdocs-single-layout-8 .betterdocs-content-wrapper .betterdocs-sidebar.betterdocs-sidebar-layout-7', $css->properties( [
+    'border-color' => 'betterdocs_sidebar_border_color_layout_7'
+] ) );
 
 $css->add_rule( '.betterdocs-sidebar.betterdocs-sidebar-layout-7 .betterdocs-sidebar-content', $css->properties( [
     'padding-top'    => 'betterdocs_sidebar_padding_top_layout_7',
@@ -5282,3 +5285,27 @@ $css->add_rule( '.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3
     'padding' => 'betterdocs_faq_list_padding_layout_3'
 ], 'px' ) );
 //FAQ LAYOUT 3 Controls End
+
+//Archive Page Pagination Controls
+$css->add_rule( '.betterdocs-category-archive-wrapper .betterdocs-pagination ul li a', $css->properties( [
+    'height' => 'archive_docs_pagination_wrapper_height',
+    'width'  => 'archive_docs_pagination_wrapper_width',
+    'font-size' => 'archive_docs_pagination_wrapper_font_size'
+], 'px' ) );
+
+$css->add_rule( '.betterdocs-category-archive-wrapper .betterdocs-pagination ul li a', $css->properties( [
+    'color' => 'archive_docs_pagination_wrapper_color',
+]) );
+
+$css->add_rule( '.betterdocs-category-archive-wrapper .doc-category-layout-7 .betterdocs-pagination ul li a', $css->properties( [
+    'background-color' => 'archive_docs_pagination_wrapper_background_color_sleek'
+]) );
+
+$css->add_rule( '.betterdocs-category-archive-wrapper .betterdocs-pagination ul li a', $css->properties( [
+    'background-color' => 'archive_docs_pagination_wrapper_background_color'
+]) );
+
+$css->add_rule( '.betterdocs-category-archive-wrapper .betterdocs-pagination ul li.active a', $css->properties( [
+    'color'        => 'archive_docs_pagination_wrapper_active_color',
+    'border-color' => 'archive_docs_pagination_wrapper_active_border_color'
+]));

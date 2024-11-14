@@ -17,7 +17,7 @@ class DocCategories extends BaseAPI {
         global $wpdb;
 
         $mkb        = $request->get_param('knowledge_base');
-        
+
         $terms_query = betterdocs()->query->terms_query( [
             'hide_empty' => false,
             'taxonomy'   => 'doc_category',

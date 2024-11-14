@@ -4651,6 +4651,117 @@ class SingleDoc extends Section {
         );
     }
 
+    public function post_reactions_happy() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_happy', [
+            'default'           => $this->defaults['betterdocs_post_reactions_happy'],
+            'capability'        => 'edit_theme_options',
+            'sanitize_callback' => [$this->sanitizer, 'checkbox']
+        ] );
+
+        $this->customizer->add_control( new ToggleControl(
+            $this->customizer, 'betterdocs_post_reactions_happy', [
+                'label'    => __( 'Enable Happy?', 'betterdocs' ),
+                'priority' => 160,
+                'section'  => 'betterdocs_single_docs_settings',
+                'settings' => 'betterdocs_post_reactions_happy',
+                'type'     => 'light' // light, ios, flat
+            ] )
+        );
+    }
+
+    public function post_reactions_happy_icon() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_happy_icon', [
+            'default'    => $this->defaults['betterdocs_post_reactions_happy_icon'],
+            'capability' => 'edit_theme_options'
+
+        ] );
+
+        $this->customizer->add_control(
+            new WP_Customize_Image_Control(
+                $this->customizer, 'betterdocs_post_reactions_happy_icon', [
+                    'section'  => 'betterdocs_single_docs_settings',
+                    'settings' => 'betterdocs_post_reactions_happy_icon',
+                    'label'    => __( 'Happy Icon', 'betterdocs' ),
+                    'priority' => 160
+                ]
+            )
+        );
+    }
+
+    public function post_reactions_normal() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_normal', [
+            'default'           => $this->defaults['betterdocs_post_reactions_normal'],
+            'capability'        => 'edit_theme_options',
+            'sanitize_callback' => [$this->sanitizer, 'checkbox']
+        ] );
+
+        $this->customizer->add_control( new ToggleControl(
+            $this->customizer, 'betterdocs_post_reactions_normal', [
+                'label'    => __( 'Enable Normal?', 'betterdocs' ),
+                'priority' => 160,
+                'section'  => 'betterdocs_single_docs_settings',
+                'settings' => 'betterdocs_post_reactions_normal',
+                'type'     => 'light' // light, ios, flat
+            ] )
+        );
+    }
+
+    public function post_reactions_normal_icon() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_normal_icon', [
+            'default'    => $this->defaults['betterdocs_post_reactions_normal_icon'],
+            'capability' => 'edit_theme_options'
+
+        ] );
+
+        $this->customizer->add_control(
+            new WP_Customize_Image_Control(
+                $this->customizer, 'betterdocs_post_reactions_normal_icon', [
+                    'section'  => 'betterdocs_single_docs_settings',
+                    'settings' => 'betterdocs_post_reactions_normal_icon',
+                    'label'    => __( 'Normal Icon', 'betterdocs' ),
+                    'priority' => 160
+                ]
+            )
+        );
+    }
+
+    public function post_reactions_sad() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_sad', [
+            'default'           => $this->defaults['betterdocs_post_reactions_sad'],
+            'capability'        => 'edit_theme_options',
+            'sanitize_callback' => [$this->sanitizer, 'checkbox']
+        ] );
+
+        $this->customizer->add_control( new ToggleControl(
+            $this->customizer, 'betterdocs_post_reactions_sad', [
+                'label'    => __( 'Enable Sad?', 'betterdocs' ),
+                'priority' => 160,
+                'section'  => 'betterdocs_single_docs_settings',
+                'settings' => 'betterdocs_post_reactions_sad',
+                'type'     => 'light' // light, ios, flat
+            ] )
+        );
+    }
+
+    public function post_reactions_sad_icon() {
+        $this->customizer->add_setting( 'betterdocs_post_reactions_sad_icon', [
+            'default'    => $this->defaults['betterdocs_post_reactions_sad_icon'],
+            'capability' => 'edit_theme_options'
+
+        ] );
+
+        $this->customizer->add_control(
+            new WP_Customize_Image_Control(
+                $this->customizer, 'betterdocs_post_reactions_sad_icon', [
+                    'section'  => 'betterdocs_single_docs_settings',
+                    'settings' => 'betterdocs_post_reactions_sad_icon',
+                    'label'    => __( 'Sad Icon', 'betterdocs' ),
+                    'priority' => 160
+                ]
+            )
+        );
+    }
+
     public function post_reactions_text() {
         $this->customizer->add_setting( 'betterdocs_post_reactions_text', [
             'default'           => $this->defaults['betterdocs_post_reactions_text'],

@@ -3,9 +3,9 @@ Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, cu121, fe
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 3.7.3
+Stable tag: 3.8.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -219,6 +219,34 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 3.8.0 - 14/11/2024 =
+- Added: Sleek Layout for the Category Box block
+- Added: Abstract Layout for the FAQ block
+- Added: Modal Layout for the Search block
+- Added: New Layout for the Sidebar block
+- Added: New Layout for the Breadcrumb block
+- Added: Archive Header block
+- Added: New Layout for the Archive Docs block
+- Added: Reading Time block
+- Added: Docs Tag block
+- Added: New Layout for the Print block
+- Added: New Layout for the Reactions block
+- Added: New Layout for the Social Share block
+- Added: Docs Page Sleek Layout pattern
+- Added: Doc Category Sleek Layout pattern
+- Added: Single Docs Essence Layout pattern
+- Added: Single Docs Rustic Layout pattern
+- Added: Docs category order option for the Instant Answer 'Home' section
+- Added: Controller for customizing Sub Categories & Last Updated text
+- Added: Search option for Glossaries and FAQ builder
+- Added: Pagination for docs on the Category Archive page
+- Added: Custom Icon option for Reactions
+- Fixed: Conflict with YoastSEO
+- Fixed: Doc title not showing in the print option when using an FSE theme
+- Fixed: Popular docs widget displaying draft/private docs in the list
+- Fixed: Import/Export not working properly when exporting FAQ
+- Few minor bug fixes and improvements
+
 = 3.7.3 - 22/10/2024 =
 
 - Fixed: Conflict between the 'moment' JS library and other plugins when using the Category Grid Block
@@ -248,7 +276,7 @@ Yes, it will work with any standard WordPress theme.
 - Added: New Doc Layout | Sleek Layout
 - Added 2 New Single Docs Layout | Essence & Rustic Layout
 - Added: New Category Archive Layout | Sleek Layout
-- Added: New Search Layout | Modal 
+- Added: New Search Layout | Modal
 - Added: New FAQ Layout | Abstract Layout
 - Added: New Elementor Widget | Doc Category Archive Header
 - Added: New Layout options inside Elementor

@@ -100,7 +100,7 @@
 
 
     if ( isset( $widget ) && $widget instanceof \WPDeveloper\BetterDocs\Editors\BlockEditor\Block ) {
-        $wrapper_attr_array['class'][] = $blockId;
+        $br_wrapper_attr_array['class'][] = $blockId;
     }
 
     $wrapper_attr = betterdocs()->template_helper->get_html_attributes( $br_wrapper_attr_array );
