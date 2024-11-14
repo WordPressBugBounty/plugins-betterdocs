@@ -92,21 +92,25 @@ class SetupWizard extends Base {
                     'buttons' => [
                         'skip'                  => __( 'Skip This Step', 'betterdocs' ),
                         'prev'                  => __( 'Previous', 'betterdocs' ),
+                        'start'                  => [
+                            'name'       => 'Start',
+                            'type'       => 'customize',
+                            'customName' => __( 'Proceed to Next Step', 'betterdocs' ),
+                            'condition'  => 'getting-started',
+                            'ajax'       => [
+                                'on'       => 'click',
+                                'api'      => "/betterdocs/v1/plugin_insights",
+                                'data'     => [
+                                    'product_list'  => "betterdocs"
+                                ],
+                                'hideSwal' => true
+                            ]
+                        ],
                         'next'                  => [
                             'name'       => 'Next',
                             'type'       => 'customize',
-                            'customName' => 'Proceed to Next Step',
+                            'customName' => __( 'Next', 'betterdocs' ),
                             'condition'  => 'getting-started',
-                            // 'ajax'       => [
-                            //     'api'      => "/betterdocs/v1/plugin_insights",
-                            //     'data'     => [
-                            //         'type'   => "@type",
-                            //         'source' => "@source",
-                            //         'field'  => "product_list"
-                            //     ],
-                            //     'rules'    => Rules::is( 'config.active', 'getting-started', false ),
-                            //     'hideSwal' => true
-                            // ]
                         ],
                         'quick-builder-publish' => [
                             'name'   => 'quick-builder-publish',
