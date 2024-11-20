@@ -30,7 +30,7 @@ class Sidebar extends Block {
     }
 
     public function register_scripts() {
-        if ( function_exists( 'betterdocs_pro' ) ) { // get the sidebar modal on gutenberg edit mode
+        if ( function_exists( 'betterdocs_pro' ) && betterdocs_pro()->assets != null ) { // get the sidebar modal on gutenberg edit mode
             betterdocs_pro()->assets->enqueue( 'betterdocs-extend-search-modal', 'public/js/extend-search-modal.js', [] );
         }
         $this->assets_manager->enqueue(
