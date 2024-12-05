@@ -115,6 +115,9 @@ class Admin extends Base {
          */
         add_filter( 'manage_users_columns', [$this, 'add_users_total_docs_column'], 10, 1 );
         add_filter( 'manage_users_custom_column', [$this, 'popular_users_docs_data'], 10, 3 );
+        if ( is_plugin_active('betterdocs-pro/betterdocs-pro.php') ) {
+            add_action( 'admin_footer-plugins.php', array( $this, 'disable_deactivation' ) );
+        }
 
         if ( $this->settings->get( 'enable_estimated_reading_time' ) ) {
             add_action( 'add_meta_boxes', [$this, 'reading_meta_box_'], 10 );
@@ -131,6 +134,50 @@ class Admin extends Base {
             unset( $e );
         }
     }
+
+    public function disable_deactivation() {
+        $tooltip_text = esc_html__('Deactivate BetterDocs Pro First', 'betterdocs');
+        ?>
+        <style type="text/css">
+            #deactivate-betterdocs {
+                color: #cccccc;
+                position: relative;
+            }
+
+            /* Tooltip styling */
+            #deactivate-betterdocs[title]:hover::after {
+                content: attr(title);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #333;
+                color: #fff;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                white-space: nowrap;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+                z-index: 10;
+            }
+            #deactivate-betterdocs:focus {
+                box-shadow: none;
+                outline: none;
+            }
+        </style>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                // Disable the default action and add class with tooltip by default
+                const tooltipText = "<?php echo $tooltip_text; ?>";
+                $("#deactivate-betterdocs")
+                    .addClass("disabled-tooltip")
+                    .attr("title", tooltipText)
+                    .on("click", function(e) {
+                        e.preventDefault(); // Prevent any action on click
+                    });
+            });
+        </script>
+    <?php }
 
     public function add_users_total_docs_column( $columns ) {
         $new_column = [
@@ -316,8 +363,7 @@ class Admin extends Base {
         if ( $this->insights != null && ! isset( $allow_tracking[ 'betterdocs' ] )  ) {
             $notices->add( 'opt_in', [$this->insights, 'notice'], [
                 'classes'     => 'updated put-dismiss-notice',
-                // 'start'       => $notices->time(),
-                'start'       => strtotime('12:00:00pm December 6, 2024'),
+                'start'       => $notices->time(),
                 'refresh'     => BETTERDOCS_VERSION,
                 'dismissible' => true,
                 'do_action'   => 'wpdeveloper_notice_clicked_for_betterdocs',

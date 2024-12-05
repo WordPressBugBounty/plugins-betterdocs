@@ -598,7 +598,7 @@ class Settings extends Base {
                     Rules::is( 'config.active', 'tab-migration', true )
                 ], 'and' )
             ],
-            'values'        => $this->get_all(),
+            'values'        => betterdocs()->is_pro_active() ? $this->get_all() : array_merge( $this->get_all(), $this->pro_settings_default_values() ),
             'tabs'          => apply_filters( 'betterdocs_settings_tabs', [
                 'tab-general'          => apply_filters( 'betterdocs_settings_tab_general', [
                     'id'       => 'tab-general',
@@ -728,7 +728,7 @@ class Settings extends Base {
                                     'type'                       => 'toggle',
                                     'label'                      => __( 'Unique Visitor Count', 'betterdocs' ),
                                     'enable_disable_text_active' => true,
-                                    'default'                    => true,
+                                    'default'                    => false,
                                     'priority'                   => 16,
                                     'is_pro'                     => true
                                 ],
@@ -737,7 +737,7 @@ class Settings extends Base {
                                     'type'                       => 'toggle',
                                     'label'                      => __( 'Exclude Bot Analytics', 'betterdocs' ),
                                     'enable_disable_text_active' => true,
-                                    'default'                    => true,
+                                    'default'                    => false,
                                     'priority'                   => 17,
                                     'is_pro'                     => true
                                 ]
@@ -1887,7 +1887,7 @@ class Settings extends Base {
                                             'priority'                   => 100,
                                             'description'                => __( 'Enable Instant Answer', 'betterdocs' ),
                                             'enable_disable_text_active' => false,
-                                            'default'                    => true,
+                                            'default'                    => false,
                                             'is_pro'                     => true
                                         ]
                                     ]
@@ -1951,6 +1951,29 @@ class Settings extends Base {
         ];
 
         return apply_filters( 'betterdocs_settings_args', $settings );
+    }
+
+    /**
+     * Call This Function As Helper, When Pro Is Deactivated, To Be Used As Settings Default Values, When Betterdocs Pro Is Deactivated
+     *
+     * @return array
+     */
+    public function pro_settings_default_values() {
+        return [
+            'multiple_kb'                  => false,
+            'enable_glossaries'            => false,
+            'enable_encyclopedia'          => false,
+            'analytics_from'               => false,
+            'unique_visitor_count'         => false,
+            'exclude_bot_analytics'        => false,
+            'show_attachment'              => false,
+            'show_related_docs'            => false,
+            'advance_search'               => false,
+            'child_category_exclude'       => false,
+            'kb_based_search'              => false,
+            'enable_disable'               => false,
+            'enable_content_restriction'   => false
+        ];
     }
 
     public function import_export_settings( $settings ) {
