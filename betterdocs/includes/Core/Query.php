@@ -947,40 +947,36 @@ class Query extends Base {
 	}
 
 	public function get_doc_ids_by_term( $term, $optional = null, $nested_subcategory = false ) {
-		$args = [ 'taxonomy' => $term->taxonomy ];
-		$args = [ 'include' => $term->term_id ];
-		if ( $nested_subcategory ) {
-			$args['child_of'] = $term->term_id;
-			unset( $args['include'] );
-		}
-		$_child_terms = get_terms( $args );
+		$args = ['include' => $term->term_id];
+        if ( $nested_subcategory ) {
+            $args['child_of'] = $term->term_id;
+            unset( $args['include'] );
+        }
+        $_child_terms = get_terms( $term->taxonomy, $args );
 
-		if ( ! is_array( $_child_terms ) ) {
-			return false;
-		}
+        if ( ! is_array( $_child_terms ) ) {
+            return false;
+        }
 
-		array_unshift( $_child_terms, $term );
+        array_unshift( $_child_terms, $term );
 
-		$_child_terms_ids      = array_column( $_child_terms, 'term_id' );
-		$_child_terms_taxs     = array_column( $_child_terms, 'taxonomy' );
-		$_child_terms_docs_ids = get_objects_in_term( $_child_terms_ids, $_child_terms_taxs );
+        $_child_terms_ids      = array_column( $_child_terms, 'term_id' );
+        $_child_terms_taxs     = array_column( $_child_terms, 'taxonomy' );
+        $_child_terms_docs_ids = get_objects_in_term( $_child_terms_ids, $_child_terms_taxs );
 
-		if ( $optional !== null ) {
-			$_optional_doc_ids     = get_objects_in_term( $optional->term_id, $optional->taxonomy );
-			$_child_terms_docs_ids = array_intersect( $_child_terms_docs_ids, $_optional_doc_ids );
-		}
+        if ( $optional !== null ) {
+            $_optional_doc_ids     = get_objects_in_term( $optional->term_id, $optional->taxonomy );
+            $_child_terms_docs_ids = array_intersect( $_child_terms_docs_ids, $_optional_doc_ids );
+        }
 
-		return array_filter(
-			$_child_terms_docs_ids,
-			function ( $doc_id ) {
-				if ( ! is_user_logged_in() ) {
-					return is_post_publicly_viewable( $doc_id );
-				}
+        return array_filter( $_child_terms_docs_ids, function ( $doc_id ) {
+            if ( ! is_user_logged_in() ) {
+                return is_post_publicly_viewable( $doc_id );
+            }
 
-				$_status = get_post_status( $doc_id );
-				return $_status == 'private' || is_post_publicly_viewable( $doc_id );
-			}
-		);
+            $_status = get_post_status( $doc_id );
+            return $_status == 'private' || is_post_publicly_viewable( $doc_id );
+        } );
 	}
 
 	/**

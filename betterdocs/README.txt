@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 3.8.4
+Stable tag: 3.8.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -219,6 +219,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.8.5 - 15/12/2024 =
+
+- Fixed: Nested sub-category doesn’t show if the parent category doesn’t have any docs assigned
+- Few minor bug fixes and improvements
 
 = 3.8.4 - 09/12/2024 =
 
