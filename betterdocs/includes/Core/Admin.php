@@ -649,7 +649,10 @@ class Admin extends Base {
 			]
 		);
 
-		$this->assets->enqueue( 'moment', 'vendor/js/moment.min.js', [] );
+		// If wp-date (which includes moment.js) is not registered, enqueue your custom moment.js
+		if ( ! wp_script_is( 'wp-date', 'registered' ) ) {
+			$this->assets->enqueue( 'moment', 'vendor/js/moment.min.js', [] );
+		}
 		wp_enqueue_script( 'betterdocs-admin' );
 
 		/**

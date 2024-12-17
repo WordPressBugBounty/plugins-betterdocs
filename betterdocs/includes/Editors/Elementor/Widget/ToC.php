@@ -250,10 +250,6 @@ class ToC extends BaseWidget {
 			[
 				'label'     => __( 'Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
-				'scheme'    => [
-					'type'  => Schemes\Color::get_type(),
-					'value' => Schemes\Color::COLOR_1
-				],
 				'selectors' => [
 					'{{WRAPPER}} .betterdocs-toc .toc-title' => 'color: {{VALUE}};'
 				]

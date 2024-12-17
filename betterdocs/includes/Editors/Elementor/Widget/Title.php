@@ -152,10 +152,6 @@ class Title extends BaseWidget {
 			[
 				'label'     => __( 'Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
-				'scheme'    => [
-					'type'  => Schemes\Color::get_type(),
-					'value' => Schemes\Color::COLOR_1
-				],
 				'selectors' => [
 					'{{WRAPPER}} .betterdocs-entry-title, .betterdocs-entry-title a' => 'color: {{VALUE}};'
 				]
@@ -166,7 +162,6 @@ class Title extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'typography',
-				'scheme'   => Schemes\Typography::TYPOGRAPHY_1,
 				'selector' => '{{WRAPPER}} .betterdocs-entry-title, .betterdocs-entry-title a'
 			]
 		);

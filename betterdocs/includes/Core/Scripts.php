@@ -22,7 +22,10 @@ class Scripts extends Base {
 
 		// Vendor JS
 		$assets->register( 'simplebar', 'vendor/js/simplebar.js' );
-		$assets->register( 'clipboard', 'vendor/js/clipboard.min.js' );
+
+		if ( ! wp_script_is( 'clipboard', 'registered' ) ) {
+			$assets->register( 'clipboard', 'vendor/js/clipboard.min.js' );
+		}
 
 		// Shortcodes Styles Registrations
 		$assets->register( 'betterdocs-search', 'public/css/search.css' );
