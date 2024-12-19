@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\Core;
 use WP_Error;
 use WP_Query;
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class FAQBuilder extends Base {
 	/**
@@ -429,9 +430,15 @@ class FAQBuilder extends Base {
 		}
 	}
 
-	public function delete_faq_category( $params ) {
-		$term_id = $params->get_param( 'term_id' );
-		$delete  = wp_delete_term( $term_id, 'betterdocs_faq_category' );
+    public function delete_faq_category( $params ) {
+        $term_id = $params->get_param( 'term_id' );
+        $delete_all_docs = $params->get_param('with_all_post');
+
+        if ( $delete_all_docs ) {
+            Helper::delete_specific_faq_posts_by_faq_category( $term_id );
+        }
+
+        $delete  = wp_delete_term( $term_id, 'betterdocs_faq_category' );
 
 		if ( is_wp_error( $delete ) ) {
 			return $delete;

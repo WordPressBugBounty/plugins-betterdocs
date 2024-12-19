@@ -436,16 +436,6 @@ class CSVExporter {
 	private function get_glossaries_csv_data( $post_ids ) {
 		$csv_data_terms = [];
 
-		// Add CSV headers for terms
-		$csv_data_terms[] = [
-			'Taxonomy',
-			'Term ID',
-			'Term name',
-			'Term slug',
-			'Term group',
-			'Term description'
-		];
-
 		if ( $this->args['content'] == 'glossaries' ) {
 			$terms = get_terms(
 				[
@@ -456,6 +446,21 @@ class CSVExporter {
 		} else {
 			$terms = $this->get_terms( $post_ids, $this->args['include_faq'] );
 		}
+
+		if ( is_wp_error( $terms ) ) {
+			return $csv_data_terms;
+		}
+
+		// Add CSV headers for terms
+		$csv_data_terms[] = [
+			'Taxonomy',
+			'Term ID',
+			'Term name',
+			'Term slug',
+			'Term group',
+			'Term description'
+		];
+
 		foreach ( $terms as $term ) {
 			// Add CSV row for term
 			$csv_data_terms[] = [
@@ -464,7 +469,7 @@ class CSVExporter {
 				$term->name,
 				$term->slug,
 				$term->term_group,
-				$term->description
+				get_term_meta( $term->term_id, 'glossary_term_description', true )
 			];
 		}
 

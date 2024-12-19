@@ -113,8 +113,12 @@ class CSV_Parser {
 					'term_id'       => $term_data['Term ID'],
 					'term_name'     => $term_data['Term name'],
 					'slug'          => $term_data['Term slug'],
-					'term_group'    => $term_data['Term group'],
-					'description'   => $term_data['Term description']
+					'term_group'    => $term_data['Term group']
+				];
+
+				$term_args['termmeta'][] = [
+					'key'   => 'glossary_term_description',
+					'value' => $term_data['Term description']
 				];
 
 				$data['terms'][] = $term_args;
