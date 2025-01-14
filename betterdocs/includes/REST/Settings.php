@@ -12,6 +12,7 @@ use WPDeveloper\BetterDocs\Admin\WPExporter;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Dependencies\DI\DependencyException;
 use WPDeveloper\BetterDocs\Dependencies\DI\NotFoundException;
+use WPDeveloper\BetterDocsChatbot\Core\AIChatbot;
 
 class Settings extends BaseAPI {
 
@@ -19,23 +20,29 @@ class Settings extends BaseAPI {
 		return current_user_can( 'edit_docs_settings' );
 	}
 
-	public function register() {
-		$this->get( 'settings', [ $this, 'get_settings' ] );
-		$this->post( 'dark-mode', [ $this, 'dark_mode' ] );
-		$this->post( 'settings', [ $this, 'save_settings' ] );
-		$this->post( 'plugin_insights', [ $this, 'plugin_insights' ] );
-		$this->post( 'create-sample-docs', [ $this, 'sample_docs' ] );
-		$this->post( 'reporting-test', [ $this, 'test_reporting' ] );
-		$this->post( 'export-docs', [ $this, 'export_docs' ] );
-		$this->post( 'export-settings', [ $this, 'export_settings' ] );
-		$this->post( 'import-docs', [ $this, 'import_docs' ] );
-		$this->post( 'import-settings', [ $this, 'import_settings' ] );
-		$this->post( 'parse-xml', [ $this, 'parse_xml' ] );
-		$this->post( 'parse-csv', [ $this, 'parse_csv' ] );
-		$this->post( 'migrate', [ $this, 'migrate_plugins' ] );
-		$this->post( 'helpscout-migration', [ $this, 'helpscout_migration' ] );
-		$this->post( 'dashboard-mode', [ $this, 'dashboard_mode' ] );
-	}
+    public function register() {
+        $this->get( 'settings', [ $this, 'get_settings' ] );
+        $this->post( 'dark-mode', [ $this, 'dark_mode' ] );
+        $this->post( 'settings', [ $this, 'save_settings' ] );
+        $this->post( 'plugin_insights', [ $this, 'plugin_insights' ] );
+        $this->post( 'create-sample-docs', [$this, 'sample_docs'] );
+        $this->post( 'reporting-test', [ $this, 'test_reporting' ] );
+        $this->post( 'export-docs', [ $this, 'export_docs' ] );
+        if(
+            get_option('betterdocs_chatbot_software__license_status') === 'valid' && 
+            get_option('betterdocs_pro_software__license_status') === 'valid'
+        ){
+            $this->post( 'save-aichatbot', [ $this, 'save_aichatbot' ] );
+        }
+        $this->post( 'export-settings', [ $this, 'export_settings' ] );
+        $this->post( 'import-docs', [ $this, 'import_docs' ] );
+        $this->post( 'import-settings', [ $this, 'import_settings' ] );
+        $this->post( 'parse-xml', [ $this, 'parse_xml' ] );
+        $this->post( 'parse-csv', [ $this, 'parse_csv' ] );
+        $this->post( 'migrate', [ $this, 'migrate_plugins' ] );
+        $this->post( 'helpscout-migration', [$this, 'helpscout_migration'] );
+        $this->post( 'dashboard-mode', [$this, 'dashboard_mode'] );
+    }
 
 	public function dashboard_mode( WP_REST_Request $request ) {
 		$mode = $request->get_param( 'dashboard_mode' );
@@ -108,10 +115,78 @@ class Settings extends BaseAPI {
 		return $exporter->run();
 	}
 
-	public function export_settings( WP_REST_Request $request ): array {
-		$betterdocs_settings = get_option( 'betterdocs_settings' );
-		$json_str            = json_encode( $betterdocs_settings, JSON_PRETTY_PRINT );
-		$file_name           = 'betterdocs-settings.json';
+    public function save_aichatbot( WP_REST_Request $request ) {
+        $data = $request->get_params();
+
+        betterdocs()->settings->save( 'enable_ai_chatbot', $data['enable_ai_chatbot'] );
+
+        $api_status = AIChatbot::check_openai_quota($data['ai_chatbot_api_key']);
+
+        $api_status = json_decode($api_status, true);  // Decode the JSON response
+    
+        // Check if required data is empty
+        if ( empty( $data['ai_chatbot_api_key'] ) || 
+             empty( $data['ai_chatbot_embed_model'] ) || 
+             empty( $data['ai_chatbot_chat_model'] ) ) {
+            return [
+                'status'  => 'error',
+                'message' => __('Required fields cannot be empty.', 'betterdocs'),
+            ];
+        }
+
+        if (isset($api_status['error'])) {  // Check if the 'error' key exists in the response
+            $error_message = $api_status['error']['message'] ?? 'Unknown error';
+            return [
+                'status'  => 'error',
+                'message' => __($error_message, 'betterdocs'),
+            ];
+        }
+
+    
+        // Get previous values
+        $prev_api_key      = betterdocs()->settings->get( 'ai_chatbot_api_key', '' );
+        $prev_embed_model  = betterdocs()->settings->get( 'ai_chatbot_embed_model', '' );
+    
+        // Save settings if all required fields are provided
+        betterdocs()->settings->save( 'ai_chatbot_api_key', $data['ai_chatbot_api_key'] );
+        betterdocs()->settings->save( 'ai_chatbot_embed_model', $data['ai_chatbot_embed_model'] );
+        betterdocs()->settings->save( 'ai_chatbot_chat_model', $data['ai_chatbot_chat_model'] );
+    
+        // Execute if ai_chatbot_embed_model has changed
+        if ( $prev_embed_model !== $data['ai_chatbot_embed_model'] ) {
+            update_option( 'is_ai_chatbot_bg_complete', 'running' );
+            update_option( 'background_process_status', 1 );
+            AIChatbot::send_data();
+        }
+
+        $post_type = 'docs'; //betterdocs()->settings->get('ai_chatbot_allow_post_types', 'docs');
+		$docs_count = AIChatbot::get_docs_count( $post_type ); // Calculate the number of iterations needed
+        update_option( 'docs_count', $docs_count );
+
+
+		if($docs_count < 1){
+			update_option( 'background_process_status', 0 );
+			update_option( 'is_ai_chatbot_bg_complete', 'complete' );
+			update_option( 'show_ai_chatbot_process_notices', 0 );
+		}
+    
+        // Execute if ai_chatbot_api_key has changed
+        if ( $prev_api_key !== $data['ai_chatbot_api_key'] ) {
+            $openai_api_key = $data['ai_chatbot_api_key'];
+            AIChatbot::encrypted_api_key( $openai_api_key, '0kXsYZmsHgvIB85miXWlq3nigYYD4PktOSVvOs3vlbA=' );
+        }
+    
+        return [
+            'status'  => 'success',
+            'message' => __( 'Settings saved successfully.', 'betterdocs' ),
+        ];
+    }
+    
+
+    public function export_settings( WP_REST_Request $request ): array {
+        $betterdocs_settings = get_option( 'betterdocs_settings' );
+        $json_str            = json_encode( $betterdocs_settings, JSON_PRETTY_PRINT );
+        $file_name           = 'betterdocs-settings.json';
 
 		return [
 			'success' => true,

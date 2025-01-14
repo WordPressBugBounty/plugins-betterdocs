@@ -1,1 +1,33 @@
-(()=>{var t;t=jQuery,wp.customize.bind("ready",(function(){var n=this;t.each(["#CONTROLNAME01#","#CONTROLNAME02#"],(function(t,o){n(o,(function(t){var i=n.control(o).container.find(".customize-control-title");i.toggleClass("disabled-control-title",!t.get()),t.bind((function(n){i.toggleClass("disabled-control-title",!t.get())}))}))}))}))})();
+/******/ (() => { // webpackBootstrap
+/*!*****************************************************************!*\
+  !*** ./react-src/admin/customizer/customizer-toggle-control.js ***!
+  \*****************************************************************/
+/*
+ * Script run inside a Customizer control sidebar
+ *
+ * Enable / disable the control title by toggeling its .disabled-control-title style class on or off.
+ */
+(function ($) {
+  wp.customize.bind('ready', function () {
+    // Ready?
+
+    var customize = this; // Customize object alias.
+    // Array with the control names
+    // TODO: Replace #CONTROLNAME01#, #CONTROLNAME02# etc with the real control names.
+    var toggleControls = ['#CONTROLNAME01#', '#CONTROLNAME02#'];
+    $.each(toggleControls, function (index, control_name) {
+      customize(control_name, function (value) {
+        var controlTitle = customize.control(control_name).container.find('.customize-control-title'); // Get control  title.
+        // 1. On loading.
+        controlTitle.toggleClass('disabled-control-title', !value.get());
+        // 2. Binding to value change.
+        value.bind(function (to) {
+          controlTitle.toggleClass('disabled-control-title', !value.get());
+        });
+      });
+    });
+  });
+})(jQuery);
+/******/ })()
+;
+//# sourceMappingURL=customizer-toggle-control.js.map

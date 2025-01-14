@@ -1,1 +1,42 @@
-!function(e){wp.customize.bind("ready",(function(){t();var r=jQuery(".betterdocs-customizer-reset.betterdocs-range-value");r.each((function(){e(r).on("click",(function(t){t.preventDefault();var r=e(this).next(".betterdcos-range-slider"),a=e(this).next(".betterdcos-range-slider").data("default-val"),i=r.find(".betterdcos-range-slider__range").attr("suffix");r.find(".betterdcos-range-slider__range").val(a).trigger("change"),r.find(".betterdcos-range-slider__value").html(a+i)}))}))}));var t=function(){var t=e(".betterdcos-range-slider"),r=e(".betterdcos-range-slider__range"),a=e(".betterdcos-range-slider__value");t.each((function(){a.each((function(){var t=e(this).prev().attr("value"),r=e(this).prev().attr("suffix")?e(this).prev().attr("suffix"):"";e(this).html(t+r)})),r.on("input",(function(){var t=e(this).attr("suffix")?e(this).attr("suffix"):"";e(this).next(a).html(this.value+t)}))}))}}(jQuery);
+/******/ (() => { // webpackBootstrap
+/*!**********************************************************************!*\
+  !*** ./react-src/admin/customizer/customizer-range-value-control.js ***!
+  \**********************************************************************/
+/**
+ * Script run inside a Customizer control sidebar
+ */
+(function ($) {
+  wp.customize.bind('ready', function () {
+    rangeSlider();
+    var rangeValReset = jQuery('.betterdocs-customizer-reset.betterdocs-range-value');
+    rangeValReset.each(function () {
+      $(rangeValReset).on('click', function (e) {
+        e.preventDefault();
+        var nextRangeselector = $(this).next('.betterdcos-range-slider');
+        var nextRangeDefaultVal = $(this).next('.betterdcos-range-slider').data('default-val');
+        var suffix = nextRangeselector.find('.betterdcos-range-slider__range').attr('suffix');
+        nextRangeselector.find('.betterdcos-range-slider__range').val(nextRangeDefaultVal).trigger('change');
+        nextRangeselector.find('.betterdcos-range-slider__value').html(nextRangeDefaultVal + suffix);
+      });
+    });
+  });
+  var rangeSlider = function () {
+    var slider = $('.betterdcos-range-slider'),
+      range = $('.betterdcos-range-slider__range'),
+      value = $('.betterdcos-range-slider__value');
+    slider.each(function () {
+      value.each(function () {
+        var value = $(this).prev().attr('value');
+        var suffix = $(this).prev().attr('suffix') ? $(this).prev().attr('suffix') : '';
+        $(this).html(value + suffix);
+      });
+      range.on('input', function () {
+        var suffix = $(this).attr('suffix') ? $(this).attr('suffix') : '';
+        $(this).next(value).html(this.value + suffix);
+      });
+    });
+  };
+})(jQuery);
+/******/ })()
+;
+//# sourceMappingURL=customizer-range-value-control.js.map

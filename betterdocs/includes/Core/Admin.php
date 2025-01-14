@@ -386,7 +386,7 @@ class Admin extends Base {
 				[ $this->insights, 'notice' ],
 				[
 					'classes'     => 'updated put-dismiss-notice',
-					'start'       => strtotime( '12:00:00pm January 11, 2024' ),
+					'start'       => $notices->time(),
 					'refresh'     => BETTERDOCS_VERSION,
 					'dismissible' => true,
 					'do_action'   => 'wpdeveloper_notice_clicked_for_betterdocs',
@@ -395,50 +395,6 @@ class Admin extends Base {
 				]
 			);
 		}
-
-// 		$blackfriday_message = '<div class="betterdocs-notice-body"><p style="margin-top: 0; margin-bottom: 0;"><strong>🛍️ Black Friday Specials:</strong> Save up to 35% OFF on BetterDocs PRO plans & manage docs/FAQs seamlessly.</p><a class="button button-primary" href="https://betterdocs.co/bfcm24-pricing" target="_blank"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-// <path d="M15.7431 10.9381L15.904 9.35966C15.9898 8.5175 16.0464 7.9614 16.002 7.61102L16.0175 7.61112C16.7442 7.61112 17.3333 6.98929 17.3333 6.22223C17.3333 5.45517 16.7442 4.83334 16.0175 4.83334C15.2908 4.83334 14.7017 5.45517 14.7017 6.22223C14.7017 6.56914 14.8222 6.88634 15.0214 7.12975C14.7354 7.31608 14.3615 7.70926 13.7987 8.30106L13.7986 8.30107L13.7986 8.30108C13.365 8.75699 13.1482 8.98495 12.9064 9.02025C12.7724 9.03981 12.6358 9.01971 12.5121 8.96219C12.2887 8.85838 12.1398 8.57656 11.842 8.01293L10.2723 5.04204C10.0886 4.69433 9.9348 4.40331 9.79616 4.16913C10.3649 3.86285 10.7543 3.23869 10.7543 2.51852C10.7543 1.49577 9.96888 0.666672 8.99996 0.666672C8.03104 0.666672 7.24557 1.49577 7.24557 2.51852C7.24557 3.23869 7.63503 3.86285 8.20376 4.16913C8.06511 4.40333 7.91137 4.6943 7.72763 5.04204L6.1579 8.01293C5.8601 8.57656 5.71119 8.85838 5.48786 8.96219C5.36411 9.01971 5.22757 9.03981 5.09355 9.02025C4.85169 8.98495 4.63488 8.75699 4.20127 8.30107C3.63844 7.70928 3.26449 7.31608 2.97849 7.12975C3.17771 6.88634 3.29821 6.56914 3.29821 6.22223C3.29821 5.45517 2.70911 4.83334 1.98242 4.83334C1.25572 4.83334 0.666626 5.45517 0.666626 6.22223C0.666626 6.98929 1.25572 7.61112 1.98242 7.61112L1.99795 7.61102C1.95348 7.96139 2.01015 8.51749 2.09596 9.35965L2.2568 10.938C2.34608 11.8142 2.42032 12.6478 2.51125 13.3982H15.4887C15.5796 12.6478 15.6538 11.8142 15.7431 10.9381Z" fill="white"/>
-// <path d="M8.04563 17.3333H9.95429C12.4419 17.3333 13.6858 17.3333 14.5157 16.5492C14.8779 16.207 15.1073 15.59 15.2728 14.787H2.72711C2.89263 15.59 3.12201 16.207 3.48424 16.5492C4.31414 17.3333 5.55797 17.3333 8.04563 17.3333Z" fill="white"/>
-// </svg> Upgrade To PRO</a></div>';
-// 		$_blackfriday_notice = [
-// 			'thumbnail' => $this->assets->icon( 'betterdocs-logo.svg', true ),
-// 			'html'      => $blackfriday_message
-// 		];
-
-// 		$notices->add(
-// 			'blackfriday24',
-// 			$_blackfriday_notice,
-// 			[
-// 				'start'       => $notices->time(),
-// 				'recurrence'  => false,
-// 				'dismissible' => true,
-// 				'refresh'     => BETTERDOCS_VERSION,
-// 				'expire'      => strtotime( '11:59:59pm December 5, 2024' ),
-// 				'display_if'  => ! is_plugin_active( 'betterdocs-pro/betterdocs-pro.php' )
-// 			]
-// 		);
-
-		$holiday_message = '<div class="betterdocs-notice-body betterdocs-holiday-notice-body" style="margin-left: 30px;"><p style="margin-top: 0; margin-bottom: 0;"><strong>🎁 Save Flat 25% now</strong> & unlock AI-powered documentation layouts to manage multiple knowledge bases in 2025.</p><div class="betterdocs-notice-actions"><a class="button button-primary" href="https://betterdocs.co/holiday24-admin-notice" target="_blank"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.7431 10.9381L15.904 9.35966C15.9898 8.5175 16.0464 7.9614 16.002 7.61102L16.0175 7.61112C16.7442 7.61112 17.3333 6.98929 17.3333 6.22223C17.3333 5.45517 16.7442 4.83334 16.0175 4.83334C15.2908 4.83334 14.7017 5.45517 14.7017 6.22223C14.7017 6.56914 14.8222 6.88634 15.0214 7.12975C14.7354 7.31608 14.3615 7.70926 13.7987 8.30106L13.7986 8.30107L13.7986 8.30108C13.365 8.75699 13.1482 8.98495 12.9064 9.02025C12.7724 9.03981 12.6358 9.01971 12.5121 8.96219C12.2887 8.85838 12.1398 8.57656 11.842 8.01293L10.2723 5.04204C10.0886 4.69433 9.9348 4.40331 9.79616 4.16913C10.3649 3.86285 10.7543 3.23869 10.7543 2.51852C10.7543 1.49577 9.96888 0.666672 8.99996 0.666672C8.03104 0.666672 7.24557 1.49577 7.24557 2.51852C7.24557 3.23869 7.63503 3.86285 8.20376 4.16913C8.06511 4.40333 7.91137 4.6943 7.72763 5.04204L6.1579 8.01293C5.8601 8.57656 5.71119 8.85838 5.48786 8.96219C5.36411 9.01971 5.22757 9.03981 5.09355 9.02025C4.85169 8.98495 4.63488 8.75699 4.20127 8.30107C3.63844 7.70928 3.26449 7.31608 2.97849 7.12975C3.17771 6.88634 3.29821 6.56914 3.29821 6.22223C3.29821 5.45517 2.70911 4.83334 1.98242 4.83334C1.25572 4.83334 0.666626 5.45517 0.666626 6.22223C0.666626 6.98929 1.25572 7.61112 1.98242 7.61112L1.99795 7.61102C1.95348 7.96139 2.01015 8.51749 2.09596 9.35965L2.2568 10.938C2.34608 11.8142 2.42032 12.6478 2.51125 13.3982H15.4887C15.5796 12.6478 15.6538 11.8142 15.7431 10.9381Z" fill="white"/>
-<path d="M8.04563 17.3333H9.95429C12.4419 17.3333 13.6858 17.3333 14.5157 16.5492C14.8779 16.207 15.1073 15.59 15.2728 14.787H2.72711C2.89263 15.59 3.12201 16.207 3.48424 16.5492C4.31414 17.3333 5.55797 17.3333 8.04563 17.3333Z" fill="white"/>
-</svg>GET PRO Lifetime Access</a><a href="#" data-dismiss="1" class="dismiss-btn">No, I’ll Pay Full Price Later</a></div></div>';
-		$_holiday_notice = [
-			'thumbnail' => $this->assets->icon( 'betterdocs-logo.svg', true ),
-			'html'      => $holiday_message
-		];
-
-		$notices->add(
-			'holiday24',
-			$_holiday_notice,
-			[
-				'start'       => $notices->time(),
-				'recurrence'  => false,
-				'dismissible' => true,
-				'refresh'     => BETTERDOCS_VERSION,
-				'expire'      => strtotime( '11:59:59pm January 10, 2025' ),
-				'display_if'  => ! is_plugin_active( 'betterdocs-pro/betterdocs-pro.php' )
-			]
-		);
 
 		self::$cache_bank->create_account( $notices );
 		self::$cache_bank->calculate_deposits( $notices );
@@ -451,6 +407,7 @@ class Admin extends Base {
 					'betterdocs_page_betterdocs-faq',
 					'betterdocs_page_betterdocs-analytics',
 					'betterdocs_page_betterdocs-glossaries',
+					'betterdocs_page_betterdocs-ai-chatbot',
 					'edit-doc_category',
 					'edit-doc_tag'
 				],
@@ -464,14 +421,22 @@ class Admin extends Base {
 		$saved_settings     = get_option( 'betterdocs_settings', false );
 		$dark_mode          = isset( $saved_settings['dark_mode'] ) ? $saved_settings['dark_mode'] : false;
 		$dark_mode          = ! empty( $dark_mode ) ? boolval( $dark_mode ) : false;
-		$current_screen_id  = get_current_screen() != null ? str_replace( 'toplevel_page_', '', get_current_screen()->id ) : '';
-		$registered_screens = [
-			'betterdocs-settings',
-			'betterdocs-admin',
-			'betterdocs-analytics',
-			'betterdocs-glossaries'
-		];
-		$classes           .= ' betterdocs-admin ';
+		$current_screen_id  = get_current_screen() != null ? str_replace( 'betterdocs_page_', '', str_replace( 'toplevel_page_', '', get_current_screen()->id ) ) : '';
+        $registered_screens = [
+            'betterdocs-settings',
+            'betterdocs-admin',
+            'betterdocs-analytics',
+            'betterdocs-glossaries',
+            'betterdocs-faq',
+            'edit-doc_category',
+            'edit-doc_tag',
+            'edit-knowledge_base',
+            'betterdocs-ai-chatbot'
+        ];
+
+        if( in_array( $current_screen_id, $registered_screens ) ) {
+            $classes .= ' betterdocs-admin ';
+        }
 
 		if ( $dark_mode === true && in_array( $current_screen_id, $registered_screens ) ) {
 			$classes .= ' betterdocs-dark-mode ';
@@ -660,6 +625,9 @@ class Admin extends Base {
 			'free_version'                   => betterdocs()->version,
 			'generate_data_url'              => get_rest_url( null, '/betterdocs/v1/create-sample-docs' ),
 			'nonce'                          => wp_create_nonce( 'wp_rest' ),
+            'sync_nonce'                 => wp_create_nonce( 'ai_chatbot_embed' ),
+            'count_all_docs'             => wp_count_posts('docs')->publish,
+            'count_new_docs'             => count(get_option('saved_docs_post_ids', [])),
 			'admin_url'                      => admin_url(),
 			'ia_preview'                     => betterdocs()->settings->get( 'ia_enable_preview', false ),
 			'multiple_kb'                    => betterdocs()->settings->get( 'multiple_kb' ),
@@ -667,7 +635,8 @@ class Admin extends Base {
 			'dashboard_mode'                 => get_option( 'dashboard_mode' ),
 			'betterdocs_pro_plugin'          => betterdocs()->is_pro_active(),
 			'betterdocs_pro_version'         => betterdocs()->pro_version(),
-			'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' )
+			'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
+            'disabled_embed_model_option'=> get_option('disabled_embed_model_option'),
 			]
 		);
 
@@ -895,8 +864,9 @@ class Admin extends Base {
 			);
 		}
 
-		return apply_filters( 'betterdocs_admin_menu', $betterdocs_admin_pages );
-	}
+        return apply_filters( 'betterdocs_admin_menu', $betterdocs_admin_pages, [$this, 'output'], $parent_slug);
+
+    }
 
 	public function add_custom_classes_to_menu_items() {
 		global $menu, $submenu;
@@ -911,6 +881,7 @@ class Admin extends Base {
 			'betterdocs-analytics'     => 'betterdocs-analytics',
 			'betterdocs-faq'           => 'betterdocs-faq',
 			'betterdocs-glossaries'    => 'betterdocs-glossaries',
+			'betterdocs-ai-chatbot'    => 'betterdocs-ai-chatbot',
 			'edit-tags.php?taxonomy=knowledge_base&post_type=docs' => 'betterdocs-multiplekb'
 		];
 

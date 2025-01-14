@@ -1,1 +1,75 @@
-.docs-navigation{align-items:center;display:flex;justify-content:space-between;margin:20px 0}.docs-navigation a{align-items:center;color:#3f5876;display:flex;font-size:16px;font-weight:bolder;line-height:1.5em;position:relative;transition:all .3s;width:50%}.docs-navigation a:first-child{margin-right:20px}.docs-navigation a:last-child{text-align:right}.docs-navigation a:focus{outline:none}.docs-navigation a svg{min-width:16px;width:16px;fill:#5edf8e}.docs-navigation a[rel=prev] svg{margin-right:10px}.docs-navigation a[rel=next]{margin-left:auto}.docs-navigation a[rel=next] svg{margin-left:10px}.docs-navigation.layout-2{align-items:center;background:#f9fafb;border-radius:4px;display:flex;justify-content:space-between;margin:40px 0;padding:14px 16px}@media only screen and (max-width:1280px){.docs-navigation.layout-2{margin:30px 0;padding:10px 12px}}.docs-navigation.layout-2 a{color:#344054;display:inline-flex;font-size:14px;margin:0}@media only screen and (max-width:1280px){.docs-navigation.layout-2 a{font-size:12px}}.docs-navigation.layout-2 a svg{fill:#667085}
+/*!***************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./react-src/scss/template-parts/nav.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************************/
+.docs-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+.docs-navigation a {
+  width: 50%;
+  position: relative;
+  color: #3f5876;
+  font-size: 16px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  line-height: 1.5em;
+}
+.docs-navigation a:first-child {
+  margin-right: 20px;
+}
+.docs-navigation a:last-child {
+  text-align: right;
+}
+.docs-navigation a:focus {
+  outline: none;
+}
+.docs-navigation a svg {
+  min-width: 16px;
+  width: 16px;
+  fill: #5edf8e;
+}
+.docs-navigation a[rel=prev] svg {
+  margin-right: 10px;
+}
+.docs-navigation a[rel=next] {
+  margin-left: auto;
+}
+.docs-navigation a[rel=next] svg {
+  margin-left: 10px;
+}
+
+.docs-navigation.layout-2 {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #F9FAFB;
+  border-radius: 4px;
+  margin: 40px 0;
+}
+@media only screen and (max-width: 1280px) {
+  .docs-navigation.layout-2 {
+    padding: 10px 12px;
+    margin: 30px 0;
+  }
+}
+.docs-navigation.layout-2 a {
+  display: inline-flex;
+  margin: 0;
+  font-size: 14px;
+  color: #344054;
+}
+@media only screen and (max-width: 1280px) {
+  .docs-navigation.layout-2 a {
+    font-size: 12px;
+  }
+}
+.docs-navigation.layout-2 a svg {
+  fill: #667085;
+}
+
+/*# sourceMappingURL=navigation.css.map*/

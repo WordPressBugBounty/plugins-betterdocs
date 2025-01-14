@@ -1,1 +1,37 @@
-.reading-time{background-color:#f9fafb;border-radius:16px;display:inline-block;margin:0 0 24px;padding:5px 10px}@media only screen and (max-width:1280px){.reading-time{margin-bottom:18px}}.reading-time p{align-items:center;color:#667085;display:flex;font-size:14px;font-weight:400;justify-content:center;line-height:16px;margin:0;padding:0}.reading-time p svg{height:auto;margin-right:5px;width:14px}
+/*!********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./react-src/scss/shortcodes/reading-time.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************/
+.reading-time {
+  display: inline-block;
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  background-color: #F9FAFB;
+  border-radius: 16px;
+  margin: 0;
+  margin-bottom: 24px;
+}
+@media only screen and (max-width: 1280px) {
+  .reading-time {
+    margin-bottom: 18px;
+  }
+}
+.reading-time p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 0px;
+  margin: 0px;
+}
+.reading-time p svg {
+  margin-right: 5px;
+  width: 14px;
+  height: auto;
+}
+
+/*# sourceMappingURL=reading-time.css.map*/

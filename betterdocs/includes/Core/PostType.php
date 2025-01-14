@@ -1019,6 +1019,9 @@ class PostType extends Base {
 		if ( 'betterdocs_page_betterdocs-analytics' == $current_screen->id ) {
 			$submenu_file = 'betterdocs-analytics';
 		}
+		if ( 'betterdocs_page_betterdocs-ai-chatbot' == $current_screen->id ) {
+            $submenu_file = 'betterdocs-ai-chatbot';
+        }
 
 		if ( 'betterdocs_page_betterdocs-setup' == $current_screen->id ) {
 			$submenu_file = 'betterdocs-setup';

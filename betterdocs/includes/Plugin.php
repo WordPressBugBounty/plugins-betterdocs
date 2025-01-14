@@ -6,32 +6,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+use WPDeveloper\BetterDocs\Admin\Analytics;
+use WPDeveloper\BetterDocs\Admin\Customizer\Customizer;
+use WPDeveloper\BetterDocs\Admin\HelpScoutMigration;
+use WPDeveloper\BetterDocs\Admin\ReportEmail;
 use WPDeveloper\BetterDocs\Core\Admin;
-use WPDeveloper\BetterDocs\Core\Query;
-use WPDeveloper\BetterDocs\Core\Roles;
-use WPDeveloper\BetterDocs\Utils\Views;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Core\Install;
+use WPDeveloper\BetterDocs\Core\KBMigration;
+use WPDeveloper\BetterDocs\Core\Query;
 use WPDeveloper\BetterDocs\Core\Request;
 use WPDeveloper\BetterDocs\Core\Rewrite;
+use WPDeveloper\BetterDocs\Core\Roles;
 use WPDeveloper\BetterDocs\Core\Scripts;
-use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Core\Settings;
-use WPDeveloper\BetterDocs\Utils\Enqueue;
-use WPDeveloper\BetterDocs\Editors\Editor;
-use WPDeveloper\BetterDocs\Utils\Database;
-use WPDeveloper\BetterDocs\Admin\Analytics;
-use WPDeveloper\BetterDocs\Core\KBMigration;
-use WPDeveloper\BetterDocs\Core\WriteWithAI;
-use WPDeveloper\BetterDocs\Admin\ReportEmail;
-use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
 use WPDeveloper\BetterDocs\Core\ShortcodeFactory;
-use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
-use WPDeveloper\BetterDocs\Admin\HelpScoutMigration;
+use WPDeveloper\BetterDocs\Core\WriteWithAI;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
-use WPDeveloper\BetterDocs\Admin\Customizer\Customizer;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
+use WPDeveloper\BetterDocs\Editors\Editor;
+use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
+use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
 use WPDeveloper\BetterDocs\Modules\StyleHandler as ModulesStyleHandler;
+use WPDeveloper\BetterDocs\Utils\Database;
+use WPDeveloper\BetterDocs\Utils\Enqueue;
+use WPDeveloper\BetterDocs\Utils\Helper;
+use WPDeveloper\BetterDocs\Utils\Views;
 
 final class Plugin {
 	private static $_instance = null;
@@ -117,7 +117,7 @@ final class Plugin {
 	 * Plugin Version
 	 * @var string
 	 */
-	public $version = '3.8.7';
+	public $version = '3.8.8';
 
 	/**
 	 * WriteWithAI Class
@@ -408,7 +408,9 @@ final class Plugin {
 			'toplevel_page_betterdocs-admin',
 			'betterdocs_page_betterdocs-analytics',
 			'betterdocs_page_betterdocs-faq',
-			'betterdocs_page_betterdocs-glossaries'
+			'betterdocs_page_betterdocs-glossaries',
+            'betterdocs_page_betterdocs-ai-chatbot',
+
 		];
 
 		if ( $admin_check ) {
@@ -428,7 +430,9 @@ final class Plugin {
 			'betterdocs_page_betterdocs-settings',
 			'betterdocs_page_betterdocs-analytics',
 			'betterdocs_page_betterdocs-faq',
-			'betterdocs_page_betterdocs-glossaries'
+			'betterdocs_page_betterdocs-glossaries',
+            'betterdocs_page_betterdocs-ai-chatbot',
+
 		];
 
 		$current_screen_id = get_current_screen() != null ? get_current_screen()->id : '';
