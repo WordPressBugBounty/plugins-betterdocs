@@ -219,6 +219,7 @@ class Settings extends Base {
 			'title_link_ctc'                       => true,
 			'enable_breadcrumb'                    => true,
 			'breadcrumb_home_text'                 => __( 'Home', 'betterdocs' ),
+			'enable_breadcrumb_home_text'		   => true,
 			'breadcrumb_home_url'                  => get_home_url(),
 			'enable_breadcrumb_category'           => true,
 			'enable_breadcrumb_title'              => true,
@@ -1363,19 +1364,34 @@ class Settings extends Base {
 																	'default'                    => 1,
 																	'priority'                   => 1
 																],
+																'enable_breadcrumb_home_text' => [
+																	'name'                       => 'enable_breadcrumb_home_text',
+																	'type'                       => 'toggle',
+																	'label'                      => __( 'Enable Breadcrumb Home Text', 'betterdocs' ),
+																	'enable_disable_text_active' => true,
+																	'default'                    => true,
+																	'priority'                   => 2,
+																	'rules'    					 => Rules::is( 'enable_breadcrumb', true )
+																],
 																'breadcrumb_home_text'       => [
 																	'name'     => 'breadcrumb_home_text',
 																	'type'     => 'text',
 																	'label'    => __( 'Breadcrumb Home Text', 'betterdocs' ),
 																	'default'  => __( 'Home', 'betterdocs' ),
-																	'priority' => 2,
-																	'rules'    => Rules::is( 'enable_breadcrumb', true )
+																	'priority' => 3,
+																	'rules'    =>  Rules::logicalRule(
+																		[
+																			Rules::is( 'enable_breadcrumb', true ),
+																			Rules::is( 'enable_breadcrumb_home_text', true )
+																		],
+																		'and'
+																	)
 																],
 																'breadcrumb_home_url'        => [
 																	'name'     => 'breadcrumb_home_url',
 																	'type'     => 'text',
 																	'label'    => __( 'Breadcrumb Home URL', 'betterdocs' ),
-																	'priority' => 3,
+																	'priority' => 4,
 																	'default'  => get_home_url(),
 																	'rules'    => Rules::is( 'enable_breadcrumb', true )
 																],
@@ -1385,7 +1401,7 @@ class Settings extends Base {
 																	'label'                      => __( 'Category on Breadcrumb', 'betterdocs' ),
 																	'enable_disable_text_active' => true,
 																	'default'                    => 1,
-																	'priority'                   => 4,
+																	'priority'                   => 5,
 																	'rules'                      => Rules::is( 'enable_breadcrumb', true )
 																],
 																'enable_breadcrumb_title'    => [
@@ -1394,7 +1410,7 @@ class Settings extends Base {
 																	'label'                      => __( 'Title on Breadcrumb', 'betterdocs' ),
 																	'enable_disable_text_active' => true,
 																	'default'                    => 1,
-																	'priority'                   => 5,
+																	'priority'                   => 6,
 																	'rules'                      => Rules::is( 'enable_breadcrumb', true )
 																]
 															]

@@ -96,6 +96,7 @@ class Scripts extends Base {
 			'betterdocsSearchModalConfig',
 			[
 				'ajax_url'               => admin_url( 'admin-ajax.php' ),
+				'rest_url' 			     => esc_url_raw(rest_url()),
 				'advance_search'         => $this->settings->get( 'advance_search' ),
 				'child_category_exclude' => $this->settings->get( 'child_category_exclude' ),
 				'popular_keyword_limit'  => $this->settings->get( 'popular_keyword_limit' ),

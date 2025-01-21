@@ -15,7 +15,7 @@ if ( ! $email_feedback ) {
 	$flink_url      = betterdocs()->settings->get( 'feedback_url' );
 	$flink_url_href = $flink_url ? esc_url( $flink_url ) : '#betterdocs-form-modal';
 
-	$shortcode_attributes = [ 'button_text' => $button_text ];
+	$shortcode_attributes = [ 'button_text' => $button_text, 'feedback_form_name_label_text' => $feedbackFormNameLabelText, 'feedback_form_email_label_text' => $feedbackFormEmailLabelText, 'feedback_form_message_label_text' => $feedbackFormMessageLabelText ];
 
 	$flink_attribute = [
 		'class' => [ 'feedback-form-link' ],

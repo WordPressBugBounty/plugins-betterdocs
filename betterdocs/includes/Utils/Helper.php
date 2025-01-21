@@ -258,7 +258,7 @@ class Helper extends Base {
 
             if ( is_array( $posts ) && ! empty( $posts ) ) {
                 foreach ( $posts as $post ) {
-                    $description               = \json_decode( $post['meta_data'], true );
+                    $description               = isset($post['meta_data']) ? \json_decode( $post['meta_data'], true ) : '';
                     $glossary_term_description = $description['glossary_term_description'] ?? '';
 
                     // Remove any <p> tags or other unwanted HTML tags

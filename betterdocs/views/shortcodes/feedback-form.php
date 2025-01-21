@@ -3,19 +3,19 @@
 	<form id="betterdocs-feedback-form" class="betterdocs-feedback-form" action="" method="post">
 		<p>
 			<label for="message_name" class="form-name">
-				<?php esc_html_e( 'Name', 'betterdocs' ); ?>: <span>*</span> <br>
+				<?php echo $feedback_form_name_label_text; ?> <span>*</span> <br>
 				<input type="text" id="message_name" name="message_name" aria-label="<?php echo esc_html( 'Name', 'betterdocs' ); ?>" value="<?php echo esc_html( $name ); ?>" />
 			</label>
 		</p>
 		<p>
 			<label for="message_email" class="form-email">
-				<?php esc_html_e( 'Email', 'betterdocs' ); ?>: <span>*</span> <br>
+				<?php echo $feedback_form_email_label_text; ?> <span>*</span> <br>
 				<input type="text" id="message_email" name="message_email" aria-label="<?php echo esc_html( 'Email', 'betterdocs' ); ?>" value="<?php echo esc_html( $email ); ?>" />
 			</label>
 		</p>
 		<p>
 			<label for="message_text" class="form-message">
-				<?php esc_html_e( 'Message', 'betterdocs' ); ?>: <span>*</span> <br>
+				<?php echo $feedback_form_message_label_text; ?> <span>*</span> <br>
 				<textarea type="text" id="message_text" aria-label="<?php echo esc_html( 'Message', 'betterdocs' ); ?>" name="message_text"></textarea>
 			</label>
 		</p>

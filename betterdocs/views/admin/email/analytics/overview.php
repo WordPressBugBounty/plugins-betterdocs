@@ -100,7 +100,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $views );
-									echo esc_html( $view_arrow );
+									echo $view_arrow;
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $view_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_views ); ?>%
@@ -119,7 +119,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $total_search );
-									echo esc_html( $search_arrow );
+									echo $search_arrow;
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $search_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_total_search ); ?>%
@@ -141,7 +141,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $reactions );
-									echo esc_html( $reactions_arrow );
+									echo $reactions_arrow;
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $reactions_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_reactions ); ?>%
@@ -162,7 +162,7 @@ if ( $percentage_total_docs == '0.00' ) {
 								style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $total_docs );
-									echo esc_html( $docs_arrow );
+									echo $docs_arrow;
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $docs_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_total_docs ); ?>%

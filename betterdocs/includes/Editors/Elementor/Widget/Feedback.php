@@ -54,6 +54,35 @@ class Feedback extends Widget_Base {
 			]
 		);
 
+
+		$this->add_control(
+			'feedback_form_name_label_text',
+			[
+				'label'   => __( 'Label Name Text', 'betterdocs' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => esc_html__( 'Name:', 'betterdocs' )
+			]
+		);
+
+
+		$this->add_control(
+			'feedback_form_email_label_text',
+			[
+				'label'   => __( 'Label Email Text', 'betterdocs' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => esc_html__( 'Email:', 'betterdocs' )
+			]
+		);
+
+		$this->add_control(
+			'feedback_form_message_label_text',
+			[
+				'label'   => __( 'Label Message Text', 'betterdocs' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => esc_html__( 'Message:', 'betterdocs' )
+			]
+		);
+
 		$this->add_control(
 			'feedback_link_title',
 			[

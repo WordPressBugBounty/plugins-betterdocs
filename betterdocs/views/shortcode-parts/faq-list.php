@@ -8,10 +8,15 @@ if ( $faqs->have_posts() ) {
 	$faq_markup = '';
 	while ( $faqs->have_posts() ) :
 		$faqs->the_post();
+		$faq_toggle = (bool)get_post_meta(get_the_ID(), 'faq_open_by_default', true);
 		echo '<li>';
-		echo '<div class="betterdocs-faq-group">';
-		$view_object->get( 'shortcode-parts/faq-title' );
-		$view_object->get( 'shortcode-parts/faq-content' );
+		echo '<div class="betterdocs-faq-group'.($faq_toggle ? ' active' : '').'">';
+		$view_object->get( 'shortcode-parts/faq-title', [
+			'faq_toggle' => $faq_toggle
+		] );
+		$view_object->get( 'shortcode-parts/faq-content', [
+			'faq_toggle' => $faq_toggle
+		] );
 		echo '</div>';
 		echo '</li>';
 

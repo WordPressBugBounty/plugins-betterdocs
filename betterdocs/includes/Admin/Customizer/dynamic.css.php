@@ -10151,6 +10151,133 @@ $css->add_rule(
 );
 //FAQ LAYOUT 3 Controls End
 
+//FAQ LAYOUT 4 Controls Start
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title',
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_category_title_color_layout_4'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab.active .faq-tab-title',
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_category_title_active_color_layout_4'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_category_name_font_size_layout_4'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab',
+	$css->properties(
+		[
+			'padding' => 'betterdocs_faq_category_name_padding_layout_4'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name',
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_list_color_layout_4'
+		],
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group.active',
+	$css->properties(
+		[
+			'background' => 'betterdocs_faq_list_content_background_color_layout_4'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content',
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_list_content_color_layout_4'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_list_content_font_size_layout_4'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_list_font_size_layout_4'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'',
+	$css->properties(
+		[
+			'' => ''
+		],
+		''
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group',
+	$css->properties(
+		[
+			'background' => 'betterdocs_faq_list_background_color_layout_4'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group',
+	$css->properties(
+		[
+			'padding' => 'betterdocs_faq_list_padding_layout_4'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab.active',
+	$css->properties(
+		[
+			'background' => 'betterdocs_faq_category_active_title_background_color_layout_4'
+		]
+	)
+);
+
+//FAQ LAYOUT 4 Controls End
+
 //Archive Page Pagination Controls
 $css->add_rule(
 	'.betterdocs-category-archive-wrapper .betterdocs-pagination ul li a',

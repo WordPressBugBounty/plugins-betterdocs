@@ -13,5 +13,7 @@ if ( $enable && $have_posts && ! empty( $faq_terms ) ) {
 		echo do_shortcode( '[betterdocs_faq_list_classic ' . $attributes . ']' );
 	} elseif ( $layout === 'layout-3' ) {
 		echo do_shortcode( '[betterdocs_faq_list_layout_3 ' . $attributes . ']' );
+	} elseif ( $layout === 'layout-4' ) {
+		echo do_shortcode( '[betterdocs_faq_tab ' . $attributes . ']' );
 	}
 }

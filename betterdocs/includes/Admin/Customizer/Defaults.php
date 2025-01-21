@@ -277,6 +277,9 @@ class Defaults extends Base {
 			'betterdocs_single_content_font_size'          => '16',
 			'betterdocs_single_content_font_color'         => '#4d4d4d',
 			'betterdocs_doc_single_entry_footer'           => '',
+			'single_doc_feedback_label_name_text' 		  => __('Name:', 'betterdocs'),
+			'single_doc_feedback_label_email_text'		  => __('Email:', 'betterdocs'),
+			'single_doc_feedback_label_message_text'	   => __('Message:', 'betterdocs'),
 			'betterdocs_social_share_title'                => '',
 			'betterdocs_post_social_share'                 => true,
 			'betterdocs_social_sharing_text'               => __( 'Share This Article :', 'betterdocs' ),
@@ -1226,6 +1229,28 @@ class Defaults extends Base {
 			'archive_docs_pagination_wrapper_active_border_color' => '#00b884',
 			'archive_docs_pagination_wrapper_background_color_sleek' => '#f6f7f8',
 			'archive_docs_pagination_wrapper_background_color' => '#fff',
+			'betterdocs_faq_category_title_color_layout_4' => '#667085',
+			'betterdocs_faq_category_title_active_color_layout_4' => '#344054',
+			'betterdocs_faq_category_name_font_size_layout_4' => '18',
+			'betterdocs_faq_category_name_padding_layout_4' => [
+				'input1' => 16,
+				'input2' => 16,
+				'input3' => 16,
+				'input4' => 16
+			],
+			'betterdocs_faq_list_color_layout_4' => '#172b4d',
+			'betterdocs_faq_list_content_background_color_layout_4' => '#f6fef9',
+			'betterdocs_faq_list_content_color_layout_4' => '#3a4b68',
+			'betterdocs_faq_list_content_font_size_layout_4' => '16',
+			'betterdocs_faq_list_font_size_layout_4' => '18',
+			'betterdocs_faq_list_background_color_layout_4' => '#0000',
+			'betterdocs_faq_list_padding_layout_4' => [
+				'input1' => 24,
+				'input2' => 24,
+				'input3' => 24,
+				'input4' => 24
+			],
+			'betterdocs_faq_category_active_title_background_color_layout_4' => '#E8FFF4'
 		];
 
 		if ( ! empty( $key ) ) {

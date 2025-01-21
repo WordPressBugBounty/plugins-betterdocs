@@ -344,7 +344,7 @@ class Glossaries extends Base {
 
 		// Set the custom field description
 		$term_id = $new_term['term_id'];
-		update_term_meta( $term_id, 'glossary_term_description', wp_kses_post( $description ) );
+		update_term_meta( $term_id, 'glossary_term_description', $description ); //phpcs:ignore inline styles are need for the front-end
 
 		return true;
 	}
@@ -379,7 +379,7 @@ class Glossaries extends Base {
 			return $update;
 		} else {
 			// Update the custom field description
-			update_term_meta( $term_id, 'glossary_term_description', wp_kses_post( $description ) );
+			update_term_meta( $term_id, 'glossary_term_description', $description );
 			return true;
 		}
 	}

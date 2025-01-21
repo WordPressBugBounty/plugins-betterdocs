@@ -157,8 +157,10 @@ class Request extends Base {
 	public function parse( $wp ) {
 		static::$already_parsed = true;
 
-		$this->permalink_magic( $wp );
-	}
+        $this->perma_structure = apply_filters('docs_rewrite_rules', $this->perma_structure);
+
+        $this->permalink_magic( $wp );
+    }
 
 	protected function permalink_magic( $wp ) {
 		$this->wp_query_vars = $wp->query_vars;

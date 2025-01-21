@@ -143,6 +143,10 @@ class FaqBuilder extends Section {
 							'label' => __( 'Classic Layout', 'betterdocs' ),
 							'image' => $this->assets->icon( 'customizer/faq/layout-2.png', true )
 						],
+						'layout-4' => [
+							'label' => __( 'Retro Layout', 'betterdocs' ),
+							'image' => $this->assets->icon( 'customizer/faq/layout-4.png', true )
+						],
 					]
 				]
 			)
@@ -1148,6 +1152,355 @@ class FaqBuilder extends Section {
 					'section'      => 'betterdocs_faq_section',
 					'settings'     => 'betterdocs_faq_list_padding_layout_3',
 					'priority'     => 661,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 24,
+						'input2' => 14,
+						'input3' => 24,
+						'input4' => 14
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_category_title_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_title_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_title_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_category_title_color_layout_4',
+				[
+					'label'    => __( 'Group Title Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'priority' => 662,
+					'settings' => 'betterdocs_faq_category_title_color_layout_4'
+				]
+			)
+		);
+	}
+
+	public function faq_category_title_background_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_active_title_background_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_active_title_background_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_category_active_title_background_color_layout_4',
+				[
+					'label'    => __( 'Group Title Active Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'priority' => 662,
+					'settings' => 'betterdocs_faq_category_active_title_background_color_layout_4'
+				]
+			)
+		);
+	}
+
+	public function faq_category_title_active_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_title_active_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_title_active_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_category_title_active_color_layout_4',
+				[
+					'label'    => __( 'Group Active Title Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'priority' => 662,
+					'settings' => 'betterdocs_faq_category_title_active_color_layout_4'
+				]
+			)
+		);
+	}
+
+	public function faq_category_name_font_size_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_name_font_size_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_name_font_size_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_category_name_font_size_layout_4',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_category_name_font_size_layout_4',
+					'label'       => __( 'Group Title Font Size', 'betterdocs' ),
+					'priority'    => 663,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px' // optional suffix
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_category_name_padding_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_name_padding_layout_4',
+			[
+				'default'    => $this->defaults['betterdocs_faq_category_name_padding_layout_4'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_category_name_padding_layout_4',
+				[
+					'label'        => __( 'Group Title Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_category_name_padding_layout_3',
+					'priority'     => 664,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 20,
+						'input2' => 20,
+						'input3' => 20,
+						'input4' => 20
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_color_layout_4',
+				[
+					'label'    => __( 'FAQ List Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_color_layout_4',
+					'priority' => 665
+				]
+			)
+		);
+	}
+
+	public function faq_list_background_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_background_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_background_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_background_color_layout_4',
+				[
+					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_background_color_layout_4',
+					'priority' => 666
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_background_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_background_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_background_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_background_color_layout_4',
+				[
+					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_content_background_color_layout_4',
+					'priority' => 667
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_color_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_color_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_color_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_color_layout_4',
+				[
+					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_content_color_layout_4',
+					'priority' => 668
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_font_size_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_font_size_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_font_size_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_font_size_layout_4',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_list_content_font_size_layout_4',
+					'label'       => __( 'FAQ Content Font Size', 'betterdocs' ),
+					'priority'    => 669,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px' //optional suffix
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_font_size_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_font_size_layout_4',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_font_size_layout_4'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_list_font_size_layout_4',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_list_font_size_layout_4',
+					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
+					'priority'    => 670,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px' // optional suffix
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_padding_layout_4() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_padding_layout_4',
+			[
+				'default'    => $this->defaults['betterdocs_faq_list_padding_layout_4'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_list_padding_layout_4',
+				[
+					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_list_padding_layout_3',
+					'priority'     => 671,
 					'input_fields' => [
 						'input1' => __( 'top', 'betterdocs' ),
 						'input2' => __( 'right', 'betterdocs' ),

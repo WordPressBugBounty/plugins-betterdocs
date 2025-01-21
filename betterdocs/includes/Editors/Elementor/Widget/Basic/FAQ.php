@@ -62,7 +62,8 @@ class FAQ extends Widget_Base {
 				'options'     => [
 					'layout-3' => __( 'Abstract Layout', 'betterdocs' ),
 					'layout-1' => __( 'Modern Layout', 'betterdocs' ),
-					'layout-2' => __( 'Classic Layout', 'betterdocs' )
+					'layout-2' => __( 'Classic Layout', 'betterdocs' ),
+					'layout-4' => __( 'Tab Layout', 'betterdocs' )
 				],
 				'default'     => 'layout-1',
 				'label_block' => true
@@ -200,7 +201,10 @@ class FAQ extends Widget_Base {
 			'faq_box_title_section',
 			[
 				'label' => __( 'FAQ Group Title', 'betterdocs' ),
-				'tab'   => Controls_Manager::TAB_STYLE
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-1', 'layout-2', 'layout-3']
+				]
 			]
 		);
 
@@ -237,10 +241,57 @@ class FAQ extends Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
+			'faq_box_title_section_layout_4',
+			[
+				'label' => __( 'FAQ Group Title', 'betterdocs' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-4']
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_color_layout_4',
+			[
+				'label'     => esc_html__( 'Title Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title, .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab .faq-tab-title' => 'color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_color_hover_layout_4',
+			[
+				'label'     => esc_html__( 'Title Hover Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title:hover' => 'color:{{VALUE}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab .faq-tab-title:hover' => 'color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'     => 'faq_box_title_typography_layout_4',
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title, .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab .faq-tab-title'
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
 			'faq_box_style_section',
 			[
 				'label' => __( 'FAQ List', 'betterdocs' ),
-				'tab'   => Controls_Manager::TAB_STYLE
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-1', 'layout-2', 'layout-3']
+				]
 			]
 		);
 
@@ -346,10 +397,125 @@ class FAQ extends Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
+			'faq_box_style_section_layout_4',
+			[
+				'label' => __( 'FAQ List', 'betterdocs' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-4']
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_padding_layout_4',
+			[
+				'label'      => __( 'Padding', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_margin_layout_4',
+			[
+				'label'      => __( 'Margin', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				]
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'     => 'faq_box_typography_layout_4',
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name'
+			]
+		);
+
+		$this->add_control(
+			'faq_box_term_title_color_layout_4',
+			[
+				'label'     => esc_html__( 'Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name' => 'color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->start_controls_tabs( 'faq_tabs_layout_4' );
+
+		// Normal State Tab
+		$this->start_controls_tab(
+			'faq_box_normal_layout_4',
+			[ 'label' => esc_html__( 'Normal', 'betterdocs' ) ]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name'     => 'faq_box_border_normal_layout_4',
+				'label'    => esc_html__( 'Border', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group'
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name'     => 'faq_box_background_normal_layout_4',
+				'label'    => esc_html__( 'Background', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group'
+			]
+		);
+
+		$this->end_controls_tab();
+
+		// Hover State Tab
+		$this->start_controls_tab(
+			'faq_box_hover_layout_4',
+			[ 'label' => esc_html__( 'Hover', 'betterdocs' ) ]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name'     => 'faq_box_border_hover_layout_4',
+				'label'    => esc_html__( 'Border', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group:hover'
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name'     => 'faq_box_background_hover_layout_4',
+				'label'    => esc_html__( 'Background', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group:hover'
+			]
+		);
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
 			'faq_box_content_section',
 			[
 				'label' => __( 'FAQ Content', 'betterdocs' ),
-				'tab'   => Controls_Manager::TAB_STYLE
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-1', 'layout-2', 'layout-3']
+				]
 			]
 		);
 
@@ -408,10 +574,78 @@ class FAQ extends Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
+			'faq_box_content_section_layout_4',
+			[
+				'label' => __( 'FAQ Content', 'betterdocs' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-4']
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_content_section_padding_layout_4',
+			[
+				'label'      => __( 'Padding', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_content_section_margin_layout_4',
+			[
+				'label'      => __( 'Margin', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				]
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name'     => 'faq_box_content_section_background_layout_4',
+				'label'    => esc_html__( 'Background', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group.active'
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'     => 'faq_box_content_section_typography_layout_4',
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content'
+			]
+		);
+
+		$this->add_control(
+			'faq_box_content_section_color_layout_4',
+			[
+				'label'     => esc_html__( 'Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-list-content .betterdocs-faq-list li .betterdocs-faq-group .betterdocs-faq-main-content' => 'color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
 			'faq_box_content_icon',
 			[
 				'label' => __( 'FAQ List Icon', 'betterdocs' ),
-				'tab'   => Controls_Manager::TAB_STYLE
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-1', 'layout-2', 'layout-3']
+				]
 			]
 		);
 
@@ -461,6 +695,66 @@ class FAQ extends Widget_Base {
 					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-iconminus path'  => 'fill:{{VALUE}} ! important;',
 					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-iconplus g' => 'stroke:{{VALUE}} ! important;',
 					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-iconminus g'  => 'stroke:{{VALUE}} ! important;'
+				]
+			]
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'faq_group_icon_layout_4',
+			[
+				'label' => __( 'FAQ Group Icon', 'betterdocs' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'faq_layout_selection' => ['layout-4']
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_content_icon_height_layout_4',
+			[
+				'label'      => esc_html__( 'Icon Height', 'betterdocs' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
+				'range'      => [
+					'px' => [
+						'max' => 500
+					]
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-icon svg' => 'height:{{SIZE}}{{UNIT}}; max-height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab img' => 'height:{{SIZE}}{{UNIT}}; max-height: {{SIZE}}{{UNIT}};',
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'faq_box_content_icon_width_layout_4',
+			[
+				'label'      => esc_html__( 'Icon Width', 'betterdocs' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em' ],
+				'range'      => [
+					'px' => [
+						'max' => 500
+					]
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-icon svg' => 'width:{{SIZE}}{{UNIT}}; max-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab img' => 'width:{{SIZE}}{{UNIT}}; max-width: {{SIZE}}{{UNIT}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_content_icon_color_layout_4',
+			[
+				'label'     => esc_html__( 'Icon Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-icon svg g path' => 'fill:{{VALUE}} ! important;'
 				]
 			]
 		);

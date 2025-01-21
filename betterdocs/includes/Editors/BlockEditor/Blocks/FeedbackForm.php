@@ -28,7 +28,10 @@ class FeedbackForm extends Block {
 			'blockId'     => '',
 			'buttonText'  => __( 'Submit', 'betterdocs' ),
 			'formContent' => __( 'Still stuck? How can we help?', 'betterdocs' ),
-			'formTitle'   => __( 'How can we help?', 'betterdocs' )
+			'formTitle'   => __( 'How can we help?', 'betterdocs' ),
+			'feedbackFormNameLabelText'    => __( 'Name:', 'betterdocs' ),
+            'feedbackFormEmailLabelText'   => __( 'Email:', 'betterdocs' ),
+            'feedbackFormMessageLabelText' => __( 'Message:', 'betterdocs' )
 		];
 	}
 

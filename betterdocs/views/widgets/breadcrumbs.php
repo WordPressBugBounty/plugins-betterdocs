@@ -13,6 +13,7 @@ if ( is_front_page() ) {
 	$post_type                  = 'docs';
 	$docs_page_title            = __( 'Docs', 'betterdocs' );
 	$li_classes                 = [ 'item-cat', 'item-custom-post-type-docs' ];
+	$enable_breadcrumb_home_text = betterdocs()->settings->get('enable_breadcrumb_home_text', true);
 
 if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 	$post_type_object = get_post_type_object( $post_type );
@@ -38,6 +39,10 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 			'text'       => $docs_page_title
 		]
 	];
+
+	if( ! $enable_breadcrumb_home_text ) {
+		unset($breadcrumbs[0]);
+	}
 
 	$breadcrumbs = apply_filters( 'betterdocs_breadcrumb_before_archives', $breadcrumbs );
 	if ( $taxanomy == 'doc_category' || is_tax( 'doc_tag' ) ) {

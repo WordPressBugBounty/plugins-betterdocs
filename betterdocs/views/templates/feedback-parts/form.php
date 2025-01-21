@@ -15,7 +15,11 @@ if ( ! $email_feedback ) {
 	$flink_url      = betterdocs()->settings->get( 'feedback_url' );
 	$flink_url_href = $flink_url ? esc_url( $flink_url ) : '#betterdocs-form-modal';
 
-	$shortcode_attributes = [];
+	$shortcode_attributes = [
+		'feedback_form_name_label_text' => betterdocs()->customizer->defaults->get('single_doc_feedback_label_name_text'),
+		'feedback_form_email_label_text' => betterdocs()->customizer->defaults->get('single_doc_feedback_label_email_text'),
+		'feedback_form_message_label_text' => betterdocs()->customizer->defaults->get('single_doc_feedback_label_message_text')
+	];
 
 	/**
 	 * FOR ELEMENTOR WIDGET
@@ -29,7 +33,10 @@ if ( isset( $widget ) && $widget instanceof \WPDeveloper\BetterDocs\Editors\Elem
 	$feedback_title     = $settings['feedback_form_title'];
 
 	$shortcode_attributes = [
-		'button_text' => $settings['feedback_form_button_text']
+		'button_text' 					   => $settings['feedback_form_button_text'],
+		'feedback_form_name_label_text'    => $settings['feedback_form_name_label_text'],
+		'feedback_form_email_label_text'   => $settings['feedback_form_email_label_text'],
+		'feedback_form_message_label_text' => $settings['feedback_form_message_label_text']
 	];
 
 	$flink_text = $settings['feedback_link_title'];
@@ -92,7 +99,7 @@ if ( isset( $widget ) && $widget instanceof \WPDeveloper\BetterDocs\Editors\Elem
 				<?php
 					echo wp_sprintf(
 						'<%1$s class="feedback-form-title">%2$s</%1$s>',
-						$feedback_title_tag, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
+						$feedback_title_tag, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						isset( $feedback_title ) ? esc_html( $feedback_title ) : esc_html__( 'How can we help?', 'betterdocs' )
 					);
 

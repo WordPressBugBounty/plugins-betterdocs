@@ -82,6 +82,7 @@ class FAQBuilder extends Base {
 		register_term_meta( $this->category, 'order', [ 'show_in_rest' => true ] );
 		register_term_meta( $this->category, 'status', [ 'show_in_rest' => true ] );
 		register_term_meta( $this->category, '_betterdocs_faq_order', [ 'show_in_rest' => true ] );
+		register_term_meta( $this->category, 'faq_group_icon', [ 'show_in_rest' => true ]);
 
 		/**
 		 * Register post type
@@ -123,6 +124,7 @@ class FAQBuilder extends Base {
 		];
 
 		register_post_type( $this->post_type, $args );
+		register_post_meta( $this->post_type, 'faq_open_by_default', [ 'show_in_rest' => true, 'single' => true ] );
 	}
 
 	/**
@@ -404,13 +406,15 @@ class FAQBuilder extends Base {
 		$description = $params->get_param( 'description' );
 		$description = ( $description !== 'undefined' ) ? $description : '';
 		$slug        = $params->get_param( 'slug' );
-		return $this->insert_betterdocs_faq_category( $title, $description, $slug );
+		$group_icon_url = $params->get_param('group_icon_url');
+		return $this->insert_betterdocs_faq_category( $title, $description, $group_icon_url, $slug );
 	}
 
 	public function update_faq_category( $params ) {
 		$term_id     = $params->get_param( 'term_id' );
 		$title       = $params->get_param( 'title' );
 		$description = $params->get_param( 'description' );
+		$group_icon_url = $params->get_param('group_icon_url');
 		$description = ( $description !== 'undefined' ) ? $description : '';
 		$slug        = $params->get_param( 'slug' );
 		$update      = wp_update_term(
@@ -426,6 +430,11 @@ class FAQBuilder extends Base {
 		if ( is_wp_error( $update ) ) {
 			return $update;
 		} else {
+			$term_id = isset( $update['term_id'] ) ?  $update['term_id']  : 0;
+			if( $term_id != 0 ) {
+				$previous_icon_url = get_term_meta($term_id, 'faq_group_icon', true);
+				update_term_meta($term_id, 'faq_group_icon', $group_icon_url, $previous_icon_url);
+			}
 			return true;
 		}
 	}
@@ -447,7 +456,7 @@ class FAQBuilder extends Base {
 		}
 	}
 
-	public function insert_betterdocs_faq_category( $title, $description, $slug = '' ) {
+	public function insert_betterdocs_faq_category( $title, $description, $icon_url, $slug = '' ) {
 		$insert_term = wp_insert_term(
 			$title,
 			'betterdocs_faq_category',
@@ -460,6 +469,10 @@ class FAQBuilder extends Base {
 		if ( is_wp_error( $insert_term ) ) {
 			return $insert_term;
 		} else {
+			$term_id = isset( $insert_term['term_id'] ) ?  $insert_term['term_id']  : 0;
+			if( $term_id != 0 ) {
+				update_term_meta($term_id, 'faq_group_icon', $icon_url);
+			}
 			return true;
 		}
 	}

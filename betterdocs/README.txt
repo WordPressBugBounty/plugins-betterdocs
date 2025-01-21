@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 3.8.8
+Stable tag: 3.8.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -226,6 +226,16 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.8.9 - 21/01/2024 =
+
+- Added: New FAQ Retro Layout
+- Added: Dropdown option to display all Admin Panel FAQs by page number
+- Added: Option to remove “Home” from breadcrumbs from Settings
+- Added: Option to enable default expanded FAQ group
+- Added: Option to change Feedback Form labels
+- Fixed: Search Fetch URl Related Issue
+- Few minor bug fixes and improvements
 
 = 3.8.8 - 14/01/2024 =
 

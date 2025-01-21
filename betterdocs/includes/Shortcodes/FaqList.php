@@ -55,9 +55,9 @@ class FaqList extends Shortcode {
 		];
 	}
 
-	public function icons() {
-		$faq_markup  = '<svg class="betterdocs-faq-iconminus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2"><g fill="none" stroke="' . esc_attr( $this->attributes['button_color'] ) . '" stroke-linecap="round" stroke-miterlimit="10" stroke-linejoin="round"><path d="M17 12H7"></path><circle cx="12" cy="12" r="11"></circle></g></svg>';
-		$faq_markup .= '<svg class="betterdocs-faq-iconplus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-width="2" fill="none" stroke="' . esc_attr( $this->attributes['button_color'] ) . '" stroke-linecap="square" stroke-miterlimit="10"><path d="M12 7v10M17 12H7"></path><circle cx="12" cy="12" r="11"></circle></g></svg>';
+	public function icons( $faq_toggle ) {
+		$faq_markup  = '<svg class="betterdocs-faq-iconminus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"' .($faq_toggle ? " style='display:inline;'" : ""). 'stroke-width="2"><g fill="none" stroke="' . esc_attr( $this->attributes['button_color'] ) . '" stroke-linecap="round" stroke-miterlimit="10" stroke-linejoin="round"><path d="M17 12H7"></path><circle cx="12" cy="12" r="11"></circle></g></svg>';
+		$faq_markup .= '<svg class="betterdocs-faq-iconplus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"'.($faq_toggle ? " style='display:none;'" : "").'><g stroke-width="2" fill="none" stroke="' . esc_attr( $this->attributes['button_color'] ) . '" stroke-linecap="square" stroke-miterlimit="10"><path d="M12 7v10M17 12H7"></path><circle cx="12" cy="12" r="11"></circle></g></svg>';
 
 		echo $faq_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}

@@ -5198,6 +5198,81 @@ class SingleDoc extends Section {
 		);
 	}
 
+	public function single_doc_feedback_label_name_text(){
+		$this->customizer->add_setting(
+			'single_doc_feedback_label_name_text',
+			[
+				'default'           => $this->defaults['single_doc_feedback_label_name_text'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SelectControl(
+				$this->customizer,
+				'single_doc_feedback_label_name_text',
+				[
+					'label'    => __( 'Label Name Text', 'betterdocs' ),
+					'priority' => 173,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'single_doc_feedback_label_name_text',
+					'type'     => 'text'
+				]
+			)
+		);
+	}
+
+	public function single_doc_feedback_label_email_text(){
+		$this->customizer->add_setting(
+			'single_doc_feedback_label_email_text',
+			[
+				'default'           => $this->defaults['single_doc_feedback_label_email_text'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SelectControl(
+				$this->customizer,
+				'single_doc_feedback_label_email_text',
+				[
+					'label'    => __( 'Label Email Text', 'betterdocs' ),
+					'priority' => 173,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'single_doc_feedback_label_email_text',
+					'type'     => 'text'
+				]
+			)
+		);
+	}
+
+	public function single_doc_feedback_label_message_text(){
+		$this->customizer->add_setting(
+			'single_doc_feedback_label_message_text',
+			[
+				'default'           => $this->defaults['single_doc_feedback_label_message_text'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SelectControl(
+				$this->customizer,
+				'single_doc_feedback_label_message_text',
+				[
+					'label'    => __( 'Label Message Text', 'betterdocs' ),
+					'priority' => 173,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'single_doc_feedback_label_message_text',
+					'type'     => 'text'
+				]
+			)
+		);
+	}
+
 	public function single_doc_feedback_icon_font_size() {
 		$this->customizer->add_setting(
 			'betterdocs_single_doc_feedback_icon_font_size',

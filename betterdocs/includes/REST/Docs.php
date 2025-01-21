@@ -12,18 +12,15 @@ class Docs extends BaseAPI {
 		return true;
 	}
 
-	public function register() {
-		$this->get( 'search', [ $this, 'search_posts' ] );
-		$this->get( 'search-insert', [ $this, 'search_insert' ] );
-		$this->get( 'get-terms', [ $this, 'get_terms_name_and_slug' ] );
-		$this->get( 'months-with-posts', [ $this, 'get_months_with_posts' ] );
-		$this->register_field(
-			'docs',
-			'year_month',
-			[
-				'get_callback' => [ $this, 'year_month' ]
-			]
-		);
+    public function register() {
+        $this->get( 'search', [$this, 'search_posts'] );
+        $this->get( 'search-insert', [$this, 'search_insert'] );
+        $this->get( 'get-terms', [$this, 'get_terms_name_and_slug'] );
+        $this->get( 'months-with-posts', [$this, 'get_months_with_posts'] );
+        $this->get( 'order_docs', [$this, 'render_betterdocs_order_docs'] );
+        $this->register_field( 'docs', 'year_month', [
+            'get_callback' => [$this, 'year_month']
+        ] );
 
 		$this->register_field(
 			'docs',
@@ -36,23 +33,98 @@ class Docs extends BaseAPI {
 		add_filter( 'rest_docs_query', [ $this, 'filter_docs_query' ], 10, 2 );
 	}
 
-	/**
-	 * Retrieves the months and years that have posts of the type 'docs' and formats them.
-	 *
-	 * This function queries the WordPress database for all unique months and years
-	 * in which 'docs' post type posts have been published. The results are then
-	 * formatted into an array of associative arrays, where each entry contains an
-	 * 'id' and a 'name'.
-	 *
-	 * The 'id' is a string formatted as 'month-year' (e.g., 'may-2024') to provide
-	 * a unique identifier that is easy to work with in JavaScript and HTML. The 'name'
-	 * is a more human-readable string formatted as 'Month Year' (e.g., 'May 2024') to
-	 * display to users.
-	 *
-	 * @return WP_REST_Response A response containing the formatted months and years.
-	 */
-	public function get_months_with_posts() {
-		global $wpdb;
+    public function render_betterdocs_order_docs($request) {
+        $doc_category = $request->get_param('doc_category');
+        $order        = $request->get_param('order');
+        $orderby      = $request->get_param('orderby');
+        $per_page     = $request->get_param('per_page');
+
+        if( empty( $doc_category) ) {
+            return [];
+        }
+
+        $args         = [
+            'term_id' => $doc_category,
+            'orderby'  => $orderby,
+            'order'    => $order,
+            'posts_per_page' => $per_page
+        ];
+
+        $args = betterdocs()->query->docs_query_args($args);
+        $posts = betterdocs()->query->get_posts( $args, true );
+
+        if ( ! $posts->have_posts() ) {
+            wp_reset_query();
+        }
+
+        $post_datas = [];
+
+        while ( $posts->have_posts() ):
+            $posts->the_post();
+            $post_data = $this->get_doc_data( get_the_ID() );
+            array_push( $post_datas, $post_data );
+        endwhile;
+
+        wp_reset_postdata();
+        wp_reset_query();
+
+        return $post_datas;
+    }
+
+     /**
+     * Get Doc Data Based On Doc ID
+     *
+     * @return array
+     */
+    public function get_doc_data( $id ) {
+        $post_data = get_post( $id );
+        $data      = [
+            'author'         => (int) $post_data->post_author,
+            'author_info'    => [
+                'name'            => get_the_author_meta( 'display_name', $post_data->post_author ),
+                'author_nicename' => get_the_author_meta( 'nicename', $post_data->post_author ),
+                'author_url'      => get_author_posts_url( $post_data->post_author )
+            ],
+            'unique_id'      => uniqid( 'doc' ),
+            'id'             => $post_data->ID,
+            'title'          => [
+                'rendered' => $post_data->post_title
+            ],
+            'slug'           => get_post_field( 'post_name', $id ),
+            'link'           => get_permalink( $id ),
+            'status'         => get_post_status(),
+            'date'           => $post_data->post_date,
+            'date_gmt'       => $post_data->post_date_gmt,
+            'doc_category'   => wp_get_post_terms( $id, 'doc_category', ["fields" => "ids"] ),
+            'doc_tag'        => wp_get_post_terms( $id, 'doc_tag', ["fields" => "ids"] ),
+            'password'       => $post_data->post_password,
+            'comment_status' => $post_data->comment_status
+        ];
+
+        if ( taxonomy_exists( 'knowledge_base' ) ) {
+            $data['knowledge_base'] = wp_get_post_terms( $id, 'knowledge_base', ["fields" => "ids"] );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Retrieves the months and years that have posts of the type 'docs' and formats them.
+     *
+     * This function queries the WordPress database for all unique months and years
+     * in which 'docs' post type posts have been published. The results are then
+     * formatted into an array of associative arrays, where each entry contains an
+     * 'id' and a 'name'.
+     *
+     * The 'id' is a string formatted as 'month-year' (e.g., 'may-2024') to provide
+     * a unique identifier that is easy to work with in JavaScript and HTML. The 'name'
+     * is a more human-readable string formatted as 'Month Year' (e.g., 'May 2024') to
+     * display to users.
+     *
+     * @return WP_REST_Response A response containing the formatted months and years.
+     */
+    public function get_months_with_posts() {
+        global $wpdb;
 
 		// Query to get distinct year and month from posts of type 'docs'
 		$results = $wpdb->get_results(

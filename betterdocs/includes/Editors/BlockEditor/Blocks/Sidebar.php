@@ -40,33 +40,33 @@ class Sidebar extends Block {
 		);
 	}
 
-	public function get_default_attributes() {
-		return [
-			'blockId'                       => '',
-			'sidebar_layout'                => 'layout-1',
-			'selectKB'                      => '',
-			'includeCategories'             => '',
-			'excludeCategories'             => '',
-			'terms_per_page'                => -1,
-			'terms_order'                   => 'asc',
-			'terms_orderby'                 => 'doc_category_order',
-			'docs_per_page'                 => -1,
-			'docs_orderby'                  => 'title',
-			'docs_order'                    => 'asc',
-			'enableNestedSubcategory'       => false,
-			'docs_per_subcategory'          => 10,
-			'titleTag'                      => 'h1',
-			'show_count'                    => false,
-			'enableStickyTOC'               => false,
-			'listIcon'                      => '',
-			'listIconImageUrl'              => '',
-			'initialDocsQueryNumber'        => 5,
-			'initialFAQQueryNumber'         => 5,
-			'searchModalQueryTermIds'       => '', //for search modal
-			'searchModalQueryDocIds'        => '', //for search modal
-			'searchModalQueriesFaqGroupIds' => ''
-		];
-	}
+    public function get_default_attributes() {
+        return [
+            'blockId'                       => '',
+            'sidebar_layout'                => 'layout-1',
+            'selectKB'                      => '',
+            'includeCategories'             => '',
+            'excludeCategories'             => '',
+            'terms_per_page'                => -1,
+            'terms_order'                   => 'asc',
+            'terms_orderby'                 => 'doc_category_order',
+            'docs_per_page'                 => -1,
+            'postsOrderBy'                  => 'title',
+            'postsOrder'                    => 'asc',
+            'enableNestedSubcategory'       => false,
+            'docs_per_subcategory'          => 10,
+            'titleTag'                      => 'h1',
+            'show_count'                    => false,
+            'enableStickyTOC'               => false,
+            'listIcon'                      => '',
+            'listIconImageUrl'              => '',
+            'initialDocsQueryNumber'        => 5,
+            'initialFAQQueryNumber'         => 5,
+            'searchModalQueryTermIds'       => '', //for search modal
+            'searchModalQueryDocIds'        => '', //for search modal
+            'searchModalQueriesFaqGroupIds' => ''
+        ];
+    }
 
 	public function render( $attributes, $content ) {
 		$layout         = isset( $this->attributes['sidebar_layout'] ) ? $this->attributes['sidebar_layout'] : 'layout-1';
@@ -113,25 +113,27 @@ class Sidebar extends Block {
 			$settings['show_count'] = true;
 		}
 
-		$default_view_params = [
-			'shortcode_attr' => [
-				'terms_order'              => $settings['terms_order'],
-				'terms_orderby'            => $settings['terms_orderby'] == 'doc_category_order' ? 'betterdocs_order' : $settings['terms_orderby'],
-				'terms_include'            => array_diff( $this->string_to_array( $settings['includeCategories'] ), $this->string_to_array( $settings['excludeCategories'] ) ),
-				'terms_exclude'            => isset( $settings['excludeCategories'] ) ? $this->string_to_array( $settings['excludeCategories'] ) : '',
-				'nested_subcategory'       => $settings['enableNestedSubcategory'],
-				'multiple_knowledge_base'  => $default_multiple_kb,
-				'kb_slug'                  => $kb_slug,
-				'sidebar_list'             => true,
-				'list_icon_url'            => '',
-				'list_icon_name'           => $settings['sidebar_layout'] == 'layout-4' ? '' : ( ! empty( $this->attributes['listIconImageUrl'] ) ? $this->attributes['listIconImageUrl'] : ( ! empty( $this->attributes['listIcon'] ) ? $this->attributes['listIcon'] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : 'list' ) ) ),
-				'layout_type'              => 'block',
-				'disable_customizer_style' => true,
-				'posts_per_page'           => -1,
-				'title_tag'                => $settings['titleTag'],
-				'show_count'               => $settings['show_count']
-			]
-		];
+        $default_view_params = [
+            'shortcode_attr' => [
+                'terms_order'              => $settings['terms_order'],
+                'terms_orderby'            => $settings['terms_orderby'] == 'doc_category_order' ? 'betterdocs_order' : $settings['terms_orderby'],
+                'terms_include'            => array_diff( $this->string_to_array( $settings['includeCategories'] ), $this->string_to_array( $settings['excludeCategories'] ) ),
+                'terms_exclude'            => isset( $settings['excludeCategories'] ) ? $this->string_to_array( $settings['excludeCategories'] ) : '',
+                'nested_subcategory'       => $settings['enableNestedSubcategory'],
+                'multiple_knowledge_base'  => $default_multiple_kb,
+                'kb_slug'                  => $kb_slug,
+                'sidebar_list'             => true,
+                'list_icon_url'            => '',
+                'list_icon_name'           => $settings['sidebar_layout'] == 'layout-4' ? '' : ( ! empty( $this->attributes['listIconImageUrl'] ) ? $this->attributes['listIconImageUrl'] : ( ! empty( $this->attributes['listIcon'] ) ? $this->attributes['listIcon'] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : 'list' ) ) ),
+                'layout_type'              => 'block',
+                'disable_customizer_style' => true,
+                'posts_per_page'           => -1,
+                'title_tag'                => $settings['titleTag'],
+                'show_count'               => $settings['show_count'],
+                'orderby'                  => $settings['postsOrderBy'],
+                'order'                    => $settings['postsOrder']
+            ]
+        ];
 
 		if ( $settings['sidebar_layout'] == 'layout-7' ) {
 			$default_view_params['number_of_docs'] = $settings['initialDocsQueryNumber'];
