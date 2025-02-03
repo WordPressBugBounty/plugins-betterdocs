@@ -19,6 +19,10 @@ class Content extends ContentBaseWidget {
 		return __( 'Doc Content', 'betterdocs' );
 	}
 
+	public function has_widget_inner_wrapper():bool {
+		return false;
+	}
+
 	public function get_icon() {
 		return 'betterdocs-icon-Content';
 	}

@@ -1,11 +1,11 @@
 === BetterDocs – Advanced AI-Driven Documentation, FAQ & Knowledge Base Tool for Elementor & Gutenberg with Encyclopedia, AI Support, Instant Answers ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, cu121, fencermonir, sapanmozammel, seakashdiu
+Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, cu121, fencermonir, sapanmozammel, seakashdiu, bashar94
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 3.8.9
+Stable tag: 3.8.10
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -227,7 +227,12 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
-= 3.8.9 - 21/01/2024 =
+= 3.8.10 - 03/02/2025 =
+
+- Fixed: Initial search response failed for modal layout
+- Few minor bug fixes and improvements 
+
+= 3.8.9 - 21/01/2025 =
 
 - Added: New FAQ Retro Layout
 - Added: Dropdown option to display all Admin Panel FAQs by page number
