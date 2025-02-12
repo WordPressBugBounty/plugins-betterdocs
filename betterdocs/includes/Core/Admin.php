@@ -842,7 +842,7 @@ class Admin extends Base {
 			'faq'        => $this->normalize_menu(
 				__( 'FAQ Builder', 'betterdocs' ),
 				'betterdocs-faq',
-				'read_docs_analytics',
+				'read_faq_builder',
 				[
 					$this,
 					'output'

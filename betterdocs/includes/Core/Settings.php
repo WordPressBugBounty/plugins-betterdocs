@@ -1649,6 +1649,28 @@ class Settings extends Base {
 									'description'         => __( '[betterdocs_faq_list_classic groups="group_id" class="" group_exclude="group_id" faq_heading="Frequently Asked Questions"]', 'betterdocs' ),
 									'descriptionLabel'    => __( 'Example with parameters:', 'betterdocs' ),
 									'descriptionCopyable' => true
+								],
+								'betterdocs_faq_list_layout_3' => [
+									'name'                => 'betterdocs_faq_list_layout_3',
+									'type'                => 'copy-to-clipboard',
+									'label'               => __( 'FAQ Layout - 3', 'betterdocs' ),
+									'default'             => '[betterdocs_faq_list_layout_3 class="faq-doc betterdocs-faq-layout-3"]',
+									'readOnly'            => true,
+									'priority'            => 15,
+									'description'         => __( '[betterdocs_faq_list_layout_3 class="faq-doc betterdocs-faq-layout-3" groups="group_id" class="" group_exclude="group_id" faq_heading="Frequently Asked Questions"]', 'betterdocs' ),
+									'descriptionLabel'    => __( 'Example with parameters:', 'betterdocs' ),
+									'descriptionCopyable' => true
+								],
+								'betterdocs_faq_tab' => [
+									'name'                => 'betterdocs_faq_tab',
+									'type'                => 'copy-to-clipboard',
+									'label'               => __( 'FAQ Layout - 4', 'betterdocs' ),
+									'default'             => '[betterdocs_faq_tab class="faq-doc betterdocs-faq-layout-4"]',
+									'readOnly'            => true,
+									'priority'            => 16,
+									'description'         => __( '[betterdocs_faq_tab class="faq-doc betterdocs-faq-layout-4" groups="group_id" group_exclude="group_id" faq_heading="Frequently Asked Questions"]', 'betterdocs' ),
+									'descriptionLabel'    => __( 'Example with parameters:', 'betterdocs' ),
+									'descriptionCopyable' => true
 								]
 							] )
 						]
@@ -1698,11 +1720,22 @@ class Settings extends Base {
 									'default'  => [ 'administrator' ],
 									'options'  => $wp_roles
 								],
+								'faq_roles' => [
+									'name'     => 'faq_roles',
+									'type'     => 'checkbox-select',
+									'label'    => __( 'Who Can Check FAQ Builder?', 'betterdocs' ),
+									'priority' => 4,
+									'multiple' => true,
+									'is_pro'   => true,
+									'search'   => true,
+									'default'  => [ 'administrator' ],
+									'options'  => $wp_roles
+								],
 								'enable_content_restriction' => [
 									'name'                       => 'enable_content_restriction',
 									'type'                       => 'toggle',
 									'is_pro'                     => true,
-									'priority'                   => 4,
+									'priority'                   => 5,
 									'label'                      => __( 'Internal Knowledge Base', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => [ 'all' ]
@@ -1713,7 +1746,7 @@ class Settings extends Base {
 									'label'          => __( 'Restrict Access to', 'betterdocs' ),
 									'label_subtitle' => __( 'Only selected User Roles will be able to view your Knowledge Base', 'betterdocs' ),
 									'is_pro'         => true,
-									'priority'       => 5,
+									'priority'       => 6,
 									'multiple'       => true,
 									'search'         => true,
 									'default'        => [ 'all' ],
@@ -1730,7 +1763,7 @@ class Settings extends Base {
 									'label'          => __( 'Restriction on Docs', 'betterdocs' ),
 									'label_subtitle' => __( 'Selected Docs pages will be restricted', 'betterdocs' ),
 									'is_pro'         => true,
-									'priority'       => 6,
+									'priority'       => 7,
 									'multiple'       => true,
 									'search'         => true,
 									'default'        => [ 'all' ],
@@ -1745,7 +1778,7 @@ class Settings extends Base {
 									'label'          => __( 'Restriction on Docs Categories', 'betterdocs' ),
 									'label_subtitle' => __( 'Selected Docs categories will be restricted', 'betterdocs' ),
 									'is_pro'         => true,
-									'priority'       => 7,
+									'priority'       => 8,
 									'multiple'       => true,
 									'search'         => true,
 									'default'        => [ 'all' ],
@@ -2510,6 +2543,7 @@ class Settings extends Base {
 			unset( $tabData['fields']['title-advance-settings']['fields']['article_roles'] );
 			unset( $tabData['fields']['title-advance-settings']['fields']['settings_roles'] );
 			unset( $tabData['fields']['title-advance-settings']['fields']['analytics_roles'] );
+			unset( $tabData['fields']['title-advance-settings']['fields']['faq_roles'] );
 		}
 
 		return $tabData;

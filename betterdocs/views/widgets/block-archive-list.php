@@ -41,7 +41,7 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 				'template-parts/pagination',
 				[
 					'total_pages'  => $total_pages,
-					'link'         => get_term_link( $current_category, 'doc_category' ),
+					'link'         => ( $current_category instanceof \WP_Term ) ? get_term_link( $current_category, 'doc_category' ) : get_permalink(get_the_ID()),
 					'current_page' => $page,
 					'template'     => 'doc_category'
 				]

@@ -14,6 +14,24 @@ class Roles extends Base {
 
 	public function __construct( Database $database ) {
 		$this->database = $database;
+
+		/**
+		 * Register One Time Only When This Plugin Is Updated
+		 */
+		if( get_option('register_faq_builder_capability') != "1" ) {
+			$this->assgin_faq_builder_capability_to_admin();
+			update_option('register_faq_builder_capability', true);
+		}
+	}
+
+	/**
+	 * Assign FAQ Builder Capability To The Admin
+	 */
+	public function assgin_faq_builder_capability_to_admin() {
+		if( current_user_can('administrator') && ! current_user_can('read_faq_builder') ) {
+			$current_user_role = get_role('administrator');
+			$current_user_role->add_cap('read_faq_builder');
+		}
 	}
 
 	/**
@@ -48,7 +66,8 @@ class Roles extends Base {
 
 				// Settings and Analytics Related caps
 				'edit_docs_settings',
-				'read_docs_analytics'
+				'read_docs_analytics',
+				'read_faq_builder'
 			],
 			'editor'        => [
 				// post type related caps

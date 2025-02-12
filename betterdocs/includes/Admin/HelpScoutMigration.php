@@ -65,7 +65,7 @@ class HelpScoutMigration extends WP_Background_Process {
 			}
 			$initial_body = wp_remote_retrieve_body( $initial_response );
 			$initial_data = json_decode( $initial_body, true );
-			$total_pages  = $initial_data['articles']['pages'];
+			$total_pages  = isset( $initial_data['articles']['pages'] ) ? $initial_data['articles']['pages'] : 0;
 			update_option( 'betterdocs_helpscout_total_pages', $total_pages );
 		}
 

@@ -793,6 +793,40 @@ class FAQ extends Widget_Base {
 		?>
 			<script>
 				jQuery(document).ready(function($) {
+					const $tabs = $(".betterdocs-faq-tab");
+					const $mobileTabs = $(".betterdocs-faq-list-wrapper .betterdocs-faq-tab");
+					const $contents = $(".betterdocs-faq-list-content");
+
+					$tabs.on("click", function () {
+						const termId = $(this).data("term-id");
+
+						// Remove active class from all tabs and hide all contents
+						$tabs.removeClass("active");
+						$contents.hide().removeClass("active");
+
+						// Reset all icons to default state
+						$(".betterdocs-faq-iconplus").show();
+						$(".betterdocs-faq-iconminus").hide();
+
+						// Add active class to the clicked tab and show the corresponding content
+						$(this).addClass("active");
+						$contents.filter(`[data-term-id="${termId}"]`).show().addClass("active");
+
+						// Toggle icons for the active tab
+						$(this).find(".betterdocs-faq-iconplus").hide();
+						$(this).find(".betterdocs-faq-iconminus").show();
+					});
+
+					// Trigger click on the first tab to show the first content by default
+					if ($tabs.length > 0) {
+						$tabs.first().trigger("click").addClass("active");
+
+						const $mobileFirstTab = $mobileTabs.first();
+						$mobileFirstTab.addClass("active");
+						$mobileFirstTab.find(".betterdocs-faq-iconplus").hide();
+						$mobileFirstTab.find(".betterdocs-faq-iconminus").show();
+					}
+
 					$('.betterdocs-faq-post').on('click', function(e) {
 						var current_node = $(this);
 						var active_list  = $('.betterdocs-faq-group.active');

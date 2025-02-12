@@ -241,6 +241,11 @@ class Rewrite extends Base {
 			'top'
 		);
 
+        $base = $this->get_base_slug();
+        $this->add_rewrite_rule( $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
+        $this->add_rewrite_rule( $base . '/authors/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]' );
+		$this->add_rewrite_rule( $base . '/authors/([0-9]+)/page/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]&page=$matches[2]' );
+
 		/**
 		 * This code of blocks used to determine single docs permalink.
 		 */

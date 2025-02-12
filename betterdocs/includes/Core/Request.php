@@ -53,21 +53,23 @@ class Request extends Base {
 			return;
 		}
 
-		$this->perma_structure = [
-			'is_docs'          => trim( $this->rewrite->get_base_slug(), '/' ),
-			'is_docs_feed'     => trim( $this->rewrite->get_base_slug(), '/' ) . '/%feed%',
-			'is_docs_category' => trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ) . '/%doc_category%',
-			'is_docs_tag'      => trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ) . '/%doc_tag%',
-			'is_single_docs'   => trim( $this->settings->get( 'permalink_structure', 'docs' ), '/' ) . '/%name%'
-		];
+        $this->perma_structure = [
+            'is_docs'          => trim( $this->rewrite->get_base_slug(), '/' ),
+            'is_docs_feed'     => trim( $this->rewrite->get_base_slug(), '/' ) . '/%feed%',
+            'is_docs_category' => trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ) . '/%doc_category%',
+            'is_docs_tag'      => trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ) . '/%doc_tag%',
+            'is_single_docs'   => trim( $this->settings->get( 'permalink_structure', 'docs' ), '/' ) . '/%name%',
+            'is_docs_author'   => trim( $this->rewrite->get_base_slug(), '/' ) . '/authors/%author%'
+        ];
 
-		$this->query_vars = [
-			'is_docs'          => [ 'post_type' ],
-			'is_docs_feed'     => [ 'doc_category' ],
-			'is_docs_category' => [ 'doc_category' ],
-			'is_docs_tag'      => [ 'doc_tag' ],
-			'is_single_docs'   => [ 'name', 'docs', 'post_type' ]
-		];
+        $this->query_vars = [
+            'is_docs'          => ['post_type'],
+            'is_docs_feed'     => ['doc_category'],
+            'is_docs_category' => ['doc_category'],
+            'is_docs_tag'      => ['doc_tag'],
+            'is_single_docs'   => ['name', 'docs', 'post_type'],
+            'is_docs_author'   => ['post_type', 'author']
+        ];
 
 		add_action( 'parse_request', [ $this, 'parse' ] );
 
@@ -103,10 +105,14 @@ class Request extends Base {
 		return isset( $query_vars['feed'] ) && in_array( $query_vars['feed'], $wp_rewrite->feeds );
 	}
 
-	protected function is_single_docs( $query_vars ) {
-		if ( ! isset( $query_vars['name'] ) ) {
-			return false;
-		}
+    public function is_docs_author( $query_vars ) {
+        return isset( $query_vars['author'] ) ? true : false;
+    }
+
+    protected function is_single_docs( $query_vars ) {
+        if ( ! isset( $query_vars['name'] ) ) {
+            return false;
+        }
 
 		global $wpdb;
 		$name = $query_vars['name'];
@@ -171,18 +177,15 @@ class Request extends Base {
 			foreach ( $this->perma_structure as $_type => $structure ) {
 				$_perma_vars = $this->is_perma_valid_for( $structure, $wp->request );
 
-				// $_valid = empty( $_valid ) && $_perma_vars ? [ 'type' => $_type, 'query_vars' => $_perma_vars ] : $_valid;
-				if ( ( $_perma_vars && method_exists( $this, $_type ) && call_user_func_array( [ $this, $_type ], [ & $_perma_vars ] ) ) ) {
-					// dump( $_type, $_perma_vars );
-					if ( $_type === 'is_single_docs' || $_type == 'is_docs_feed' ) {
-						$_perma_vars['post_type'] = 'docs';
-					}
-					$_valid = [
-						'type'       => $_type,
-						'query_vars' => $_perma_vars
-					];
-				}
-			}
+                // $_valid = empty( $_valid ) && $_perma_vars ? [ 'type' => $_type, 'query_vars' => $_perma_vars ] : $_valid;
+                if ( ( $_perma_vars && method_exists( $this, $_type ) && call_user_func_array( [$this, $_type], [ & $_perma_vars] ) ) ) {
+                    // dump( $_type, $_perma_vars );
+                    if ( $_type === 'is_single_docs' || $_type == 'is_docs_feed' || $_type == 'is_docs_author' ) {
+                        $_perma_vars['post_type'] = 'docs';
+                    }
+                    $_valid = ['type' => $_type, 'query_vars' => $_perma_vars];
+                }
+            }
 
 			$type       = isset( $_valid['type'] ) ? $_valid['type'] : '';
 			$query_vars = isset( $_valid['query_vars'] ) ? $_valid['query_vars'] : [];
@@ -202,13 +205,13 @@ class Request extends Base {
 				);
 			}
 
-			$wp->query_vars = is_array( $query_vars ) ? array_merge( $wp->query_vars, $query_vars ) : $wp->query_vars;
-			// Fallback
-			if ( ! empty( $_valid ) ) {
-				unset( $wp->query_vars['attachment'] );
-			}
-		}
-	}
+            $wp->query_vars = is_array( $query_vars ) ? array_merge( $wp->query_vars, $query_vars ) : $wp->query_vars;
+            // Fallback
+            if ( ! empty( $_valid ) ) {
+                unset( $wp->query_vars['attachment'] );
+            }
+        }
+    }
 
 	/**
 	 * This method is responsible for checking a structure is valid again a request.

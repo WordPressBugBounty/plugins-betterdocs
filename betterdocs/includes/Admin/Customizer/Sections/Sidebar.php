@@ -3076,6 +3076,31 @@ class Sidebar extends Section {
 		);
 	}
 
+
+	public function list_item_active_color_layout_7_2() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_active_color_layout_7_2',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_active_color_layout_7_2'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_active_color_layout_7_2',
+				[
+					'label'    => __( 'List Item Active Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_list_item_active_color_layout_7_2'
+				]
+			)
+		);
+	}
+
 	public function list_item_font_size_layout_7() {
 		$this->customizer->add_setting(
 			'betterdocs_sidebar_list_item_font_size_layout_7',

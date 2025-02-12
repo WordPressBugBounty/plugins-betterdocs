@@ -1629,7 +1629,7 @@ class CategoryBox extends BaseWidget {
 
 		$styles = '';
 		if ( $settings['layout_template'] == 'layout-4' ) {
-			$reminder = $term_count % $settings['box_column_layout_4'];
+			$reminder = $term_count % ( $settings['box_column_layout_4'] == 0 ? 1 : $settings['box_column_layout_4'] );
 			$styles  .= "--column: $box_column;";
 			$styles  .= "--count: $term_count;";
 			$styles  .= "--reminder: $reminder;";
@@ -1653,7 +1653,7 @@ class CategoryBox extends BaseWidget {
 			'layout'                  => sanitize_file_name( $settings['layout_template'] ),
 			'total_terms'             => $term_count,
 			'reminder'                => $reminder,
-			'column'                  => $box_column,
+			'column'                  => $box_column == 0 ? 1 : $box_column,
 			'widget_type'             => 'category-box',
 			'multiple_knowledge_base' => $default_multiple_kb,
 			'kb_slug'                 => $kb_slug,

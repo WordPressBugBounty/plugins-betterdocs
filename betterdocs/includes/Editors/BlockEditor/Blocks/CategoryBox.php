@@ -205,6 +205,11 @@ class CategoryBox extends Block {
 		$this->add_filter( $_eligible );
 		$this->views( 'layouts/base' );
 		$this->remove_filter( $_eligible );
+
+		if ( $attributes['layout'] == 'layout-4' ) {
+			remove_filter( 'betterdocs_layout_filename', [ $this, 'change_to_layout_four' ], 15, 3 );
+		}
+
 	}
 
 	public function change_to_layout_four() {

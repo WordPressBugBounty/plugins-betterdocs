@@ -1214,6 +1214,7 @@ class Defaults extends Base {
 			'betterdocs_sidebar_list_item_padding_bottom_layout_7' => '0',
 			'betterdocs_sidebar_list_item_padding_left_layout_7' => '0',
 			'betterdocs_sidebar_list_item_active_color_layout_7' => '#a1dcc0',
+			'betterdocs_sidebar_list_item_active_color_layout_7_2' => '#e8fff4',
 			'toc_active_item_border_color_layout_8_9'      => '#A1DCC0',
 			'search_modal_query_doc_ids'                   => '',
 			'search_modal_query_doc_term_ids'              => '',

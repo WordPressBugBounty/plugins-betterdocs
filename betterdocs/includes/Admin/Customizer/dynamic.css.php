@@ -7272,6 +7272,15 @@ $css->add_rule(
 );
 
 $css->add_rule(
+	'.betterdocs-sidebar.betterdocs-sidebar-layout-7 .betterdocs-sidebar-content .betterdocs-category-grid-wrapper .betterdocs-category-grid-inner-wrapper .betterdocs-single-category-wrapper .betterdocs-single-category-inner .betterdocs-body .betterdocs-articles-list li a.active',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_sidebar_list_item_active_color_layout_7_2'
+		]
+	)
+);
+
+$css->add_rule(
 	'.betterdocs-sidebar.betterdocs-sidebar-layout-7 .betterdocs-sidebar-content .betterdocs-category-grid-wrapper .betterdocs-category-grid-inner-wrapper .betterdocs-single-category-wrapper .betterdocs-single-category-inner .betterdocs-body .betterdocs-articles-list li a',
 	$css->properties(
 		[

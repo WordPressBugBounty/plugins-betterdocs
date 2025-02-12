@@ -80,7 +80,7 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 		// Check if the post is in a category
 		if ( $enable_breadcrumb_title ) {
 			$breadcrumbs[] = [
-				'li_classes' => [ 'item-current', 'item-' . $post->ID, 'current' ],
+				'li_classes' => [ 'item-current', 'item-' . ( $post->ID != null ? $post->ID : '' ), 'current' ],
 				'url'        => '',
 				'text'       => betterdocs()->template_helper->kses( get_the_title() )
 			];

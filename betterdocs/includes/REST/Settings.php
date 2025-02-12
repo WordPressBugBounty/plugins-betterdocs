@@ -302,7 +302,7 @@ class Settings extends BaseAPI {
 
 		$initial_response = wp_remote_get( $api_endpoint, array( 'headers' => $headers ) );
 
-		if ( $initial_response['response']['code'] == '404' ) {
+		if ( $initial_response['response']['code'] == '404' || $initial_response['response']['code'] == 401 ) {
 			return [
 				'status'  => 'error',
 				'message' => esc_html__( 'Unauthorized API Key or Collection ID', 'betterdocs' )

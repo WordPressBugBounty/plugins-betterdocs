@@ -205,7 +205,7 @@ class Breadcrumbs extends BaseWidget {
 				'label'     => __( 'Active Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item.current span' => 'color: {{VALUE}}'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item.current span' => 'color: {{VALUE}}'
 				]
 			]
 		);
@@ -216,7 +216,7 @@ class Breadcrumbs extends BaseWidget {
 				'label'     => __( 'Active Text Hover Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}}  .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item.current span:hover' => 'color: {{VALUE}}'
+					'{{WRAPPER}}  #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item.current span:hover' => 'color: {{VALUE}}'
 				]
 			]
 		);
@@ -227,7 +227,7 @@ class Breadcrumbs extends BaseWidget {
 				'label'     => __( 'Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item > a' => 'color: {{VALUE}}'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item > a' => 'color: {{VALUE}}'
 				]
 			]
 		);
@@ -238,7 +238,7 @@ class Breadcrumbs extends BaseWidget {
 				'label'     => __( 'Text Color Hover', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item > a:hover' => 'color: {{VALUE}}'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item > a:hover' => 'color: {{VALUE}}'
 				]
 			]
 		);
@@ -269,7 +269,7 @@ class Breadcrumbs extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'text_typography_layout_2',
-				'selector' => '{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item a,{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item span'
+				'selector' => '{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item a,{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-item span'
 			]
 		);
 
@@ -293,7 +293,7 @@ class Breadcrumbs extends BaseWidget {
 					]
 				],
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-list' => 'justify-content: {{VALUE}}'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2 .betterdocs-breadcrumb-list' => 'justify-content: {{VALUE}}'
 				]
 			]
 		);
@@ -305,7 +305,7 @@ class Breadcrumbs extends BaseWidget {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
 				]
 			]
 		);
@@ -325,7 +325,7 @@ class Breadcrumbs extends BaseWidget {
 					'isLinked' => false,
 				],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-breadcrumb.layout-2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+					'{{WRAPPER}} #betterdocs-breadcrumb.betterdocs-breadcrumb.layout-2' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
 				]
 			]
 		);

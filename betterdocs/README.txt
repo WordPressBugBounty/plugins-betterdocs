@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.0
-Stable tag: 3.8.10
+Stable tag: 3.8.11
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -227,6 +227,14 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 3.8.11 - 12/02/2025 =
+
+- Added: Author template to display docs authored by specific users. 
+- Added: Docs order option for the Sidebar Elementor widget. 
+- Fixed: Multiple Customizer controls not working for Rustic, Essence, and Sleek layouts.
+- Fixed: Reaction icon missing in the Essence layout.
+- Few minor bug fixes and improvements 
+
 = 3.8.10 - 03/02/2025 =
 
 - Fixed: Initial search response failed for modal layout
@@ -242,7 +250,7 @@ Yes, it will work with any standard WordPress theme.
 - Fixed: Search Fetch URl Related Issue
 - Few minor bug fixes and improvements
 
-= 3.8.8 - 14/01/2024 =
+= 3.8.8 - 14/01/2025 =
 
 - Few Minor Bug Fixes & Improvements
 

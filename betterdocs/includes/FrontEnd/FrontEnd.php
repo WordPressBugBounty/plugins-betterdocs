@@ -3,10 +3,10 @@
 namespace WPDeveloper\BetterDocs\FrontEnd;
 
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\Utils\Enqueue;
 use WPDeveloper\BetterDocs\Utils\Database;
-use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class FrontEnd extends Base {
@@ -35,12 +35,12 @@ class FrontEnd extends Base {
 		add_action( 'init', [ $this, 'init' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
-		/**
-		 * Update The 'Edit Site' Url In FSE Mode For Betterdocs Templates Only
-		 */
-		if ( Helper::is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && wp_is_block_theme() ) {
-			add_action( 'admin_bar_menu', [ $this, 'fse_url_update' ], 41, 1 );
-		}
+        /**
+         * Update The 'Edit Site' Url In FSE Mode For Betterdocs Templates Only
+         */
+        if ( Helper::is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && wp_is_block_theme() ) {
+            add_action( 'admin_bar_menu', [$this, 'fse_url_update'], 41, 1 );
+        }
 
 		add_filter( 'betterdocs_layout_filename', [ $this, 'layout_filename' ], 10, 2 );
 
@@ -55,28 +55,44 @@ class FrontEnd extends Base {
 		//Remove our search selector from from Searchanise plugin for woocommerce, conflicts with betterdocs search (Bug Fix Card -> https://trello.com/c/lXzrtv2f/1313-client-issue-betterdocs-is-conflicting-with-the-searchanise-plugin)
 		add_filter( 'se_load_search_widgets', [ $this, 'exclude_betterdocs_search' ], 10, 1 );
 
-		//Fix Betterdocs Search Issue With HostCluster Theme
-		if ( function_exists( 'hostcluster_search_filter' ) ) {
-			remove_filter( 'pre_get_posts', 'hostcluster_search_filter' );
-		}
-	}
+        //Fix Betterdocs Search Issue With HostCluster Theme
+        if ( function_exists( 'hostcluster_search_filter' ) ) {
+            remove_filter( 'pre_get_posts', 'hostcluster_search_filter' );
+        }
 
-	public function fse_url_update( &$wp_admin_bar ) {
-		$site_edit_node = $wp_admin_bar->get_node( 'site-editor' );
+        //render authors template
+        add_filter( 'template_include', [$this, 'render_authors_template'], 10, 1 );
+    }
 
-		if ( empty( $site_edit_node ) ) {
-			return;
-		}
+    public function render_authors_template( $template_path ) {
+        $post_type         = get_query_var( 'post_type' ) != null ? get_query_var( 'post_type' ) : '';
+        $author_id         = get_query_var( 'author' ) != null ? get_query_var( 'author' ) : 0;
+        $author_docs_count = count_user_posts( $author_id, 'docs' );
 
-		if ( is_post_type_archive( 'docs' ) || is_tax( 'knowledge_base' ) || is_tax( 'doc_category' ) || is_tax( 'doc_tag' ) || is_singular( 'docs' ) ) {
-			$href = isset( $site_edit_node->href ) ? $site_edit_node->href : '';
-			if ( ! empty( $href ) ) {
-				$href                 = $href . '&lang=' . ICL_LANGUAGE_CODE;
-				$site_edit_node->href = $href;
-				$wp_admin_bar->add_node( $site_edit_node );
-			}
-		}
-	}
+        if ( $post_type == 'docs' && $author_docs_count > 0 ) {
+            wp_enqueue_style('betterdocs-breadcrumb');
+            $template_path = BETTERDOCS_ABSPATH . 'views/templates/authors/author.php';
+        }
+
+        return $template_path;
+    }
+
+    public function fse_url_update( &$wp_admin_bar ) {
+        $site_edit_node = $wp_admin_bar->get_node( 'site-editor' );
+
+        if ( empty( $site_edit_node ) ) {
+            return;
+        }
+
+        if ( is_post_type_archive( 'docs' ) || is_tax( 'knowledge_base' ) || is_tax( 'doc_category' ) || is_tax( 'doc_tag' ) || is_singular( 'docs' ) ) {
+            $href = isset( $site_edit_node->href ) ? $site_edit_node->href : '';
+            if ( ! empty( $href ) ) {
+                $href                 = $href . '&lang=' . ICL_LANGUAGE_CODE;
+                $site_edit_node->href = $href;
+                $wp_admin_bar->add_node( $site_edit_node );
+            }
+        }
+    }
 
 	public function exclude_betterdocs_search( $options ) {
 		$options['search_input'] = $options['search_input'] . ':not(.betterdocs-search-field)';
@@ -203,7 +219,7 @@ class FrontEnd extends Base {
 		];
 
 		foreach ( $reactions_data as $key => $theme_mod ) {
-			$value = $this->database->get_theme_mod( $theme_mod, true );
+			$value = betterdocs()->customizer->defaults->get( $theme_mod );
 			if ( $value ) {
 				$args[ $key ] = $value;
 			} else {
