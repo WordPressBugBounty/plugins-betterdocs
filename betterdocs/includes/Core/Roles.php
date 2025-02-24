@@ -15,20 +15,14 @@ class Roles extends Base {
 	public function __construct( Database $database ) {
 		$this->database = $database;
 
-		/**
-		 * Register One Time Only When This Plugin Is Updated
-		 */
-		if( get_option('register_faq_builder_capability') != "1" ) {
-			$this->assgin_faq_builder_capability_to_admin();
-			update_option('register_faq_builder_capability', true);
-		}
+		$this->assgin_faq_builder_capability_to_admin(); //will run when it is called
 	}
 
 	/**
 	 * Assign FAQ Builder Capability To The Admin
 	 */
 	public function assgin_faq_builder_capability_to_admin() {
-		if( current_user_can('administrator') && ! current_user_can('read_faq_builder') ) {
+		if( current_user_can('administrator') && ! current_user_can('read_faq_builder') ) { // if the current user is admin, and current user does not have faq menu visibility option, then assign the faq menu visibility capability
 			$current_user_role = get_role('administrator');
 			$current_user_role->add_cap('read_faq_builder');
 		}

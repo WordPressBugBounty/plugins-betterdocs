@@ -117,7 +117,7 @@ final class Plugin {
 	 * Plugin Version
 	 * @var string
 	 */
-	public $version = '3.8.11';
+	public $version = '3.8.12';
 
 	/**
 	 * WriteWithAI Class
