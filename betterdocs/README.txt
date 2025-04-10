@@ -3,9 +3,9 @@ Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, cu121, fe
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 3.8.13
+Stable tag: 3.8.14
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -226,6 +226,12 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.8.14 - 10/04/2025 =
+
+- Fixed: Disabled JS and CSS on pages where BetterDocs is not used
+- Fixed: Heading Block custom colors not working on docs
+- Few minor bug fixes and improvements
 
 = 3.8.13 - 17/03/2025 =
 

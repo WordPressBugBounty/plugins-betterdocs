@@ -30,14 +30,16 @@ class Sidebar extends Block {
 	}
 
 	public function register_scripts() {
-		if ( function_exists( 'betterdocs_pro' ) && betterdocs_pro()->assets != null ) { // get the sidebar modal on gutenberg edit mode
-			betterdocs_pro()->assets->enqueue( 'betterdocs-extend-search-modal', 'public/js/extend-search-modal.js', [] );
+		if( is_admin() ){ // load for wordpress admin panel only
+			if ( function_exists( 'betterdocs_pro' ) && betterdocs_pro()->assets != null ) { // get the sidebar modal on gutenberg edit mode
+				betterdocs_pro()->assets->enqueue( 'betterdocs-extend-search-modal', 'public/js/extend-search-modal.js', [] );
+			}
+			$this->assets_manager->enqueue(
+				'betterdocs-search-modal',
+				'shortcodes/js/search-modal.js',
+				[ 'jquery' ]
+			);
 		}
-		$this->assets_manager->enqueue(
-			'betterdocs-search-modal',
-			'shortcodes/js/search-modal.js',
-			[ 'jquery' ]
-		);
 	}
 
     public function get_default_attributes() {

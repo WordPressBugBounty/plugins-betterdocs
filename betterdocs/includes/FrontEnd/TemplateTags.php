@@ -417,13 +417,18 @@ class TemplateTags extends Base {
 					preg_match( '/class="([^"]*)"/', $matches[2], $class_matches );
 					$classes = isset( $class_matches[1] ) ? strtolower( $class_matches[1] ) : '';
 
+					preg_match( '/style="([^"]*)"/', $matches[0], $style_matches );
+					$inline_style = isset($style_matches[0]) ? $style_matches[0] : '';
+					// $classes = isset( $class_matches[1] ) ? strtolower( $class_matches[1] ) : '';
+
 					$class = ! empty( $classes ) ? $classes . ' betterdocs-content-heading' : 'betterdocs-content-heading';
 
 					return sprintf(
-						'<%1$s class="%2$s" id="%3$s">%4$s %5$s</%1$s>',
+						'<%1$s class="%2$s" id="%3$s" %4$s>%5$s %6$s</%1$s>',
 						$tag,
 						$class,
 						$id,
+						$inline_style,
 						$matches[3],
 						$hash_link
 					);
