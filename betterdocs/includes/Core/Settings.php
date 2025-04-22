@@ -176,6 +176,7 @@ class Settings extends Base {
 			'enable_export_faq'                    => true,
 			'builtin_doc_page'                     => true,
 			'breadcrumb_doc_title'                 => __( 'Docs', 'betterdocs' ),
+			'enable_category_hierarchy_slugs'	   => false,
 			'docs_slug'                            => 'docs',
 			'docs_page'                            => 0,
 			'category_slug'                        => 'docs-category',
@@ -632,12 +633,21 @@ class Settings extends Base {
 									'default'                    => 1,
 									'priority'                   => 2
 								],
+								'enable_category_hierarchy_slugs'     => [
+									'name'                       => 'enable_category_hierarchy_slugs',
+									'type'                       => 'toggle',
+									'label'                      => __( 'Enable Category Hierarchy Slug', 'betterdocs' ),
+									'enable_disable_text_active' => true,
+									'default'                    => false,
+									'priority'                   => 3,
+									'label_subtitle' 			 => __( "Show's Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page", 'betterdocs' )
+								],
 								'breadcrumb_doc_title' => [
 									'name'     => 'breadcrumb_doc_title',
 									'type'     => 'text',
 									'label'    => __( 'Documentation Page Title', 'betterdocs' ),
 									'default'  => __( 'Docs', 'betterdocs' ),
-									'priority' => 3,
+									'priority' => 4,
 									'rules'    => Rules::is( 'builtin_doc_page', true )
 								],
 								'docs_slug'            => [
@@ -645,7 +655,7 @@ class Settings extends Base {
 									'type'     => 'text',
 									'label'    => __( 'BetterDocs Root Slug', 'betterdocs' ),
 									'default'  => 'docs',
-									'priority' => 4,
+									'priority' => 5,
 									'rules'    => Rules::is( 'builtin_doc_page', true )
 								],
 								'docs_page'            => [
@@ -653,7 +663,7 @@ class Settings extends Base {
 									'label'          => __( 'Docs Page', 'betterdocs' ),
 									'type'           => 'select',
 									'default'        => 0,
-									'priority'       => 5,
+									'priority'       => 6,
 									'search'         => true,
 									'options'        => $this->normalize_options( $this->get_pages() ),
 									'label_subtitle' => __( 'You will need to insert BetterDocs Shortcode inside the page. This page will be used as docs permalink.', 'betterdocs' ),
@@ -665,21 +675,21 @@ class Settings extends Base {
 									'type'     => 'text',
 									'label'    => __( 'Custom Category Slug', 'betterdocs' ),
 									'default'  => 'docs-category',
-									'priority' => 6
+									'priority' => 7
 								],
 								'tag_slug'              => [
 									'name'     => 'tag_slug',
 									'type'     => 'text',
 									'label'    => __( 'Custom Tag Slug', 'betterdocs' ),
 									'default'  => 'docs-tag',
-									'priority' => 7
+									'priority' => 8
 								],
 								'permalink_structure'   => [
 									'name'           => 'permalink_structure',
 									'type'           => 'permalink_structure',
 									'label'          => __( 'Single Docs Permalink', 'betterdocs' ),
 									'default'        => PostType::permalink_structure(),
-									'priority'       => 8,
+									'priority'       => 9,
 									'tags'           => $this->normalize_options( [
 										'%doc_category%'   => '%doc_category%',
 										'%knowledge_base%' => '%knowledge_base%'
@@ -693,7 +703,7 @@ class Settings extends Base {
 									'label_subtitle'             => __( 'Enable the glossary feature to allow users to look up definitions for terms used within your encyclopedia or glossaries themselves.', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => false,
-									'priority'                   => 9,
+									'priority'                   => 10,
 									'is_pro'                     => true
 								],
 								'enable_encyclopedia'   => [
@@ -702,7 +712,7 @@ class Settings extends Base {
 									'label'                      => __( 'Built-in Encyclopedia Page', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => false,
-									'priority'                   => 10,
+									'priority'                   => 11,
 									'is_pro'                     => true
 								],
 								'enable_faq_schema'     => [
@@ -711,7 +721,7 @@ class Settings extends Base {
 									'label'                      => __( 'FAQ Schema', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => '',
-									'priority'                   => 14
+									'priority'                   => 12
 								],
 								'analytics_from'        => [
 									'name'     => 'analytics_from',
@@ -723,7 +733,7 @@ class Settings extends Base {
 										'registered_users' => __( 'Registered Users Only', 'betterdocs' )
 									] ),
 									'default'  => 'everyone',
-									'priority' => 15,
+									'priority' => 13,
 									'is_pro'   => true
 								],
 								'unique_visitor_count'  => [
@@ -732,7 +742,7 @@ class Settings extends Base {
 									'label'                      => __( 'Unique Visitor Count', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => false,
-									'priority'                   => 16,
+									'priority'                   => 14,
 									'is_pro'                     => true
 								],
 								'exclude_bot_analytics' => [
@@ -741,7 +751,7 @@ class Settings extends Base {
 									'label'                      => __( 'Exclude Bot Analytics', 'betterdocs' ),
 									'enable_disable_text_active' => true,
 									'default'                    => false,
-									'priority'                   => 17,
+									'priority'                   => 15,
 									'is_pro'                     => true
 								]
 
@@ -2323,7 +2333,7 @@ class Settings extends Base {
 															'search'         => true,
 															'default'        => [ 'all' ],
 															'placeholder'    => __( 'Select any', 'betterdocs' ),
-															'options'        => $this->get_terms( 'doc_category' ),
+															'options'        => $this->get_terms( 'doc_category', false ),
 															'filterValue'    => 'all',
 															'rules'          => Rules::is( 'export_type', 'doc_category' )
 														],
@@ -2474,7 +2484,7 @@ class Settings extends Base {
 		return $docs_tax;
 	}
 
-	public function get_terms( $taxonomy ) {
+	public function get_terms( $taxonomy, $hide_empty = true ) {
 		$_cache_key = 'betterdocs::settings::terms::' . trim( $taxonomy );
 		$docs_tax   = $this->database->get_cache( $_cache_key );
 
@@ -2484,7 +2494,7 @@ class Settings extends Base {
 
 		$get_terms = get_terms( [
 			'taxonomy'   => $taxonomy,
-			'hide_empty' => false
+			'hide_empty' => $hide_empty
 		] );
 
 		$terms = [

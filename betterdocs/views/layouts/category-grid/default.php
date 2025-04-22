@@ -17,7 +17,9 @@
 	}
 
 	$attributes = betterdocs()->template_helper->get_html_attributes( $attributes );
-	?>
+	$posts_per_page = isset( $docs_query_args['posts_per_page'] ) ? $docs_query_args['posts_per_page'] : ( isset( $post_per_tab ) ? $post_per_tab : ( isset($post_per_page) ? $post_per_page : 0 ) ); // for category grid, mkb, tab
+	$current_term_posts_count = isset( $counts ) && ! is_array( $counts ) ? $counts : ( isset( $counts ) && is_array( $counts ) ? $counts['counts'] : 0 );
+?>
 
 <article
 	<?php echo $attributes; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -33,7 +35,9 @@
 			echo '</div>';
 		}
 
+		if( $posts_per_page < $current_term_posts_count ) {
 			$view_object->get( 'layout-parts/footer' );
+		}
 		?>
 	</div>
 </article>

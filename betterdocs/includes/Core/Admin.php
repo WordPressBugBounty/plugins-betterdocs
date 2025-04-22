@@ -645,6 +645,7 @@ class Admin extends Base {
 			return;
 		}
 
+		wp_enqueue_media(); // load early to fix problems with media upload issues on settings for wordpress 6.0.9
 		$this->assets->register( 'betterdocs-admin', 'admin/js/dashboard.js' );
 
 		$saved_settings = get_option( 'betterdocs_settings', false );

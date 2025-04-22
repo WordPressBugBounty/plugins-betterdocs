@@ -639,6 +639,8 @@ class WriteWithAI extends Base {
 
 			.betterdocs-ai-button-container {
 				margin-left: 10px;
+				white-space: nowrap;
+				max-width: 145px;
 			}
 
 			.autowrite-icon {
@@ -710,6 +712,7 @@ class WriteWithAI extends Base {
 				align-items: center;
 				justify-content: space-between;
 				gap: 10px;
+				width: 135px;
 			}
 
 			.betterdocs-ai-button img {

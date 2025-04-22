@@ -55,6 +55,6 @@ class ArchiveCondition extends Condition_Base {
 	}
 
 	public function check( $args ) {
-		return is_post_type_archive( 'docs' ) || is_tax( 'knowledge_base' ) || is_tax( 'doc_category' ) || is_tax( 'doc_tag' );
+		return is_post_type_archive( 'docs' ) || is_tax( 'knowledge_base' ) || is_tax( 'doc_category' ) || is_tax( 'doc_tag' ) || is_tax('glossaries');
 	}
 }

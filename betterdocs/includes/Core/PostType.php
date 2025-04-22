@@ -70,6 +70,30 @@ class PostType extends Base {
 		add_filter( 'rest_doc_category_collection_params', [ $this, 'add_rest_orderby_params_on_doc_category' ], 10, 1 );
 		add_filter( 'rest_doc_category_query', [ $this, 'modify_doc_category_rest_query' ], 10, 2 );
 		add_action( 'before_delete_post', [ $this, 'delete_analytics_rows_on_post_delete' ], 10, 1 );
+		add_filter('rest_prepare_doc_category', [$this, 'modify_term_response'], 10, 3); //modify rest api doc category term count when nested_subcategory is enabled
+		if( $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { // reigster hierarchy based slug rewrite rule, for doc category
+			add_filter('betterdocs_category_rewrite', [$this, 'enable_nested_hierarchy_doc_category_slug'], 10, 1);
+		}
+	}
+
+	public function modify_term_response( $response, $item, $request ){
+		if( $request->get_param('nested_subcategory') != null && $request->get_param('nested_subcategory') ) {
+			$response->data['count'] = betterdocs()->query->get_docs_count(
+				$item,
+				$request->get_param('nested_subcategory'),
+				[
+					'multiple_knowledge_base' => false,
+					'kb_slug'                 => ''
+				]
+			);
+		}
+		return $response;
+
+	}
+
+	public function enable_nested_hierarchy_doc_category_slug($doc_category_rewrite_payload) {
+		$doc_category_rewrite_payload['hierarchical'] = true;
+		return $doc_category_rewrite_payload;
 	}
 
 	/**
@@ -107,7 +131,21 @@ class PostType extends Base {
 
 		$cat_terms = wp_get_object_terms( $post->ID, 'doc_category' );
 
-		if ( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
+		if( is_array( $cat_terms ) && ! empty( $cat_terms ) && $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { //if nested slug is enabled, render this
+			$doccat_terms = [];
+
+			foreach( $cat_terms as $term ) {
+				$process_term = $term;
+				array_unshift( $doccat_terms, $term->slug );
+				while( $process_term->parent != 0 ) {
+					$parent_term = get_term($process_term->parent);
+					array_unshift($doccat_terms, $parent_term->slug);
+					$process_term = $parent_term;
+				}
+			}
+
+			$doccat_terms = implode('/', $doccat_terms);
+		} else if ( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
 			$doccat_terms = $cat_terms[0]->slug;
 		} else {
 			$doccat_terms = 'uncategorized';

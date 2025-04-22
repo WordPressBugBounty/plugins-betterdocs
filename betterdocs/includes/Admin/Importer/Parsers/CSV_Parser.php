@@ -129,46 +129,46 @@ class CSV_Parser {
 
 				$term_data = array_combine( $term_headers, $term_row );
 
-				$taxonomy  = $term_data['Taxonomy'];
-				$term_args = [
-					'term_id'       => $term_data['Term ID'],
-					'term_taxonomy' => $taxonomy,
-					'slug'          => $term_data['Term slug'],
-					'term_parent'   => $term_data['Term parent'],
-					'term_name'     => $term_data['Term name'],
-					'description'   => $term_data['Term description'],
-					'term_group'    => $term_data['Term group'],
-					'termmeta'      => []
-				];
+                $taxonomy  = $term_data['Taxonomy'];
+                $term_args = [
+                    'term_id'       => sanitize_text_field( $term_data['Term ID'] ),
+                    'term_taxonomy' => $taxonomy,
+                    'slug'          => sanitize_text_field( $term_data['Term slug'] ),
+                    'term_parent'   => sanitize_text_field( $term_data['Term parent'] ),
+                    'term_name'     => sanitize_text_field( $term_data['Term name'] ),
+                    'description'   => sanitize_text_field( $term_data['Term description'] ),
+                    'term_group'    => sanitize_text_field( $term_data['Term group'] ),
+                    'termmeta'      => []
+                ];
 
-				if ( $taxonomy === 'doc_category' ) {
-					if ( ! empty( $term_data['Assigned Docs'] ) ) {
-						$term_args['termmeta'][] = [
-							'key'   => '_docs_order',
-							'value' => $term_data['Assigned Docs']
-						];
-					}
+                if ( $taxonomy === 'doc_category' ) {
+                    if ( ! empty( $term_data['Assigned Docs'] ) ) {
+                        $term_args['termmeta'][] = [
+                            'key'   => '_docs_order',
+                            'value' => sanitize_text_field( $term_data['Assigned Docs'] )
+                        ];
+                    }
 
-					if ( ! empty( $term_data['Assigned KBs'] ) ) {
-						$doc_category_knowledge_base = explode( ',', $term_data['Assigned KBs'] );
-						$term_args['termmeta'][]     = [
-							'key'   => 'doc_category_knowledge_base',
-							'value' => rest_sanitize_array( $doc_category_knowledge_base )
-						];
-					}
+                    if ( ! empty( $term_data['Assigned KBs'] ) ) {
+                        $doc_category_knowledge_base = explode( ",", sanitize_text_field( $term_data['Assigned KBs'] ) );
+                        $term_args['termmeta'][]     = [
+                            'key'   => 'doc_category_knowledge_base',
+                            'value' => rest_sanitize_array( $doc_category_knowledge_base )
+                        ];
+                    }
 
-					if ( ! empty( $term_data['Doc Category order'] ) ) {
-						$term_args['termmeta'][] = [
-							'key'   => 'doc_category_order',
-							'value' => $term_data['Doc Category order']
-						];
-					}
-				} elseif ( $taxonomy === 'knowledge_base' && ! empty( $term_data['KB order'] ) ) {
-					$term_args['termmeta'][] = [
-						'key'   => 'kb_order',
-						'value' => $term_data['KB order']
-					];
-				}
+                    if ( ! empty( $term_data['Doc Category order'] ) ) {
+                        $term_args['termmeta'][] = [
+                            'key'   => 'doc_category_order',
+                            'value' => sanitize_text_field( $term_data['Doc Category order'] )
+                        ];
+                    }
+                } else if ( $taxonomy === 'knowledge_base' && ! empty( $term_data['KB order'] ) ) {
+                    $term_args['termmeta'][] = [
+                        'key'   => 'kb_order',
+                        'value' => $term_data['KB order']
+                    ];
+                }
 
 				$data['terms'][] = $term_args;
 			} elseif ( $type === 'Author' ) {
@@ -178,65 +178,65 @@ class CSV_Parser {
 
 				$author_data = array_combine( $author_headers, $author_row );
 
-				$data['authors'][ $author_data['Author login'] ] = [
-					'author_id'           => $author_data['Author id'],
-					'author_login'        => $author_data['Author login'],
-					'author_email'        => $author_data['Author email'],
-					'author_display_name' => $author_data['Author display name'],
-					'author_first_name'   => $author_data['Author first name'],
-					'author_last_name'    => $author_data['Author last name']
-				];
-			} elseif ( $type === 'Docs' ) {
-				$post_headers = array_slice( $headers, 1, 21 );
-				$post_row     = array_slice( $row, 1, 21 );
-				$post_row     = array_pad( $post_row, count( $post_headers ), '' );
+                $data['authors'][$author_data['Author login']] = [
+                    'author_id'           => sanitize_text_field( $author_data['Author id'] ),
+                    'author_login'        => sanitize_text_field( $author_data['Author login'] ),
+                    'author_email'        => sanitize_text_field( $author_data['Author email'] ),
+                    'author_display_name' => sanitize_text_field( $author_data['Author display name'] ),
+                    'author_first_name'   => sanitize_text_field( $author_data['Author first name'] ),
+                    'author_last_name'    => sanitize_text_field( $author_data['Author last name'] )
+                ];
+            } else if ( $type === 'Docs' ) {
+                $post_headers = array_slice( $headers, 1, 21 );
+                $post_row     = array_slice( $row, 1, 21 );
+                $post_row     = array_pad( $post_row, count( $post_headers ), '' );
 
 				$post_data = array_combine( $post_headers, $post_row );
 
-				$post_args = [
-					'post_id'           => $post_data['Docs ID'] ?? '',
-					'post_type'         => 'docs',
-					'post_author'       => $post_data['Docs author'] ?? '',
-					'post_content'      => $post_data['Docs content'] ?? '',
-					'post_title'        => $post_data['Docs title'] ?? '',
-					'post_name'         => $post_data['Docs slug'] ?? '',
-					'post_excerpt'      => $post_data['Docs excerpt'] ?? '',
-					'status'            => $post_data['Docs status'] ?? 'publish',
-					'post_password'     => $post_data['Docs password'] ?? '',
-					'post_parent'       => $post_data['Docs parent'] ?? '',
-					'menu_order'        => $post_data['Docs menu order'] ?? '',
-					'post_date'         => $post_data['Docs date'] ?? '',
-					'post_date_gmt'     => $post_data['Docs date gmt'] ?? '',
-					'post_modified'     => $post_data['Docs modified date'] ?? '',
-					'post_modified_gmt' => $post_data['Docs modified date gmt'] ?? '',
-					'terms'             => [],
-					'postmeta'          => []
-				];
+                $post_args = [
+                    'post_id'           => sanitize_text_field( $post_data['Docs ID'] ) ?? '',
+                    'post_type'         => 'docs',
+                    'post_author'       => sanitize_text_field( $post_data['Docs author'] ) ?? '',
+                    'post_content'      => sanitize_text_field( $post_data['Docs content'] ) ?? '',
+                    'post_title'        => sanitize_text_field( $post_data['Docs title'] ) ?? '',
+                    'post_name'         => sanitize_text_field( $post_data['Docs slug'] ) ?? '',
+                    'post_excerpt'      => sanitize_text_field( $post_data['Docs excerpt'] ) ?? '',
+                    'status'            => sanitize_text_field( $post_data['Docs status'] ) ?? 'publish',
+                    'post_password'     => sanitize_text_field( $post_data['Docs password'] ) ?? '',
+                    'post_parent'       => sanitize_text_field( $post_data['Docs parent'] ) ?? '',
+                    'menu_order'        => sanitize_text_field( $post_data['Docs menu order'] ) ?? '',
+                    'post_date'         => sanitize_text_field( $post_data['Docs date'] ) ?? '',
+                    'post_date_gmt'     => sanitize_text_field( $post_data['Docs date gmt'] ) ?? '',
+                    'post_modified'     => sanitize_text_field( $post_data['Docs modified date'] ) ?? '',
+                    'post_modified_gmt' => sanitize_text_field( $post_data['Docs modified date gmt'] ) ?? '',
+                    'terms'             => [],
+                    'postmeta'          => []
+                ];
 
-				if ( isset( $post_data['Doc Categories'] ) && $data['terms'] ) {
-					$post_args['terms'] = array_merge(
-						$this->searchTermsByIds( $data['terms'], $post_data['Doc Categories'] ),
-						$this->searchTermsByIds( $data['terms'], $post_data['Doc Tags'] ),
-						$this->searchTermsByIds( $data['terms'], $post_data['Knowledge Bases'] )
-					);
-				}
+                if ( isset( $post_data['Doc Categories'] ) && $data['terms'] ) {
+                    $post_args['terms'] = array_merge(
+                        $this->searchTermsByIds( $data['terms'], sanitize_text_field( $post_data['Doc Categories'] ) ),
+                        $this->searchTermsByIds( $data['terms'], sanitize_text_field( $post_data['Doc Tags'] ) ),
+                        $this->searchTermsByIds( $data['terms'], sanitize_text_field( $post_data['Knowledge Bases'] ) )
+                    );
+                }
 
 				$data['posts'][] = $post_args;
 
-				if ( ! empty( $post_data['Docs attachement url'] ) ) {
-					$attachment_args = [
-						'post_type'      => 'attachment',
-						'post_author'    => $post_data['Docs author'] ?? '',
-						'post_id'        => $post_data['Docs attachement ID'] ?? '',
-						'status'         => 'inherit',
-						'post_content'   => '',
-						'post_excerpt'   => '',
-						'guid'           => '',
-						'post_title'     => pathinfo( $post_data['Docs attachement url'], PATHINFO_FILENAME ),
-						'post_name'      => pathinfo( $post_data['Docs attachement url'], PATHINFO_FILENAME ),
-						'post_parent'    => $post_data['Docs ID'] ?? '',
-						'attachment_url' => $post_data['Docs attachement url']
-					];
+                if ( ! empty( $post_data['Docs attachement url'] ) ) {
+                    $attachment_args = [
+                        'post_type'      => 'attachment',
+                        'post_author'    => sanitize_text_field( $post_data['Docs author'] ) ?? '',
+                        'post_id'        => sanitize_text_field( $post_data['Docs attachement ID'] ) ?? '',
+                        'status'         => 'inherit',
+                        'post_content'   => '',
+                        'post_excerpt'   => '',
+                        'guid'           => '',
+                        'post_title'     => pathinfo( sanitize_text_field( $post_data['Docs attachement url'] ), PATHINFO_FILENAME ),
+                        'post_name'      => pathinfo( sanitize_text_field( $post_data['Docs attachement url'] ), PATHINFO_FILENAME ),
+                        'post_parent'    => sanitize_text_field( $post_data['Docs ID'] ) ?? '',
+                        'attachment_url' => sanitize_text_field( $post_data['Docs attachement url'] )
+                    ];
 
 					$data['posts'][] = $attachment_args;
 				}

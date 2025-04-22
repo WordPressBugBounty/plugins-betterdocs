@@ -75,7 +75,7 @@ class ComposerStaticInit3ce4b42d4553d2813f3c2fc3abece7bf
         'WPDeveloper\\BetterDocs\\Admin\\Importer\\Parsers\\WXR_Parser_XML' => __DIR__ . '/../..' . '/includes/Admin/Importer/Parsers/WXR_Parser_XML.php',
         'WPDeveloper\\BetterDocs\\Admin\\Importer\\WPImport' => __DIR__ . '/../..' . '/includes/Admin/Importer/WPImport.php',
         'WPDeveloper\\BetterDocs\\Admin\\ReportEmail' => __DIR__ . '/../..' . '/includes/Admin/ReportEmail.php',
-        'WPDeveloper\\BetterDocs\\Admin\\WPExporter' => __DIR__ . '/../..' . '/includes/Admin/WPExporter.php',
+        'WPDeveloper\\BetterDocs\\Admin\\XMLExporter' => __DIR__ . '/../..' . '/includes/Admin/XMLExporter.php',
         'WPDeveloper\\BetterDocs\\Core\\Admin' => __DIR__ . '/../..' . '/includes/Core/Admin.php',
         'WPDeveloper\\BetterDocs\\Core\\BaseAPI' => __DIR__ . '/../..' . '/includes/Core/BaseAPI.php',
         'WPDeveloper\\BetterDocs\\Core\\FAQBuilder' => __DIR__ . '/../..' . '/includes/Core/FAQBuilder.php',

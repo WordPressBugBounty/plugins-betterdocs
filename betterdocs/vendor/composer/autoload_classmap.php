@@ -52,7 +52,7 @@ return array(
     'WPDeveloper\\BetterDocs\\Admin\\Importer\\Parsers\\WXR_Parser_XML' => $baseDir . '/includes/Admin/Importer/Parsers/WXR_Parser_XML.php',
     'WPDeveloper\\BetterDocs\\Admin\\Importer\\WPImport' => $baseDir . '/includes/Admin/Importer/WPImport.php',
     'WPDeveloper\\BetterDocs\\Admin\\ReportEmail' => $baseDir . '/includes/Admin/ReportEmail.php',
-    'WPDeveloper\\BetterDocs\\Admin\\WPExporter' => $baseDir . '/includes/Admin/WPExporter.php',
+    'WPDeveloper\\BetterDocs\\Admin\\XMLExporter' => $baseDir . '/includes/Admin/XMLExporter.php',
     'WPDeveloper\\BetterDocs\\Core\\Admin' => $baseDir . '/includes/Core/Admin.php',
     'WPDeveloper\\BetterDocs\\Core\\BaseAPI' => $baseDir . '/includes/Core/BaseAPI.php',
     'WPDeveloper\\BetterDocs\\Core\\FAQBuilder' => $baseDir . '/includes/Core/FAQBuilder.php',

@@ -142,6 +142,11 @@ class Rewrite extends Base {
 		return $structure;
 	}
 
+	public function hierarchy_based_slug_switch() {
+		$hierarchy_slug = $this->settings->get( 'enable_category_hierarchy_slugs', false );
+		return $hierarchy_slug;
+	}
+
 	public function get_base_slug() {
 		$docs_slug        = $this->settings->get( 'docs_slug', 'docs' );
 		$docs_page        = $this->settings->get( 'docs_page', 0 );
@@ -232,7 +237,8 @@ class Rewrite extends Base {
 		 * https://url/docs/(cat-slug)/(kb-slug)/(docs-slug)
 		 */
 
-		$base = $this->get_base_slug();
+		$base 			= $this->get_base_slug();
+		$hierarchy_slug = $this->hierarchy_based_slug_switch();
 
 		// Add rule to handle pagination attempts
 		$this->add_rewrite_rule(
@@ -245,6 +251,17 @@ class Rewrite extends Base {
         $this->add_rewrite_rule( $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
         $this->add_rewrite_rule( $base . '/authors/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]' );
 		$this->add_rewrite_rule( $base . '/authors/([0-9]+)/page/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]&page=$matches[2]' );
+
+		if( $hierarchy_slug ) { // reigster hierarchy based slug rewrite rule, for single doc permalink
+			$this->add_rewrite_rule( $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$', 'index.php?doc_category=$matches[1]&docs=$matches[2]&post_type=docs' );
+
+			$rewrite_rules = get_option('rewrite_rules');
+
+			if( ! isset( $rewrite_rules[$base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$'] ) ) { // if this nested rule is not set then flush the rules
+				error_log(12);
+				flush_rewrite_rules();
+			}
+		}
 
 		/**
 		 * This code of blocks used to determine single docs permalink.

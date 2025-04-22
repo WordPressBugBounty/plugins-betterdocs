@@ -8,7 +8,7 @@ use WPDeveloper\BetterDocs\Admin\CSVExporter;
 use WPDeveloper\BetterDocs\Admin\Importer\Parsers\CSV_Parser;
 use WPDeveloper\BetterDocs\Admin\Importer\WPImport;
 use WPDeveloper\BetterDocs\Admin\ReportEmail;
-use WPDeveloper\BetterDocs\Admin\WPExporter;
+use WPDeveloper\BetterDocs\Admin\XMLExporter;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Dependencies\DI\DependencyException;
 use WPDeveloper\BetterDocs\Dependencies\DI\NotFoundException;
@@ -69,26 +69,28 @@ class Settings extends BaseAPI {
 		}
 	}
 
-	public function export_docs( WP_REST_Request $request ) {
-		$data = $request->get_params();
-		$args = [
-			'include_post_featured_image_as_attachment' => true,
-			'status'                                    => 'publish',
-			'content'                                   => $data['export_type'] == 'glossaries' ? 'glossaries' : 'docs',
-			'selected_docs'                             => $data['export_docs'],
-			'include_faq'                               => $data['enable_export_faq'],
-		];
+    public function export_docs( WP_REST_Request $request ) {
+        $data = $request->get_params();
+        $args = [
+            'include_post_featured_image_as_attachment' => true,
+            'status'                                    => 'publish',
+            'content'                                   => $data['export_type'],
+            'selected_docs'                             => $data['export_docs'],
+            'include_faq'                               => $data['enable_export_faq'],
+        ];
 
 		if ( $data['export_type'] == 'docs' && $data['export_docs'][0] != 'all' ) {
 			$args['post__in'] = $data['export_docs'];
 		}
 
-		if ( $data['export_type'] == 'doc_category' && $data['export_categories'][0] != 'all' ) {
-			$args['category_terms'] = $data['export_categories'];
+		if ( $data['export_type'] == 'doc_category' || $data['export_type'] == 'knowledge_base' ) {
+			$args['content'] = 'docs';
 		}
 
-		if ( $data['export_type'] == 'knowledge_base' && $data['export_kbs'][0] != 'all' ) {
-			$args['kb_terms'] = $data['export_kbs'];
+		if ( $data['export_type'] == 'doc_category' && $data['export_categories'][0] != 'all' ) {
+			$args['category_terms'] = $data['export_categories'];
+		} else if ( $data['export_type'] == 'knowledge_base' && $data['export_kbs'][0] != 'all' ) {
+			$args['kb_terms'] = $data['export_kbs'];	
 		}
 
 		if ( $data['export_type'] == 'glossaries' && $data['export_glossaries'][0] != 'all' ) {
@@ -96,15 +98,15 @@ class Settings extends BaseAPI {
 			unset( $args['selected_docs'] );
 		}
 
-		if ( $data['file_type'] == 'xml' ) {
-			$exporter = new WPExporter( $args );
-		} elseif ( $data['file_type'] == 'csv' ) {
-			$exporter = new CSVExporter( $args );
-		}
+        if ( $data['file_type'] == 'xml' ) {
+            $exporter = new XMLExporter( $args );
+        } else if ( $data['file_type'] == 'csv' ) {
+            $exporter = new CSVExporter( $args );
+        }
 
-		/**
-		 * @var WPExporter|CSVExporter $exporter
-		 */
+        /**
+         * @var XMLExporter|CSVExporter $exporter
+         */
 
 		return $exporter->run();
 	}

@@ -15,8 +15,9 @@ use Elementor\Controls_Manager;
 use WPDeveloper\BetterDocs\Editors\Elementor\Helper;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Typography;
+use WPDeveloper\BetterDocs\Editors\Elementor\BaseWidget;
 
-class FAQ extends Widget_Base {
+class FAQ extends BaseWidget {
 
 	public function get_name() {
 		return 'betterdocs-faq';
@@ -762,7 +763,7 @@ class FAQ extends Widget_Base {
 		$this->end_controls_section();
 	}
 
-	protected function render() {
+	protected function render_callback() {
 		$control_values = $this->get_settings_for_display();
 
 		$specific_faqs = ! empty( $control_values['select_specific_faq'] ) ? implode( ',', $control_values['select_specific_faq'] ) : '';

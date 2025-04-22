@@ -104,7 +104,7 @@ abstract class Block extends Base {
 				function ( $item ) use ( &$key ) {
 					return $item[ $key ];
 				},
-				$_return_val
+				$_return_val == null || empty( $_return_val ) ? [] : $_return_val
 			);
 		}
 

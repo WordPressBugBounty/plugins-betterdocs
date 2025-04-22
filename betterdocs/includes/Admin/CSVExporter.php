@@ -1,6 +1,8 @@
 <?php
 namespace WPDeveloper\BetterDocs\Admin;
 
+use Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -118,14 +120,21 @@ class CSVExporter {
 			}
 		} elseif ( isset( $this->args['kb_terms'] ) ) {
 			$join = "INNER JOIN {$this->wpdb->term_relationships} ON ({$this->wpdb->posts}.ID = {$this->wpdb->term_relationships}.object_id)";
+			$kb_terms = [];
+			
 			foreach ( $this->args['kb_terms'] as $term_slug ) {
 				$term = get_term_by( 'slug', $term_slug, 'knowledge_base' );
 				if ( $term ) {
-					$where .= $this->wpdb->prepare(
-						" AND {$this->wpdb->term_relationships}.term_taxonomy_id = %d",
-						$term->term_taxonomy_id
-					);
+					$kb_terms[] = $term->term_taxonomy_id;
 				}
+			}
+			
+			if ( ! empty( $kb_terms ) ) {
+				$term_placeholder = implode( ', ', array_fill( 0, count( $kb_terms ), '%d' ) );
+				$where .= $this->wpdb->prepare(
+					" AND {$this->wpdb->term_relationships}.term_taxonomy_id IN ($term_placeholder)",
+					$kb_terms
+				);
 			}
 		}
 

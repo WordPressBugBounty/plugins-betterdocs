@@ -5,12 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-use Elementor\Widget_Base;
+use WPDeveloper\BetterDocs\Editors\Elementor\BaseWidget;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Plugin;
 
-class Feedback extends Widget_Base {
+class Feedback extends BaseWidget {
 
 	public function get_name() {
 		return 'betterdocs-feedback';
@@ -455,7 +455,7 @@ class Feedback extends Widget_Base {
 		$this->end_controls_section();
 	}
 
-	protected function render() {
+	protected function render_callback() {
 		$settings = $this->get_settings_for_display();
 
 		betterdocs()->views->get(

@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 3.8.14
+Stable tag: 3.8.15
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -226,6 +226,18 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.8.15 - 22/04/2025 =
+
+ - Added: Support for nested category URL slugs on both Docs Category and Single Docs pages.
+ - Added: Option to hide the "Explore More" button for categories based on the number of docs.
+ - Added: Classic UI Button in the FAQ Builder.
+ - Fixed: Export/Import issues for single categories.
+ - Fixed: Background color option not applying on Archive Doc List and BetterDocs Sidebar blocks.
+ - Fixed: Table of Contents not functioning under specific conditions.
+ - Fixed: Highlight issue in Table of Contents on Single Docs pages.
+ - Fixed: Deprecated CSS classes removed from Elementor widgets.
+ - Few minor bug fixes and improvements.
 
 = 3.8.14 - 10/04/2025 =
 

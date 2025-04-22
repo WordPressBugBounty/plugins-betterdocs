@@ -704,9 +704,7 @@ class ToC extends BaseWidget {
 			'list_number' => $this->attributes['list_number']
 		];
 
-		if ( ElementorPlugin::$instance->editor->is_edit_mode() ) {
-			set_transient( 'betterdocs_toc_setting', $toc_setting );
-		}
+		set_transient( 'betterdocs_toc_setting', $toc_setting );
 
 		$htags = implode( ',', $this->attributes['htags'] );
 
