@@ -640,7 +640,7 @@ class Settings extends Base {
 									'enable_disable_text_active' => true,
 									'default'                    => false,
 									'priority'                   => 3,
-									'label_subtitle' 			 => __( "Show's Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page", 'betterdocs' )
+									'label_subtitle' 			 => __( "Shows Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page", 'betterdocs' )
 								],
 								'breadcrumb_doc_title' => [
 									'name'     => 'breadcrumb_doc_title',

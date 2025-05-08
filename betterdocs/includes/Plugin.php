@@ -117,7 +117,7 @@ final class Plugin {
 	 * Plugin Version
 	 * @var string
 	 */
-	public $version = '3.8.15';
+	public $version = '3.9.0';
 
 	/**
 	 * WriteWithAI Class
@@ -364,6 +364,18 @@ final class Plugin {
 		return false;
 	}
 
+	public function chatbot_file() {
+		return WP_PLUGIN_DIR . '/betterdocs-ai-chatbot/betterdocs-ai-chatbot.php';
+	}
+
+	public function is_chatbot_active() {
+		if ( file_exists( $this->chatbot_file() ) ) {
+			return $this->helper->is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' );
+		}
+
+		return false;
+	}
+
 	public function pro_version() {
 		if ( ! $this->is_pro_active() ) {
 			return false;
@@ -404,13 +416,15 @@ final class Plugin {
 
 	public function is_betterdocs_screen( $hook, $admin_check = true ): bool {
 		$screens = [
-			'betterdocs_page_betterdocs-settings',
+			'toplevel_page_betterdocs-dashboard',
 			'toplevel_page_betterdocs-admin',
+			'admin_page_betterdocs-admin',
+			'betterdocs_page_betterdocs-admin',
 			'betterdocs_page_betterdocs-analytics',
+			'betterdocs_page_betterdocs-settings',
 			'betterdocs_page_betterdocs-faq',
 			'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
-
 		];
 
 		if ( $admin_check ) {
@@ -426,13 +440,15 @@ final class Plugin {
 
 	public function get_betterdocs_screen() {
 		$registered_screens = [
-			'toplevel_page_betterdocs-admin',
+			'toplevel_page_betterdocs-dashboard',
+			'admin_page_betterdocs-admin',
+			'betterdocs_page_betterdocs-admin',
 			'betterdocs_page_betterdocs-settings',
 			'betterdocs_page_betterdocs-analytics',
 			'betterdocs_page_betterdocs-faq',
 			'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
-
+			'edit-docs',
 		];
 
 		$current_screen_id = get_current_screen() != null ? get_current_screen()->id : '';

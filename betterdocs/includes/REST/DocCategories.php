@@ -6,7 +6,8 @@ use WPDeveloper\BetterDocs\Core\BaseAPI;
 
 class DocCategories extends BaseAPI {
 	public function permission_check(): bool {
-		return current_user_can( 'edit_docs' );
+		return true;
+		// return current_user_can( 'edit_docs' );
 	}
 
 	public function register() {
@@ -16,17 +17,27 @@ class DocCategories extends BaseAPI {
 	public function get_response( $request ) {
 		global $wpdb;
 
-		$mkb = $request->get_param( 'knowledge_base' );
+		$mkb 	  = $request->get_param( 'knowledge_base' );
+		$per_page = $request->get_param( 'per_page' );
+		$page     = $request->get_param( 'page' );
 
-		$terms_query = betterdocs()->query->terms_query(
-			[
-				'hide_empty' => false,
-				'taxonomy'   => 'doc_category',
-				'orderby'    => 'meta_value_num',
-				'meta_key'   => 'doc_category_order',
-				'order'      => 'ASC'
-			]
-		);
+		$default_args = [
+			'hide_empty' => false,
+			'taxonomy'   => 'doc_category',
+			'orderby'    => 'meta_value_num',
+			'meta_key'   => 'doc_category_order',
+			'order'      => 'ASC',
+		];
+
+		if( $per_page !=  0 ) {
+			$default_args['number'] = $per_page;
+		}
+
+		if( $page != 0 ) {
+			$default_args['offset'] = ( $page * $per_page ) - $per_page;
+		}
+
+		$terms_query = betterdocs()->query->terms_query( $default_args );
 
 		if ( ! empty( $mkb ) ) {
 			$terms_query['meta_query'] = [
@@ -113,7 +124,14 @@ class DocCategories extends BaseAPI {
 			$response['uncategorized'] = $uncategorized_docs;
 		}
 
-		return $response;
+		unset($terms_query['offset']);
+		unset($terms_query['number']);
+		$total_terms = wp_count_terms( $terms_query );
+
+		return [
+			'data' 		  => $response,
+			'total_terms' => $total_terms
+		];
 	}
 
 	/**

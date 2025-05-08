@@ -406,7 +406,7 @@ class PostType extends Base {
 		global $current_screen;
 		$screen_id = isset( $current_screen->id ) ? $current_screen->id : '';
 
-		if ( in_array( $screen_id, [ 'toplevel_page_betterdocs-admin', 'betterdocs_page_betterdocs-settings' ] ) ) {
+		if ( in_array( $screen_id, [ 'betterdocs_page_betterdocs-admin', 'betterdocs_page_betterdocs-settings', 'admin_page_betterdocs-admin' ] ) ) {
 			$this->default_term_order( 'doc_category' );
 		}
 
@@ -1019,11 +1019,10 @@ class PostType extends Base {
 
 	public function highlight_admin_menu( $parent_file ) {
 		global $current_screen;
-
-		if ( $current_screen->id === 'edit-docs' || in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category' ] ) ) {
-			$parent_file = 'betterdocs-admin';
+		if ( $current_screen->id === 'edit-docs' || $current_screen->id === 'admin_page_betterdocs-admin' || in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category' ] ) ) {
+			$parent_file = 'betterdocs-dashboard';
 		} elseif ( in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category' ] ) ) {
-				$parent_file = 'edit.php?post_type=docs';
+			$parent_file = 'edit.php?post_type=docs';
 		}
 
 		return apply_filters( 'betterdocs_highlight_admin_menu', $parent_file, $current_screen );

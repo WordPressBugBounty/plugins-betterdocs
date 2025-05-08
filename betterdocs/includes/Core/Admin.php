@@ -21,7 +21,7 @@ class Admin extends Base {
 	 * Admin Root Menu Slug
 	 * @var string
 	 */
-	private $slug = 'betterdocs-admin';
+	private $slug = 'betterdocs-dashboard';
 	/**
 	 * Insights
 	 *
@@ -68,7 +68,7 @@ class Admin extends Base {
 		$this->assets      = $assets;
 		$this->settings    = $settings;
 		$this->kbmigration = $kbmigration;
-		$this->slug        = 'betterdocs-admin';
+		$this->slug        = 'betterdocs-dashboard';
 
 		add_action( 'init', [ $type, 'register' ], 9 );
 
@@ -445,7 +445,8 @@ class Admin extends Base {
 		if ( method_exists( self::$cache_bank, 'clear_notices_in_' ) ) {
 			self::$cache_bank->clear_notices_in_(
 				[
-					'toplevel_page_betterdocs-admin',
+					'toplevel_page_betterdocs-dashboard',
+					'admin_page_betterdocs-admin',
 					'betterdocs_page_betterdocs-admin',
 					'betterdocs_page_betterdocs-settings',
 					'betterdocs_page_betterdocs-faq',
@@ -465,10 +466,11 @@ class Admin extends Base {
 		$saved_settings     = get_option( 'betterdocs_settings', false );
 		$dark_mode          = isset( $saved_settings['dark_mode'] ) ? $saved_settings['dark_mode'] : false;
 		$dark_mode          = ! empty( $dark_mode ) ? boolval( $dark_mode ) : false;
-		$current_screen_id  = get_current_screen() != null ? str_replace( 'betterdocs_page_', '', str_replace( 'toplevel_page_', '', get_current_screen()->id ) ) : '';
+		$current_screen_id  = get_current_screen() != null ? str_replace( 'betterdocs_page_', '', str_replace( 'toplevel_page_', '', str_replace( 'admin_page_', '', get_current_screen()->id ) ) ) : '';
         $registered_screens = [
             'betterdocs-settings',
             'betterdocs-admin',
+            'betterdocs-dashboard',
             'betterdocs-analytics',
             'betterdocs-glossaries',
             'betterdocs-faq',
@@ -603,7 +605,7 @@ class Admin extends Base {
 		/**
 		 * This scripts enqueued for Dashboard App.
 		 */
-		$this->assets->enqueue( 'betterdocs', 'admin/css/dashboard.css', [ 'betterdocs-old' ] );
+		$this->assets->enqueue( 'betterdocs', 'admin/css/dashboard.css', [ 'betterdocs-old' ], '', BETTERDOCS_VERSION );
 		$this->assets->enqueue( 'betterdocs-icons', 'admin/btd-icon/style.css' );
 	}
 
@@ -670,9 +672,10 @@ class Admin extends Base {
 			'free_version'                   => betterdocs()->version,
 			'generate_data_url'              => get_rest_url( null, '/betterdocs/v1/create-sample-docs' ),
 			'nonce'                          => wp_create_nonce( 'wp_rest' ),
-            'sync_nonce'                 => wp_create_nonce( 'ai_chatbot_embed' ),
-            'count_all_docs'             => wp_count_posts('docs')->publish,
-            'count_new_docs'             => count(get_option('saved_docs_post_ids', [])),
+            'sync_nonce'                 	 => wp_create_nonce( 'ai_chatbot_embed' ),
+            'count_all_docs'                 => wp_count_posts('docs')->publish,
+            'count_all_faq'                  => wp_count_posts('betterdocs_faq')->publish,
+            'count_new_docs'                 => count(get_option('saved_docs_post_ids', [])),
 			'admin_url'                      => admin_url(),
 			'ia_preview'                     => betterdocs()->settings->get( 'ia_enable_preview', false ),
 			'multiple_kb'                    => betterdocs()->settings->get( 'multiple_kb' ),
@@ -681,7 +684,9 @@ class Admin extends Base {
 			'betterdocs_pro_plugin'          => betterdocs()->is_pro_active(),
 			'betterdocs_pro_version'         => betterdocs()->pro_version(),
 			'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
-            'disabled_embed_model_option'=> get_option('disabled_embed_model_option'),
+            'disabled_embed_model_option'    => get_option('disabled_embed_model_option'),
+            'betterdocs_ChatBot_plugin'	     => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
+			'total_doc_category_terms' 		 => wp_count_terms( 'doc_category')
 			]
 		);
 
@@ -772,35 +777,75 @@ class Admin extends Base {
 	 * @return void
 	 * @since 1.0.0
 	 */
-
 	public function menus() {
 		$default_args = [
 			'page_title' => 'BetterDocs',
 			'menu_title' => 'BetterDocs',
-			'capability' => 'edit_posts',
+			'capability' => 'edit_docs',  // Unified capability
 			'menu_slug'  => $this->slug,
 			'callback'   => [ $this, 'output' ],
 			'icon_url'   => betterdocs()->assets->icon( 'betterdocs-icon-white.svg', true ),
 			'position'   => 5
 		];
-
+	
 		$_menu_position = 5;
-
+		global $submenu;
+	
+		// Always register both UI endpoints
+		$this->register_modern_ui_fallback();
+	
 		foreach ( $this->menu_list() as $key => $value ) {
 			if ( $key === 'betterdocs' ) {
 				$callable = 'add_menu_page';
 				$value    = wp_parse_args( $value, $default_args );
+				call_user_func_array( $callable, $value );
 			} else {
-				$callable                 = 'add_submenu_page';
-				$default_args['callback'] = '';
-				$default_args['position'] = $_menu_position;
-				unset( $default_args['icon_url'] );
-				$value = wp_parse_args( $value, array_merge( [ 'parent_slug' => $this->slug ], $default_args ) );
+				$is_core_page = strpos($value['menu_slug'], '?') !== false;
+				
+				if ($is_core_page) {
+					// Add classic UI directly
+					$submenu[$this->slug][] = [
+						$value['menu_title'],
+						$value['capability'],
+						$value['menu_slug'],
+						$value['page_title']
+					];
+				} else {
+					// Add modern UI through WordPress API
+					add_submenu_page(
+						$this->slug,
+						$value['page_title'],
+						$value['menu_title'],
+						$value['capability'],
+						$value['menu_slug'],
+						$value['callback']
+					);
+				}
+				$_menu_position++;
 			}
+		}
+	}
 
-			++$_menu_position;
-
-			call_user_func_array( $callable, $value );
+	private function register_modern_ui_fallback() {
+		// Add the submenu with valid parent slug
+		add_submenu_page(
+			'betterdocs', // Valid parent slug
+			__('All Docs', 'betterdocs'),
+			'', // Empty menu title hides it
+			'edit_docs',
+			'betterdocs-admin',
+			[ $this, 'output' ]
+		);
+	
+		// Hide the menu item from appearing in the admin sidebar
+		global $submenu;
+		if (isset($submenu['betterdocs'])) {
+			foreach ($submenu['betterdocs'] as $key => $item) {
+				if ($item[2] === 'betterdocs-admin') {
+					unset($submenu['betterdocs'][$key]);
+					break;
+				}
+			}
 		}
 	}
 
@@ -860,10 +905,36 @@ class Admin extends Base {
 				'icon_url'   => betterdocs()->assets->icon( 'betterdocs-icon-white.svg', true ),
 				'position'   => 5
 			],
-			'all_docs'   => $this->normalize_menu( __( 'All Docs', 'betterdocs' ), $this->ui_slug() ),
-			'add_new'    => $this->normalize_menu( __( 'Add New', 'betterdocs' ), 'post-new.php?post_type=docs' ),
-			'categories' => $this->normalize_menu( __( 'Categories', 'betterdocs' ), 'edit-tags.php?taxonomy=doc_category&post_type=docs', 'manage_doc_terms' ),
-			'tags'       => $this->normalize_menu( __( 'Tags', 'betterdocs' ), 'edit-tags.php?taxonomy=doc_tag&post_type=docs', 'manage_doc_terms' ),
+			'dashboard'   => $this->normalize_menu(
+				__( 'Dashboard', 'betterdocs' ),
+				'betterdocs-dashboard',
+				'edit_docs',
+				[
+					$this,
+					'output'
+				]
+			),
+			'all_docs'   => $this->normalize_menu(
+				__( 'All Docs', 'betterdocs' ),
+				$this->ui_slug(),
+				'edit_docs',
+				[ $this, 'output' ],
+				$parent_slug
+			),
+			'add_new'    => $this->normalize_menu(
+				__( 'Add New', 'betterdocs' ),
+				'post-new.php?post_type=docs'
+			),
+			'categories' => $this->normalize_menu(
+				__( 'Categories', 'betterdocs' ),
+				'edit-tags.php?taxonomy=doc_category&post_type=docs',
+				'manage_doc_terms'
+			),
+			'tags'       => $this->normalize_menu(
+				__( 'Tags', 'betterdocs' ),
+				'edit-tags.php?taxonomy=doc_tag&post_type=docs',
+				'manage_doc_terms'
+			),
 			'settings'   => $this->normalize_menu(
 				__( 'Settings', 'betterdocs' ),
 				'betterdocs-settings',
@@ -908,6 +979,20 @@ class Admin extends Base {
 				$parent_slug
 			);
 		}
+
+
+		if (!betterdocs()->is_chatbot_active()) {
+            $betterdocs_admin_pages['ai_chatbot'] = $this->normalize_menu(
+                __('AI Chatbot', 'betterdocs'),
+                'betterdocs-ai-chatbot',
+                'edit_docs_settings',
+                [
+					$this,
+					'output'
+				],
+                $parent_slug
+            );
+        }
 
         return apply_filters( 'betterdocs_admin_menu', $betterdocs_admin_pages, [$this, 'output'], $parent_slug);
 
@@ -1047,22 +1132,16 @@ class Admin extends Base {
 	 * @since 3.0.1
 	 */
 	public function ui_slug() {
-		$last_visited = get_user_meta( get_current_user_id(), 'last_visited_docs_admin_page', true );
-		$docs         = get_posts(
-			[
-				'post_type'   => 'docs',
-				'post_status' => 'any',
-				'numberposts' => 2
-			]
-		);
-
-		if ( $last_visited === 'modern_ui' || count( $docs ) == 0 ) {
-			$slug = 'betterdocs-admin';
-		} else {
-			$slug = admin_url( 'edit.php?post_type=docs&bdocs_view=classic' );
-		}
-
-		return $slug;
+		$last_visited = get_user_meta(get_current_user_id(), 'last_visited_docs_admin_page', true);
+		$docs_exist = get_posts([
+			'post_type' => 'docs',
+			'post_status' => 'any',
+			'numberposts' => 1
+		]);
+	
+		return ($last_visited === 'modern_ui' || empty($docs_exist)) 
+			? 'betterdocs-admin' 
+			: 'edit.php?post_type=docs&bdocs_view=classic';
 	}
 
 	/**
