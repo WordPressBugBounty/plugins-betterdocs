@@ -47,7 +47,9 @@ class SearchModal extends Shortcode {
 				'faq_categories_ids' => '',
 				'layout'             => 'layout-1',
 				'doc_ids'            => '',
-				'doc_categories_ids' => ''
+				'doc_categories_ids' => '',
+				'enable_docs_search' => true,
+				'enable_faq_search'  => true
 			]
 		);
 	}
@@ -61,19 +63,23 @@ class SearchModal extends Shortcode {
 			]
 		);
 
+		$defaults_attrs = $this->default_attributes();
+
 		if ( isset( $atts['layout'] ) && $atts['layout'] == 'layout-1' ) {
 			$attributes = [
-				'placeholder'        => $atts['placeholder'],
-				'heading'            => $atts['heading'],
-				'subheading'         => $atts['subheading'],
-				'headingtag'         => $atts['heading_tag'],
-				'subheadingtag'      => $atts['subheading_tag'],
+				'placeholder'        => isset( $atts['placeholder'] ) ?  $atts['placeholder'] : $defaults_attrs['placeholder'],
+				'heading'            => isset( $atts['heading'] ) ? $atts['heading'] : $defaults_attrs['heading'],
+				'subheading'         => isset( $atts['subheading'] ) ? $atts['subheading'] : $defaults_attrs['subheading'],
+				'headingtag'         => isset( $atts['heading_tag'] ) ? $atts['heading_tag'] : $defaults_attrs['heading_tag'],
+				'subheadingtag'      => isset( $atts['subheading_tag'] ) ? $atts['subheading_tag'] : $defaults_attrs['subheading_tag'],
 				'buttontext'         => isset( $atts['search_button_text'] ) ? $atts['search_button_text'] : '',
 				'numberofdocs'       => isset( $atts['number_of_docs'] ) ? $atts['number_of_docs'] : 5,
 				'numberoffaqs'       => isset( $atts['number_of_faqs'] ) ? $atts['number_of_faqs'] : 5,
 				'faq_categories_ids' => isset( $atts['faq_categories_ids'] ) ? $atts['faq_categories_ids'] : '',
 				'doc_ids'            => isset( $atts['doc_ids'] ) ? $atts['doc_ids'] : '',
-				'doc_categories_ids' => isset( $atts['doc_categories_ids'] ) ? $atts['doc_categories_ids'] : ''
+				'doc_categories_ids' => isset( $atts['doc_categories_ids'] ) ? $atts['doc_categories_ids'] : '',
+				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
+				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 			echo '<div class="betterdocs-search-modal-layout-1" id="betterdocs-search-modal"';
@@ -90,7 +96,9 @@ class SearchModal extends Shortcode {
 				'numberoffaqs'       => isset( $atts['number_of_faqs'] ) ? $atts['number_of_faqs'] : 5,
 				'faq_categories_ids' => isset( $atts['faq_categories_ids'] ) ? $atts['faq_categories_ids'] : '',
 				'doc_ids'            => isset( $atts['doc_ids'] ) ? $atts['doc_ids'] : '',
-				'doc_categories_ids' => isset( $atts['doc_categories_ids'] ) ? $atts['doc_categories_ids'] : ''
+				'doc_categories_ids' => isset( $atts['doc_categories_ids'] ) ? $atts['doc_categories_ids'] : '',
+				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
+				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 

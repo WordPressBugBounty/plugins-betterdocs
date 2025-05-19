@@ -319,8 +319,20 @@ class TemplateTags extends Base {
 			$shortcode_attributes_new = [
 				'number_of_faqs'     => $this->defaults->get( 'search_modal_query_initial_number_of_faqs' ),
 				'number_of_docs'     => $this->defaults->get( 'search_modal_query_initial_number_of_docs' ),
-				'search_button_text' => $this->defaults->get( 'search_button_text', __( 'Search', 'betterdocs' ) )
+				'search_button_text' => $this->defaults->get( 'search_button_text', __( 'Search', 'betterdocs' ) ),
+				'enable_docs_search' => $this->settings->get('search_modal_search_type', 'all'),
 			];
+
+			if( $this->settings->get('search_modal_search_type', 'all') == 'all' ) {
+				$shortcode_attributes_new['enable_docs_search'] = true;
+				$shortcode_attributes_new['enable_faq_search']  = true;
+			} else if( $this->settings->get('search_modal_search_type', 'all')  == 'docs' ) {
+				$shortcode_attributes_new['enable_docs_search'] = true;
+				$shortcode_attributes_new['enable_faq_search']  = false;
+			} else if( $this->settings->get('search_modal_search_type', 'all')  == 'faq' ) {
+				$shortcode_attributes_new['enable_docs_search'] = false;
+				$shortcode_attributes_new['enable_faq_search']  = true;
+			}
 
 			if ( $this->defaults->get( 'search_modal_query_type' ) === 'specific_doc_ids' ) {
 				$shortcode_attributes_new['doc_ids'] = $this->defaults->get( 'search_modal_query_doc_ids' );

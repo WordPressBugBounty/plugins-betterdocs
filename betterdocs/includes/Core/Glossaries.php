@@ -42,6 +42,8 @@ class Glossaries extends Base {
 				'single'       => true
 			]
 		);
+
+		register_term_meta( $this->category, 'order', [ 'show_in_rest' => true, 'single' => true ] );
 	}
 
 	public function enqueue( $hook ) {
@@ -339,14 +341,40 @@ class Glossaries extends Base {
 		);
 
 		if ( is_wp_error( $new_term ) ) {
-			return $new_term;
+			return ['status' => 'failed', 'data' => $new_term];
 		}
 
 		// Set the custom field description
 		$term_id = $new_term['term_id'];
 		update_term_meta( $term_id, 'glossary_term_description', $description ); //phpcs:ignore inline styles are need for the front-end
 
-		return true;
+		$new_term =  $this->glossary_term_in_rest_api_schema($term_id, $description);
+		return ['status' => 'success', 'data' => $new_term];
+	}
+
+	/**
+	 * Form Glossary Term In Rest Api Schema Format
+	 *
+	 * @param int $term_id
+	 * @param string $meta_description
+	 * @return array
+	 */
+	public function glossary_term_in_rest_api_schema( $term_id, $meta_description = '' ) {
+		$term 		= get_term_by('id', $term_id, 'glossaries');
+		return  [
+			'count' 	 				=> $term->count,
+			'description' 				=>  $term->description,
+			'glossary_term_description' => $meta_description, //get the current description
+			'id' 						=> $term->term_id,
+			'link' 						=> get_permalink($term->term_id),
+			'meta' 						=> [
+											'status' => get_term_meta( $term->term_id, 'status', true )
+			],
+			'name' 						=> $term->name,
+			'parent' 					=> $term->parent,
+			'slug' 						=> $term->slug,
+			'taxonomy' 					=> $term->taxonomy
+		];
 	}
 
 	public function update_glossaries( $request ) {
@@ -376,11 +404,11 @@ class Glossaries extends Base {
 		);
 
 		if ( is_wp_error( $update ) ) {
-			return $update;
+			return ['status' => 'failed', 'data' => $update];
 		} else {
 			// Update the custom field description
 			update_term_meta( $term_id, 'glossary_term_description', $description );
-			return true;
+			return ['status' => 'success', 'data' => $this->glossary_term_in_rest_api_schema($term_id, $description)];
 		}
 	}
 

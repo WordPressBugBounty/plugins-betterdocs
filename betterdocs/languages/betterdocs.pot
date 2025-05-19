@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-07T06:53:19+00:00\n"
+"POT-Creation-Date: 2025-05-18T12:44:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: betterdocs\n"
@@ -106,7 +106,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Defaults.php:539
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4715
-#: includes/Core/Settings.php:927
+#: includes/Core/Settings.php:928
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:152
 #: includes/Editors/Elementor/Widget/Sidebar.php:133
 #: assets/blocks/editor.js:1
@@ -946,8 +946,8 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:539
 #: includes/Admin/Customizer/Sections/SingleDoc.php:936
-#: includes/Core/Settings.php:945
-#: includes/Core/Settings.php:1001
+#: includes/Core/Settings.php:946
+#: includes/Core/Settings.php:1002
 #: includes/Editors/BlockEditor/Blocks/SearchForm.php:35
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:262
 #: includes/FrontEnd/TemplateTags.php:322
@@ -1810,8 +1810,8 @@ msgid "Active Border Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:17
-#: includes/Core/Settings.php:1366
-#: includes/Core/Settings.php:1372
+#: includes/Core/Settings.php:1380
+#: includes/Core/Settings.php:1386
 msgid "Breadcrumb"
 msgstr ""
 
@@ -1828,7 +1828,7 @@ msgid "Active Item Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:45
-#: includes/Core/Settings.php:663
+#: includes/Core/Settings.php:664
 #: includes/Core/SetupWizard.php:211
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:14
 #: includes/Editors/Elementor/Conditions/DocsPage.php:26
@@ -2031,7 +2031,7 @@ msgid "Image"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2768
-#: includes/Core/Settings.php:1077
+#: includes/Core/Settings.php:1091
 #: includes/Editors/Elementor/Widget/ArchiveList.php:87
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:831
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2575
@@ -2053,7 +2053,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ToC.php:243
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:18597
+#: assets/admin/js/dashboard.js:18635
 #: assets/blocks/editor.js:5612
 #: assets/blocks/editor.js:6127
 #: assets/blocks/editor.js:7530
@@ -2066,7 +2066,7 @@ msgid "Title"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2796
-#: includes/Core/Settings.php:1050
+#: includes/Core/Settings.php:1064
 #: includes/Editors/Elementor.php:235
 #: includes/Editors/Elementor.php:298
 #: includes/Editors/Elementor.php:470
@@ -2127,7 +2127,7 @@ msgid "Docs List Item Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:3719
-#: includes/Core/Settings.php:910
+#: includes/Core/Settings.php:911
 msgid "Explore More Button"
 msgstr ""
 
@@ -2396,7 +2396,7 @@ msgid "Group Active Title Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:37
-#: includes/Core/Settings.php:951
+#: includes/Core/Settings.php:952
 msgid "Live Search"
 msgstr ""
 
@@ -2840,7 +2840,7 @@ msgid "Search Modal Query"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4710
-#: includes/Core/Settings.php:2295
+#: includes/Core/Settings.php:2309
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:148
 #: includes/Editors/Elementor/Widget/Sidebar.php:129
 #: assets/blocks/editor.js:1
@@ -3078,8 +3078,8 @@ msgid "List Background Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:37
-#: includes/Core/Settings.php:1110
-#: includes/Core/Settings.php:1116
+#: includes/Core/Settings.php:1124
+#: includes/Core/Settings.php:1130
 #: includes/Editors/Elementor/SingleDocs.php:40
 msgid "Single Doc"
 msgstr ""
@@ -3156,9 +3156,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1647
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2467
 #: includes/blocks.php:125
-#: includes/Core/Settings.php:211
-#: includes/Core/Settings.php:1259
-#: includes/Core/Settings.php:1268
+#: includes/Core/Settings.php:212
+#: includes/Core/Settings.php:1273
+#: includes/Core/Settings.php:1282
 #: views/shortcodes/toc.php:17
 msgid "Table of Contents"
 msgstr ""
@@ -3199,7 +3199,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:3337
 #: includes/Editors/Elementor/Widget/DocAuthor.php:118
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18606
+#: assets/admin/js/dashboard.js:18644
 msgid "Author"
 msgstr ""
 
@@ -3213,8 +3213,8 @@ msgid "Updated Date"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:3436
-#: includes/Core/Admin.php:202
-#: includes/Core/Settings.php:1218
+#: includes/Core/Admin.php:215
+#: includes/Core/Settings.php:1232
 msgid "Estimated Reading Time"
 msgstr ""
 
@@ -3376,7 +3376,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:5952
 #: includes/blocks.php:101
-#: includes/Core/Admin.php:508
+#: includes/Core/Admin.php:521
 #: views/admin/analytics.php:16
 #: views/admin/email/analytics/leading-docs.php:29
 msgid "Reactions"
@@ -3465,7 +3465,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:7200
 #: includes/Admin/Customizer/Sections/SingleDoc.php:8333
-#: includes/Core/Settings.php:1482
+#: includes/Core/Settings.php:1496
 msgid "Attachments"
 msgstr ""
 
@@ -3578,7 +3578,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:9467
 #: includes/Admin/Customizer/Sections/SingleDoc.php:10507
-#: includes/Core/Settings.php:1500
+#: includes/Core/Settings.php:1514
 msgid "Related Docs"
 msgstr ""
 
@@ -3685,24 +3685,24 @@ msgid "You have to enable Reporting first."
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:295
-#: includes/Core/Settings.php:1843
+#: includes/Core/Settings.php:1857
 msgid "Once Weekly"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:299
-#: includes/Core/Settings.php:1842
+#: includes/Core/Settings.php:1856
 msgid "Once Daily"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:303
-#: includes/Core/Settings.php:1844
+#: includes/Core/Settings.php:1858
 msgid "Once Monthly"
 msgstr ""
 
 #. Translators: %s is replaced with the website name.
 #. translators: %s is the website name.
 #: includes/Admin/ReportEmail.php:341
-#: includes/Core/Settings.php:1897
+#: includes/Core/Settings.php:1911
 #: views/admin/email/body.php:41
 msgid "Your Documentation Performance of %s Website"
 msgstr ""
@@ -3770,7 +3770,7 @@ msgid "Doc Navigation"
 msgstr ""
 
 #: includes/blocks.php:133
-#: includes/Core/Settings.php:1600
+#: includes/Core/Settings.php:1614
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:14505
 msgid "Feedback Form"
@@ -3811,17 +3811,17 @@ msgstr ""
 msgid "Docs Tag"
 msgstr ""
 
-#: includes/Core/Admin.php:139
+#: includes/Core/Admin.php:152
 msgid "Deactivate BetterDocs Pro First"
 msgstr ""
 
-#: includes/Core/Admin.php:185
+#: includes/Core/Admin.php:198
 #: includes/Core/PostType.php:723
 #: includes/Core/Settings.php:178
-#: includes/Core/Settings.php:205
-#: includes/Core/Settings.php:649
-#: includes/Core/Settings.php:897
-#: includes/Core/Settings.php:2302
+#: includes/Core/Settings.php:206
+#: includes/Core/Settings.php:650
+#: includes/Core/Settings.php:898
+#: includes/Core/Settings.php:2316
 #: includes/Core/SetupWizard.php:224
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:47
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:220
@@ -3842,124 +3842,124 @@ msgstr ""
 msgid "Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:240
+#: includes/Core/Admin.php:253
 msgid "Want to help make <strong>BetterDocs</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage."
 msgstr ""
 
-#: includes/Core/Admin.php:241
+#: includes/Core/Admin.php:254
 msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
 msgstr ""
 
-#: includes/Core/Admin.php:275
+#: includes/Core/Admin.php:288
 msgid "We hope you're enjoying BetterDocs! Could you please do us a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: includes/Core/Admin.php:284
+#: includes/Core/Admin.php:297
 msgid "Sure, you deserve it!"
 msgstr ""
 
-#: includes/Core/Admin.php:288
+#: includes/Core/Admin.php:301
 msgid "I already did"
 msgstr ""
 
-#: includes/Core/Admin.php:295
-#: includes/Core/Admin.php:351
+#: includes/Core/Admin.php:308
+#: includes/Core/Admin.php:364
 #: includes/Core/KBMigration.php:51
 msgid "Maybe Later"
 msgstr ""
 
-#: includes/Core/Admin.php:307
+#: includes/Core/Admin.php:320
 msgid "I need help"
 msgstr ""
 
-#: includes/Core/Admin.php:311
-#: includes/Core/Admin.php:359
+#: includes/Core/Admin.php:324
+#: includes/Core/Admin.php:372
 msgid "Never show again"
 msgstr ""
 
 #. translators: %s is the name of the existing knowledge base plugin.
-#: includes/Core/Admin.php:335
+#: includes/Core/Admin.php:348
 msgid "Already using %s? Power up your Knowledge Base by migrating all your docs and settings to BetterDocs with just 1 click."
 msgstr ""
 
-#: includes/Core/Admin.php:343
+#: includes/Core/Admin.php:356
 #: includes/Core/KBMigration.php:50
 #: includes/Core/KBMigration.php:214
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Core/Admin.php:507
+#: includes/Core/Admin.php:520
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18726
+#: assets/admin/js/dashboard.js:18764
 msgid "Word Count"
 msgstr ""
 
-#: includes/Core/Admin.php:634
-#: includes/Core/Admin.php:665
+#: includes/Core/Admin.php:647
+#: includes/Core/Admin.php:678
 msgid "Switch to BetterDocs UI"
 msgstr ""
 
-#: includes/Core/Admin.php:667
+#: includes/Core/Admin.php:680
 msgid "Copied!"
 msgstr ""
 
-#: includes/Core/Admin.php:668
+#: includes/Core/Admin.php:681
 msgid "Test Report!"
 msgstr ""
 
-#: includes/Core/Admin.php:669
+#: includes/Core/Admin.php:682
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:758
+#: includes/Core/Admin.php:771
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:760
+#: includes/Core/Admin.php:773
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17905
-#: assets/admin/js/dashboard.js:17930
+#: assets/admin/js/dashboard.js:17943
+#: assets/admin/js/dashboard.js:17968
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:833
-#: includes/Core/Admin.php:918
+#: includes/Core/Admin.php:846
+#: includes/Core/Admin.php:931
 #: includes/Core/PostType.php:729
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16081
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:909
+#: includes/Core/Admin.php:922
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Core/Admin.php:925
+#: includes/Core/Admin.php:938
 #: includes/Core/FAQBuilder.php:95
 #: includes/Core/PostType.php:724
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:929
+#: includes/Core/Admin.php:942
 #: includes/Core/FAQBuilder.php:60
 #: includes/Core/PostType.php:790
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:934
+#: includes/Core/Admin.php:947
 #: includes/Core/PostType.php:965
-#: includes/Core/Settings.php:1171
+#: includes/Core/Settings.php:1185
 #: includes/Editors/Elementor/Widget/Tags.php:82
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:19481
-#: assets/admin/js/dashboard.js:20192
+#: assets/admin/js/dashboard.js:19519
+#: assets/admin/js/dashboard.js:20230
 #: assets/blocks/editor.js:12047
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:939
-#: includes/Core/Admin.php:1059
+#: includes/Core/Admin.php:952
+#: includes/Core/Admin.php:1072
 #: views/admin/template-parts/settings-header-2.php:3
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:2680
@@ -3968,24 +3968,24 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:949
+#: includes/Core/Admin.php:962
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:959
+#: includes/Core/Admin.php:972
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:972
+#: includes/Core/Admin.php:985
 #: includes/Core/PostType.php:835
-#: includes/Core/Settings.php:2304
+#: includes/Core/Settings.php:2318
 msgid "Glossaries"
 msgstr ""
 
-#: includes/Core/Admin.php:986
-#: includes/Core/Settings.php:1972
-#: includes/Core/Settings.php:1984
-#: includes/Core/Settings.php:1994
+#: includes/Core/Admin.php:999
+#: includes/Core/Settings.php:1986
+#: includes/Core/Settings.php:1998
+#: includes/Core/Settings.php:2008
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:15168
 #: assets/admin/js/dashboard.js:15410
@@ -3993,16 +3993,44 @@ msgstr ""
 msgid "AI Chatbot"
 msgstr ""
 
-#: includes/Core/Admin.php:1045
+#: includes/Core/Admin.php:1058
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:1095
+#: includes/Core/Admin.php:1108
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:1107
+#: includes/Core/Admin.php:1120
 msgid "Visit Encyclopedia"
+msgstr ""
+
+#: includes/Core/Admin.php:1201
+msgid "You are not allowed to do this action"
+msgstr ""
+
+#: includes/Core/Admin.php:1233
+msgid "Want To Get All Exclusive Gutenberg Blocks For Free?"
+msgstr ""
+
+#: includes/Core/Admin.php:1234
+msgid "If you want to enrich your Gutenberg block library with the latest designs and functionalities, Essential Blocks can be your best companion."
+msgstr ""
+
+#: includes/Core/Admin.php:1238
+#: includes/Core/Settings.php:338
+#: includes/Core/Settings.php:348
+#: assets/admin/js/dashboard.js:1
+#: assets/admin/js/dashboard.js:17493
+msgid "Learn More"
+msgstr ""
+
+#: includes/Core/Admin.php:1239
+msgid "Get Essential Blocks"
+msgstr ""
+
+#: includes/Core/Admin.php:1239
+msgid "Activate"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:51
@@ -4080,14 +4108,14 @@ msgstr ""
 msgid "Add new faq from here"
 msgstr ""
 
-#: includes/Core/Glossaries.php:403
+#: includes/Core/Glossaries.php:431
 #: includes/Core/PostType.php:874
 #: includes/Core/PostType.php:897
 #: includes/Core/PostType.php:931
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26277
-#: assets/admin/js/dashboard.js:26603
+#: assets/admin/js/dashboard.js:26315
+#: assets/admin/js/dashboard.js:26641
 #: assets/admin/js/glossaries.js:7690
 #: assets/admin/js/glossaries.js:8016
 msgid "Glossary Term Description"
@@ -4164,6 +4192,39 @@ msgstr ""
 msgid "Migration completed successfully."
 msgstr ""
 
+#: includes/Core/PluginInstaller.php:54
+#: includes/Core/PluginInstaller.php:89
+#: includes/Core/PluginInstaller.php:134
+msgid "Argument should not be empty."
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:152
+#: includes/Core/PluginInstaller.php:174
+#: includes/Core/PluginInstaller.php:193
+#: includes/Core/PluginInstaller.php:214
+msgid "you are not allowed to do this action"
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:166
+msgid "Plugin is installed successfully!"
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:184
+msgid "Plugin is updated successfully!"
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:204
+msgid "Plugin couldn't be activated."
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:206
+msgid "Plugin is activated successfully!"
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:220
+msgid "Plugin is deactivated successfully!"
+msgstr ""
+
 #: includes/Core/PostType.php:516
 #: includes/Core/PostType.php:574
 #: includes/Core/PostType.php:608
@@ -4194,9 +4255,9 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29415
-#: assets/admin/js/dashboard.js:30019
-#: assets/admin/js/dashboard.js:52053
+#: assets/admin/js/dashboard.js:29453
+#: assets/admin/js/dashboard.js:30057
+#: assets/admin/js/dashboard.js:52091
 #: assets/admin/js/quick-setup.js:2292
 #: assets/admin/js/quick-setup.js:22011
 #: assets/admin/js/settings.js:5301
@@ -4250,7 +4311,7 @@ msgid "Docs Categories"
 msgstr ""
 
 #: includes/Core/PostType.php:782
-#: includes/Core/Settings.php:2303
+#: includes/Core/Settings.php:2317
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:18
 #: includes/Utils/BlockTemplate.php:406
 msgid "Docs Category"
@@ -4320,8 +4381,8 @@ msgstr ""
 
 #: includes/Core/PostType.php:953
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19482
-#: assets/admin/js/dashboard.js:20193
+#: assets/admin/js/dashboard.js:19520
+#: assets/admin/js/dashboard.js:20231
 msgid "Search Tags"
 msgstr ""
 
@@ -4376,8 +4437,8 @@ msgstr ""
 msgid "Sorry, no docs were found."
 msgstr ""
 
-#: includes/Core/Settings.php:206
-#: includes/Core/Settings.php:904
+#: includes/Core/Settings.php:207
+#: includes/Core/Settings.php:905
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:48
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:234
 #: assets/blocks/editor.js:1
@@ -4386,8 +4447,8 @@ msgstr ""
 msgid "Doc"
 msgstr ""
 
-#: includes/Core/Settings.php:208
-#: includes/Core/Settings.php:919
+#: includes/Core/Settings.php:209
+#: includes/Core/Settings.php:920
 #: includes/Editors/BlockEditor/Blocks/CategoryGrid.php:86
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:316
 #: assets/blocks/editor.js:1
@@ -4397,14 +4458,14 @@ msgstr ""
 msgid "Explore More"
 msgstr ""
 
-#: includes/Core/Settings.php:222
-#: includes/Core/Settings.php:1390
+#: includes/Core/Settings.php:223
+#: includes/Core/Settings.php:1404
 msgid "Home"
 msgstr ""
 
-#: includes/Core/Settings.php:231
-#: includes/Core/Settings.php:1447
-#: includes/Core/Settings.php:1455
+#: includes/Core/Settings.php:232
+#: includes/Core/Settings.php:1461
+#: includes/Core/Settings.php:1469
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:30
 #: includes/Editors/Elementor/Widget/Feedback.php:91
 #: views/templates/feedback-parts/form.php:92
@@ -4413,12 +4474,12 @@ msgstr ""
 msgid "Still stuck? How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:232
+#: includes/Core/Settings.php:233
 #: includes/FrontEnd/FrontEnd.php:317
 msgid "Thanks for your feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:234
+#: includes/Core/Settings.php:235
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:31
 #: includes/Editors/Elementor/Widget/Feedback.php:99
 #: views/templates/feedback-parts/form.php:103
@@ -4428,10 +4489,10 @@ msgstr ""
 msgid "How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:258
 #: includes/Core/Settings.php:259
-#: includes/Core/Settings.php:1235
-#: includes/Core/Settings.php:1243
+#: includes/Core/Settings.php:260
+#: includes/Core/Settings.php:1249
+#: includes/Core/Settings.php:1257
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:25
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:26
 #: includes/Editors/Elementor/Widget/ReadingTime.php:68
@@ -4441,35 +4502,28 @@ msgstr ""
 msgid "min read"
 msgstr ""
 
-#: includes/Core/Settings.php:337
+#: includes/Core/Settings.php:338
 msgid "Design with Gutenberg"
 msgstr ""
 
-#: includes/Core/Settings.php:337
-#: includes/Core/Settings.php:347
-#: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17455
-msgid "Learn More"
-msgstr ""
-
-#: includes/Core/Settings.php:347
+#: includes/Core/Settings.php:348
 msgid "Design with Elementor"
 msgstr ""
 
-#: includes/Core/Settings.php:358
+#: includes/Core/Settings.php:359
 msgid "Customize in BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:526
+#: includes/Core/Settings.php:527
 msgid "You don't have any rights for saving settings."
 msgstr ""
 
-#: includes/Core/Settings.php:564
+#: includes/Core/Settings.php:565
 #: includes/Core/SetupWizard.php:63
 msgid "Select a Page"
 msgstr ""
 
-#: includes/Core/Settings.php:578
+#: includes/Core/Settings.php:579
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:2622
 #: assets/blocks/editor.js:3162
@@ -4479,17 +4533,17 @@ msgstr ""
 msgid "betterdocs"
 msgstr ""
 
-#: includes/Core/Settings.php:594
+#: includes/Core/Settings.php:595
 msgid "Save"
 msgstr ""
 
-#: includes/Core/Settings.php:595
+#: includes/Core/Settings.php:596
 msgid "Saving..."
 msgstr ""
 
-#: includes/Core/Settings.php:609
-#: includes/Core/Settings.php:833
-#: includes/Core/Settings.php:1141
+#: includes/Core/Settings.php:610
+#: includes/Core/Settings.php:834
+#: includes/Core/Settings.php:1155
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:51
 #: includes/Editors/Elementor/Widget/DocDate.php:44
 #: assets/blocks/editor.js:1
@@ -4515,107 +4569,107 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/Core/Settings.php:616
+#: includes/Core/Settings.php:617
 msgid "General Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:622
+#: includes/Core/Settings.php:623
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17275
+#: assets/admin/js/dashboard.js:17312
 msgid "Multiple Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:631
+#: includes/Core/Settings.php:632
 #: includes/Core/SetupWizard.php:203
 msgid "Built-in Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:639
+#: includes/Core/Settings.php:640
 msgid "Enable Category Hierarchy Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:643
+#: includes/Core/Settings.php:644
 msgid "Shows Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page"
 msgstr ""
 
-#: includes/Core/Settings.php:648
+#: includes/Core/Settings.php:649
 #: includes/Core/SetupWizard.php:223
 msgid "Documentation Page Title"
 msgstr ""
 
-#: includes/Core/Settings.php:656
+#: includes/Core/Settings.php:657
 #: includes/Core/SetupWizard.php:231
 msgid "BetterDocs Root Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:669
+#: includes/Core/Settings.php:670
 #: includes/Core/SetupWizard.php:217
 msgid "You will need to insert BetterDocs Shortcode inside the page. This page will be used as docs permalink."
 msgstr ""
 
-#: includes/Core/Settings.php:676
+#: includes/Core/Settings.php:677
 msgid "Custom Category Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:683
+#: includes/Core/Settings.php:684
 msgid "Custom Tag Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:690
+#: includes/Core/Settings.php:691
 #: includes/Core/SetupWizard.php:239
 msgid "Single Docs Permalink"
 msgstr ""
 
-#: includes/Core/Settings.php:697
+#: includes/Core/Settings.php:698
 #: includes/Core/SetupWizard.php:248
 msgid "Make sure to keep Docs Root Slug in the Single Docs Permalink. You are not able to keep it blank. You can use the available tags from below."
 msgstr ""
 
-#: includes/Core/Settings.php:702
+#: includes/Core/Settings.php:703
 #: includes/Core/SetupWizard.php:254
 msgid "Show Glossary"
 msgstr ""
 
-#: includes/Core/Settings.php:703
+#: includes/Core/Settings.php:704
 #: includes/Core/SetupWizard.php:255
 msgid "Enable the glossary feature to allow users to look up definitions for terms used within your encyclopedia or glossaries themselves."
 msgstr ""
 
-#: includes/Core/Settings.php:712
+#: includes/Core/Settings.php:713
 #: includes/Core/SetupWizard.php:264
 msgid "Built-in Encyclopedia Page"
 msgstr ""
 
-#: includes/Core/Settings.php:721
+#: includes/Core/Settings.php:722
 #: includes/Core/SetupWizard.php:281
 msgid "FAQ Schema"
 msgstr ""
 
-#: includes/Core/Settings.php:729
+#: includes/Core/Settings.php:730
 msgid "Analytics From"
 msgstr ""
 
-#: includes/Core/Settings.php:731
+#: includes/Core/Settings.php:732
 msgid "Everyone"
 msgstr ""
 
-#: includes/Core/Settings.php:732
+#: includes/Core/Settings.php:733
 msgid "Guests Only"
 msgstr ""
 
-#: includes/Core/Settings.php:733
+#: includes/Core/Settings.php:734
 msgid "Registered Users Only"
 msgstr ""
 
-#: includes/Core/Settings.php:742
+#: includes/Core/Settings.php:743
 msgid "Unique Visitor Count"
 msgstr ""
 
-#: includes/Core/Settings.php:751
+#: includes/Core/Settings.php:752
 msgid "Exclude Bot Analytics"
 msgstr ""
 
-#: includes/Core/Settings.php:764
+#: includes/Core/Settings.php:765
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:47
 #: includes/Editors/Elementor/Widget/Sidebar.php:238
 #: assets/blocks/editor.js:1
@@ -4623,36 +4677,36 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/Core/Settings.php:771
-#: includes/Core/Settings.php:777
+#: includes/Core/Settings.php:772
+#: includes/Core/Settings.php:778
 msgid "Layout Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:802
-#: includes/Core/Settings.php:808
+#: includes/Core/Settings.php:803
+#: includes/Core/Settings.php:809
 msgid "Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:840
+#: includes/Core/Settings.php:841
 msgid "Docs List Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:841
+#: includes/Core/Settings.php:842
 msgid "Upload your own preferred document list icon"
 msgstr ""
 
-#: includes/Core/Settings.php:847
+#: includes/Core/Settings.php:848
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:299
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:7411
 msgid "Category Title Link"
 msgstr ""
 
-#: includes/Core/Settings.php:848
+#: includes/Core/Settings.php:849
 msgid "This setting is applicable for category grid layout"
 msgstr ""
 
-#: includes/Core/Settings.php:856
+#: includes/Core/Settings.php:857
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:99
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6148
@@ -4660,92 +4714,112 @@ msgstr ""
 msgid "Masonry"
 msgstr ""
 
-#: includes/Core/Settings.php:864
+#: includes/Core/Settings.php:865
 msgid "Nested Sub Category"
 msgstr ""
 
-#: includes/Core/Settings.php:872
+#: includes/Core/Settings.php:873
 msgid "Number Of Columns"
 msgstr ""
 
-#: includes/Core/Settings.php:873
+#: includes/Core/Settings.php:874
 msgid "This setting is not applicable for sleek layout."
 msgstr ""
 
-#: includes/Core/Settings.php:880
+#: includes/Core/Settings.php:881
 msgid "Number Of Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:881
+#: includes/Core/Settings.php:882
 msgid "This setting is not applicable for handbook layout."
 msgstr ""
 
-#: includes/Core/Settings.php:888
+#: includes/Core/Settings.php:889
 msgid "Doc Count"
 msgstr ""
 
-#: includes/Core/Settings.php:896
+#: includes/Core/Settings.php:897
 msgid "Count Text"
 msgstr ""
 
-#: includes/Core/Settings.php:903
+#: includes/Core/Settings.php:904
 msgid "Count Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:918
+#: includes/Core/Settings.php:919
 msgid "Explore More Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:926
+#: includes/Core/Settings.php:927
 msgid "Popular Docs Text"
 msgstr ""
 
-#: includes/Core/Settings.php:934
+#: includes/Core/Settings.php:935
 msgid "Popular Docs Number"
 msgstr ""
 
-#: includes/Core/Settings.php:959
+#: includes/Core/Settings.php:960
 #: includes/Core/SetupWizard.php:291
 msgid "Advanced Search"
 msgstr ""
 
-#: includes/Core/Settings.php:968
+#: includes/Core/Settings.php:969
 msgid "Exclude Child Terms In Category Search"
 msgstr ""
 
-#: includes/Core/Settings.php:977
+#: includes/Core/Settings.php:978
 msgid "Minimum amount of Keywords Search"
 msgstr ""
 
-#: includes/Core/Settings.php:985
+#: includes/Core/Settings.php:986
 msgid "Minimum Character Limit For Search Result"
 msgstr ""
 
-#: includes/Core/Settings.php:992
+#: includes/Core/Settings.php:993
 msgid "Search Placeholder"
 msgstr ""
 
-#: includes/Core/Settings.php:993
+#: includes/Core/Settings.php:994
 msgid "Search.."
 msgstr ""
 
-#: includes/Core/Settings.php:999
+#: includes/Core/Settings.php:1000
 msgid "Search Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1007
+#: includes/Core/Settings.php:1008
 msgid "Search Not Found Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1014
+#: includes/Core/Settings.php:1015
 msgid "Search Result Image"
 msgstr ""
 
-#: includes/Core/Settings.php:1022
+#: includes/Core/Settings.php:1023
 msgid "KB Based Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1035
+#: includes/Core/Settings.php:1033
+msgid "Search Modal Source"
+msgstr ""
+
+#: includes/Core/Settings.php:1034
+msgid "Choose the content type to be shown in the search modal. <br> <b>Note:</b> This is only applicable on Modal Search."
+msgstr ""
+
+#: includes/Core/Settings.php:1037
+msgid "Both (Docs + FAQs)"
+msgstr ""
+
+#: includes/Core/Settings.php:1038
+msgid "Docs only"
+msgstr ""
+
+#: includes/Core/Settings.php:1039
+msgid "FAQs only"
+msgstr ""
+
+#: includes/Core/Settings.php:1049
 #: includes/Editors/Elementor.php:289
 #: includes/Editors/Elementor.php:346
 #: includes/Editors/Elementor/Widget/ArchiveList.php:83
@@ -4758,15 +4832,15 @@ msgstr ""
 msgid "Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1041
+#: includes/Core/Settings.php:1055
 #: includes/Editors/Elementor.php:226
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:21026
 msgid "Terms Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1044
-#: includes/Core/Settings.php:1074
+#: includes/Core/Settings.php:1058
+#: includes/Core/Settings.php:1088
 #: includes/Editors/Elementor.php:229
 #: includes/Editors/Elementor.php:292
 #: includes/Editors/Elementor.php:538
@@ -4776,7 +4850,7 @@ msgstr ""
 msgid "No order"
 msgstr ""
 
-#: includes/Core/Settings.php:1045
+#: includes/Core/Settings.php:1059
 #: includes/Editors/Elementor.php:230
 #: includes/Editors/Elementor.php:293
 #: includes/Editors/Elementor.php:465
@@ -4790,7 +4864,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/Core/Settings.php:1046
+#: includes/Core/Settings.php:1060
 #: includes/Editors/Elementor.php:231
 #: includes/Editors/Elementor.php:294
 #: includes/Editors/Elementor.php:466
@@ -4798,8 +4872,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArchiveList.php:88
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:19322
-#: assets/admin/js/dashboard.js:20035
+#: assets/admin/js/dashboard.js:19360
+#: assets/admin/js/dashboard.js:20073
 #: assets/blocks/editor.js:4381
 #: assets/blocks/editor.js:6114
 #: assets/blocks/editor.js:8238
@@ -4808,7 +4882,7 @@ msgstr ""
 msgid "Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:1047
+#: includes/Core/Settings.php:1061
 #: includes/Editors/Elementor.php:232
 #: includes/Editors/Elementor.php:295
 #: includes/Editors/Elementor.php:467
@@ -4823,7 +4897,7 @@ msgstr ""
 msgid "Term Group"
 msgstr ""
 
-#: includes/Core/Settings.php:1048
+#: includes/Core/Settings.php:1062
 #: includes/Editors/Elementor.php:233
 #: includes/Editors/Elementor.php:296
 #: includes/Editors/Elementor.php:468
@@ -4832,7 +4906,7 @@ msgstr ""
 msgid "Term ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1049
+#: includes/Core/Settings.php:1063
 #: includes/Editors/Elementor.php:234
 #: includes/Editors/Elementor.php:297
 #: includes/Editors/Elementor.php:469
@@ -4847,7 +4921,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1051
+#: includes/Core/Settings.php:1065
 #: includes/Editors/Elementor.php:236
 #: includes/Editors/Elementor.php:299
 #: includes/Editors/Elementor.php:471
@@ -4856,8 +4930,8 @@ msgstr ""
 msgid "Parent"
 msgstr ""
 
-#: includes/Core/Settings.php:1052
-#: includes/Core/Settings.php:1084
+#: includes/Core/Settings.php:1066
+#: includes/Core/Settings.php:1098
 #: includes/Editors/Elementor.php:237
 #: includes/Editors/Elementor.php:300
 #: includes/Editors/Elementor.php:472
@@ -4875,30 +4949,30 @@ msgstr ""
 msgid "BetterDocs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1059
+#: includes/Core/Settings.php:1073
 #: includes/Editors/Elementor.php:246
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:21053
 msgid "Terms Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1071
+#: includes/Core/Settings.php:1085
 #: includes/Editors/Elementor.php:263
 msgid "Docs Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1075
+#: includes/Core/Settings.php:1089
 msgid "Docs ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1076
+#: includes/Core/Settings.php:1090
 msgid "Docs Author"
 msgstr ""
 
-#: includes/Core/Settings.php:1078
+#: includes/Core/Settings.php:1092
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:18647
+#: assets/admin/js/dashboard.js:18685
 #: assets/blocks/editor.js:6128
 #: assets/blocks/editor.js:12507
 #: assets/blocks/editor.js:19764
@@ -4906,7 +4980,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1079
+#: includes/Core/Settings.php:1093
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6129
 #: assets/blocks/editor.js:12508
@@ -4915,7 +4989,7 @@ msgstr ""
 msgid "Last Modified Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1080
+#: includes/Core/Settings.php:1094
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6130
 #: assets/blocks/editor.js:12509
@@ -4924,7 +4998,7 @@ msgstr ""
 msgid "Parent Id"
 msgstr ""
 
-#: includes/Core/Settings.php:1081
+#: includes/Core/Settings.php:1095
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6131
 #: assets/blocks/editor.js:12510
@@ -4933,7 +5007,7 @@ msgstr ""
 msgid "Random"
 msgstr ""
 
-#: includes/Core/Settings.php:1082
+#: includes/Core/Settings.php:1096
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6132
 #: assets/blocks/editor.js:12511
@@ -4942,7 +5016,7 @@ msgstr ""
 msgid "Comment Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1083
+#: includes/Core/Settings.php:1097
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:6133
 #: assets/blocks/editor.js:12512
@@ -4951,71 +5025,71 @@ msgstr ""
 msgid "Menu Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1091
+#: includes/Core/Settings.php:1105
 #: includes/Editors/Elementor.php:273
 msgid "Docs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1147
+#: includes/Core/Settings.php:1161
 #: includes/Editors/Elementor/Tags/TitleTag.php:17
 #: includes/Editors/Elementor/Widget/Title.php:26
 #: views/admin/email/analytics/leading-docs.php:19
 msgid "Doc Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1155
-#: includes/Core/Settings.php:1528
+#: includes/Core/Settings.php:1169
+#: includes/Core/Settings.php:1542
 msgid "Sidebar Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1163
+#: includes/Core/Settings.php:1177
 msgid "Print Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1179
+#: includes/Core/Settings.php:1193
 msgid "Last Update Time"
 msgstr ""
 
-#: includes/Core/Settings.php:1187
+#: includes/Core/Settings.php:1201
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:11575
 msgid "Navigation"
 msgstr ""
 
-#: includes/Core/Settings.php:1195
+#: includes/Core/Settings.php:1209
 msgid "Comment"
 msgstr ""
 
-#: includes/Core/Settings.php:1203
+#: includes/Core/Settings.php:1217
 #: includes/Core/SetupWizard.php:273
 msgid "Show Powered by BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:1211
+#: includes/Core/Settings.php:1225
 msgid "Reaction Feedback Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1212
+#: includes/Core/Settings.php:1226
 msgid "Thanks for your feedback."
 msgstr ""
 
-#: includes/Core/Settings.php:1226
+#: includes/Core/Settings.php:1240
 msgid "Estimated Reading Time Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1234
+#: includes/Core/Settings.php:1248
 msgid "Estimated Reading Time Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1242
+#: includes/Core/Settings.php:1256
 msgid "Estimated Reading Time Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1253
+#: includes/Core/Settings.php:1267
 msgid "TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1267
+#: includes/Core/Settings.php:1281
 #: includes/Editors/Elementor/Widget/ToC.php:67
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:24176
@@ -5023,106 +5097,106 @@ msgstr ""
 msgid "TOC Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1276
+#: includes/Core/Settings.php:1290
 msgid "TOC Hierarchy"
 msgstr ""
 
-#: includes/Core/Settings.php:1285
+#: includes/Core/Settings.php:1299
 msgid "TOC List Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1294
+#: includes/Core/Settings.php:1308
 msgid "Show TOC Title in Anchor Links"
 msgstr ""
 
-#: includes/Core/Settings.php:1303
+#: includes/Core/Settings.php:1317
 #: includes/Editors/Elementor/Widget/Sidebar.php:347
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:22020
 msgid "Sticky TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1312
+#: includes/Core/Settings.php:1326
 msgid "Collapsible TOC on small devices"
 msgstr ""
 
-#: includes/Core/Settings.php:1321
+#: includes/Core/Settings.php:1335
 msgid "Title Link Copy To Clipboard"
 msgstr ""
 
-#: includes/Core/Settings.php:1328
+#: includes/Core/Settings.php:1342
 msgid "TOC Supported Heading Tag"
 msgstr ""
 
-#: includes/Core/Settings.php:1354
+#: includes/Core/Settings.php:1368
 msgid "Content Offset"
 msgstr ""
 
-#: includes/Core/Settings.php:1357
+#: includes/Core/Settings.php:1371
 msgid "content offset from top on scroll."
 msgstr ""
 
-#: includes/Core/Settings.php:1380
+#: includes/Core/Settings.php:1394
 msgid "Enable Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1389
+#: includes/Core/Settings.php:1403
 msgid "Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1403
+#: includes/Core/Settings.php:1417
 msgid "Breadcrumb Home URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1411
+#: includes/Core/Settings.php:1425
 msgid "Category on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1420
+#: includes/Core/Settings.php:1434
 msgid "Title on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1432
-#: includes/Core/Settings.php:1438
+#: includes/Core/Settings.php:1446
+#: includes/Core/Settings.php:1452
 msgid "Email Feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:1446
+#: includes/Core/Settings.php:1460
 msgid "Feedback Link Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1454
+#: includes/Core/Settings.php:1468
 #: includes/Editors/Elementor/Widget/Feedback.php:97
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:14415
 msgid "Feedback Form Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1462
+#: includes/Core/Settings.php:1476
 msgid "Email Address"
 msgstr ""
 
-#: includes/Core/Settings.php:1465
+#: includes/Core/Settings.php:1479
 msgid "The email address where the Feedback form will be sent"
 msgstr ""
 
-#: includes/Core/Settings.php:1471
+#: includes/Core/Settings.php:1485
 msgid "Feedback URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1490
+#: includes/Core/Settings.php:1504
 msgid "Show Attachment"
 msgstr ""
 
-#: includes/Core/Settings.php:1508
+#: includes/Core/Settings.php:1522
 msgid "Show Related Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1522
+#: includes/Core/Settings.php:1536
 msgid "Archive Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1536
+#: includes/Core/Settings.php:1550
 #: includes/Editors/Elementor.php:407
 #: includes/Editors/Elementor.php:421
 #: includes/Editors/Elementor.php:495
@@ -5132,72 +5206,72 @@ msgstr ""
 msgid "Nested Subcategory"
 msgstr ""
 
-#: includes/Core/Settings.php:1544
+#: includes/Core/Settings.php:1558
 #: includes/Editors/Elementor/Widget/ArchiveList.php:129
 #: assets/blocks/editor.js:1
 #: assets/blocks/editor.js:9361
 msgid "Enable Pagination"
 msgstr ""
 
-#: includes/Core/Settings.php:1559
-#: includes/Core/Settings.php:1565
+#: includes/Core/Settings.php:1573
+#: includes/Core/Settings.php:1579
 msgid "Design"
 msgstr ""
 
-#: includes/Core/Settings.php:1572
-#: includes/Core/Settings.php:1580
+#: includes/Core/Settings.php:1586
+#: includes/Core/Settings.php:1594
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/Core/Settings.php:1583
+#: includes/Core/Settings.php:1597
 msgid "Search for shortcode"
 msgstr ""
 
-#: includes/Core/Settings.php:1584
+#: includes/Core/Settings.php:1598
 msgid "No Shortcodes Found with these keywords"
 msgstr ""
 
-#: includes/Core/Settings.php:1589
+#: includes/Core/Settings.php:1603
 msgid "Search Form"
 msgstr ""
 
-#: includes/Core/Settings.php:1593
+#: includes/Core/Settings.php:1607
 msgid "[betterdocs_search_form placeholder=\"Search...\" heading=\"Heading\" subheading=\"Subheading\" category_search=\"true\" search_button=\"true\" popular_search=\"true\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1594
-#: includes/Core/Settings.php:1605
-#: includes/Core/Settings.php:1616
-#: includes/Core/Settings.php:1627
-#: includes/Core/Settings.php:1638
-#: includes/Core/Settings.php:1649
-#: includes/Core/Settings.php:1660
-#: includes/Core/Settings.php:1671
-#: includes/Core/Settings.php:1682
+#: includes/Core/Settings.php:1608
+#: includes/Core/Settings.php:1619
+#: includes/Core/Settings.php:1630
+#: includes/Core/Settings.php:1641
+#: includes/Core/Settings.php:1652
+#: includes/Core/Settings.php:1663
+#: includes/Core/Settings.php:1674
+#: includes/Core/Settings.php:1685
+#: includes/Core/Settings.php:1696
 msgid "Example with parameters:"
 msgstr ""
 
-#: includes/Core/Settings.php:1604
+#: includes/Core/Settings.php:1618
 msgid "[betterdocs_feedback_form button_text=\"Send\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1611
+#: includes/Core/Settings.php:1625
 msgid "Category Grid- Layout 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1615
+#: includes/Core/Settings.php:1629
 msgid "[betterdocs_category_grid show_count=\"true\" show_icon=\"true\" masonry=\"true\" column=\"3\" posts_per_page=\"5\" nested_subcategory=\"true\" terms=\"term_ID, term_ID\" terms_orderby=\"\" terms_order=\"\" multiple_knowledge_base=\"\" kb_slug=\"\" title_tag=\"h2\" orderby=\"\" order=\"\" ]"
 msgstr ""
 
-#: includes/Core/Settings.php:1622
+#: includes/Core/Settings.php:1636
 msgid "Category Box- Layout 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1626
+#: includes/Core/Settings.php:1640
 msgid "[betterdocs_category_box orderby=\"\" column=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" show_icon=\"\" kb_slug=\"\" title_tag=\"h2\" multiple_knowledge_base=\"false\" border_bottom=\"false\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1633
+#: includes/Core/Settings.php:1647
 #: includes/Editors/Elementor/Widget/ArchiveList.php:237
 #: includes/Editors/Elementor/Widget/ArchiveList.php:395
 #: includes/Editors/Elementor/Widget/Sidebar.php:1924
@@ -5205,69 +5279,69 @@ msgstr ""
 msgid "Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1637
+#: includes/Core/Settings.php:1651
 msgid "[betterdocs_category_list orderby=\"\" order=\"\" posts_per_page=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" terms_order=\"\" kb_slug=\"\" multiple_knowledge_base=\"false\" title_tag=\"h2\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1644
+#: includes/Core/Settings.php:1658
 msgid "FAQ Layout - 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1648
+#: includes/Core/Settings.php:1662
 msgid "[betterdocs_faq_list_modern groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1655
+#: includes/Core/Settings.php:1669
 msgid "FAQ Layout - 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1659
+#: includes/Core/Settings.php:1673
 msgid "[betterdocs_faq_list_classic groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1666
+#: includes/Core/Settings.php:1680
 msgid "FAQ Layout - 3"
 msgstr ""
 
-#: includes/Core/Settings.php:1670
+#: includes/Core/Settings.php:1684
 msgid "[betterdocs_faq_list_layout_3 class=\"faq-doc betterdocs-faq-layout-3\" groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1677
+#: includes/Core/Settings.php:1691
 msgid "FAQ Layout - 4"
 msgstr ""
 
-#: includes/Core/Settings.php:1681
+#: includes/Core/Settings.php:1695
 msgid "[betterdocs_faq_tab class=\"faq-doc betterdocs-faq-layout-4\" groups=\"group_id\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1691
-#: includes/Core/Settings.php:1697
+#: includes/Core/Settings.php:1705
+#: includes/Core/Settings.php:1711
 msgid "Advanced Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:1703
+#: includes/Core/Settings.php:1717
 msgid "Who Can Write Docs?"
 msgstr ""
 
-#: includes/Core/Settings.php:1714
+#: includes/Core/Settings.php:1728
 msgid "Who Can Edit Settings?"
 msgstr ""
 
-#: includes/Core/Settings.php:1725
+#: includes/Core/Settings.php:1739
 msgid "Who Can Check Analytics?"
 msgstr ""
 
-#: includes/Core/Settings.php:1736
+#: includes/Core/Settings.php:1750
 msgid "Who Can Check FAQ Builder?"
 msgstr ""
 
-#: includes/Core/Settings.php:1749
+#: includes/Core/Settings.php:1763
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:17323
-#: assets/admin/js/dashboard.js:30232
-#: assets/admin/js/dashboard.js:30323
+#: assets/admin/js/dashboard.js:17360
+#: assets/admin/js/dashboard.js:30270
+#: assets/admin/js/dashboard.js:30361
 #: assets/admin/js/quick-setup.js:2594
 #: assets/admin/js/quick-setup.js:2685
 #: assets/admin/js/settings.js:6011
@@ -5275,129 +5349,129 @@ msgstr ""
 msgid "Internal Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:1756
+#: includes/Core/Settings.php:1770
 msgid "Restrict Access to"
 msgstr ""
 
-#: includes/Core/Settings.php:1757
+#: includes/Core/Settings.php:1771
 msgid "Only selected User Roles will be able to view your Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:1763
-#: includes/Core/Settings.php:1780
-#: includes/Core/Settings.php:1795
-#: includes/Core/Settings.php:2316
-#: includes/Core/Settings.php:2335
+#: includes/Core/Settings.php:1777
+#: includes/Core/Settings.php:1794
+#: includes/Core/Settings.php:1809
+#: includes/Core/Settings.php:2330
 #: includes/Core/Settings.php:2349
+#: includes/Core/Settings.php:2363
 msgid "Select any"
 msgstr ""
 
-#: includes/Core/Settings.php:1765
+#: includes/Core/Settings.php:1779
 msgid "All logged in users"
 msgstr ""
 
-#: includes/Core/Settings.php:1773
+#: includes/Core/Settings.php:1787
 msgid "Restriction on Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1774
+#: includes/Core/Settings.php:1788
 msgid "Selected Docs pages will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:1788
+#: includes/Core/Settings.php:1802
 msgid "Restriction on Docs Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:1789
+#: includes/Core/Settings.php:1803
 msgid "Selected Docs categories will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:1803
+#: includes/Core/Settings.php:1817
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1804
+#: includes/Core/Settings.php:1818
 msgid "Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the \"404 not found\" page"
 msgstr ""
 
-#: includes/Core/Settings.php:1817
-#: includes/Core/Settings.php:1823
-#: includes/Core/Settings.php:1828
+#: includes/Core/Settings.php:1831
+#: includes/Core/Settings.php:1837
+#: includes/Core/Settings.php:1842
 #: views/admin/email/pro.php:17
 msgid "Email Reporting"
 msgstr ""
 
-#: includes/Core/Settings.php:1837
+#: includes/Core/Settings.php:1851
 msgid "Reporting Frequency"
 msgstr ""
 
-#: includes/Core/Settings.php:1851
+#: includes/Core/Settings.php:1865
 msgid "Reporting Day"
 msgstr ""
 
-#: includes/Core/Settings.php:1859
+#: includes/Core/Settings.php:1873
 msgid "Sunday"
 msgstr ""
 
-#: includes/Core/Settings.php:1860
+#: includes/Core/Settings.php:1874
 msgid "Monday"
 msgstr ""
 
-#: includes/Core/Settings.php:1861
+#: includes/Core/Settings.php:1875
 msgid "Tuesday"
 msgstr ""
 
-#: includes/Core/Settings.php:1862
+#: includes/Core/Settings.php:1876
 msgid "Wednesday"
 msgstr ""
 
-#: includes/Core/Settings.php:1863
+#: includes/Core/Settings.php:1877
 msgid "Thursday"
 msgstr ""
 
-#: includes/Core/Settings.php:1864
+#: includes/Core/Settings.php:1878
 msgid "Friday"
 msgstr ""
 
-#: includes/Core/Settings.php:1865
+#: includes/Core/Settings.php:1879
 msgid "Saturday"
 msgstr ""
 
-#: includes/Core/Settings.php:1867
+#: includes/Core/Settings.php:1881
 msgid "This is only applicable for the “Weekly” report"
 msgstr ""
 
-#: includes/Core/Settings.php:1872
+#: includes/Core/Settings.php:1886
 msgid "Select Reporting Data"
 msgstr ""
 
-#: includes/Core/Settings.php:1887
+#: includes/Core/Settings.php:1901
 msgid "Reporting Email"
 msgstr ""
 
-#: includes/Core/Settings.php:1895
+#: includes/Core/Settings.php:1909
 msgid "Reporting Email Subject"
 msgstr ""
 
-#: includes/Core/Settings.php:1904
+#: includes/Core/Settings.php:1918
 msgid "Reporting Test"
 msgstr ""
 
-#: includes/Core/Settings.php:1905
+#: includes/Core/Settings.php:1919
 msgid "Test Report"
 msgstr ""
 
-#: includes/Core/Settings.php:1921
+#: includes/Core/Settings.php:1935
 msgid "Successfully Sent a Test Report in Your Email."
 msgstr ""
 
-#: includes/Core/Settings.php:1935
-#: includes/Core/Settings.php:1942
+#: includes/Core/Settings.php:1949
+#: includes/Core/Settings.php:1956
 #: includes/Core/SetupWizard.php:304
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30236
-#: assets/admin/js/dashboard.js:30327
+#: assets/admin/js/dashboard.js:30274
+#: assets/admin/js/dashboard.js:30365
 #: assets/admin/js/quick-setup.js:2598
 #: assets/admin/js/quick-setup.js:2689
 #: assets/admin/js/settings.js:6015
@@ -5405,196 +5479,196 @@ msgstr ""
 msgid "Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:1957
+#: includes/Core/Settings.php:1971
 msgid "Enable Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:1995
+#: includes/Core/Settings.php:2009
 msgid "Enable AI Chatbot"
 msgstr ""
 
-#: includes/Core/Settings.php:2011
-#: includes/Core/Settings.php:2017
+#: includes/Core/Settings.php:2025
+#: includes/Core/Settings.php:2031
 #: includes/Core/WriteWithAI.php:577
 msgid "Write with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2024
+#: includes/Core/Settings.php:2038
 msgid "Write Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2025
+#: includes/Core/Settings.php:2039
 msgid "Generate AI based Documentation in your Gutenberg Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2033
+#: includes/Core/Settings.php:2047
 msgid "Write FAQ with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2034
+#: includes/Core/Settings.php:2048
 msgid "Generate AI based FAQ in your Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2041
+#: includes/Core/Settings.php:2055
 msgid "API Key"
 msgstr ""
 
 #. translators: %s is a link to the documentation about generating an OpenAI API key.
-#: includes/Core/Settings.php:2042
+#: includes/Core/Settings.php:2056
 msgid "Check out this <a target=\"_blank\" href=\"%s\">documentation</a> to find out how to generate your OpenAI API Key."
 msgstr ""
 
-#: includes/Core/Settings.php:2049
+#: includes/Core/Settings.php:2063
 msgid "Set Max Tokens"
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2051
+#: includes/Core/Settings.php:2065
 msgid "Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2112
-#: includes/Core/Settings.php:2118
+#: includes/Core/Settings.php:2126
+#: includes/Core/Settings.php:2132
 msgid "Import / Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2124
+#: includes/Core/Settings.php:2138
 msgid "Import Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2149
-#: includes/Core/Settings.php:2155
+#: includes/Core/Settings.php:2163
+#: includes/Core/Settings.php:2169
 msgid "Import"
 msgstr ""
 
-#: includes/Core/Settings.php:2180
-#: includes/Core/Settings.php:2186
+#: includes/Core/Settings.php:2194
+#: includes/Core/Settings.php:2200
 msgid "Import Docs"
 msgstr ""
 
 #. Translators: %1$s is a link to download a sample CSV file.
-#: includes/Core/Settings.php:2188
+#: includes/Core/Settings.php:2202
 msgid "To import your Docs, please upload the .xml / .csv file here. <a href=\"%1$s\">Download sample csv file</a>"
 msgstr ""
 
-#: includes/Core/Settings.php:2190
-#: includes/Core/Settings.php:2191
-#: includes/Core/Settings.php:2230
-#: includes/Core/Settings.php:2231
-#: includes/Core/Settings.php:2380
-#: includes/Core/Settings.php:2381
+#: includes/Core/Settings.php:2204
+#: includes/Core/Settings.php:2205
+#: includes/Core/Settings.php:2244
+#: includes/Core/Settings.php:2245
+#: includes/Core/Settings.php:2394
+#: includes/Core/Settings.php:2395
 msgid "Proceed"
 msgstr ""
 
-#: includes/Core/Settings.php:2192
-#: includes/Core/Settings.php:2232
+#: includes/Core/Settings.php:2206
+#: includes/Core/Settings.php:2246
 msgid "Importing..."
 msgstr ""
 
-#: includes/Core/Settings.php:2193
+#: includes/Core/Settings.php:2207
 msgid "It seems like documentations with same slugs already exist on your website. What would you like to do?"
 msgstr ""
 
-#: includes/Core/Settings.php:2199
-#: includes/Core/Settings.php:2241
+#: includes/Core/Settings.php:2213
+#: includes/Core/Settings.php:2255
 msgid "Import completed successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:2214
-#: includes/Core/Settings.php:2220
+#: includes/Core/Settings.php:2228
+#: includes/Core/Settings.php:2234
 msgid "Import Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2221
+#: includes/Core/Settings.php:2235
 msgid "To import BetterDocs Settings, please upload BetterDocs settings you have exported from another website in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:2222
+#: includes/Core/Settings.php:2236
 msgid "Change"
 msgstr ""
 
-#: includes/Core/Settings.php:2259
-#: includes/Core/Settings.php:2265
+#: includes/Core/Settings.php:2273
+#: includes/Core/Settings.php:2279
 msgid "Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2290
+#: includes/Core/Settings.php:2304
 msgid "Export Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2296
+#: includes/Core/Settings.php:2310
 msgid "Choose an export type: All Docs, a specific Knowledge Base, or a Doc Category"
 msgstr ""
 
-#: includes/Core/Settings.php:2310
+#: includes/Core/Settings.php:2324
 msgid "Select Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2311
+#: includes/Core/Settings.php:2325
 msgid "Selected docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2329
+#: includes/Core/Settings.php:2343
 msgid "Select Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2330
+#: includes/Core/Settings.php:2344
 msgid "Selected categories and its docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2343
+#: includes/Core/Settings.php:2357
 msgid "Select Glossaries"
 msgstr ""
 
-#: includes/Core/Settings.php:2344
+#: includes/Core/Settings.php:2358
 msgid "Selected glossary terms will be exported."
 msgstr ""
 
-#: includes/Core/Settings.php:2356
+#: includes/Core/Settings.php:2370
 msgid "Select File Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2357
+#: includes/Core/Settings.php:2371
 msgid "Choose a file type"
 msgstr ""
 
-#: includes/Core/Settings.php:2363
+#: includes/Core/Settings.php:2377
 msgid ".xml"
 msgstr ""
 
-#: includes/Core/Settings.php:2364
+#: includes/Core/Settings.php:2378
 msgid ".csv"
 msgstr ""
 
-#: includes/Core/Settings.php:2371
+#: includes/Core/Settings.php:2385
 msgid "Export FAQ"
 msgstr ""
 
-#: includes/Core/Settings.php:2372
+#: includes/Core/Settings.php:2386
 msgid "Export FAQ Related Terms & Posts"
 msgstr ""
 
-#: includes/Core/Settings.php:2382
-#: includes/Core/Settings.php:2422
+#: includes/Core/Settings.php:2396
+#: includes/Core/Settings.php:2436
 msgid "Exporting..."
 msgstr ""
 
-#: includes/Core/Settings.php:2399
+#: includes/Core/Settings.php:2413
 msgid "Exported Successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:2412
-#: includes/Core/Settings.php:2417
-#: includes/Core/Settings.php:2420
-#: includes/Core/Settings.php:2421
+#: includes/Core/Settings.php:2426
+#: includes/Core/Settings.php:2431
+#: includes/Core/Settings.php:2434
+#: includes/Core/Settings.php:2435
 msgid "Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2418
+#: includes/Core/Settings.php:2432
 msgid "Simply click on “Export Settings” button to download your BetterDocs settings in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:2433
+#: includes/Core/Settings.php:2447
 msgid "File downloaded successfully."
 msgstr ""
 
@@ -5744,7 +5818,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4394
-#: assets/admin/js/dashboard.js:23572
+#: assets/admin/js/dashboard.js:23610
 #: assets/admin/js/faq.js:9311
 msgid "Keywords:"
 msgstr ""
@@ -5901,7 +5975,7 @@ msgstr ""
 
 #: includes/Editors/Elementor.php:151
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19599
+#: assets/admin/js/dashboard.js:19637
 msgid "All Knowledge Base"
 msgstr ""
 
@@ -5973,15 +6047,15 @@ msgstr ""
 #: assets/admin/js/glossares.js:3975
 #: assets/admin/js/glossares.js:4639
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:18184
-#: assets/admin/js/dashboard.js:18444
-#: assets/admin/js/dashboard.js:18470
-#: assets/admin/js/dashboard.js:21735
-#: assets/admin/js/dashboard.js:23077
-#: assets/admin/js/dashboard.js:23816
-#: assets/admin/js/dashboard.js:24155
-#: assets/admin/js/dashboard.js:24535
-#: assets/admin/js/dashboard.js:26741
+#: assets/admin/js/dashboard.js:18222
+#: assets/admin/js/dashboard.js:18482
+#: assets/admin/js/dashboard.js:18508
+#: assets/admin/js/dashboard.js:21773
+#: assets/admin/js/dashboard.js:23115
+#: assets/admin/js/dashboard.js:23854
+#: assets/admin/js/dashboard.js:24193
+#: assets/admin/js/dashboard.js:24573
+#: assets/admin/js/dashboard.js:26779
 #: assets/admin/js/faq.js:7474
 #: assets/admin/js/faq.js:8816
 #: assets/admin/js/faq.js:9555
@@ -6000,15 +6074,15 @@ msgstr ""
 #: assets/admin/js/glossares.js:3976
 #: assets/admin/js/glossares.js:4640
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:18185
-#: assets/admin/js/dashboard.js:18445
-#: assets/admin/js/dashboard.js:18471
-#: assets/admin/js/dashboard.js:21736
-#: assets/admin/js/dashboard.js:23078
-#: assets/admin/js/dashboard.js:23817
-#: assets/admin/js/dashboard.js:24156
-#: assets/admin/js/dashboard.js:24536
-#: assets/admin/js/dashboard.js:26742
+#: assets/admin/js/dashboard.js:18223
+#: assets/admin/js/dashboard.js:18483
+#: assets/admin/js/dashboard.js:18509
+#: assets/admin/js/dashboard.js:21774
+#: assets/admin/js/dashboard.js:23116
+#: assets/admin/js/dashboard.js:23855
+#: assets/admin/js/dashboard.js:24194
+#: assets/admin/js/dashboard.js:24574
+#: assets/admin/js/dashboard.js:26780
 #: assets/admin/js/faq.js:7475
 #: assets/admin/js/faq.js:8817
 #: assets/admin/js/faq.js:9556
@@ -7012,7 +7086,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:247
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3355
-#: assets/admin/js/dashboard.js:22361
+#: assets/admin/js/dashboard.js:22399
 #: assets/admin/js/faq.js:8100
 msgid "FAQ Group Title"
 msgstr ""
@@ -7053,7 +7127,7 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:708
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:22380
+#: assets/admin/js/dashboard.js:22418
 #: assets/admin/js/faq.js:8119
 msgid "FAQ Group Icon"
 msgstr ""
@@ -7234,8 +7308,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:918
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:19473
-#: assets/admin/js/dashboard.js:20184
+#: assets/admin/js/dashboard.js:19511
+#: assets/admin/js/dashboard.js:20222
 #: assets/blocks/editor.js:19021
 #: assets/blocks/editor.js:22156
 msgid "Search Category"
@@ -7295,8 +7369,8 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1275
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19472
-#: assets/admin/js/dashboard.js:20183
+#: assets/admin/js/dashboard.js:19510
+#: assets/admin/js/dashboard.js:20221
 msgid "Category"
 msgstr ""
 
@@ -7691,8 +7765,8 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/Title.php:134
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18990
-#: assets/admin/js/dashboard.js:19134
+#: assets/admin/js/dashboard.js:19028
+#: assets/admin/js/dashboard.js:19172
 msgid "View"
 msgstr ""
 
@@ -7801,7 +7875,7 @@ msgstr ""
 msgid "How did you feel?"
 msgstr ""
 
-#: includes/FrontEnd/TemplateTags.php:413
+#: includes/FrontEnd/TemplateTags.php:425
 msgid "Copy URL"
 msgstr ""
 
@@ -8029,7 +8103,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:52400
+#: assets/admin/js/dashboard.js:52438
 #: assets/admin/js/quick-setup.js:22358
 #: assets/admin/js/settings.js:25775
 msgid "Reset"
@@ -8269,21 +8343,21 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3271
-#: assets/admin/js/dashboard.js:22264
+#: assets/admin/js/dashboard.js:22302
 #: assets/admin/js/faq.js:8003
 msgid "Please Insert FAQ Group Title."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3297
-#: assets/admin/js/dashboard.js:22299
+#: assets/admin/js/dashboard.js:22337
 #: assets/admin/js/faq.js:8038
 msgid "FAQ Group Updated Successfully."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:22307
-#: assets/admin/js/dashboard.js:22328
+#: assets/admin/js/dashboard.js:22345
+#: assets/admin/js/dashboard.js:22366
 #: assets/admin/js/faq.js:8046
 #: assets/admin/js/faq.js:8067
 msgid "Something went wrong!"
@@ -8291,7 +8365,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3319
-#: assets/admin/js/dashboard.js:22320
+#: assets/admin/js/dashboard.js:22358
 #: assets/admin/js/faq.js:8059
 msgid "FAQ Group Created Successfully."
 msgstr ""
@@ -8299,8 +8373,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3344
 #: assets/admin/js/glossares.js:3390
-#: assets/admin/js/dashboard.js:22347
-#: assets/admin/js/dashboard.js:22437
+#: assets/admin/js/dashboard.js:22385
+#: assets/admin/js/dashboard.js:22475
 #: assets/admin/js/faq.js:8086
 #: assets/admin/js/faq.js:8176
 msgid "Update FAQ Group"
@@ -8308,14 +8382,14 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3344
-#: assets/admin/js/dashboard.js:22348
+#: assets/admin/js/dashboard.js:22386
 #: assets/admin/js/faq.js:8087
 msgid "Create New FAQ Group"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3364
-#: assets/admin/js/dashboard.js:22373
+#: assets/admin/js/dashboard.js:22411
 #: assets/admin/js/faq.js:8112
 msgid "FAQ Group Title..."
 msgstr ""
@@ -8323,10 +8397,10 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:22416
-#: assets/admin/js/dashboard.js:29452
-#: assets/admin/js/dashboard.js:29799
-#: assets/admin/js/dashboard.js:53230
+#: assets/admin/js/dashboard.js:22454
+#: assets/admin/js/dashboard.js:29490
+#: assets/admin/js/dashboard.js:29837
+#: assets/admin/js/dashboard.js:53268
 #: assets/admin/js/faq.js:8155
 #: assets/admin/js/quick-setup.js:23188
 #: assets/admin/js/settings.js:5338
@@ -8336,7 +8410,7 @@ msgid "Click to upload"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:22418
+#: assets/admin/js/dashboard.js:22456
 #: assets/admin/js/faq.js:8157
 msgid "SVG, PNG, JPG or GIF"
 msgstr ""
@@ -8350,14 +8424,14 @@ msgstr ""
 #: assets/admin/js/glossares.js:4010
 #: assets/admin/js/glossares.js:4672
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:22432
-#: assets/admin/js/dashboard.js:22619
-#: assets/admin/js/dashboard.js:22986
-#: assets/admin/js/dashboard.js:23117
-#: assets/admin/js/dashboard.js:24198
-#: assets/admin/js/dashboard.js:24576
-#: assets/admin/js/dashboard.js:26295
-#: assets/admin/js/dashboard.js:26623
+#: assets/admin/js/dashboard.js:22470
+#: assets/admin/js/dashboard.js:22657
+#: assets/admin/js/dashboard.js:23024
+#: assets/admin/js/dashboard.js:23155
+#: assets/admin/js/dashboard.js:24236
+#: assets/admin/js/dashboard.js:24614
+#: assets/admin/js/dashboard.js:26333
+#: assets/admin/js/dashboard.js:26661
 #: assets/admin/js/faq.js:8171
 #: assets/admin/js/faq.js:8358
 #: assets/admin/js/faq.js:8725
@@ -8371,7 +8445,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:3390
-#: assets/admin/js/dashboard.js:22438
+#: assets/admin/js/dashboard.js:22476
 #: assets/admin/js/faq.js:8177
 msgid "Create FAQ Group"
 msgstr ""
@@ -8380,8 +8454,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:5433
 #: assets/admin/js/glossares.js:5495
-#: assets/admin/js/dashboard.js:25115
-#: assets/admin/js/dashboard.js:25159
+#: assets/admin/js/dashboard.js:25153
+#: assets/admin/js/dashboard.js:25197
 #: assets/admin/js/faq.js:10808
 #: assets/admin/js/faq.js:10852
 msgid "No FAQ Found!"
@@ -8389,7 +8463,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:5497
-#: assets/admin/js/dashboard.js:25162
+#: assets/admin/js/dashboard.js:25200
 #: assets/admin/js/faq.js:10855
 msgid "Please Create a New FAQ Group to get started."
 msgstr ""
@@ -8398,15 +8472,15 @@ msgstr ""
 #: assets/admin/js/glossares.js:2785
 #: assets/admin/js/glossares.js:5507
 #: assets/admin/js/dashboard.js:15932
-#: assets/admin/js/dashboard.js:25174
+#: assets/admin/js/dashboard.js:25212
 #: assets/admin/js/faq.js:10867
 msgid "Create a New FAQ Group"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:5479
-#: assets/admin/js/dashboard.js:25139
-#: assets/admin/js/dashboard.js:27822
+#: assets/admin/js/dashboard.js:25177
+#: assets/admin/js/dashboard.js:27860
 #: assets/admin/js/faq.js:10832
 #: assets/admin/js/glossaries.js:9213
 msgid "Sample Data Generated Successfully."
@@ -8414,7 +8488,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossares.js:5515
-#: assets/admin/js/dashboard.js:25186
+#: assets/admin/js/dashboard.js:25224
 #: assets/admin/js/faq.js:10879
 msgid "Generate Sample FAQs"
 msgstr ""
@@ -8422,7 +8496,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4348
-#: assets/admin/js/dashboard.js:23505
+#: assets/admin/js/dashboard.js:23543
 #: assets/admin/js/faq.js:9244
 msgid "Write FAQ with BetterDocs AI"
 msgstr ""
@@ -8430,7 +8504,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4350
-#: assets/admin/js/dashboard.js:23510
+#: assets/admin/js/dashboard.js:23548
 #: assets/admin/js/faq.js:9249
 msgid "Generate FAQs effortlessly with BetterDocs AI. Simply input your question & relevant keywords and let the system automatically generate FAQs tailored to your needs."
 msgstr ""
@@ -8439,8 +8513,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4356
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:23522
-#: assets/admin/js/dashboard.js:27242
+#: assets/admin/js/dashboard.js:23560
+#: assets/admin/js/dashboard.js:27280
 #: assets/admin/js/faq.js:9261
 #: assets/admin/js/glossaries.js:8655
 msgid "Please insert your"
@@ -8450,8 +8524,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4359
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:23527
-#: assets/admin/js/dashboard.js:27247
+#: assets/admin/js/dashboard.js:23565
+#: assets/admin/js/dashboard.js:27285
 #: assets/admin/js/faq.js:9266
 #: assets/admin/js/glossaries.js:8660
 msgid "OpenAI API Key"
@@ -8461,8 +8535,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4359
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:23529
-#: assets/admin/js/dashboard.js:27249
+#: assets/admin/js/dashboard.js:23567
+#: assets/admin/js/dashboard.js:27287
 #: assets/admin/js/faq.js:9268
 #: assets/admin/js/glossaries.js:8662
 msgid "to use this \"Write with AI\" feature."
@@ -8471,7 +8545,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4379
-#: assets/admin/js/dashboard.js:23555
+#: assets/admin/js/dashboard.js:23593
 #: assets/admin/js/faq.js:9294
 msgid "Question:"
 msgstr ""
@@ -8479,7 +8553,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4381
-#: assets/admin/js/dashboard.js:23558
+#: assets/admin/js/dashboard.js:23596
 #: assets/admin/js/faq.js:9297
 msgid "Insert your question to generate a relevant response."
 msgstr ""
@@ -8487,7 +8561,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4396
-#: assets/admin/js/dashboard.js:23575
+#: assets/admin/js/dashboard.js:23613
 #: assets/admin/js/faq.js:9314
 msgid "Add keywords to generate precise & relevant FAQs (comma-separated)."
 msgstr ""
@@ -8495,7 +8569,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4404
-#: assets/admin/js/dashboard.js:23584
+#: assets/admin/js/dashboard.js:23622
 #: assets/admin/js/faq.js:9323
 msgid "Generated FAQ:"
 msgstr ""
@@ -8504,8 +8578,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4421
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:23600
-#: assets/admin/js/dashboard.js:27314
+#: assets/admin/js/dashboard.js:23638
+#: assets/admin/js/dashboard.js:27352
 #: assets/admin/js/faq.js:9339
 #: assets/admin/js/glossaries.js:8727
 msgid "Keep"
@@ -8515,8 +8589,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3475
 #: assets/admin/js/glossares.js:3728
-#: assets/admin/js/dashboard.js:22511
-#: assets/admin/js/dashboard.js:22782
+#: assets/admin/js/dashboard.js:22549
+#: assets/admin/js/dashboard.js:22820
 #: assets/admin/js/faq.js:8250
 #: assets/admin/js/faq.js:8521
 msgid "Please insert your question here."
@@ -8526,8 +8600,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3481
 #: assets/admin/js/glossares.js:3734
-#: assets/admin/js/dashboard.js:22517
-#: assets/admin/js/dashboard.js:22791
+#: assets/admin/js/dashboard.js:22555
+#: assets/admin/js/dashboard.js:22829
 #: assets/admin/js/faq.js:8256
 #: assets/admin/js/faq.js:8530
 msgid "Answer must not be Empty."
@@ -8536,7 +8610,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3507
-#: assets/admin/js/dashboard.js:22546
+#: assets/admin/js/dashboard.js:22584
 #: assets/admin/js/faq.js:8285
 msgid "FAQ Created Successfully."
 msgstr ""
@@ -8545,8 +8619,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3531
 #: assets/admin/js/glossares.js:3832
-#: assets/admin/js/dashboard.js:22571
-#: assets/admin/js/dashboard.js:22916
+#: assets/admin/js/dashboard.js:22609
+#: assets/admin/js/dashboard.js:22954
 #: assets/admin/js/faq.js:8310
 #: assets/admin/js/faq.js:8655
 msgid "Question"
@@ -8556,8 +8630,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3542
 #: assets/admin/js/glossares.js:3843
-#: assets/admin/js/dashboard.js:22585
-#: assets/admin/js/dashboard.js:22933
+#: assets/admin/js/dashboard.js:22623
+#: assets/admin/js/dashboard.js:22971
 #: assets/admin/js/faq.js:8324
 #: assets/admin/js/faq.js:8672
 msgid "Add New Question"
@@ -8568,10 +8642,10 @@ msgstr ""
 #: assets/admin/js/glossares.js:3551
 #: assets/admin/js/glossares.js:3852
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:22591
-#: assets/admin/js/dashboard.js:22939
-#: assets/admin/js/dashboard.js:26267
-#: assets/admin/js/dashboard.js:26593
+#: assets/admin/js/dashboard.js:22629
+#: assets/admin/js/dashboard.js:22977
+#: assets/admin/js/dashboard.js:26305
+#: assets/admin/js/dashboard.js:26631
 #: assets/admin/js/faq.js:8330
 #: assets/admin/js/faq.js:8678
 #: assets/admin/js/glossaries.js:7680
@@ -8583,8 +8657,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3558
 #: assets/admin/js/glossares.js:3859
-#: assets/admin/js/dashboard.js:22601
-#: assets/admin/js/dashboard.js:22949
+#: assets/admin/js/dashboard.js:22639
+#: assets/admin/js/dashboard.js:22987
 #: assets/admin/js/faq.js:8340
 #: assets/admin/js/faq.js:8688
 msgid "Answer"
@@ -8594,8 +8668,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3562
 #: assets/admin/js/glossares.js:3863
-#: assets/admin/js/dashboard.js:22607
-#: assets/admin/js/dashboard.js:22956
+#: assets/admin/js/dashboard.js:22645
+#: assets/admin/js/dashboard.js:22994
 #: assets/admin/js/faq.js:8346
 #: assets/admin/js/faq.js:8695
 msgid "Write your Answer here."
@@ -8605,8 +8679,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3580
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:22622
-#: assets/admin/js/dashboard.js:26298
+#: assets/admin/js/dashboard.js:22660
+#: assets/admin/js/dashboard.js:26336
 #: assets/admin/js/faq.js:8361
 #: assets/admin/js/glossaries.js:7711
 msgid "Create"
@@ -8615,7 +8689,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3760
-#: assets/admin/js/dashboard.js:22823
+#: assets/admin/js/dashboard.js:22861
 #: assets/admin/js/faq.js:8562
 msgid "FAQ Updated Successfully"
 msgstr ""
@@ -8623,14 +8697,14 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3814
-#: assets/admin/js/dashboard.js:22894
+#: assets/admin/js/dashboard.js:22932
 #: assets/admin/js/faq.js:8633
 msgid "FAQ Group"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
-#: assets/admin/js/dashboard.js:22963
+#: assets/admin/js/dashboard.js:23001
 #: assets/admin/js/faq.js:8702
 msgid "Keep It Open By default"
 msgstr ""
@@ -8639,8 +8713,8 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3881
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:22994
-#: assets/admin/js/dashboard.js:26631
+#: assets/admin/js/dashboard.js:23032
+#: assets/admin/js/dashboard.js:26669
 #: assets/admin/js/faq.js:8733
 #: assets/admin/js/glossaries.js:8044
 msgid "Update"
@@ -8650,9 +8724,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4031
 #: assets/admin/js/glossares.js:4691
-#: assets/admin/js/dashboard.js:23148
-#: assets/admin/js/dashboard.js:24229
-#: assets/admin/js/dashboard.js:24605
+#: assets/admin/js/dashboard.js:23186
+#: assets/admin/js/dashboard.js:24267
+#: assets/admin/js/dashboard.js:24643
 #: assets/admin/js/faq.js:8887
 #: assets/admin/js/faq.js:9968
 #: assets/admin/js/faq.js:10344
@@ -8663,9 +8737,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4031
 #: assets/admin/js/glossares.js:4691
-#: assets/admin/js/dashboard.js:23149
-#: assets/admin/js/dashboard.js:24230
-#: assets/admin/js/dashboard.js:24606
+#: assets/admin/js/dashboard.js:23187
+#: assets/admin/js/dashboard.js:24268
+#: assets/admin/js/dashboard.js:24644
 #: assets/admin/js/faq.js:8888
 #: assets/admin/js/faq.js:9969
 #: assets/admin/js/faq.js:10345
@@ -8676,9 +8750,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3970
 #: assets/admin/js/glossares.js:4634
-#: assets/admin/js/dashboard.js:23073
-#: assets/admin/js/dashboard.js:24151
-#: assets/admin/js/dashboard.js:24531
+#: assets/admin/js/dashboard.js:23111
+#: assets/admin/js/dashboard.js:24189
+#: assets/admin/js/dashboard.js:24569
 #: assets/admin/js/faq.js:8812
 #: assets/admin/js/faq.js:9890
 #: assets/admin/js/faq.js:10270
@@ -8688,8 +8762,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:3988
-#: assets/admin/js/dashboard.js:23094
-#: assets/admin/js/dashboard.js:24172
+#: assets/admin/js/dashboard.js:23132
+#: assets/admin/js/dashboard.js:24210
 #: assets/admin/js/faq.js:8833
 #: assets/admin/js/faq.js:9911
 msgid "FAQ Duplicated Successfully."
@@ -8699,9 +8773,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4002
 #: assets/admin/js/glossares.js:4664
-#: assets/admin/js/dashboard.js:23112
-#: assets/admin/js/dashboard.js:24193
-#: assets/admin/js/dashboard.js:24571
+#: assets/admin/js/dashboard.js:23150
+#: assets/admin/js/dashboard.js:24231
+#: assets/admin/js/dashboard.js:24609
 #: assets/admin/js/faq.js:8851
 #: assets/admin/js/faq.js:9932
 #: assets/admin/js/faq.js:10310
@@ -8712,9 +8786,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4003
 #: assets/admin/js/glossares.js:4665
-#: assets/admin/js/dashboard.js:23113
-#: assets/admin/js/dashboard.js:24194
-#: assets/admin/js/dashboard.js:24572
+#: assets/admin/js/dashboard.js:23151
+#: assets/admin/js/dashboard.js:24232
+#: assets/admin/js/dashboard.js:24610
 #: assets/admin/js/faq.js:8852
 #: assets/admin/js/faq.js:9933
 #: assets/admin/js/faq.js:10311
@@ -8725,9 +8799,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4009
 #: assets/admin/js/glossares.js:4671
-#: assets/admin/js/dashboard.js:23116
-#: assets/admin/js/dashboard.js:24197
-#: assets/admin/js/dashboard.js:24575
+#: assets/admin/js/dashboard.js:23154
+#: assets/admin/js/dashboard.js:24235
+#: assets/admin/js/dashboard.js:24613
 #: assets/admin/js/faq.js:8855
 #: assets/admin/js/faq.js:9936
 #: assets/admin/js/faq.js:10314
@@ -8738,9 +8812,9 @@ msgstr ""
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4017
 #: assets/admin/js/glossares.js:4677
-#: assets/admin/js/dashboard.js:23128
-#: assets/admin/js/dashboard.js:24209
-#: assets/admin/js/dashboard.js:24585
+#: assets/admin/js/dashboard.js:23166
+#: assets/admin/js/dashboard.js:24247
+#: assets/admin/js/dashboard.js:24623
 #: assets/admin/js/faq.js:8867
 #: assets/admin/js/faq.js:9948
 #: assets/admin/js/faq.js:10324
@@ -8750,8 +8824,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2924
-#: assets/admin/js/dashboard.js:21808
-#: assets/admin/js/dashboard.js:23887
+#: assets/admin/js/dashboard.js:21846
+#: assets/admin/js/dashboard.js:23925
 #: assets/admin/js/faq.js:7547
 #: assets/admin/js/faq.js:9626
 msgid "FAQ Group Disabled."
@@ -8760,8 +8834,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2924
-#: assets/admin/js/dashboard.js:21809
-#: assets/admin/js/dashboard.js:23888
+#: assets/admin/js/dashboard.js:21847
+#: assets/admin/js/dashboard.js:23926
 #: assets/admin/js/faq.js:7548
 #: assets/admin/js/faq.js:9627
 msgid "FAQ Group Enabled."
@@ -8770,8 +8844,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2958
-#: assets/admin/js/dashboard.js:21864
-#: assets/admin/js/dashboard.js:23923
+#: assets/admin/js/dashboard.js:21902
+#: assets/admin/js/dashboard.js:23961
 #: assets/admin/js/faq.js:7603
 #: assets/admin/js/faq.js:9662
 msgid "Add a New FAQ"
@@ -8780,8 +8854,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2872
-#: assets/admin/js/dashboard.js:21731
-#: assets/admin/js/dashboard.js:23812
+#: assets/admin/js/dashboard.js:21769
+#: assets/admin/js/dashboard.js:23850
 #: assets/admin/js/faq.js:7470
 #: assets/admin/js/faq.js:9551
 msgid "Delete this FAQ Group?"
@@ -8790,8 +8864,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2882
-#: assets/admin/js/dashboard.js:21739
-#: assets/admin/js/dashboard.js:23820
+#: assets/admin/js/dashboard.js:21777
+#: assets/admin/js/dashboard.js:23858
 #: assets/admin/js/faq.js:7478
 #: assets/admin/js/faq.js:9559
 msgid "Also delete all FAQs inside this FAQ Group"
@@ -8800,8 +8874,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2890
-#: assets/admin/js/dashboard.js:21754
-#: assets/admin/js/dashboard.js:23834
+#: assets/admin/js/dashboard.js:21792
+#: assets/admin/js/dashboard.js:23872
 #: assets/admin/js/faq.js:7493
 #: assets/admin/js/faq.js:9573
 msgid "FAQ Group Deleted Successfully."
@@ -8810,8 +8884,8 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:2903
-#: assets/admin/js/dashboard.js:21774
-#: assets/admin/js/dashboard.js:23853
+#: assets/admin/js/dashboard.js:21812
+#: assets/admin/js/dashboard.js:23891
 #: assets/admin/js/faq.js:7513
 #: assets/admin/js/faq.js:9592
 msgid "FAQ Group Deleted Successfully With All FAQs."
@@ -8820,7 +8894,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4650
-#: assets/admin/js/dashboard.js:24550
+#: assets/admin/js/dashboard.js:24588
 #: assets/admin/js/faq.js:10289
 msgid "FAQ Duplicated Successfully"
 msgstr ""
@@ -8828,82 +8902,82 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/faq.js:1
 #: assets/admin/js/glossares.js:4812
-#: assets/admin/js/dashboard.js:17919
-#: assets/admin/js/dashboard.js:24742
+#: assets/admin/js/dashboard.js:17957
+#: assets/admin/js/dashboard.js:24780
 #: assets/admin/js/faq.js:10481
 msgid "Uncategorized"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:24943
+#: assets/admin/js/dashboard.js:24981
 #: assets/admin/js/faq.js:10682
 msgid "Most Recent"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:24944
+#: assets/admin/js/dashboard.js:24982
 #: assets/admin/js/faq.js:10683
 msgid "Least Recent"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:27842
+#: assets/admin/js/dashboard.js:27880
 #: assets/admin/js/glossaries.js:9233
 msgid "No Glossary Found!"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:27845
+#: assets/admin/js/dashboard.js:27883
 #: assets/admin/js/glossaries.js:9236
 msgid "Please Create a New Glossary to get started."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:15967
-#: assets/admin/js/dashboard.js:27857
+#: assets/admin/js/dashboard.js:27895
 #: assets/admin/js/glossaries.js:9248
 msgid "Create a New Glossary"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27225
+#: assets/admin/js/dashboard.js:27263
 #: assets/admin/js/glossaries.js:8638
 msgid "Write Glossary Term with BetterDocs AI"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27230
+#: assets/admin/js/dashboard.js:27268
 #: assets/admin/js/glossaries.js:8643
 msgid "Generate Glossaries effortlessly with BetterDocs AI. Simply input your glossary term and let the system automatically generate Glossaries tailored to your needs."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27275
+#: assets/admin/js/dashboard.js:27313
 #: assets/admin/js/glossaries.js:8688
 msgid "Glossary Term:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27278
+#: assets/admin/js/dashboard.js:27316
 #: assets/admin/js/glossaries.js:8691
 msgid "Insert your term to generate a relevant response."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27298
+#: assets/admin/js/dashboard.js:27336
 #: assets/admin/js/glossaries.js:8711
 msgid "Generated Glossary:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26095
-#: assets/admin/js/dashboard.js:26417
+#: assets/admin/js/dashboard.js:26133
+#: assets/admin/js/dashboard.js:26455
 #: assets/admin/js/glossaries.js:7508
 #: assets/admin/js/glossaries.js:7830
 msgid "Please Insert Glossary Term is Title."
@@ -8911,8 +8985,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26124
-#: assets/admin/js/dashboard.js:26445
+#: assets/admin/js/dashboard.js:26162
+#: assets/admin/js/dashboard.js:26483
 #: assets/admin/js/glossaries.js:7537
 #: assets/admin/js/glossaries.js:7858
 msgid "Glossary Term is Updated Successfully."
@@ -8920,8 +8994,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26151
-#: assets/admin/js/dashboard.js:26472
+#: assets/admin/js/dashboard.js:26189
+#: assets/admin/js/dashboard.js:26510
 #: assets/admin/js/glossaries.js:7564
 #: assets/admin/js/glossaries.js:7885
 msgid "Glossary Term is Created Successfully."
@@ -8929,8 +9003,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26247
-#: assets/admin/js/dashboard.js:26570
+#: assets/admin/js/dashboard.js:26285
+#: assets/admin/js/dashboard.js:26608
 #: assets/admin/js/glossaries.js:7660
 #: assets/admin/js/glossaries.js:7983
 msgid "Glossary Term"
@@ -8938,8 +9012,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26261
-#: assets/admin/js/dashboard.js:26587
+#: assets/admin/js/dashboard.js:26299
+#: assets/admin/js/dashboard.js:26625
 #: assets/admin/js/glossaries.js:7674
 #: assets/admin/js/glossaries.js:8000
 msgid "Write your Glossary Term here."
@@ -8947,8 +9021,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26283
-#: assets/admin/js/dashboard.js:26610
+#: assets/admin/js/dashboard.js:26321
+#: assets/admin/js/dashboard.js:26648
 #: assets/admin/js/glossaries.js:7696
 #: assets/admin/js/glossaries.js:8023
 msgid "Write your Glossary Term description here."
@@ -8956,56 +9030,56 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27433
+#: assets/admin/js/dashboard.js:27471
 #: assets/admin/js/glossaries.js:8846
 msgid "Total used in "
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27435
+#: assets/admin/js/dashboard.js:27473
 #: assets/admin/js/glossaries.js:8848
 msgid " doc."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:27435
+#: assets/admin/js/dashboard.js:27473
 #: assets/admin/js/glossaries.js:8848
 msgid " docs."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26737
+#: assets/admin/js/dashboard.js:26775
 #: assets/admin/js/glossaries.js:8150
 msgid "Delete this Glossary?"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26754
+#: assets/admin/js/dashboard.js:26792
 #: assets/admin/js/glossaries.js:8167
 msgid "Glossary Deleted Successfully."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26774
+#: assets/admin/js/dashboard.js:26812
 #: assets/admin/js/glossaries.js:8187
 msgid "Glossary Deleted Successfully With All Glossaries."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26806
+#: assets/admin/js/dashboard.js:26844
 #: assets/admin/js/glossaries.js:8219
 msgid "Glossary Enabled."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/glossaries.js:1
-#: assets/admin/js/dashboard.js:26805
+#: assets/admin/js/dashboard.js:26843
 #: assets/admin/js/glossaries.js:8218
 msgid "Glossary Disabled."
 msgstr ""
@@ -9013,9 +9087,9 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29276
-#: assets/admin/js/dashboard.js:29753
-#: assets/admin/js/dashboard.js:53116
+#: assets/admin/js/dashboard.js:29314
+#: assets/admin/js/dashboard.js:29791
+#: assets/admin/js/dashboard.js:53154
 #: assets/admin/js/quick-setup.js:23074
 #: assets/admin/js/settings.js:5162
 #: assets/admin/js/settings.js:5639
@@ -9026,9 +9100,9 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29262
-#: assets/admin/js/dashboard.js:29749
-#: assets/admin/js/dashboard.js:53113
+#: assets/admin/js/dashboard.js:29300
+#: assets/admin/js/dashboard.js:29787
+#: assets/admin/js/dashboard.js:53151
 #: assets/admin/js/quick-setup.js:23071
 #: assets/admin/js/settings.js:5148
 #: assets/admin/js/settings.js:5635
@@ -9038,43 +9112,43 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29542
+#: assets/admin/js/dashboard.js:29580
 #: assets/admin/js/settings.js:5428
 msgid "Ignore"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29561
+#: assets/admin/js/dashboard.js:29599
 #: assets/admin/js/settings.js:5447
 msgid "Keep Both"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29580
+#: assets/admin/js/dashboard.js:29618
 #: assets/admin/js/settings.js:5466
 msgid "Replace"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29049
+#: assets/admin/js/dashboard.js:29087
 #: assets/admin/js/settings.js:4935
 msgid "Sync new posts (%d)"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:29057
+#: assets/admin/js/dashboard.js:29095
 #: assets/admin/js/settings.js:4943
 msgid "Change Model"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30186
-#: assets/admin/js/dashboard.js:51054
+#: assets/admin/js/dashboard.js:30224
+#: assets/admin/js/dashboard.js:51092
 #: assets/admin/js/quick-setup.js:2548
 #: assets/admin/js/quick-setup.js:21012
 #: assets/admin/js/settings.js:5965
@@ -9084,21 +9158,21 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30187
+#: assets/admin/js/dashboard.js:30225
 #: assets/admin/js/quick-setup.js:2549
 #: assets/admin/js/settings.js:5966
 msgid "Text Goes Here: text"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:30305
+#: assets/admin/js/dashboard.js:30343
 #: assets/admin/js/quick-setup.js:2667
 #: assets/admin/js/settings.js:6084
 msgid "License Not Activated"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:30309
+#: assets/admin/js/dashboard.js:30347
 #: assets/admin/js/quick-setup.js:2671
 #: assets/admin/js/settings.js:6088
 msgid "To access this feature, simply upgrade to BetterDocs PRO for premium access."
@@ -9106,8 +9180,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30223
-#: assets/admin/js/dashboard.js:30314
+#: assets/admin/js/dashboard.js:30261
+#: assets/admin/js/dashboard.js:30352
 #: assets/admin/js/quick-setup.js:2585
 #: assets/admin/js/quick-setup.js:2676
 #: assets/admin/js/settings.js:6002
@@ -9117,8 +9191,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30228
-#: assets/admin/js/dashboard.js:30319
+#: assets/admin/js/dashboard.js:30266
+#: assets/admin/js/dashboard.js:30357
 #: assets/admin/js/quick-setup.js:2590
 #: assets/admin/js/quick-setup.js:2681
 #: assets/admin/js/settings.js:6007
@@ -9128,8 +9202,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30240
-#: assets/admin/js/dashboard.js:30331
+#: assets/admin/js/dashboard.js:30278
+#: assets/admin/js/dashboard.js:30369
 #: assets/admin/js/quick-setup.js:2602
 #: assets/admin/js/quick-setup.js:2693
 #: assets/admin/js/settings.js:6019
@@ -9139,8 +9213,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30244
-#: assets/admin/js/dashboard.js:30335
+#: assets/admin/js/dashboard.js:30282
+#: assets/admin/js/dashboard.js:30373
 #: assets/admin/js/quick-setup.js:2606
 #: assets/admin/js/quick-setup.js:2697
 #: assets/admin/js/settings.js:6023
@@ -9150,8 +9224,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30248
-#: assets/admin/js/dashboard.js:30339
+#: assets/admin/js/dashboard.js:30286
+#: assets/admin/js/dashboard.js:30377
 #: assets/admin/js/quick-setup.js:2610
 #: assets/admin/js/quick-setup.js:2701
 #: assets/admin/js/settings.js:6027
@@ -9161,8 +9235,8 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30263
-#: assets/admin/js/dashboard.js:30346
+#: assets/admin/js/dashboard.js:30301
+#: assets/admin/js/dashboard.js:30384
 #: assets/admin/js/quick-setup.js:2625
 #: assets/admin/js/quick-setup.js:2708
 #: assets/admin/js/settings.js:6042
@@ -9172,7 +9246,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30252
+#: assets/admin/js/dashboard.js:30290
 #: assets/admin/js/quick-setup.js:2614
 #: assets/admin/js/settings.js:6031
 msgid "Glossaries & Encyclopedia"
@@ -9180,7 +9254,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30256
+#: assets/admin/js/dashboard.js:30294
 #: assets/admin/js/quick-setup.js:2618
 #: assets/admin/js/settings.js:6035
 msgid "AI-Powered Chatbot"
@@ -9188,7 +9262,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
-#: assets/admin/js/dashboard.js:30009
+#: assets/admin/js/dashboard.js:30047
 #: assets/admin/js/quick-setup.js:2273
 #: assets/admin/js/settings.js:5833
 msgid "Changes Saved Successfully."
@@ -9196,42 +9270,42 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28775
+#: assets/admin/js/dashboard.js:28813
 #: assets/admin/js/settings.js:4661
 msgid "Full Site Editing in Gutenberg"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28781
+#: assets/admin/js/dashboard.js:28819
 #: assets/admin/js/settings.js:4667
 msgid "Effortlessly design and customize your docs category archive, single docs, ready patterns & more with full site editing (FSE) compatibility in Gutenberg."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28740
+#: assets/admin/js/dashboard.js:28778
 #: assets/admin/js/settings.js:4626
 msgid "Instant Design in Elementor"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28746
+#: assets/admin/js/dashboard.js:28784
 #: assets/admin/js/settings.js:4632
 msgid "Easily design and customize your single docs, category archive page, FAQ builder &  more using pre-made templates and widgets for Elementor & see changes in real time."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28705
+#: assets/admin/js/dashboard.js:28743
 #: assets/admin/js/settings.js:4591
 msgid "Legacy Customizer"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:28711
+#: assets/admin/js/dashboard.js:28749
 #: assets/admin/js/settings.js:4597
 msgid "Create and personalize your templates and pages effortlessly with the live customizer. Make your adjustments the way you want and see the changes in action."
 msgstr ""
@@ -9239,7 +9313,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:50557
+#: assets/admin/js/dashboard.js:50595
 #: assets/admin/js/quick-setup.js:20515
 #: assets/admin/js/settings.js:23932
 msgid "\"allOf\" condition requires an array as #3 argument"
@@ -9248,7 +9322,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:50566
+#: assets/admin/js/dashboard.js:50604
 #: assets/admin/js/quick-setup.js:20524
 #: assets/admin/js/settings.js:23941
 msgid "\"anyOf\" condition requires an array as #3 argument"
@@ -9257,7 +9331,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:50593
+#: assets/admin/js/dashboard.js:50631
 #: assets/admin/js/quick-setup.js:20551
 #: assets/admin/js/settings.js:23968
 msgid "\"not\" can have only one comparison rule, multiple rules given"
@@ -9266,7 +9340,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:50609
+#: assets/admin/js/dashboard.js:50647
 #: assets/admin/js/quick-setup.js:20567
 #: assets/admin/js/settings.js:23984
 msgid "Invalid comparison rule %s."
@@ -9275,7 +9349,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:52000
+#: assets/admin/js/dashboard.js:52038
 #: assets/admin/js/quick-setup.js:21958
 #: assets/admin/js/settings.js:25375
 msgid "Button has a required params #text."
@@ -9284,7 +9358,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:52751
+#: assets/admin/js/dashboard.js:52789
 #: assets/admin/js/quick-setup.js:22709
 #: assets/admin/js/settings.js:26126
 msgid "Loading..."
@@ -9293,7 +9367,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:52916
+#: assets/admin/js/dashboard.js:52954
 #: assets/admin/js/quick-setup.js:22874
 #: assets/admin/js/settings.js:26291
 msgid "Field must have a #type. see documentation."
@@ -9302,7 +9376,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:52991
+#: assets/admin/js/dashboard.js:53029
 #: assets/admin/js/quick-setup.js:22949
 #: assets/admin/js/settings.js:26366
 msgid "You should give a #fields arguments to a group field."
@@ -9311,7 +9385,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:53232
+#: assets/admin/js/dashboard.js:53270
 #: assets/admin/js/quick-setup.js:23190
 #: assets/admin/js/settings.js:26607
 msgid "SVG, PNG, JPG or GIF (max.800x400px)"
@@ -9320,7 +9394,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:53274
+#: assets/admin/js/dashboard.js:53312
 #: assets/admin/js/quick-setup.js:23232
 #: assets/admin/js/settings.js:26649
 msgid "Modal needs button/body with it."
@@ -9329,7 +9403,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:53352
+#: assets/admin/js/dashboard.js:53390
 #: assets/admin/js/quick-setup.js:23310
 #: assets/admin/js/settings.js:26727
 msgid "#options is a required arguments for RadioCard field."
@@ -9338,7 +9412,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:53740
+#: assets/admin/js/dashboard.js:53778
 #: assets/admin/js/quick-setup.js:23698
 #: assets/admin/js/settings.js:27115
 msgid "Save Changes"
@@ -9347,7 +9421,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:58199
+#: assets/admin/js/dashboard.js:58237
 #: assets/admin/js/quick-setup.js:28157
 #: assets/admin/js/settings.js:31574
 msgid "There are no #tabs args defined in props."
@@ -9356,7 +9430,7 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:58204
+#: assets/admin/js/dashboard.js:58242
 #: assets/admin/js/quick-setup.js:28162
 #: assets/admin/js/settings.js:31579
 msgid "Not an array."
@@ -9365,14 +9439,14 @@ msgstr ""
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/quick-setup.js:1
 #: assets/admin/js/settings.js:1
-#: assets/admin/js/dashboard.js:58268
+#: assets/admin/js/dashboard.js:58306
 #: assets/admin/js/quick-setup.js:28226
 #: assets/admin/js/settings.js:31643
 msgid "There are no tabs defined!"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19630
+#: assets/admin/js/dashboard.js:19668
 msgid "Select Knowledge Base"
 msgstr ""
 
@@ -9387,154 +9461,154 @@ msgid "Classic UI"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18968
-#: assets/admin/js/dashboard.js:19120
+#: assets/admin/js/dashboard.js:19006
+#: assets/admin/js/dashboard.js:19158
 msgid "Quick Edit"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18985
-#: assets/admin/js/dashboard.js:19142
+#: assets/admin/js/dashboard.js:19023
+#: assets/admin/js/dashboard.js:19180
 msgid "Trash"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17990
-#: assets/admin/js/dashboard.js:19867
+#: assets/admin/js/dashboard.js:18028
+#: assets/admin/js/dashboard.js:19905
 msgid "No Docs Found"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19809
+#: assets/admin/js/dashboard.js:19847
 msgid "No Category Found"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19812
+#: assets/admin/js/dashboard.js:19850
 msgid "Please create a new category to get started"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19822
+#: assets/admin/js/dashboard.js:19860
 msgid "Create A New Category"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16907
-#: assets/admin/js/dashboard.js:17025
-#: assets/admin/js/dashboard.js:19225
-#: assets/admin/js/dashboard.js:19942
+#: assets/admin/js/dashboard.js:17041
+#: assets/admin/js/dashboard.js:19263
+#: assets/admin/js/dashboard.js:19980
 msgid "Published"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19226
-#: assets/admin/js/dashboard.js:19943
+#: assets/admin/js/dashboard.js:19264
+#: assets/admin/js/dashboard.js:19981
 msgid "Pending review"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17562
-#: assets/admin/js/dashboard.js:19227
-#: assets/admin/js/dashboard.js:19944
+#: assets/admin/js/dashboard.js:17600
+#: assets/admin/js/dashboard.js:19265
+#: assets/admin/js/dashboard.js:19982
 msgid "Draft"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19253
-#: assets/admin/js/dashboard.js:19966
+#: assets/admin/js/dashboard.js:19291
+#: assets/admin/js/dashboard.js:20004
 msgid "Authors:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19285
-#: assets/admin/js/dashboard.js:19998
+#: assets/admin/js/dashboard.js:19323
+#: assets/admin/js/dashboard.js:20036
 msgid "Status:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19306
-#: assets/admin/js/dashboard.js:20019
+#: assets/admin/js/dashboard.js:19344
+#: assets/admin/js/dashboard.js:20057
 msgid "Title:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19339
-#: assets/admin/js/dashboard.js:20052
+#: assets/admin/js/dashboard.js:19377
+#: assets/admin/js/dashboard.js:20090
 msgid "Date:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19355
-#: assets/admin/js/dashboard.js:20068
+#: assets/admin/js/dashboard.js:19393
+#: assets/admin/js/dashboard.js:20106
 msgid "Select Privacy"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19377
-#: assets/admin/js/dashboard.js:20082
+#: assets/admin/js/dashboard.js:19415
+#: assets/admin/js/dashboard.js:20120
 msgid "Password Protected"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19403
-#: assets/admin/js/dashboard.js:20108
+#: assets/admin/js/dashboard.js:19441
+#: assets/admin/js/dashboard.js:20146
 msgid "Make Private"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:19427
-#: assets/admin/js/dashboard.js:20138
+#: assets/admin/js/dashboard.js:19465
+#: assets/admin/js/dashboard.js:20176
 #: assets/blocks/editor.js:30393
 #: assets/blocks/editor.js:30448
 msgid "None"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19435
-#: assets/admin/js/dashboard.js:20146
+#: assets/admin/js/dashboard.js:19473
+#: assets/admin/js/dashboard.js:20184
 msgid "Password:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19503
-#: assets/admin/js/dashboard.js:20214
+#: assets/admin/js/dashboard.js:19541
+#: assets/admin/js/dashboard.js:20252
 msgid "Allow Comments"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19541
-#: assets/admin/js/dashboard.js:20261
+#: assets/admin/js/dashboard.js:19579
+#: assets/admin/js/dashboard.js:20299
 msgid "Saved Successfully"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19546
-#: assets/admin/js/dashboard.js:20266
+#: assets/admin/js/dashboard.js:19584
+#: assets/admin/js/dashboard.js:20304
 msgid "Error While Saving"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17946
+#: assets/admin/js/dashboard.js:17984
 msgid "category in this page"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17800
-#: assets/admin/js/dashboard.js:18550
+#: assets/admin/js/dashboard.js:17838
+#: assets/admin/js/dashboard.js:18588
 msgid "Previous Page"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17806
-#: assets/admin/js/dashboard.js:18556
+#: assets/admin/js/dashboard.js:17844
+#: assets/admin/js/dashboard.js:18594
 msgid "Next Page"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:17510
+#: assets/admin/js/dashboard.js:17548
 #: assets/blocks/editor.js:4393
 #: assets/blocks/editor.js:6137
 #: assets/blocks/editor.js:8264
@@ -9547,7 +9621,7 @@ msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/blocks/editor.js:1
-#: assets/admin/js/dashboard.js:17514
+#: assets/admin/js/dashboard.js:17552
 #: assets/blocks/editor.js:4394
 #: assets/blocks/editor.js:6138
 #: assets/blocks/editor.js:8265
@@ -9559,122 +9633,122 @@ msgid "Descending"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17521
+#: assets/admin/js/dashboard.js:17559
 msgid "All Dates"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17529
+#: assets/admin/js/dashboard.js:17567
 msgid "All Authors"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17542
+#: assets/admin/js/dashboard.js:17580
 msgid "All Categories"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17549
+#: assets/admin/js/dashboard.js:17587
 msgid "Doc Status"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17554
+#: assets/admin/js/dashboard.js:17592
 msgid "Publish"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16910
-#: assets/admin/js/dashboard.js:17028
-#: assets/admin/js/dashboard.js:17558
+#: assets/admin/js/dashboard.js:17044
+#: assets/admin/js/dashboard.js:17596
 msgid "Pending"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17566
+#: assets/admin/js/dashboard.js:17604
 msgid "Auto Draft"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16911
-#: assets/admin/js/dashboard.js:17029
-#: assets/admin/js/dashboard.js:17574
+#: assets/admin/js/dashboard.js:17045
+#: assets/admin/js/dashboard.js:17612
 msgid "Private"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17578
+#: assets/admin/js/dashboard.js:17616
 msgid "Inherit"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18954
+#: assets/admin/js/dashboard.js:18992
 msgid "Edit"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18485
-#: assets/admin/js/dashboard.js:19011
+#: assets/admin/js/dashboard.js:18523
+#: assets/admin/js/dashboard.js:19049
 msgid "Restore"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:19029
+#: assets/admin/js/dashboard.js:19067
 msgid "Delete Permanantly"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18612
+#: assets/admin/js/dashboard.js:18650
 msgid "Doc Category"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18617
+#: assets/admin/js/dashboard.js:18655
 msgid "Doc Tag"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18622
+#: assets/admin/js/dashboard.js:18660
 msgid "Views"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18627
+#: assets/admin/js/dashboard.js:18665
 msgid "Reaction"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18656
+#: assets/admin/js/dashboard.js:18694
 msgid "Action"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18866
+#: assets/admin/js/dashboard.js:18904
 msgid "Total %d Docs"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18180
+#: assets/admin/js/dashboard.js:18218
 msgid "Are you sure you want to permanently delete this post?"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18222
+#: assets/admin/js/dashboard.js:18260
 msgid "Failed To Delete Permanently"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18430
+#: assets/admin/js/dashboard.js:18468
 msgid "Item Selected"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18459
+#: assets/admin/js/dashboard.js:18497
 msgid "Delete Permanently"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:18459
+#: assets/admin/js/dashboard.js:18497
 msgid "Move to Trash"
 msgstr ""
 
@@ -9704,56 +9778,56 @@ msgid "Published FAQs"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17129
+#: assets/admin/js/dashboard.js:17161
 msgid "Welcome To BetterDocs"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17130
+#: assets/admin/js/dashboard.js:17162
 msgid "40,000+ businesses"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17131
+#: assets/admin/js/dashboard.js:17163
 msgid "are accelerating their growth by creating content-rich documentation and knowledge base with BetterDocs."
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17155
+#: assets/admin/js/dashboard.js:17187
 msgid "Watch Tutorials"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:16934
+#: assets/admin/js/dashboard.js:16950
 msgid "Recent Docs"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:16942
-#: assets/admin/js/dashboard.js:17060
+#: assets/admin/js/dashboard.js:16958
+#: assets/admin/js/dashboard.js:17092
 msgid "View All"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:16965
-#: assets/admin/js/dashboard.js:17083
+#: assets/admin/js/dashboard.js:16981
+#: assets/admin/js/dashboard.js:17115
 msgid "Error:"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16908
-#: assets/admin/js/dashboard.js:17026
+#: assets/admin/js/dashboard.js:17042
 msgid "Scheduled"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
 #: assets/admin/js/dashboard.js:16909
-#: assets/admin/js/dashboard.js:17027
+#: assets/admin/js/dashboard.js:17043
 msgid "Drafted"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17052
+#: assets/admin/js/dashboard.js:17084
 msgid "Recent FAQ’s"
 msgstr ""
 
@@ -9761,53 +9835,58 @@ msgstr ""
 #: assets/admin/js/dashboard.js:15134
 #: assets/admin/js/dashboard.js:15137
 #: assets/admin/js/dashboard.js:16577
-#: assets/admin/js/dashboard.js:17355
-#: assets/admin/js/dashboard.js:17401
+#: assets/admin/js/dashboard.js:17392
+#: assets/admin/js/dashboard.js:17439
 msgid "AI Chatbot Addon"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17244
+#: assets/admin/js/dashboard.js:17278
+msgid "These are the Features you are getting👇🏻"
+msgstr ""
+
+#: assets/admin/js/dashboard.js:1
+#: assets/admin/js/dashboard.js:17279
 msgid "Want Advanced Features?"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17259
+#: assets/admin/js/dashboard.js:17296
 msgid "Write with AI Auto Writer"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17291
+#: assets/admin/js/dashboard.js:17328
 msgid "Instant Answer Bot"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17307
+#: assets/admin/js/dashboard.js:17344
 msgid "Insightful Analytics"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17339
+#: assets/admin/js/dashboard.js:17376
 msgid "Glossary & Encyclopedia"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17384
+#: assets/admin/js/dashboard.js:17422
 msgid "What's New?"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17417
+#: assets/admin/js/dashboard.js:17455
 msgid "New FAQ Retro Layout"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17433
+#: assets/admin/js/dashboard.js:17471
 msgid "Author template"
 msgstr ""
 
 #: assets/admin/js/dashboard.js:1
-#: assets/admin/js/dashboard.js:17449
+#: assets/admin/js/dashboard.js:17487
 msgid "Docs order option for Elementor"
 msgstr ""
 
@@ -11251,19 +11330,19 @@ msgstr ""
 msgid "No FAQ found for"
 msgstr ""
 
-#: assets/admin/js/dashboard.js:51055
+#: assets/admin/js/dashboard.js:51093
 #: assets/admin/js/quick-setup.js:21013
 #: assets/admin/js/settings.js:24430
 msgid "Test Goes Here: text"
 msgstr ""
 
-#: assets/admin/js/dashboard.js:51796
+#: assets/admin/js/dashboard.js:51834
 #: assets/admin/js/quick-setup.js:21754
 #: assets/admin/js/settings.js:25171
 msgid "Enabled %s"
 msgstr ""
 
-#: assets/admin/js/dashboard.js:51798
+#: assets/admin/js/dashboard.js:51836
 #: assets/admin/js/quick-setup.js:21756
 #: assets/admin/js/settings.js:25173
 msgid "Disabled %s"

@@ -190,6 +190,7 @@ class Settings extends Base {
 			'search_placeholder'                   => __( 'Search...', 'betterdocs' ),
 			'search_not_found_text'                => __( 'Sorry, no docs were found.', 'betterdocs' ),
 			'search_result_image'                  => true,
+			'search_modal_search_type'			   => 'all',
 			'masonry_layout'                       => true,
 			'docs_list_icon'                       => [],
 			'category_title_link'                  => false,
@@ -1025,7 +1026,20 @@ class Settings extends Base {
 																	'priority'                   => 10,
 																	'is_pro'                     => true,
 																	'rules'                      => Rules::is( 'multiple_kb', true )
-																] )
+																] ),
+																'search_modal_search_type' => [
+																	'name'     		 => 'search_modal_search_type',
+																	'type'     		 => 'select',
+																	'label'    		 => __( 'Search Modal Source', 'betterdocs' ),
+																	'label_subtitle' => __( 'Choose the content type to be shown in the search modal. <br> <b>Note:</b> This is only applicable on Modal Search.', 'betterdocs' ),
+																	'default'  		 => 'all',
+																	'options'  		 => $this->normalize_options( [
+																		'all'  => __('Both (Docs + FAQs)', 'betterdocs'),
+																		'docs' => __('Docs only', 'betterdocs'),
+																		'faq'  => __('FAQs only', 'betterdocs')
+																	] ),
+																	'priority' => 11,
+																]
 															]
 														],
 														'layout_documentation_page_order_by' => [

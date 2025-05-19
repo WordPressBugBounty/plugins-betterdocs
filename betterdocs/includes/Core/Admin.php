@@ -10,6 +10,7 @@ use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Utils\Enqueue;
 use WPDeveloper\BetterDocs\Utils\Insights;
 use PriyoMukul\WPNotice\Utils\NoticeRemover;
+use WPDeveloper\BetterDocs\Core\PluginInstaller;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class Admin extends Base {
@@ -56,6 +57,9 @@ class Admin extends Base {
 	 */
 	private $assets;
 
+	// modules
+    protected $installer;
+
 	/**
 	 * FAQBuilder
 	 * @var FAQBuilder
@@ -81,6 +85,8 @@ class Admin extends Base {
 		if ( ! is_admin() ) {
 			return;
 		}
+
+		$this->installer = new PluginInstaller();
 
 		$this->plugin_insights();
 		add_action( 'admin_notices', [ $this, 'compatibility_notices' ] );
@@ -121,6 +127,13 @@ class Admin extends Base {
 
 		if ( $this->settings->get( 'enable_estimated_reading_time' ) ) {
 			add_action( 'add_meta_boxes', [ $this, 'reading_meta_box_' ], 10 );
+		}
+
+		if ( ! class_exists( 'Classic_Editor' ) && ! class_exists( 'EssentialBlocks' ) ) {
+			add_action( 'wpdeveloper_eb_banner_promo_init', [ $this, 'betterdocs_eb_banner_promo_init' ] );
+		    if ( ( did_action( 'wpdeveloper_eb_banner_promo_init' ) < 1 ) && ! ( get_transient( 'eael_eb_banner_promo_hide' ) || get_transient( 'wpdeveloper_eb_banner_promo_hide' ) ) ) {
+			    do_action( 'wpdeveloper_eb_banner_promo_init' );
+		    }
 		}
 
 		self::$cache_bank = CacheBank::get_instance();
@@ -673,8 +686,8 @@ class Admin extends Base {
 			'generate_data_url'              => get_rest_url( null, '/betterdocs/v1/create-sample-docs' ),
 			'nonce'                          => wp_create_nonce( 'wp_rest' ),
             'sync_nonce'                 	 => wp_create_nonce( 'ai_chatbot_embed' ),
-            'count_all_docs'                 => wp_count_posts('docs')->publish,
-            'count_all_faq'                  => wp_count_posts('betterdocs_faq')->publish,
+            'count_all_docs'                 => array_sum((array) wp_count_posts('docs')),
+            'count_all_faq'                  => array_sum((array) wp_count_posts('betterdocs_faq')),
             'count_new_docs'                 => count(get_option('saved_docs_post_ids', [])),
 			'admin_url'                      => admin_url(),
 			'ia_preview'                     => betterdocs()->settings->get( 'ia_enable_preview', false ),
@@ -787,13 +800,13 @@ class Admin extends Base {
 			'icon_url'   => betterdocs()->assets->icon( 'betterdocs-icon-white.svg', true ),
 			'position'   => 5
 		];
-	
+
 		$_menu_position = 5;
 		global $submenu;
-	
+
 		// Always register both UI endpoints
 		$this->register_modern_ui_fallback();
-	
+
 		foreach ( $this->menu_list() as $key => $value ) {
 			if ( $key === 'betterdocs' ) {
 				$callable = 'add_menu_page';
@@ -801,7 +814,7 @@ class Admin extends Base {
 				call_user_func_array( $callable, $value );
 			} else {
 				$is_core_page = strpos($value['menu_slug'], '?') !== false;
-				
+
 				if ($is_core_page) {
 					// Add classic UI directly
 					$submenu[$this->slug][] = [
@@ -836,7 +849,7 @@ class Admin extends Base {
 			'betterdocs-admin',
 			[ $this, 'output' ]
 		);
-	
+
 		// Hide the menu item from appearing in the admin sidebar
 		global $submenu;
 		if (isset($submenu['betterdocs'])) {
@@ -1138,9 +1151,9 @@ class Admin extends Base {
 			'post_status' => 'any',
 			'numberposts' => 1
 		]);
-	
-		return ($last_visited === 'modern_ui' || empty($docs_exist)) 
-			? 'betterdocs-admin' 
+
+		return ($last_visited === 'modern_ui' || empty($docs_exist))
+			? 'betterdocs-admin'
 			: 'edit.php?post_type=docs&bdocs_view=classic';
 	}
 
@@ -1165,4 +1178,81 @@ class Admin extends Base {
 			$submenu['betterdocs-admin'] = array_values( $submenu['betterdocs-admin'] );
 		}
 	}
+
+	public function betterdocs_eb_banner_promo_init() {
+		add_action( 'enqueue_block_editor_assets', [ $this, 'betterdocs_eb_banner_promo_enqueue_scripts' ] );
+		add_action( 'wp_ajax_betterdocs_eb_banner_promo_dismiss', [ $this, 'betterdocs_eb_banner_promo_dismiss' ] );
+	}
+
+	public function betterdocs_eb_banner_promo_enqueue_scripts() {
+
+		if ( is_plugin_active( 'essential-blocks/essential-blocks.php' ) ) {
+			return;
+		}
+		add_action( 'admin_footer', [ $this, 'betterdocs_eb_banner_promo_admin_js_template' ] );
+		betterdocs()->assets->enqueue( 'betterdocs-eb-promo', 'admin/css/eb-promo.css' );
+		betterdocs()->assets->enqueue( 'betterdocs-eb-promo', 'admin/js/eb-promo.js', [ 'jquery' ] );
+	}
+
+	public function betterdocs_eb_banner_promo_dismiss() {
+		check_ajax_referer( 'betterdocs-wpdeveloper-plugins', 'security' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'You are not allowed to do this action', 'betterdocs' ) );
+		}
+
+		set_transient( 'wpdeveloper_eb_banner_promo_hide', true, DAY_IN_SECONDS * 45 );
+		wp_send_json_success();
+	}
+
+	public function betterdocs_eb_banner_promo_admin_js_template() {
+		$eb_not_installed = Helper::get_local_plugin_data( 'essential-blocks/essential-blocks.php' ) === false;
+		$action           = $eb_not_installed ? 'install' : 'activate';
+        $nonce            = wp_create_nonce( 'betterdocs-wpdeveloper-plugins' );
+
+        ?>
+        <script id="betterdocs-gb-eb-banner-promo-template" type="text/html">
+            <div id="betterdocs-gb-eb-banner-promo">
+                <div class="betterdocs-gb-eb-banner-promo-left">
+                    <div class="betterdocs-gb-eb-banner-promo-image">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <g clip-path="url(#clip0_1_89)">
+                                <path d="M26.3347 11.0312C27.0408 10.8298 27.4499 10.0941 27.2486 9.38804L25.061 1.71694C24.8596 1.01084 24.124 0.601656 23.4179 0.803023L15.7468 2.9906C15.0407 3.19197 14.6315 3.92762 14.8329 4.63371L17.0204 12.3048C17.2218 13.0109 17.9574 13.4201 18.6636 13.2187L26.3347 11.0312Z" fill="#A5AEB8"/>
+                                <path d="M10.0059 15.2829C10.7402 15.2829 11.3354 14.6877 11.3354 13.9534V5.97652C11.3354 5.24227 10.7402 4.64703 10.0059 4.64703H2.02901C1.29476 4.64703 0.699524 5.24227 0.699524 5.97652V13.9534C0.699524 14.6877 1.29476 15.2829 2.02901 15.2829H10.0059Z" fill="#A5AEB8"/>
+                                <path d="M10.0059 27.2483C10.7402 27.2483 11.3354 26.6531 11.3354 25.9188V17.9419C11.3354 17.2076 10.7402 16.6124 10.0059 16.6124H2.02901C1.29476 16.6124 0.699524 17.2076 0.699524 17.9419V25.9188C0.699524 26.6531 1.29476 27.2483 2.02901 27.2483H10.0059Z" fill="#A5AEB8"/>
+                                <path d="M21.9734 27.2483C22.7077 27.2483 23.3029 26.6531 23.3029 25.9188V17.9419C23.3029 17.2076 22.7077 16.6124 21.9734 16.6124H13.9965C13.2622 16.6124 12.667 17.2076 12.667 17.9419V25.9188C12.667 26.6531 13.2622 27.2483 13.9965 27.2483H21.9734Z" fill="#A5AEB8"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_89">
+                                <rect width="28" height="28" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="betterdocs-gb-eb-banner-promo-content">
+                        <h3 class="betterdocs-gb-eb-banner-promo-title"><?php _e( 'Want To Get All Exclusive Gutenberg Blocks For Free?', 'betterdocs' ); ?></h3>
+                        <p class="betterdocs-gb-eb-banner-promo-description"><?php _e( 'If you want to enrich your Gutenberg block library with the latest designs and functionalities, Essential Blocks can be your best companion.', 'betterdocs' ); ?></p>
+                    </div>
+                </div>
+                <div class="betterdocs-gb-eb-banner-promo-right">
+                    <a class="betterdocs-gb-eb-banner-promo-learn-more" href="https://essential-blocks.com/" target="_blank"><?php _e( 'Learn More', 'betterdocs' ) ?></a>
+                    <button class="betterdocs-gb-eb-banner-promo-get-block betterdocs-gb-eb-install" data-promotype="eb-banner" data-action="<?php echo esc_attr( $action ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php echo $eb_not_installed ? __( 'Get Essential Blocks', 'betterdocs' ) : __( 'Activate', 'betterdocs' ); ?></b>
+                    <button class="betterdocs-gb-eb-banner-promo-close" data-nonce="<?php echo esc_attr( $nonce ); ?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <g clip-path="url(#clip0_1_101)">
+                                <path d="M18 6L6 18" stroke="#7A7B80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 6L18 18" stroke="#7A7B80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1_101">
+                                    <rect width="24" height="24" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </script>
+        <?php
+    }
 }

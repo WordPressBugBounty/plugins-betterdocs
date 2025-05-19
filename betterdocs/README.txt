@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 3.9.0
+Stable tag: 3.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -226,6 +226,13 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 3.9.1 - 19/05/2025 =
+
+- Added: Setting option to search either Docs or FAQs separately from the Search Modal layout. 
+- Added: Pagination support in the Glossaries Builder.
+- Fixed: Glossary drag-and-drop was not functioning and caused an uncaught error in the browser console.
+- Few minor bug fixes and improvements
 
 = 3.9.0 - 08/05/2025 =
 
