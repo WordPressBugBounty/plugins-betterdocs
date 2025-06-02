@@ -2,6 +2,7 @@
 
 namespace WPDeveloper\BetterDocs\REST;
 
+use stdClass;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 
 class DocCategories extends BaseAPI {
@@ -12,6 +13,70 @@ class DocCategories extends BaseAPI {
 
 	public function register() {
 		$this->get( 'doc-categories', [ $this, 'get_response' ] );
+		$this->get( 'doc-categories-kb', [$this, 'doc_categories_kb_response'] );
+	}
+
+	public function doc_categories_kb_response( $request ) {
+		$mkb = ! empty( $request->get_param( 'knowledge_base' ) ) ? get_term( $request->get_param( 'knowledge_base' ), 'knowledge_base' ) : '';
+		$mkb = ! empty( $mkb ) ? $mkb->slug : '';
+		$suppress_filters = ! empty( $request->get_param('suppress_filters') ) ? $request->get_param('suppress_filters') : '';
+
+		$terms_query = betterdocs()->query->terms_query(
+			[
+				'parent'     => 0,
+				'hide_empty' => true,
+				'taxonomy'   => 'doc_category',
+				'orderby'    => 'meta_value_num',
+				'meta_key'   => 'doc_category_order',
+				'order'      => 'ASC'
+			]
+		);
+
+		if( ! empty( $suppress_filters ) ) {
+			$terms_query['suppress_filters'] = $suppress_filters;
+		}
+
+		if ( ! empty( $mkb ) ) {
+			$terms_query['meta_query'] = [
+				'relation' => 'AND',
+				[
+					'key'     => 'doc_category_knowledge_base',
+					'value'   => $mkb,
+					'compare' => 'LIKE'
+				]
+			];
+			$terms_query['order']      = 'ASC';
+		}
+
+		$terms = get_terms( $terms_query );
+
+		$terms = $this->convert_terms_to_array_of_std_objects($terms);
+
+		return $terms;
+	}
+
+	private function convert_terms_to_array_of_std_objects( $payload ) {
+		$terms = [];
+
+		foreach( $payload as $term ) {
+			$object = new stdClass();
+
+			$object->term_id = $term->term_id;
+			$object->name = $term->name;
+			$object->slug = $term->slug;
+			$object->term_group = $term->term_group;
+			$object->term_taxonomy_id = $term->term_taxonomy_id;
+			$object->taxonomy = $term->taxonomy;
+			$object->description = $term->description;
+			$object->parent = $term->parent;
+			$object->count = $term->count;
+			$object->filter = $term->filter;
+			$object->meta  = $term->meta;
+
+			array_push($terms, $object);
+		}
+
+		return $terms;
 	}
 
 	public function get_response( $request ) {

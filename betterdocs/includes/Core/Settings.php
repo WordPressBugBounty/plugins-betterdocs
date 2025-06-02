@@ -257,7 +257,10 @@ class Settings extends Base {
 			'enable_ai_chatbot'                    => false,
 			'estimated_reading_time_title'         => '',
 			'estimated_reading_time_text'          => __( 'min read', 'betterdocs' ),
-			'singular_estimated_reading_time_text' => __( 'min read', 'betterdocs' )
+			'singular_estimated_reading_time_text' => __( 'min read', 'betterdocs' ),
+			'betterdocs_access_control_repeater'   => [],
+			'internal_knowledge_base_type' 		   => 'basic',
+			'betterdocs_access_control_repeater_kb'   => [],
 		];
 
 		$_default = apply_filters( 'betterdocs_default_settings', $_default );
@@ -573,6 +576,10 @@ class Settings extends Base {
 
 	public function settings_args() {
 		$wp_roles = $this->normalize_options( $this->get_roles() );
+
+		$roles_for_ikb = $this->normalize_options( array_merge( [ 'all' => __( 'All logged in users', 'betterdocs' ) ], wp_roles()->role_names ) );
+
+		unset( $roles_for_ikb['administrator'] );
 
 		$settings = [
 			'id'              => 'betterdocs_settings_metabox_wrapper',
@@ -1702,127 +1709,217 @@ class Settings extends Base {
 				] ),
 				'tab-advance-settings' => apply_filters( 'betterdocs_settings_tab_advance', [
 					'id'       => 'tab-advance-settings',
-					'label'    => __( 'Advanced Settings', 'betterdocs' ),
+					'label'    => __( 'Access & Restrictions', 'betterdocs' ),
+					'classes'  => 'tab-layout',
 					'priority' => 50,
 					'fields'   => [
-						'title-advance-settings' => [
+						'title_advance_settings' => [
 							'name'     => 'title-advance-settings-tab',
 							'type'     => 'section',
-							'label'    => __( 'Advanced Settings', 'betterdocs' ),
+							'label'    => __( 'Access & Restrictions', 'betterdocs' ),
 							'priority' => 50,
-							'fields'   => apply_filters( 'betterdocs_internal_kb_fields', [
-								'article_roles'              => [
-									'name'     => 'article_roles',
-									'type'     => 'checkbox-select',
-									'label'    => __( 'Who Can Write Docs?', 'betterdocs' ),
-									'priority' => 1,
-									'multiple' => true,
-									'search'   => true,
-									'is_pro'   => true,
-									'default'  => [ 'administrator' ],
-									'options'  => $wp_roles
-								],
-								'settings_roles'             => [
-									'name'     => 'settings_roles',
-									'type'     => 'checkbox-select',
-									'label'    => __( 'Who Can Edit Settings?', 'betterdocs' ),
-									'priority' => 2,
-									'multiple' => true,
-									'is_pro'   => true,
-									'search'   => true,
-									'default'  => [ 'administrator' ],
-									'options'  => $wp_roles
-								],
-								'analytics_roles'            => [
-									'name'     => 'analytics_roles',
-									'type'     => 'checkbox-select',
-									'label'    => __( 'Who Can Check Analytics?', 'betterdocs' ),
-									'priority' => 3,
-									'multiple' => true,
-									'is_pro'   => true,
-									'search'   => true,
-									'default'  => [ 'administrator' ],
-									'options'  => $wp_roles
-								],
-								'faq_roles' => [
-									'name'     => 'faq_roles',
-									'type'     => 'checkbox-select',
-									'label'    => __( 'Who Can Check FAQ Builder?', 'betterdocs' ),
-									'priority' => 4,
-									'multiple' => true,
-									'is_pro'   => true,
-									'search'   => true,
-									'default'  => [ 'administrator' ],
-									'options'  => $wp_roles
-								],
-								'enable_content_restriction' => [
-									'name'                       => 'enable_content_restriction',
-									'type'                       => 'toggle',
-									'is_pro'                     => true,
-									'priority'                   => 5,
-									'label'                      => __( 'Internal Knowledge Base', 'betterdocs' ),
-									'enable_disable_text_active' => true,
-									'default'                    => [ 'all' ]
-								],
-								'content_visibility'         => [
-									'name'           => 'content_visibility',
-									'type'           => 'checkbox-select',
-									'label'          => __( 'Restrict Access to', 'betterdocs' ),
-									'label_subtitle' => __( 'Only selected User Roles will be able to view your Knowledge Base', 'betterdocs' ),
-									'is_pro'         => true,
-									'priority'       => 6,
-									'multiple'       => true,
-									'search'         => true,
-									'default'        => [ 'all' ],
-									'placeholder'    => __( 'Select any', 'betterdocs' ),
-									'options'        => $this->normalize_options( array_merge( [
-										'all' => __( 'All logged in users', 'betterdocs' )
-									], wp_roles()->role_names ) ),
-									'rules'          => Rules::is( 'enable_content_restriction', true ),
-									'filterValue'    => 'all'
-								],
-								'restrict_template'          => [
-									'name'           => 'restrict_template',
-									'type'           => 'checkbox-select',
-									'label'          => __( 'Restriction on Docs', 'betterdocs' ),
-									'label_subtitle' => __( 'Selected Docs pages will be restricted', 'betterdocs' ),
-									'is_pro'         => true,
-									'priority'       => 7,
-									'multiple'       => true,
-									'search'         => true,
-									'default'        => [ 'all' ],
-									'placeholder'    => __( 'Select any', 'betterdocs' ),
-									'options'        => $this->get_texanomy(),
-									'rules'          => Rules::is( 'enable_content_restriction', true ),
-									'filterValue'    => 'all'
-								],
-								'restrict_category'          => [
-									'name'           => 'restrict_category',
-									'type'           => 'checkbox-select',
-									'label'          => __( 'Restriction on Docs Categories', 'betterdocs' ),
-									'label_subtitle' => __( 'Selected Docs categories will be restricted', 'betterdocs' ),
-									'is_pro'         => true,
-									'priority'       => 8,
-									'multiple'       => true,
-									'search'         => true,
-									'default'        => [ 'all' ],
-									'placeholder'    => __( 'Select any', 'betterdocs' ),
-									'options'        => $this->get_terms( 'doc_category' ),
-									'rules'          => Rules::is( 'enable_content_restriction', true ),
-									'filterValue'    => 'all'
-								],
-								'restricted_redirect_url'    => [
-									'name'           => 'restricted_redirect_url',
-									'type'           => 'text',
-									'label'          => __( 'Redirect URL', 'betterdocs' ),
-									'label_subtitle' => __( 'Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the "404 not found" page', 'betterdocs' ),
-									'default'        => '',
-									'placeholder'    => 'https://',
-									'is_pro'         => true,
-									'priority'       => 9,
-									'rules'          => Rules::is( 'enable_content_restriction', true )
+							'fields'   => [
+								'tab-advanced-settings' => [
+									'id' 	   		  => 'tab-advanced-settings',
+									'name'     		  => 'tab-advanced-settings',
+									'label'    		  => __( 'Access & Restrictions', 'betterdocs' ),
+									'classes'  	      => 'tab-layout',
+									'type'     		  => 'tab',
+									'active'   	      => 'global_role_management',
+									'completionTrack' => true,
+									'sidebar'         => false,
+									'save'            => false,
+									'title'           => false,
+									'config'          => [
+										'active'  => '',
+										'sidebar' => false,
+										'title'   => false
+									],
+									'submit'          => [
+										'show' => false
+									],
+									'step'            => [
+										'show' => false
+									],
+									'priority'        => 50,
+									'fields'          => [
+										'global_role_management' => [
+											'id' => 'global_role_management',
+											'name' => 'global_role_management',
+											'type' => 'section',
+											'label' => __( 'Global Role Management', 'betterdocs' ),
+											'priority' => 1,
+											'fields'   => [
+												'article_roles'              => [
+													'name'     => 'article_roles',
+													'type'     => 'checkbox-select',
+													'label'    => __( 'Who Can Write Docs?', 'betterdocs' ),
+													'priority' => 1,
+													'multiple' => true,
+													'search'   => true,
+													'is_pro'   => true,
+													'default'  => [ 'administrator' ],
+													'options'  => $wp_roles
+												],
+												'settings_roles'             => [
+													'name'     => 'settings_roles',
+													'type'     => 'checkbox-select',
+													'label'    => __( 'Who Can Edit Settings?', 'betterdocs' ),
+													'priority' => 2,
+													'multiple' => true,
+													'is_pro'   => true,
+													'search'   => true,
+													'default'  => [ 'administrator' ],
+													'options'  => $wp_roles
+												],
+												'analytics_roles'            => [
+													'name'     => 'analytics_roles',
+													'type'     => 'checkbox-select',
+													'label'    => __( 'Who Can Check Analytics?', 'betterdocs' ),
+													'priority' => 3,
+													'multiple' => true,
+													'is_pro'   => true,
+													'search'   => true,
+													'default'  => [ 'administrator' ],
+													'options'  => $wp_roles
+												],
+												'faq_roles' => [
+													'name'     => 'faq_roles',
+													'type'     => 'checkbox-select',
+													'label'    => __( 'Who Can Check FAQ Builder?', 'betterdocs' ),
+													'priority' => 4,
+													'multiple' => true,
+													'is_pro'   => true,
+													'search'   => true,
+													'default'  => [ 'administrator' ],
+													'options'  => $wp_roles
+												],
+
+											]
+										],
+										'internal_knowledge_base' => [
+											'id' => 'internal_knowledge_base',
+											'name' => 'internal_knowledge_base',
+											'type' => 'section',
+											'label' => __('Internal Knowledge Base', 'betterdocs'),
+											'priority' => 1,
+											'fields'   => apply_filters('betterdocs_settings_content_restriction_fields', [
+												'enable_content_restriction' => [
+													'name'                       => 'enable_content_restriction',
+													'type'                       => 'toggle',
+													'is_pro'                     => true,
+													'priority'                   => 5,
+													'label'                      => __( 'Internal Knowledge Base', 'betterdocs' ),
+													'enable_disable_text_active' => true,
+													'default'                    => [ 'all' ]
+												],
+												'internal_knowledge_base_type' => [
+													'name'           => 'internal_knowledge_base_type',
+													'type'           => 'radio-card',
+													'label'          => __( 'Choose a Rule Type', 'betterdocs' ),
+													'label_subtitle' => __( 'Choose a rule type: apply access globally (Basic), or configure detailed restrictions (Advanced) for docs, categories, and KBs.', 'betterdocs' ),
+													'priority'       => 6,
+													'multiple'       => true,
+													'search'         => true,
+													'default'        => [ 'all' ],
+													'placeholder'    => __( 'Select any', 'betterdocs' ),
+													'options'        => [
+														[
+															'label' => 'Basic',
+															'value' => 'basic'
+														],
+														[
+															'label' => 'Advanced',
+															'value' => 'advanced'
+														]
+													],
+													'filterValue'    => 'all',
+													'rules'          => Rules::is( 'enable_content_restriction', true )
+												],
+												'content_visibility'         => [
+													'name'           => 'content_visibility',
+													'type'           => 'checkbox-select',
+													'label'          => __( 'Restrict Access to', 'betterdocs' ),
+													'label_subtitle' => __( 'Only selected User Roles will be able to view your Knowledge Base', 'betterdocs' ),
+													'is_pro'         => true,
+													'priority'       => 7,
+													'multiple'       => true,
+													'search'         => true,
+													'default'        => [ 'all' ],
+													'placeholder'    => __( 'Select any', 'betterdocs' ),
+													'options'        => $roles_for_ikb,
+													'rules'          => Rules::logicalRule(
+														[
+															Rules::is( 'enable_content_restriction', true ),
+															Rules::is( 'internal_knowledge_base_type', 'basic' )
+														],
+														'and'
+													),
+													'filterValue'    => 'all'
+												],
+												'restrict_template'          => [
+													'name'           => 'restrict_template',
+													'type'           => 'checkbox-select',
+													'label'          => __( 'Restriction on Docs', 'betterdocs' ),
+													'label_subtitle' => __( 'Selected Docs pages will be restricted', 'betterdocs' ),
+													'is_pro'         => true,
+													'priority'       => 8,
+													'multiple'       => true,
+													'search'         => true,
+													'default'        => [ 'all' ],
+													'placeholder'    => __( 'Select any', 'betterdocs' ),
+													'options'        => $this->get_texanomy(),
+													'rules'          => Rules::logicalRule(
+														[
+															Rules::is( 'enable_content_restriction', true ),
+															Rules::is( 'internal_knowledge_base_type', 'basic' )
+														],
+														'and'
+													),
+													'filterValue'    => 'all'
+												],
+												'restrict_category'          => [
+													'name'           => 'restrict_category',
+													'type'           => 'checkbox-select',
+													'label'          => __( 'Restriction on Docs Categories', 'betterdocs' ),
+													'label_subtitle' => __( 'Selected Docs categories will be restricted', 'betterdocs' ),
+													'is_pro'         => true,
+													'priority'       => 9,
+													'multiple'       => true,
+													'search'         => true,
+													'default'        => [ 'all' ],
+													'placeholder'    => __( 'Select any', 'betterdocs' ),
+													'options'        => $this->get_terms( 'doc_category' ),
+													'rules'          => Rules::logicalRule(
+														[
+															Rules::is( 'enable_content_restriction', true ),
+															Rules::is( 'internal_knowledge_base_type', 'basic' )
+														],
+														'and'
+													),
+													'filterValue'    => 'all'
+												],
+												'restricted_redirect_url'    => [
+													'name'           => 'restricted_redirect_url',
+													'type'           => 'text',
+													'label'          => __( 'Redirect URL', 'betterdocs' ),
+													'label_subtitle' => __( 'Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the "404 not found" page', 'betterdocs' ),
+													'default'        => '',
+													'placeholder'    => 'https://',
+													'is_pro'         => true,
+													'priority'       => 20,
+													'rules'          => Rules::logicalRule(
+														[
+															Rules::is( 'enable_content_restriction', true ),
+														],
+														'and'
+													)
+												]
+											] )
+										]
+									]
 								]
-							] )
+							]
 						]
 					]
 				] ),
@@ -2519,6 +2616,38 @@ class Settings extends Base {
 			foreach ( $get_terms as $value ) {
 				if ( isset( $value->slug ) && isset( $value->name ) ) {
 					$terms[ $value->slug ] = $value->name;
+				}
+			}
+		}
+
+		$terms = $this->normalize_options( $terms );
+		if ( count( $terms ) > 1 ) {
+			$this->database->set_cache( $_cache_key, $terms );
+		}
+
+		return $terms;
+	}
+
+	public function get_terms_with_ids( $taxonomy ) {
+		$_cache_key = 'betterdocs::settings::terms::ids' . trim( $taxonomy );
+		$docs_tax   = $this->database->get_cache( $_cache_key );
+
+		if ( $docs_tax ) {
+			return $docs_tax;
+		}
+
+		$get_terms = get_terms( [
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+			'suppress_filter' => true,
+		] );
+
+		$terms = [];
+
+		if ( ! empty( $get_terms ) && ! is_wp_error( $get_terms ) ) {
+			foreach ( $get_terms as $value ) {
+				if ( isset( $value->term_id ) && isset( $value->name ) ) {
+					$terms[ $value->term_id ] = $value->name;
 				}
 			}
 		}

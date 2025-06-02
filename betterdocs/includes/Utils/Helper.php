@@ -3,6 +3,7 @@
 namespace WPDeveloper\BetterDocs\Utils;
 
 use function BetterLinksPro\Dependencies\GuzzleHttp\json_decode;
+use function WPML\PHP\Logger\error;
 
 class Helper extends Base {
 
@@ -426,6 +427,35 @@ class Helper extends Base {
         }
     }
 
+	/**
+	 * Function To Normalize Repeater Field For Quick Builder
+	 *
+	 * @param array $fields
+	 * @param array $include_field_keys
+	 *
+	 * @return array
+	 */
+	public static function normalize_repeater_field( $fields, $include_field_keys = [] ) {
+		if( empty( $include_field_keys ) ) {
+			return $fields;
+		}
+
+		$normalized_fields = [];
+
+		foreach( $fields as $field ) {
+			foreach( $include_field_keys as $field_key ) {
+				if( ! isset( $normalized_fields[$field_key] ) ) {
+					$normalized_fields[$field_key] = isset( $field[$field_key] ) && ! empty( $field[$field_key] ) ? $field[$field_key] : [];
+				} else {
+					array_push( $normalized_fields[$field_key], ...( isset( $field[$field_key] ) && ! empty( $field[$field_key] ) ? $field[$field_key] : [] ) );
+					$normalized_fields[$field_key] = array_unique( $normalized_fields[$field_key] );
+				}
+			}
+		}
+
+		return $normalized_fields;
+	}
+	
 	public static function get_local_plugin_data( $basename = '' ) {
         if ( empty( $basename ) ) {
             return false;
