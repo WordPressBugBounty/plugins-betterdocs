@@ -78,6 +78,7 @@
     }
     .betterdocs-dimension-fields li:first-child span {
         height: 30px;
+		width: auto;
         line-height: 30px;
         font-size: 15px;
         padding-left: 5px;
