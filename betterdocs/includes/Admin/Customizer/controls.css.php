@@ -62,6 +62,7 @@
         font-size: 22px;
         margin-left: 5px;
         transition: unset;
+		display: inline-block;
     }
     .betterdocs-customizer-reset svg {
         width: 16px;

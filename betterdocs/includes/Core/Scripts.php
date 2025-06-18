@@ -47,6 +47,7 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-doc_category', 'public/css/tax-doc_category.css', [ 'betterdocs-breadcrumb', 'betterdocs-pagination' ] );
 		$assets->register( 'betterdocs-category-archive-header', 'public/css/archive-header.css' );
 		$assets->register( 'betterdocs-category-archive-doc-list', 'public/css/archive-doc-list.css' );
+		$assets->register( 'betterdocs-article-summary', 'public/css/article-summary.css' );
 		$assets->register( 'betterdocs-author', 'public/css/author.css' );
 
 		$assets->register( 'betterdocs-category-grid', 'public/css/category-grid.css', [ 'simplebar' ] );
@@ -78,7 +79,9 @@ class Scripts extends Base {
 			[
 				'ajax_url'          => admin_url( 'admin-ajax.php' ),
 				'copy_text'         => __( 'Copied', 'betterdocs' ),
-				'sticky_toc_offset' => $this->settings->get( 'sticky_toc_offset' )
+				'sticky_toc_offset' => $this->settings->get( 'sticky_toc_offset' ),
+				'summary_nonce'     => wp_create_nonce( 'betterdocs_article_summary_nonce' ),
+				'summary_error'     => __( 'Failed to generate doc summary. Please try again.', 'betterdocs' )
 			]
 		);
 
@@ -123,6 +126,8 @@ class Scripts extends Base {
 
 		return $assets;
 	}
+
+
 
 	public function blocks( $assets ) {
 		$assets->register( 'betterdocs-fontawesome', 'vendor/css/font-awesome5.css' );

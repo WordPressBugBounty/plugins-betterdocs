@@ -1251,7 +1251,18 @@ class Defaults extends Base {
 				'input3' => 24,
 				'input4' => 24
 			],
-			'betterdocs_faq_category_active_title_background_color_layout_4' => '#E8FFF4'
+			'betterdocs_faq_category_active_title_background_color_layout_4' => '#E8FFF4',
+			'betterdocs_article_summary_title_bg_color' => '#F9FAFB',
+			'betterdocs_article_summary_title_color' => '#344054',
+			'betterdocs_article_summary_title_font_size' => '18',
+			'betterdocs_article_summary_content_color' => '#4d4d4d',
+			'betterdocs_article_summary_content_font_size' => '14',
+			'betterdocs_article_summary_content_font_size' => '14',
+			'betterdocs_doc_single_article_summary_title' => __( 'Doc Summary', 'betterdocs' ),
+			'betterdocs_article_summary_bg_color' => '#FFFFFF',
+			'betterdocs_article_summary_border_color' => '#EAECF0',
+			'betterdocs_article_summary_border_width' => '1',
+			'betterdocs_article_summary_border_radius' => '8',
 		];
 
 		if ( ! empty( $key ) ) {

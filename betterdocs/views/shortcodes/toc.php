@@ -1,7 +1,7 @@
 <?php
 	/** @var \WPDeveloper\BetterDocs\Shortcodes\ToC $widget */
 if ( $post !== null ) {
-	$toc_data = $widget->format_toc_data( $post->post_content, $htags, $hierarchy );
+	$toc_data = $widget->format_toc_data( apply_filters( 'the_content', $post->post_content ), $htags, $hierarchy );
 	if ( empty( $toc_data->items ) ) {
 		return;
 	}

@@ -19,6 +19,7 @@ use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\ReadingTime;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\SocialShare;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CategoryGrid;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\FeedbackForm;
+use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\ArticleSummary;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\ArchiveHeader;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\BetterdocsPrint;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocAuthor;
@@ -126,6 +127,14 @@ return [
 		'value'      => 'table-of-contents',
 		'visibility' => true,
 		'object'     => ToC::class,
+		'demo'       => '',
+		'docs'       => ''
+	],
+	'article-summary'   => [
+		'label'      => __( 'AI Doc Summarizer', 'betterdocs' ),
+		'value'      => 'article-summary',
+		'visibility' => true,
+		'object'     => ArticleSummary::class,
 		'demo'       => '',
 		'docs'       => ''
 	],

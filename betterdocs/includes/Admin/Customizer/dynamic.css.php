@@ -5365,6 +5365,100 @@ $css->add_rule(
 	)
 );
 
+//Article Summary Title Background Color
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-header',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_article_summary_title_bg_color'
+		]
+	)
+);
+
+//Article Summary Title Color
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-header .betterdocs-summary-title',
+	$css->properties(
+		[
+			'color' => 'betterdocs_article_summary_title_color'
+		]
+	)
+);
+
+//Article Summary Title Font Size
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-header .betterdocs-summary-title',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_article_summary_title_font_size'
+		],
+		'px'
+	)
+);
+
+//Article Summary Content Color
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-loading, .betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-content, .betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-content .betterdocs-summary-text .summary-content p, .betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-content p',
+	$css->properties(
+		[
+			'color' => 'betterdocs_article_summary_content_color'
+		]
+	)
+);
+
+//Article Summary Content Font Size
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-loading, .betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-content,.betterdocs-entry-content .betterdocs-article-summary .betterdocs-summary-content p, .betterdocs-article-summary .betterdocs-summary-text p',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_article_summary_content_font_size'
+		],
+		'px'
+	)
+);
+
+//Article Summary Background Color
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_article_summary_bg_color'
+		]
+	)
+);
+
+//Article Summary Border Color
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary',
+	$css->properties(
+		[
+			'border-color' => 'betterdocs_article_summary_border_color'
+		]
+	)
+);
+
+//Article Summary Border Width
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary',
+	$css->properties(
+		[
+			'border-width' => 'betterdocs_article_summary_border_width'
+		],
+		'px'
+	)
+);
+
+//Article Summary Border Radius
+$css->add_rule(
+	'.betterdocs-entry-content .betterdocs-article-summary',
+	$css->properties(
+		[
+			'border-radius' => 'betterdocs_article_summary_border_radius'
+		],
+		'px'
+	)
+);
+
 $css->add_rule(
 	'.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-8 .betterdocs-content-wrapper .docs-content-full-main .betterdocs-content, .betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-9 .betterdocs-content-wrapper .docs-content-full-main .betterdocs-content',
 	$css->properties(

@@ -22,6 +22,7 @@ use WPDeveloper\BetterDocs\Core\Scripts;
 use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\Core\ShortcodeFactory;
 use WPDeveloper\BetterDocs\Core\WriteWithAI;
+use WPDeveloper\BetterDocs\Core\ArticleSummary;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
@@ -89,6 +90,11 @@ final class Plugin {
 	 */
 	public $template_helper;
 	/**
+	 * Article Summary class
+	 * @var ArticleSummary
+	 */
+	public $article_summary;
+	/**
 	 * Customizer class
 	 * @var Customizer
 	 */
@@ -117,7 +123,7 @@ final class Plugin {
 	 * Plugin Version
 	 * @var string
 	 */
-	public $version = '3.9.3';
+	public $version = '4.0.0';
 
 	/**
 	 * WriteWithAI Class
@@ -240,6 +246,7 @@ final class Plugin {
 		$this->customizer      = $this->container->get( Customizer::class );
 		$this->editor          = $this->container->get( Editor::class );
 		$this->ai_autowrtie    = $this->container->get( WriteWithAI::class );
+		$this->article_summary = $this->container->get( ArticleSummary::class );
 
 		$this->container->get( Admin::class );
 		$this->container->get( Roles::class );

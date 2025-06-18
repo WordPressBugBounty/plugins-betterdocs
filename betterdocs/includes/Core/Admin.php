@@ -688,7 +688,7 @@ class Admin extends Base {
             'sync_nonce'                 	 => wp_create_nonce( 'ai_chatbot_embed' ),
             'count_all_docs'                 => array_sum((array) wp_count_posts('docs')),
             'count_all_faq'                  => array_sum((array) wp_count_posts('betterdocs_faq')),
-            'count_new_docs'                 => count(get_option('saved_docs_post_ids', [])),
+            'count_new_docs'                 => count(get_option('saved_docs_post_ids', [])) + count(get_option('betterdocs_ai_chatbot_error_posts', [])),
 			'admin_url'                      => admin_url(),
 			'ia_preview'                     => betterdocs()->settings->get( 'ia_enable_preview', false ),
 			'multiple_kb'                    => betterdocs()->settings->get( 'multiple_kb' ),

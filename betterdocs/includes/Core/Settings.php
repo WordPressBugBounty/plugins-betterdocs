@@ -248,8 +248,12 @@ class Settings extends Base {
 			'reporting_email'                      => get_option( 'admin_email' ),
 			'enable_write_with_ai'                 => true,
 			'enable_faq_write_with_ai'             => true,
+			'write_with_ai_model'             	   => 'gpt-4o-mini',
 			'ai_autowrite_api_key'                 => '',
 			'ai_autowrite_max_token'               => 1500,
+			'enable_article_summary'               => false,
+			'article_summary_model'                => 'gpt-4o-mini',
+			'article_summary_max_token'            => 1500,
 			'enable_estimated_reading_time'        => true,
 			'enable_encyclopedia'                  => false,
 			'enable_glossaries'                    => false,
@@ -2076,6 +2080,156 @@ class Settings extends Base {
 						]
 					]
 				] ),
+				'tab-betterdocs-ai'     => [
+					'id'       => 'tab-betterdocs-ai',
+					'name'     => 'tab-betterdocs-ai',
+					'type'     => 'section',
+					'label'    => __( 'AI Content Suite', 'betterdocs' ),
+					'priority' => 74,
+					'fields'   => [
+						'sections-betterdocs-ai' => [
+							'name'     => 'sections-betterdocs-ai',
+							'type'     => 'section',
+							'label'    => __( 'AI Content Suite', 'betterdocs' ),
+							'priority' => 10,
+							'fields'   => [
+								'all-betterdocs-ai' => [
+									'id'              => 'all-tab-betterdocs-ai',
+									'name'            => 'all-tab-betterdocs-ai',
+									'label'           => __( 'AI Content Suite Settings', 'betterdocs' ),
+									'classes'         => 'tab-layout',
+									'type'            => 'tab',
+									'active'          => 'open-ai-settings',
+									'completionTrack' => true,
+									'sidebar'         => false,
+									'save'            => false,
+									'title'           => false,
+									'config'          => [
+										'active'  => 'open-ai-settings',
+										'sidebar' => false,
+										'title'   => false
+									],
+									'submit'          => [
+										'show' => false
+									],
+									'step'            => [
+										'show' => false
+									],
+									'priority'        => 20,
+									'fields'          => apply_filters(
+										'betterdocs_migration_tab_sections',
+										[
+											'open-ai-settings' => [
+												'id'       => 'open-ai-settings',
+												'name'     => 'open-ai-settings',
+												'type'     => 'section',
+												'label'    => __( 'API Settings', 'betterdocs' ),
+												'priority' => 1,
+												'fields'   => [
+													'ai_autowrite_api_key'     => [
+														'name'           => 'ai_autowrite_api_key',
+														'type'           => 'text',
+														'label'          => __( 'API Key', 'betterdocs' ),
+														'label_subtitle' => sprintf( /* translators: %s is a link to the documentation about generating an OpenAI API key. */ __( 'Check out this <a target="_blank" href="%s">documentation</a> to find out how to generate your OpenAI API Key.', 'betterdocs' ), esc_url( 'https://betterdocs.co/docs/write-with-ai/' ) ),
+														'default'        => '',
+														'priority'       => 1
+													],
+												]
+											],
+											'write-with-ai' => [
+												'id'       => 'write-with-ai',
+												'name'     => 'write-with-ai',
+												'type'     => 'section',
+												'label'    => __( 'Write with AI', 'betterdocs' ),
+												'priority' => 5,
+												'fields'   => [
+													'enable_write_with_ai'     => [
+														'name'                       => 'enable_write_with_ai',
+														'type'                       => 'toggle',
+														'priority'                   => 0,
+														'label'                      => __( 'Write Docs with AI', 'betterdocs' ),
+														'label_subtitle'             => __( 'Generate AI based Documentation in your Gutenberg Editor', 'betterdocs' ),
+														'enable_disable_text_active' => true,
+														'default'                    => true
+													],
+													'enable_faq_write_with_ai' => [
+														'name'                       => 'enable_faq_write_with_ai',
+														'type'                       => 'toggle',
+														'priority'                   => 5,
+														'label'                      => __( 'Write FAQ with AI', 'betterdocs' ),
+														'label_subtitle'             => __( 'Generate AI based FAQ in your Editor', 'betterdocs' ),
+														'enable_disable_text_active' => true,
+														'default'                    => true
+													],
+													'write_with_ai_model' => [
+														'name'     => 'write_with_ai_model',
+														'type'     => 'select',
+														'label'    => __( 'OpenAI Model*', 'betterdocs' ),
+														'priority' => 20,
+														'multiple' => false,
+														'default'  => 'gpt-4o-mini',
+														'options'  => GlobalFields::normalize_fields( [
+															'gpt-4o-mini' => 'GPT-4o Mini',
+															'gpt-4o'      => 'GPT-4o',
+														] ),
+													],
+													'ai_autowrite_max_token'   => [
+														'name'           			 => 'ai_autowrite_max_token',
+														'type'           			 => 'number',
+														'label'          			 => __( 'Set Max Tokens', 'betterdocs' ),
+														'label_subtitle' 			 => sprintf( // translators: %s is a link to more information about token limits.
+																						__( 'Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target="_blank" href="%s">link</a>.', 'betterdocs' ), esc_url( 'https://platform.openai.com/account/limits' ) ),
+														'default'        			 => 1500,
+														'priority'       			 => 10
+													],
+												]
+											],
+											'article-summary' => [
+												'id'       => 'article-summary',
+												'name'     => 'article-summary',
+												'type'     => 'section',
+												'label'    => __( 'AI Doc Summarizer', 'betterdocs' ),
+												'priority' => 10,
+												'fields'   => [
+													'enable_article_summary'   => [
+														'name'                       => 'enable_article_summary',
+														'type'                       => 'toggle',
+														'priority'                   => 1,
+														'label'                      => __( 'AI Powered Doc Summarizer', 'betterdocs' ),
+														'label_subtitle'             => __( 'Enable AI-powered article summaries on single doc pages. Requires OpenAI API key.', 'betterdocs' ),
+														'enable_disable_text_active' => true,
+														'default'                    => false
+													],
+													'article_summary_max_token'   => [
+														'name'           => 'article_summary_max_token',
+														'type'           => 'number',
+														'label'          => __( 'Set Max Tokens', 'betterdocs' ),
+														'label_subtitle' => sprintf( // translators: %s is a link to more information about token limits.
+															__( 'Single Doc summarizer will be generated based on the token limits you have set. For more information on Token Limits, you can check out this <a target="_blank" href="%s">link</a>.', 'betterdocs' ), esc_url( 'https://platform.openai.com/account/limits' ) ),
+														'default'        => 1500,
+														'priority'       => 5
+													],
+													'article_summary_model' => [
+														'name'     => 'article_summary_model',
+														'type'     => 'select',
+														'label'    => __( 'OpenAI Model*', 'betterdocs' ),
+														'priority' => 10,
+														'multiple' => false,
+														'default'  => 'gpt-4o-mini',
+														'options'  => GlobalFields::normalize_fields( [
+															'gpt-4o-mini' => 'GPT-4o Mini',
+															'gpt-4o'      => 'GPT-4o',
+														] ),
+													],
+												]
+											],
+										]
+									)
+								]
+							]
+						]
+					],
+				],
 				'tab-ai-chatbot'       => [
 					'id'       => 'tab-ai-chatbot',
 					'name'     => 'tab-ai-chatbot',
@@ -2115,58 +2269,6 @@ class Settings extends Base {
 						] ),
 					]
 				],
-				'tab-ai-autowrite'     => [
-					'id'       => 'tab-ai-autowrite',
-					'name'     => 'tab-ai-autowrite',
-					'type'     => 'section',
-					'label'    => __( 'Write with AI', 'betterdocs' ),
-					'priority' => 75,
-					'fields'   => [
-						'title-ai-autowrite' => apply_filters( 'betterdocs_settings_ai_autowrite_fields', [
-							'name'     => 'title-ai-autowrite-tab',
-							'type'     => 'section',
-							'label'    => __( 'Write with AI', 'betterdocs' ),
-							'priority' => 60,
-							'fields'   => [
-								'enable_write_with_ai'     => [
-									'name'                       => 'enable_write_with_ai',
-									'type'                       => 'toggle',
-									'priority'                   => 0,
-									'label'                      => __( 'Write Docs with AI', 'betterdocs' ),
-									'label_subtitle'             => __( 'Generate AI based Documentation in your Gutenberg Editor', 'betterdocs' ),
-									'enable_disable_text_active' => true,
-									'default'                    => true
-								],
-								'enable_faq_write_with_ai' => [
-									'name'                       => 'enable_faq_write_with_ai',
-									'type'                       => 'toggle',
-									'priority'                   => 5,
-									'label'                      => __( 'Write FAQ with AI', 'betterdocs' ),
-									'label_subtitle'             => __( 'Generate AI based FAQ in your Editor', 'betterdocs' ),
-									'enable_disable_text_active' => true,
-									'default'                    => true
-								],
-								'ai_autowrite_api_key'     => [
-									'name'           => 'ai_autowrite_api_key',
-									'type'           => 'text',
-									'label'          => __( 'API Key', 'betterdocs' ),
-									'label_subtitle' => sprintf( /* translators: %s is a link to the documentation about generating an OpenAI API key. */ __( 'Check out this <a target="_blank" href="%s">documentation</a> to find out how to generate your OpenAI API Key.', 'betterdocs' ), esc_url( 'https://betterdocs.co/docs/write-with-ai/' ) ),
-									'default'        => '',
-									'priority'       => 10
-								],
-								'ai_autowrite_max_token'   => [
-									'name'           => 'ai_autowrite_max_token',
-									'type'           => 'number',
-									'label'          => __( 'Set Max Tokens', 'betterdocs' ),
-									'label_subtitle' => sprintf( // translators: %s is a link to more information about token limits.
-										__( 'Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target="_blank" href="%s">link</a>.', 'betterdocs' ), esc_url( 'https://platform.openai.com/account/limits' ) ),
-									'default'        => 1500,
-									'priority'       => 15
-								]
-							]
-						] )
-					]
-				]
 			] ),
 			'TAB_AI_CHATBOT'  => get_option( 'enable_ai_chatbot' ),
 			'CHATBOT_LICENSE' => get_option( 'betterdocs_chatbot_software__license_status' ),

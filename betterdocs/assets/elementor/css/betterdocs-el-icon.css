@@ -131,6 +131,18 @@
     content: "\e9cd";
 }
 
+.betterdocs-icon-printer::before {
+    content: "\e954";
+}
+
+.betterdocs-icon-alarms::before {
+    content: "\e910";
+}
+
+.betterdocs-icon-ai-summary::before {
+    content: "\e90f";
+}
+
 .betterdocs-dialog-buttons-action {
     display: block;
     text-align: center;

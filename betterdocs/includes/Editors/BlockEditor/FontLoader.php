@@ -28,7 +28,8 @@ class FontLoader extends Base {
 		'betterdocs/multiple-kb-tab',
 		'betterdocs/categoryhandbook',
 		'betterdocs/popular-docs',
-		'betterdocs/related-categories'
+		'betterdocs/related-categories',
+		'betterdocs/article-summary'
 	];
 
 	public static $retrieved_fonts = [];

@@ -26,7 +26,7 @@ class PrintButton extends BaseWidget {
 	}
 
 	public function get_icon() {
-		return 'eicon-post-list betterdocs-eicon-post-list';
+		return 'betterdocs-icon-printer';
 	}
 
 	protected function register_controls() {

@@ -26,7 +26,7 @@ class ReadingTime extends BaseWidget {
 	}
 
 	public function get_icon() {
-		return 'eicon-post-list betterdocs-eicon-post-list';
+		return 'betterdocs-icon-date';
 	}
 
 	public function get_categories() {

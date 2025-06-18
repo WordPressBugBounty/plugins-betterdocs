@@ -29,6 +29,7 @@ class WriteWithAI extends Base {
 			add_action( 'admin_footer', [ $this, 'ai_autowrite_button' ] );
 		}
 		add_action( 'wp_ajax_generate_openai_content', [ $this, 'generate_openai_content_callback' ] );
+
 	}
 
 	public function isEnabledWriteWithAI() {
@@ -88,6 +89,7 @@ class WriteWithAI extends Base {
 		try {
 			$api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
 			$max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
+			$model = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
 			$api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
 
@@ -98,7 +100,7 @@ class WriteWithAI extends Base {
 				),
 				'body'    => json_encode(
 					array( //phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
-					'model'      => 'gpt-4o-mini', // Add the model parameter here
+					'model'      => $model, // Add the model parameter here
 					'messages'   => array(
 						array(
 					'role'    => 'system',
@@ -158,6 +160,8 @@ class WriteWithAI extends Base {
 		wp_send_json_success( $generated_content );
 		wp_die();
 	}
+
+
 
 	public function ai_autowrite_button() {
 
@@ -1019,18 +1023,16 @@ class WriteWithAI extends Base {
 				font-weight: bold;
 				float: right;
 				position: absolute;
-				right: 1px;
-				top: 1px;
-				padding: 10px;
+				top: -16px;
+				border-radius: 50%;
 				background: #ffffff;
-				border-radius: 25px;
-				width: 20px;
-				height: 20px;
+				width: 40px;
+				height: 40px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				color: #281617;
-				right: -60px;
+				right: -42px;
 			}
 
 			div#betterdocs-ai-error-message,

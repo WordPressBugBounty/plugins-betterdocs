@@ -247,6 +247,7 @@ class FrontEnd extends Base {
 	public function enqueue_scripts() {
 		if ( is_singular( 'docs' ) ) {
 			wp_enqueue_style( 'betterdocs-single' );
+			wp_enqueue_style( 'betterdocs-article-summary' );
 			wp_enqueue_style( 'betterdocs-encyclopedia' );
 			wp_enqueue_style( 'betterdocs-glossaries' );
 			wp_enqueue_script( 'clipboard' );

@@ -31,6 +31,7 @@ use WPDeveloper\BetterDocs\Editors\Elementor\Widget\ArchiveList;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\PrintButton;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Breadcrumbs;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\ReadingTime;
+use WPDeveloper\BetterDocs\Editors\Elementor\Widget\ArticleSummary;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\SearchForm;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\CategoryBox;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\CategoryGrid;
@@ -723,6 +724,7 @@ class Elementor extends BaseEditor {
             'betterdocs-elementor-doc-share'                    => DocShare::class,
             'betterdocs-elementor-feedback'                     => Feedback::class,
             'betterdocs-elementor-reactions'                    => Reactions::class,
+            'betterdocs-article-summary'                        => ArticleSummary::class,
             'betterdocs-elementor-navigation'                   => Navigation::class,
             'betterdocs-elementor-breadcrumbs'                  => Breadcrumbs::class,
             'betterdocs-elementor-category-archive-list'        => ArchiveList::class,
