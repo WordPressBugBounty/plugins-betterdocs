@@ -24,6 +24,7 @@ use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\ArchiveHeader;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\BetterdocsPrint;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocAuthor;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocsTag;
+use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CodeSnippet;
 
 return [
 	'categorygrid'      => [
@@ -183,6 +184,14 @@ return [
 		'value'      => 'docs-tag',
 		'visibility' => true,
 		'object'     => DocsTag::class,
+		'demo'       => '',
+		'docs'       => ''
+	],
+	'code-snippet'      => [
+		'label'      => __( 'BetterDocs Code Snippet', 'betterdocs' ),
+		'value'      => 'code-snippet',
+		'visibility' => true,
+		'object'     => CodeSnippet::class,
 		'demo'       => '',
 		'docs'       => ''
 	]

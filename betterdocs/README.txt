@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 4.0.1
+Stable tag: 4.1.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -56,6 +56,7 @@ Let the visitors instantly find the answers they are searching for without havin
 - Showcase your glossary or documentation alphabetically so that users can find what they need easily. (PRO)
 - BetterDocs AI Chatbot Addon provides instant, intelligent support by enhancing documentation searchability and answering user questions seamlessly.(PRO)
 - BetterDocs AI Doc Summarizer allows you to generate an AI-powered summary of your documentation to give readers a quick, accurate overview of the doc content.
+- BetterDocs Code Snippet allows you to add and display formatted code blocks within your technical documentation, making it easier for readers to understand and replicate technical instructions in both Elementor and Gutenberg.
 
 
 ## 🙌 STUNNING READY TEMPLATES FOR DOCS LANDING PAGE ##
@@ -228,6 +229,12 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 4.1.0 - 24/06/2025 =
+
+- Added: New Feature | Code Snippet | New Elementor Widget and Gutenberg Block
+- Fixed: Search buttons redirecting to an empty page when using the [betterdocs_search_form] shortcode.
+- Few minor bug fixes and improvements
+
 = 4.0.1 - 20/06/2025 =
 
 - Few minor bug fixes and improvements
@@ -235,7 +242,7 @@ Yes, it will work with any standard WordPress theme.
 = 4.0.0 - 18/06/2025 =
 
 - Added: New Feature | AI-powered Doc Summarizer
-- Fixed: Elementor Search Modal Layout widget | Search wasn’t working in certain cases with the
+- Fixed: Elementor Search Modal Layout widget | Search wasn’t working in certain cases 
 - Fixed: TOC scroll behavior causing errors when headings contained special characters
 - Few minor bug fixes and improvements
 

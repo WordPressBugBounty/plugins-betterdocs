@@ -144,7 +144,7 @@ class Content extends ContentBaseWidget {
 			'htags'        => $htags,
 			'enable_toc'   => $enable_toc,
 			'wrapper_attr' => [
-				'class' => [ 'betterdocs-entry-content' ]
+				'class' => [ 'betterdocs-entry-content', 'elementor-widget-container' ] //this class 'elementor-widget-container' adds the padding, margin set from the elementor widget advanced tab
 			]
 		];
 	}

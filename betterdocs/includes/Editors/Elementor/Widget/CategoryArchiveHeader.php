@@ -23,7 +23,7 @@ class CategoryArchiveHeader extends BaseWidget {
 	}
 
 	public function get_icon() {
-		return 'betterdocs- eicon-header';
+		return 'betterdocs-icon-archive-header';
 	}
 
 	public function get_keywords() {

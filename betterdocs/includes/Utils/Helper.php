@@ -455,7 +455,7 @@ class Helper extends Base {
 
 		return $normalized_fields;
 	}
-	
+
 	public static function get_local_plugin_data( $basename = '' ) {
         if ( empty( $basename ) ) {
             return false;
@@ -472,5 +472,47 @@ class Helper extends Base {
         }
 
         return $plugins[ $basename ];
+    }
+
+    /**
+     * Get default file icon based on programming language
+     *
+     * @param string $language Programming language identifier
+     * @return string Emoji icon for the language
+     */
+    public static function get_file_icon_by_language( $language ) {
+        $icons = [
+            'javascript' => '📄',
+            'typescript' => '📘',
+            'jsx' => '⚛️',
+            'tsx' => '⚛️',
+            'html' => '🌐',
+            'css' => '🎨',
+            'scss' => '🎨',
+            'sass' => '🎨',
+            'less' => '🎨',
+            'php' => '🐘',
+            'python' => '🐍',
+            'java' => '☕',
+            'csharp' => '🔷',
+            'cpp' => '⚙️',
+            'c' => '⚙️',
+            'ruby' => '💎',
+            'go' => '🐹',
+            'rust' => '🦀',
+            'swift' => '🦉',
+            'kotlin' => '🎯',
+            'sql' => '🗃️',
+            'json' => '📋',
+            'yaml' => '📋',
+            'xml' => '📄',
+            'markdown' => '📝',
+            'bash' => '💻',
+            'shell' => '💻',
+            'powershell' => '💻',
+            'dockerfile' => '🐳',
+        ];
+
+        return isset( $icons[$language] ) ? $icons[$language] : '📄';
     }
 }

@@ -22,7 +22,7 @@ class SearchForm extends Shortcode {
 	}
 
 	public function get_script_depends() {
-		$handlers = [ 'betterdocs-search', 'betterdocs-pro' ];
+		$handlers = [ 'betterdocs-search'];
 
 		if ( is_tax() ) {
 			$handlers[] = 'betterdocs-glossaries';

@@ -25,7 +25,7 @@ class DocAuthor extends BaseWidget {
 	}
 
 	public function get_icon() {
-		return 'betterdocs- eicon-person';
+		return 'betterdocs-icon-Doc-Author';
 	}
 
 	public function get_categories() {

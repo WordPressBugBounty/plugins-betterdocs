@@ -29,6 +29,7 @@ class FontLoader extends Base {
 		'betterdocs/categoryhandbook',
 		'betterdocs/popular-docs',
 		'betterdocs/related-categories',
+		'betterdocs/code-snippet',
 		'betterdocs/article-summary'
 	];
 

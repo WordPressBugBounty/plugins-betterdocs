@@ -22,7 +22,7 @@ class Tags extends BaseWidget {
 	}
 
 	public function get_icon() {
-		return 'betterdocs- eicon-tags';
+		return 'betterdocs-icon-Tag';
 	}
 
 	public function get_categories() {
