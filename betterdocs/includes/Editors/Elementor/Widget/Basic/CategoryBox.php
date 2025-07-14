@@ -1524,10 +1524,6 @@ class CategoryBox extends BaseWidget {
 		$settings             = &$this->attributes;
 		$settings['taxonomy'] = 'doc_category';
 
-		if ( is_tax( 'doc_category' ) && $settings['layout_template'] == 'layout-4' ) {
-			add_filter( 'betterdocs_base_terms_args', [ $this, 'render_child_terms' ], 10, 1 );
-		}
-
 		if ( $settings['layout_template'] == 'layout-4' ) {
 			add_filter( 'betterdocs_layout_filename', [ $this, 'change_to_layout_four' ], 15, 3 );
 		}
@@ -1616,13 +1612,16 @@ class CategoryBox extends BaseWidget {
 
 		$terms_query_args = $this->betterdocs( 'query' )->terms_query( $terms_query );
 
-		if ( is_tax( 'doc_category' ) ) {
+		if ( is_tax( 'doc_category' ) && $settings['show_dynamic_categories_in_doc_category_template'] ) {
 			$current_category   = get_queried_object();
 			$_nested_categories = betterdocs()->query->get_child_term_ids_by_parent_id( 'doc_category', $current_category->term_id );
+			if( ! empty( $_nested_categories ) ){
+				$terms_query_args['parent']  = $current_category->term_id;
+			}
 			if ( ! $_nested_categories ) {
 				$terms_query_args = false;
 			}
-			$term_count = count( explode( ',', $_nested_categories ) );
+			$term_count 				 = count( explode( ',', $_nested_categories ) );
 		}
 
 		$box_column = $settings['layout_template'] != 'layout-4' ? $settings['box_column'] : $settings['box_column_layout_4'];
@@ -1681,15 +1680,6 @@ class CategoryBox extends BaseWidget {
 
 	public function change_to_layout_four( $layout, $layout_two, $widget_type ) {
 		return 'layout-4';
-	}
-
-	public function render_child_terms( $args ) {
-		$current_category_id = get_queried_object() != null ? get_queried_object()->term_id : '';
-		$_nested_categories  = betterdocs()->query->get_child_term_ids_by_parent_id( 'doc_category', $current_category_id );
-		if ( ! empty( $_nested_categories ) ) {
-			$args['include'] = $_nested_categories;
-		}
-		return $args;
 	}
 
 	public function layout3_wrapper() {

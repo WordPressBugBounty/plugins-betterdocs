@@ -33,6 +33,12 @@ class ToC extends Shortcode {
 	}
 
 	public function render( $atts, $content = null ) {
+		// Check if post is password protected and user hasn't provided correct password
+		if ( post_password_required( $this->attributes['post_id'] ) ) {
+			// Don't show ToC for password-protected posts until password is provided
+			return '';
+		}
+
 		$this->views( 'shortcodes/toc' );
 	}
 
@@ -40,6 +46,47 @@ class ToC extends Shortcode {
 		return [
 			'post' => get_post( $this->attributes['post_id'] )
 		];
+	}
+
+	/**
+	 * Process content for TOC generation without triggering heavy content filters
+	 * This handles special characters while avoiding memory issues from plugins like WPML
+	 *
+	 * @param string $content Raw post content
+	 * @return string Processed content
+	 */
+	public function process_content_for_toc( $content ) {
+		// Check if we should use the full content filter (for backward compatibility)
+		$use_full_filter = apply_filters( 'betterdocs_toc_use_full_content_filter', false );
+
+		if ( $use_full_filter ) {
+			// Use the full content filter if explicitly enabled
+			return apply_filters( 'the_content', $content );
+		}
+
+		// Apply only essential content processing filters that handle special characters
+		// without triggering heavy processing from plugins like WPML, page builders, etc.
+
+		// Handle shortcodes first (but don't execute them, just remove them to avoid conflicts)
+		$content = strip_shortcodes( $content );
+
+		// Decode HTML entities to handle special characters properly
+		$content = html_entity_decode( $content, ENT_QUOTES, 'UTF-8' );
+
+		// Convert line breaks to proper HTML if needed
+		$content = wpautop( $content );
+
+		// Apply specific filters that are safe and necessary for TOC generation
+		// These are lightweight filters that handle character encoding and basic formatting
+		$content = apply_filters( 'betterdocs_toc_content_processing', $content );
+
+		// Additional safety: limit content size to prevent memory issues
+		$max_content_length = apply_filters( 'betterdocs_toc_max_content_length', 500000 ); // 500KB default
+		if ( strlen( $content ) > $max_content_length ) {
+			$content = substr( $content, 0, $max_content_length );
+		}
+
+		return $content;
 	}
 
 	/**
@@ -98,7 +145,7 @@ class ToC extends Shortcode {
 				$heading_name = ! empty( $heading_name ) ? strtolower( str_replace( ' ', '-', preg_replace( '/[^\p{L}\p{N}\s]/u', '', $heading_name ) ) ) : '';
 				preg_match( '/id="(.+?)"/', $current_title, $matches_id );
 				$heading_id = isset( $matches_id[1] ) ? strtolower( $matches_id[1] ) : '';
-				$tag_number = ! empty( $heading_id ) ? $heading_id : ( ! empty( $heading_name ) && $this->settings->get( 'toc_dynamic_title' ) ? $heading_name : $tag_counter . '-toc-title' );
+				$tag_number = ! empty( $heading_id ) ? $heading_id : ( ! empty( $heading_name ) && $dynamic_toc_title_switch ? $heading_name : $tag_counter . '-toc-title' );
 
 				$new_data             = new Node();
 				$new_data->key        = $current_tag_number;

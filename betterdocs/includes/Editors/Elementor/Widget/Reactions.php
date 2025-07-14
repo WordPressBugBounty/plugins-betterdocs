@@ -81,7 +81,7 @@ class Reactions extends BaseWidget {
 				'return_value' => true,
 				'default'      => true,
 				'condition'    => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1' ,'layout-2', 'layout-3' ]
 				]
 			]
 		);
@@ -92,7 +92,7 @@ class Reactions extends BaseWidget {
 				'label'     => esc_html__( 'Happy Icon', 'betterdocs' ),
 				'type'      => Controls_Manager::MEDIA,
 				'condition' => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1', 'layout-2', 'layout-3' ]
 				]
 			]
 		);
@@ -107,7 +107,7 @@ class Reactions extends BaseWidget {
 				'return_value' => true,
 				'default'      => true,
 				'condition'    => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1', 'layout-2', 'layout-3' ]
 				]
 			]
 		);
@@ -118,7 +118,7 @@ class Reactions extends BaseWidget {
 				'label'     => esc_html__( 'Normal Icon', 'betterdocs' ),
 				'type'      => Controls_Manager::MEDIA,
 				'condition' => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1', 'layout-2', 'layout-3' ]
 				]
 			]
 		);
@@ -133,7 +133,7 @@ class Reactions extends BaseWidget {
 				'return_value' => true,
 				'default'      => true,
 				'condition'    => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1', 'layout-2', 'layout-3' ]
 				]
 			]
 		);
@@ -144,7 +144,7 @@ class Reactions extends BaseWidget {
 				'label'     => esc_html__( 'Sad Icon', 'betterdocs' ),
 				'type'      => Controls_Manager::MEDIA,
 				'condition' => [
-					'reactions_layout_template' => [ 'layout-2', 'layout-3' ]
+					'reactions_layout_template' => [ 'layout-1', 'layout-2', 'layout-3' ]
 				]
 			]
 		);

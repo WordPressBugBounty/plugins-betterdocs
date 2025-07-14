@@ -64,6 +64,12 @@ class Reactions extends Block {
 
 		if ( $this->attributes['layout'] == 'layout-1' ) {
 			$wrapper_class['class'][] = 'betterdocs-article-reactions';
+			$default_params['happy']       = $this->attributes['show_happy_icon'];
+			$default_params['happy_icon']  = $this->attributes['happy_icon_url'];
+			$default_params['normal']      = $this->attributes['show_neutral_icon'];
+			$default_params['normal_icon'] = $this->attributes['neutral_icon_url'];
+			$default_params['sad']         = $this->attributes['show_sad_icon'];
+			$default_params['sad_icon']    = $this->attributes['sad_icon_url'];
 		}
 
 		if ( $this->attributes['layout'] == 'layout-2' ) {

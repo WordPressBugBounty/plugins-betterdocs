@@ -411,9 +411,30 @@ class Elementor extends BaseEditor {
                     'label_on'     => __( 'Yes', 'betterdocs' ),
                     'label_off'    => __( 'No', 'betterdocs' ),
                     'return_value' => 'true',
-                    'default'      => false
+                    'default'      => 'true',
                 ]
             );
+
+			$wb->add_control(
+                'show_dynamic_categories_in_doc_category_template',
+                [
+                    'label'        => __( 'Show Categories Dynamically', 'betterdocs' ),
+                    'type'         => Controls_Manager::SWITCHER,
+                    'label_on'     => __( 'Yes', 'betterdocs' ),
+                    'label_off'    => __( 'No', 'betterdocs' ),
+                    'return_value' => 'true',
+                    'default'      => 'true',
+                ]
+            );
+
+			$wb->add_control(
+				'show_dynamic_categories_in_doc_category_template_description',
+				[
+					'type'            => Controls_Manager::RAW_HTML,
+					'raw'             => __( "Note: This option is only applicable for BetterDocs Category Archive page. If enabled, this will show the Categories dynamically in your BetterDocs Category Archive page.", 'betterdocs' ),
+					'content_classes' => 'elementor-panel-alert elementor-panel-alert-info'
+				]
+			);
         }
 
         if ( $wb->get_name() === 'betterdocs-sidebar' ) {
@@ -802,7 +823,7 @@ class Elementor extends BaseEditor {
         if ( ! empty( $categories ) ) {
             $library_data['types_data']['block']['categories'] = array_merge(
                 $categories,
-                $library_data['types_data']['block']['categories']
+                isset( $library_data['types_data']['block']['categories'] ) ? $library_data['types_data']['block']['categories'] : []
             );
         }
         return $library_data;

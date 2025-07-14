@@ -36,7 +36,6 @@ class Settings extends BaseAPI {
         $this->post( 'migrate', [ $this, 'migrate_plugins' ] );
         $this->post( 'helpscout-migration', [$this, 'helpscout_migration'] );
         $this->post( 'dashboard-mode', [$this, 'dashboard_mode'] );
-		$this->get( 'docs-faq-count', [ $this, 'get_docs_faq_counts' ] );
     }
 
 	public function dashboard_mode( WP_REST_Request $request ) {
@@ -91,7 +90,7 @@ class Settings extends BaseAPI {
 		if ( $data['export_type'] == 'doc_category' && $data['export_categories'][0] != 'all' ) {
 			$args['category_terms'] = $data['export_categories'];
 		} else if ( $data['export_type'] == 'knowledge_base' && $data['export_kbs'][0] != 'all' ) {
-			$args['kb_terms'] = $data['export_kbs'];	
+			$args['kb_terms'] = $data['export_kbs'];
 		}
 
 		if ( $data['export_type'] == 'glossaries' && $data['export_glossaries'][0] != 'all' ) {
@@ -292,58 +291,6 @@ class Settings extends BaseAPI {
 
 	public function get_settings(): array {
 		return betterdocs()->settings->get_all( true );
-	}
-
-	public function get_docs_faq_counts() {
-		// Initialize the return array
-		$counts = [
-			'created_docs'    => 0,
-			'published_docs'  => 0,
-			'created_faq'     => 0,
-			'published_faq'   => 0
-		];
-		
-		// Get all docs (any status)
-		$all_docs_query = new WP_Query([
-			'post_type'      => 'docs',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		]);
-		$counts['created_docs'] = $all_docs_query->post_count;
-		
-		// Get published docs only
-		$published_docs_query = new WP_Query([
-			'post_type'      => 'docs',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		]);
-		$counts['published_docs'] = $published_docs_query->post_count;
-		
-		// Get all FAQs (any status)
-		$all_faq_query = new WP_Query([
-			'post_type'      => 'betterdocs_faq',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		]);
-		$counts['created_faq'] = $all_faq_query->post_count;
-		
-		// Get published FAQs only
-		$published_faq_query = new WP_Query([
-			'post_type'      => 'betterdocs_faq',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		]);
-		$counts['published_faq'] = $published_faq_query->post_count;
-		
-		return $counts;
 	}
 
 	public function save_settings( WP_REST_Request $request ) {

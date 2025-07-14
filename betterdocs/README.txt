@@ -1,11 +1,11 @@
 === BetterDocs – Advanced AI-Driven Documentation, FAQ & Knowledge Base Tool for Elementor & Gutenberg with Encyclopedia, AI Support, Instant Answers ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, cu121, fencermonir, sapanmozammel, seakashdiu, bashar94
+Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, fencermonir, sapanmozammel, seakashdiu, bashar94
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -228,6 +228,22 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.1.1 - 14/07/2025 =
+
+- Fixed: Docs navigation not working in certain cases
+- Fixed: Glossary displaying even after being disabled
+- Fixed: TOC not working properly when titles contain special characters
+- Fixed: "Exclude Child Terms" in category search not working in Modal layout
+- Fixed: archive-doc_category.php not triggering for doc category archive pages
+- Fixed: Category Box widget not displaying on the front end of category archive pages
+- Fixed: FAQ Builder – Text color from TinyMCE editor not rendering on frontend
+- Fixed: Available docs not visible when clicking a specific Glossary item
+- Fixed: Private docs not appearing in search results for logged-in users
+- Fixed: Email feedback AJAX handler running even when disabled in settings
+- Added: Shortcode support added in FAQ Builder editor
+- Added: Option to enable/disable specific reactions on single doc pages
+- Few minor bug fixes and improvements
 
 = 4.1.0 - 24/06/2025 =
 

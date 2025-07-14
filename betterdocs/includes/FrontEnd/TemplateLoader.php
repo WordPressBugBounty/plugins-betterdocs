@@ -70,6 +70,13 @@ class TemplateLoader extends Base {
 	 * @return string The archive template.
 	 */
 	public function archive_template( $template ) {
+		if( is_tax('doc_category') ) {
+			// If 'archive-doc_category.php' exists in the theme, return it
+			$theme_template = locate_template( 'archive-doc_category.php' );
+			if ( $theme_template ) {
+				return $theme_template;
+			}
+		}
 
 		if ( is_tax( 'glossaries' ) ) {
 			// Use a custom taxonomy template for your custom taxonomy

@@ -73,12 +73,14 @@ final class StyleHandler extends Base {
 			'wp-block-editor'
 		];
 
+		$current_screen = get_current_screen();
+
 		$_style_handler_object = [
 			'sth_nonce'   => wp_create_nonce( 'betterdocs_style_handler_nonce' ),
 			'editor_type' => 'edit-site'
 		];
 
-		if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
+		if ( $hook == 'post-new.php' && $current_screen->is_block_editor || $hook == 'post.php' && $current_screen->is_block_editor ) {
 			$_style_handler_deps[]                = 'wp-edit-post';
 			$_style_handler_object['editor_type'] = 'edit-post';
 		} elseif ( $hook == 'site-editor.php' ) {

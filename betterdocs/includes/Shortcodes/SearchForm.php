@@ -52,10 +52,16 @@ class SearchForm extends Shortcode {
 
 		$term = get_term_by( 'slug', $search_cat );
 
+		$post_status = ['publish'];
+
+		if( is_user_logged_in() ) {
+			array_push($post_status,  'private');
+		}
+
 		$args = [
 			'term_id'          => isset( $term->term_id ) ? $term->term_id : 0,
 			'post_type'        => 'docs',
-			'post_status'      => 'publish',
+			'post_status'      => $post_status,
 			'posts_per_page'   => -1,
 			'suppress_filters' => true,
 			's'                => $search_input,

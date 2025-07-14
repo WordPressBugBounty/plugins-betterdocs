@@ -37,6 +37,14 @@ if ( ! $is_editor_mode ) {
 	}
 }
 
+// Check if post is password protected and user hasn't provided correct password
+// This applies to all contexts: templates, Gutenberg blocks, and Elementor widgets
+if ( ! $is_editor_mode && post_password_required( $post_id ) ) {
+	// Don't show article summary for password-protected posts until password is provided
+	// The post_password_required() function checks both if post has password and if correct password cookie exists
+	return;
+}
+
 // Generate wrapper classes - always start with base class
 $wrapper_classes = [ 'betterdocs-article-summary' ];
 

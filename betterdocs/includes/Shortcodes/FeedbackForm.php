@@ -27,6 +27,10 @@ class FeedbackForm extends Shortcode {
     }
 
     public function submit() {
+		if ( ! betterdocs()->settings->get( 'email_feedback' ) ) {
+			wp_send_json_error( __( 'Email feedback is disabled.', 'betterdocs' ) );
+		}
+
         check_ajax_referer( 'betterdocs_submit_data', 'security' );
 
         $postID       = isset( $_POST['postID'] ) ? $_POST['postID'] : null;

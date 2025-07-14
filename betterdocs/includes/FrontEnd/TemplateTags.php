@@ -407,6 +407,7 @@ class TemplateTags extends Base {
 				function ( $matches ) use ( &$index ) {
 					$tag          = $matches[1];
 					$heading_name = preg_replace( '/<[^<]+?>/', '', $matches[0] );
+					$heading_name = str_replace( ["'", '"'], "" ,filter_var( html_entity_decode($heading_name, ENT_QUOTES, 'UTF-8') ) ); //remove apostrophe and decode the utf-8 chars to its original form
 					$heading_name = ! empty( $heading_name ) ? strtolower( str_replace( ' ', '-', preg_replace( '/[^\p{L}\p{N}\s]/u', '', $heading_name ) ) ) : '';
 					preg_match( '/id="(.+?)"/', $matches[0], $matched_ids );
 

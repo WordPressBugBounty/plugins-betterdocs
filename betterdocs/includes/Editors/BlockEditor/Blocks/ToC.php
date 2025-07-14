@@ -45,7 +45,25 @@ class ToC extends Block {
 	}
 
 	public function render( $attributes, $content ) {
+		// Check if post is password protected and user hasn't provided correct password
+		// Skip check in editor mode
+		if ( ! $this->is_editor_mode() && post_password_required() ) {
+			// Don't show ToC for password-protected posts until password is provided
+			return '';
+		}
+
 		$this->views( 'widgets/toc' );
+	}
+
+	/**
+	 * Check if we're in editor mode
+	 *
+	 * @return bool
+	 */
+	private function is_editor_mode() {
+		// Check if we're in Gutenberg editor
+		return defined( 'REST_REQUEST' ) && REST_REQUEST &&
+			   isset( $_REQUEST['context'] ) && $_REQUEST['context'] === 'edit';
 	}
 
 	public function view_params() {

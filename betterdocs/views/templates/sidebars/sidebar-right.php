@@ -1,10 +1,17 @@
 <aside id="betterdocs-sidebar-right"  class="betterdocs-sidebar betterdocs-full-sidebar-right right-sidebar-toc-wrap">
 	<div data-simplebar class="layout3-toc-container right-sidebar-toc-container">
 		<?php
-			$hierarchy     = betterdocs()->settings->get( 'toc_hierarchy' );
-			$list_number   = betterdocs()->settings->get( 'toc_list_number' );
-			$supported_tag = betterdocs()->settings->get( 'supported_heading_tag' );
-			$htags         = $supported_tag ? implode( ',', $supported_tag ) : '';
+			// Check if post is password protected and user hasn't provided correct password
+			if ( post_password_required() ) {
+				// Don't show ToC sidebar for password-protected posts until password is provided
+				echo '<div class="betterdocs-toc-password-protected">';
+				echo '<p>' . esc_html__( 'Table of Contents is available after entering the correct password.', 'betterdocs' ) . '</p>';
+				echo '</div>';
+			} else {
+				$hierarchy     = betterdocs()->settings->get( 'toc_hierarchy' );
+				$list_number   = betterdocs()->settings->get( 'toc_list_number' );
+				$supported_tag = betterdocs()->settings->get( 'supported_heading_tag' );
+				$htags         = $supported_tag ? implode( ',', $supported_tag ) : '';
 
 			$attributes = betterdocs()->template_helper->get_html_attributes(
 				[
@@ -49,6 +56,7 @@
 				}
 				echo do_shortcode( '[betterdocs_article_reactions text="' . $reaction_text . '" layout="layout-3"' . $attr . ']' );
 			}
+			} // End password protection check
 			?>
 	</div>
 </aside>

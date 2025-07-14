@@ -68,6 +68,12 @@ class ArticleSummary extends Base {
 				wp_send_json_error( 'Doc Summarizer is only available for documentation posts.' );
 				wp_die();
 			}
+
+			// Check if post is password protected and user hasn't provided correct password
+			if ( post_password_required( $post_id ) ) {
+				wp_send_json_error( 'This document is password protected. Please enter the correct password to access the summary.' );
+				wp_die();
+			}
 		}
 
 		if ( empty( $post_content ) ) {

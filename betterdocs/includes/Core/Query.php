@@ -283,6 +283,26 @@ class Query extends Base {
 					'operator'         => 'AND',
 					'include_children' => false
 				];
+			} else if( isset( $wp_query->query_vars['name'] ) && isset( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] == 'docs' ) {
+				$post      = get_page_by_path($wp_query->query_vars['name'] , OBJECT, 'docs');
+				$doc_terms = [];
+
+				if( isset( $post->ID ) ) {
+					$terms = get_the_terms($post->ID, 'doc_category');
+					if( ! empty( $terms )  ) {
+						$doc_terms = wp_list_pluck( $terms, 'term_id' );
+					}
+				}
+
+				if( ! empty( $doc_terms ) ) {
+					$_args['tax_query'][] = [
+						'taxonomy'         => 'doc_category',
+						'field'            => 'term_id',
+						'terms'            => $doc_terms,
+						'operator'         => 'AND',
+						'include_children' => false
+					];
+				}
 			}
 
 			$_args['orderby'] = $_orderby;

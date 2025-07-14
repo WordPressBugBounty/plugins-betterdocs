@@ -68,7 +68,7 @@ class Reactions extends Shortcode {
 		} elseif ( isset( $atts['layout'] ) && $atts['layout'] == 'layout-3' ) {
 				$this->views( 'widgets/reactions-3', $args );
 		} else {
-			$this->views( 'widgets/reactions' );
+			$this->views( 'widgets/reactions', $args );
 		}
 	}
 

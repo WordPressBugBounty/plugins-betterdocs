@@ -259,8 +259,13 @@ class Helper extends Base {
 
             if ( is_array( $posts ) && ! empty( $posts ) ) {
                 foreach ( $posts as $post ) {
+					$term_status			   = get_term_meta( $post['term_id'], 'status', true ) ?? false;
                     $description               = isset($post['meta_data']) ? \json_decode( $post['meta_data'], true ) : '';
                     $glossary_term_description = $description['glossary_term_description'] ?? '';
+
+					if( isset( $term_status ) && $term_status == 0 ) {
+						continue;
+					}
 
                     // Remove any <p> tags or other unwanted HTML tags
                     $glossary_term_description = strip_tags( $glossary_term_description );

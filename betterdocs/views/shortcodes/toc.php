@@ -1,7 +1,16 @@
 <?php
 	/** @var \WPDeveloper\BetterDocs\Shortcodes\ToC $widget */
 if ( $post !== null ) {
-	$toc_data = $widget->format_toc_data( apply_filters( 'the_content', $post->post_content ), $htags, $hierarchy );
+	// Check if post is password protected and user hasn't provided correct password
+	if ( post_password_required( $post->ID ) ) {
+		// Don't show ToC for password-protected posts until password is provided
+		return;
+	}
+
+	// Process content for special characters without triggering heavy content filters
+	// This prevents memory issues from plugins like WPML while still handling special characters
+	$processed_content = $widget->process_content_for_toc( $post->post_content );
+	$toc_data = $widget->format_toc_data( $processed_content, $htags, $hierarchy );
 	if ( empty( $toc_data->items ) ) {
 		return;
 	}
