@@ -1,8 +1,9 @@
 <div
 	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contains attriutes and values together which are required here ?>>
-	<h2 class="<?php echo esc_attr( $faq_heading_class ); ?> betterdocs-faq-section-title">
-		<?php echo esc_html( $faq_heading ); ?>
-	</h2>
+	<?php
+		$section_tag = betterdocs()->template_helper->is_valid_tag( $faq_section_title_tag );
+		echo wp_kses_post( '<' . $section_tag . ' class="' . esc_attr( $faq_heading_class ) . ' betterdocs-faq-section-title">' . esc_html( $faq_heading ) . '</' . $section_tag . '>' );
+	?>
 
 	<div class="betterdocs-faq-inner-wrapper">
 		<?php

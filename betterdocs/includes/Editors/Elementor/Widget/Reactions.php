@@ -525,12 +525,29 @@ class Reactions extends BaseWidget {
 		);
 
 		$this->add_control(
+			'reaction_text_tag',
+			[
+				'label'   => __( 'Text Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h5',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+				],
+			]
+		);
+
+		$this->add_control(
 			'reaction_box_title_color',
 			[
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-article-reactions-heading h5' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -539,7 +556,7 @@ class Reactions extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'reaction_box_title_typography',
-				'selector' => '{{WRAPPER}} .betterdocs-article-reactions-heading h5'
+				'selector' => '{{WRAPPER}} .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag'
 			]
 		);
 
@@ -564,6 +581,23 @@ class Reactions extends BaseWidget {
 				'label'   => __( 'Text', 'betterdocs' ),
 				'type'    => Controls_Manager::TEXT,
 				'default' => esc_html__( 'What are your feelings', 'betterdocs' )
+			]
+		);
+
+		$this->add_control(
+			'reaction_text_tag_layout_2',
+			[
+				'label'   => __( 'Text Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h5',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+				],
 			]
 		);
 
@@ -611,12 +645,29 @@ class Reactions extends BaseWidget {
 		);
 
 		$this->add_control(
+			'reaction_text_tag_layout_3',
+			[
+				'label'   => __( 'Text Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h5',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+				],
+			]
+		);
+
+		$this->add_control(
 			'reaction_box_title_color_layout_3',
 			[
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-article-reactions .betterdocs-article-reactions-sidebar h5' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-article-reactions .betterdocs-article-reactions-sidebar .betterdocs-reactions-title-tag' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -625,7 +676,7 @@ class Reactions extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'reaction_box_title_typography_layout_3',
-				'selector' => '{{WRAPPER}} .betterdocs-article-reactions .betterdocs-article-reactions-sidebar h5'
+				'selector' => '{{WRAPPER}} .betterdocs-article-reactions .betterdocs-article-reactions-sidebar .betterdocs-reactions-title-tag'
 			]
 		);
 
@@ -941,6 +992,7 @@ class Reactions extends BaseWidget {
 		return [
 			'wrapper_attr'   => $wrapper_attr,
 			'reactions_text' => $settings['reactions_layout_template'] == 'layout-1' ? $this->attributes['reaction_text'] : ( $settings['reactions_layout_template'] == 'layout-2' ? $this->attributes['reaction_text_layout_2'] : $this->attributes['reaction_text_layout_3'] ),
+			'text_tag'       => $settings['reactions_layout_template'] == 'layout-1' ? $this->attributes['reaction_text_tag'] : ( $settings['reactions_layout_template'] == 'layout-2' ? $this->attributes['reaction_text_tag_layout_2'] : $this->attributes['reaction_text_tag_layout_3'] ),
 			'happy'          => $settings['happy'],
 			'happy_icon'     => is_array( $settings['happy_icon'] ) ? $settings['happy_icon']['url'] : '',
 			'normal'         => $settings['normal'],

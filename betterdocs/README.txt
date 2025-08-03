@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 4.1.1
+Stable tag: 4.1.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -228,6 +228,15 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.1.2 - 03/08/2025 =
+
+- Added: Heading tag controls for several layouts in the customiser, Elementor widgets, and Gutenberg blocks.
+- Improved: Security Enhancements
+- Fixed: Error when using the Encyclopedia Block Editor in the editor interface.
+- Fixed: Private docs not displaying on the front end for logged-in users too.
+- Fixed: Adding a category while creating a doc did not reflect under BetterDocs Category
+- Few minor bug fixes and improvements
 
 = 4.1.1 - 14/07/2025 =
 

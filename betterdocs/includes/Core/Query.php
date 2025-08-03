@@ -20,6 +20,7 @@ class Query extends Base {
 		add_action( 'parse_term_query', [ $this, 'parse_term_query' ] );
 		// add_action( 'parse_query', [$this, 'parse_query'], 1 );
 		add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ], 1 );
+		add_filter( 'betterdocs_base_terms_args', [ $this, 'modify_terms_args_for_private_docs' ], 10, 1 );
 
 		/**
 		 * These below filters are hooked for navigation only.
@@ -68,6 +69,29 @@ class Query extends Base {
 	}
 
 	public function init() {
+	}
+
+	/**
+	 * Modify terms args to include terms with only private docs for logged-in users
+	 *
+	 * @param array $args
+	 * @return array
+	 */
+	public function modify_terms_args_for_private_docs( $args ) {
+		// Only modify for logged-in users and doc_category taxonomy
+		if ( ! is_user_logged_in() || ! isset( $args['taxonomy'] ) || $args['taxonomy'] !== 'doc_category' ) {
+			return $args;
+		}
+
+		// If hide_empty is true, we need to modify the logic to include terms with private docs
+		if ( isset( $args['hide_empty'] ) && $args['hide_empty'] ) {
+			// Set hide_empty to false and we'll filter manually later
+			$args['hide_empty'] = false;
+			// Add a flag to indicate we need to filter manually
+			$args['_betterdocs_filter_private'] = true;
+		}
+
+		return $args;
 	}
 
 	public function parse_term_query( $term_query ) {
@@ -119,7 +143,11 @@ class Query extends Base {
 
 			$term = get_term_by( 'slug', $query->get( 'doc_category', '' ), 'doc_category' );
 
-			$post__in = $this->get_docs_order_by_terms( $term->term_id );
+			if ( $term && isset( $term->term_id ) ) {
+				$post__in = $this->get_docs_order_by_terms( $term->term_id );
+			} else {
+				$post__in = [];
+			}
 			if ( ! empty( $post__in ) ) {
 				$query->set( 'orderby', 'post__in' );
 				$query->set( 'post__in', $post__in );
@@ -385,7 +413,19 @@ class Query extends Base {
 	}
 
 	public function get_terms( $args ) {
-		return get_terms( $this->parse_terms_args( $args ) );
+		$parsed_args = $this->parse_terms_args( $args );
+		$terms = get_terms( $parsed_args );
+
+		// Filter terms manually if we need to consider private docs for logged-in users
+		if ( isset( $parsed_args['_betterdocs_filter_private'] ) && $parsed_args['_betterdocs_filter_private'] && is_user_logged_in() ) {
+			$terms = array_filter( $terms, function( $term ) {
+				// Get the actual count including private docs for logged-in users
+				$actual_count = $this->get_docs_count( $term, false );
+				return $actual_count > 0;
+			});
+		}
+
+		return $terms;
 	}
 
 	public function get_child_terms( $args ) {
@@ -516,7 +556,12 @@ class Query extends Base {
 		}
 
 		$_query_args = wp_parse_args( $args, $default_args );
-		return apply_filters( 'betterdocs_terms_query_args', $_query_args, $_origin_args );
+		$_query_args = apply_filters( 'betterdocs_terms_query_args', $_query_args, $_origin_args );
+
+		// Apply private docs logic for logged-in users
+		$_query_args = $this->modify_terms_args_for_private_docs( $_query_args );
+
+		return $_query_args;
 	}
 
 	public function get_term_parents( $term_id, $taxonomy = 'doc_category', $args = [] ) {
@@ -525,7 +570,7 @@ class Query extends Base {
 			return $term;
 		}
 
-		if ( ! $term ) {
+		if ( ! $term || ! isset( $term->term_id ) ) {
 			return [];
 		}
 
@@ -618,7 +663,7 @@ class Query extends Base {
 				$child_term = get_term( $term_id, $taxonomy );
 
 				// Only include terms that have a non-zero post count
-				if ( $child_term && $child_term->count > 0 ) {
+				if ( $child_term && isset( $child_term->term_id ) && $child_term->count > 0 ) {
 					$non_empty_children[] = $child_term->term_id;
 				}
 			}
@@ -952,9 +997,32 @@ class Query extends Base {
 
 
 	public function get_docs_count( $term, $nested_subcategory = false, $args = [] ) {
+		// Validate term object
+		if ( ! is_object( $term ) ) {
+			return 0;
+		}
+
 		$counts = isset( $term->count ) ? $term->count : 0;
 
 		if ( $nested_subcategory == false ) {
+			// For non-nested categories, we need to check if logged-in users should see private docs
+			// Only proceed if we have a valid term with required properties
+			if ( is_user_logged_in() && isset( $term->term_id ) && isset( $term->taxonomy ) && is_numeric( $term->term_id ) ) {
+				// Get all post IDs for this term (including private posts for logged-in users)
+				$post_ids = get_objects_in_term( $term->term_id, $term->taxonomy );
+
+				if ( ! empty( $post_ids ) ) {
+					// Filter posts to include private posts for logged-in users
+					$filtered_post_ids = array_filter( $post_ids, function( $post_id ) {
+						$post_status = get_post_status( $post_id );
+						// Include private posts for logged-in users, and all publicly viewable posts
+						return $post_status === 'private' || is_post_publicly_viewable( $post_id );
+					});
+
+					$counts = count( $filtered_post_ids );
+				}
+			}
+
 			return apply_filters( 'betterdocs_docs_count', $counts, $term, $nested_subcategory, $args );
 		}
 
@@ -967,6 +1035,11 @@ class Query extends Base {
 	}
 
 	public function get_doc_ids_by_term( $term, $optional = null, $nested_subcategory = false ) {
+		// Check if term has required properties and is a valid object
+		if ( ! is_object( $term ) || ! isset( $term->term_id ) || ! isset( $term->taxonomy ) || ! is_numeric( $term->term_id ) ) {
+			return false;
+		}
+
 		$args = ['include' => $term->term_id];
         if ( $nested_subcategory ) {
             $args['child_of'] = $term->term_id;

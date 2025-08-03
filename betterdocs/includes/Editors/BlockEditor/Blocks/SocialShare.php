@@ -9,7 +9,8 @@ class SocialShare extends Block {
 	use SocialShareTrait;
 
 	protected $map_view_vars = [
-		'share_title' => 'title'
+		'share_title' => 'title',
+		'share_title_tag' => 'title_tag'
 	];
 
 	protected $editor_styles = [
@@ -32,6 +33,7 @@ class SocialShare extends Block {
 			'show_pinterest_icon' => true,
 			'show_instagram_icon' => true,
 			'share_title'         => __( 'Share This Article: ', 'betterdocs' ),
+			'share_title_tag'     => 'h4',
 			'layout'              => 'layout-1'
 		];
 	}

@@ -15,9 +15,11 @@ betterdocs()->views->get(
 		'have_posts'     => $query->have_posts(),
 		'layout'         => $mods['betterdocs_select_faq_template'],
 		'shortcode_attr' => [
-			'groups'      => $mods['betterdocs_select_specific_faq'],
-			'class'       => 'faq-doc betterdocs-faq-' . $mods['betterdocs_select_faq_template'],
-			'faq_heading' => $mods['betterdocs_faq_title_text']
+			'groups'                => $mods['betterdocs_select_specific_faq'],
+			'class'                 => 'faq-doc betterdocs-faq-' . $mods['betterdocs_select_faq_template'],
+			'faq_heading'           => $mods['betterdocs_faq_title_text'],
+			'faq_section_title_tag' => $mods['betterdocs_faq_section_title_tag'],
+			'faq_group_title_tag'   => $mods['betterdocs_faq_group_title_tag']
 		]
 	]
 );

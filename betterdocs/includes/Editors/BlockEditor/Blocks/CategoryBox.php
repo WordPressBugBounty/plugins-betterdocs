@@ -161,7 +161,8 @@ class CategoryBox extends Block {
 			'multiple_knowledge_base' => $default_multiple_kb,
 			'nested_subcategory'      => false,
 			'show_header'             => true,
-			'show_description'        => false
+			'show_description'        => false,
+			'title_tag'               => $this->attributes['titleTag']
 		];
 
 		if ( $attributes['layout'] === 'layout-2' ) {

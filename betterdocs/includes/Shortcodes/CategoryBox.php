@@ -114,7 +114,8 @@ class CategoryBox extends Shortcode {
 			'show_title'            => true,
 			'show_count'            => $show_count,
 			'count_suffix_singular' => $singular_text,
-			'count_suffix'          => $plural_text
+			'count_suffix'          => $plural_text,
+			'title_tag'             => $this->attributes['title_tag']
 		];
 	}
 }

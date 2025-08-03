@@ -223,7 +223,8 @@ class CategoryGrid extends Block {
 			'category_title_link'     => $attributes['categoryTitleLink'],
 			'count_prefix'            => $attributes['prefix'],
 			'count_suffix'            => $attributes['suffix'],
-			'count_suffix_singular'   => $attributes['suffixSingular']
+			'count_suffix_singular'   => $attributes['suffixSingular'],
+			'title_tag'               => $attributes['titleTag']
 		];
 	}
 }

@@ -89,7 +89,8 @@ class CategoryList extends Shortcode {
 			'layout_type'           => $this->attributes['layout_type'],
 			'list_icon_url'         => $this->attributes['list_icon_url'],
 			'sidebar_layout'        => $this->attributes['sidebar_layout'],
-			'list_icon_name'        => $this->attributes['list_icon_name']
+			'list_icon_name'        => $this->attributes['list_icon_name'],
+			'title_tag'             => $this->attributes['title_tag']
 		];
 	}
 

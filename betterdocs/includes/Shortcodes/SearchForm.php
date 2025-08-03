@@ -120,8 +120,8 @@ class SearchForm extends Shortcode {
 				'placeholder'    => __( 'Search', 'betterdocs' ),
 				'heading'        => '',
 				'subheading'     => '',
-				'heading_tag'    => 'h2',
-				'subheading_tag' => 'h3'
+				'heading_tag'    => 'h1',
+				'subheading_tag' => 'p'
 			]
 		);
 	}

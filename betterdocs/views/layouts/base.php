@@ -3,7 +3,17 @@ if ( $terms_query_args == false ) {
 	return;
 }
 
-	$terms = get_terms( apply_filters( 'betterdocs_base_terms_args', $terms_query_args ) );
+	$terms_args = apply_filters( 'betterdocs_base_terms_args', $terms_query_args );
+	$terms = get_terms( $terms_args );
+
+	// Filter terms manually if we need to consider private docs for logged-in users
+	if ( isset( $terms_args['_betterdocs_filter_private'] ) && $terms_args['_betterdocs_filter_private'] && is_user_logged_in() ) {
+		$terms = array_filter( $terms, function( $term ) {
+			// Get the actual count including private docs for logged-in users
+			$actual_count = betterdocs()->query->get_docs_count( $term, false );
+			return $actual_count > 0;
+		});
+	}
 	/**
 	 * Base Layout Before Wrapper
 	 */

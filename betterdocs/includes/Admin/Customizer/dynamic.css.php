@@ -1787,7 +1787,7 @@ $css->add_rule(
 
 //Single Doc Layout 1 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-1 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-1 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -1837,7 +1837,7 @@ $css->add_rule(
 
 //Single Doc Layout 1 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-1 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-1 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -2361,7 +2361,7 @@ $css->add_rule(
 
 //Single Doc Layout 4 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-4 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-4 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -2411,7 +2411,7 @@ $css->add_rule(
 
 //Single Doc Layout 4 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-4 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-4 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -2889,7 +2889,7 @@ $css->add_rule(
 
 //Single Doc Layout 5 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -2939,7 +2939,7 @@ $css->add_rule(
 
 //Single Doc Layout 5 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -3429,7 +3429,7 @@ $css->add_rule(
 
 //Single Doc Layout 2 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-2 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-2 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -3479,7 +3479,7 @@ $css->add_rule(
 
 //Single Doc Layout 2 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-2 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-2 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -3969,7 +3969,7 @@ $css->add_rule(
 
 //Single Doc Layout 3 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-3 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-3 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -4019,7 +4019,7 @@ $css->add_rule(
 
 //Single Doc Layout 3 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-3 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-3 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -4497,7 +4497,7 @@ $css->add_rule(
 
 //Single Doc Layout 6 Reactions Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-6 .betterdocs-article-reactions .betterdocs-article-reactions-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-6 .betterdocs-article-reactions .betterdocs-article-reactions-heading .betterdocs-reactions-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_reactions_text_color'
@@ -4547,7 +4547,7 @@ $css->add_rule(
 
 //Single Doc Layout 6 Social Share Title Text Color
 $css->add_rule(
-	'.betterdocs-single-wrapper.betterdocs-single-layout-6 .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-single-wrapper.betterdocs-single-layout-6 .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color'
@@ -4951,7 +4951,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-8 .betterdocs-content-wrapper .docs-content-full-main .betterdocs-content-inner-area .betterdocs-entry-footer .betterdocs-social-share .betterdocs-social-share-heading h5, .betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-9 .betterdocs-content-wrapper .betterdocs-full-sidebar-right .right-sidebar-toc-container .simplebar-content .betterdocs-social-share .betterdocs-social-share-heading h5',
+	'.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-8 .betterdocs-content-wrapper .docs-content-full-main .betterdocs-content-inner-area .betterdocs-entry-footer .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag, .betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-9 .betterdocs-content-wrapper .betterdocs-full-sidebar-right .right-sidebar-toc-container .simplebar-content .betterdocs-social-share .betterdocs-social-share-heading .betterdocs-social-share-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_post_social_share_text_color_color_layout_8_9'
@@ -8422,7 +8422,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a',
+	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a',
 	$css->properties(
 		[
 			'color' => 'archive_docs_list_title_color_layout_7'
@@ -8431,7 +8431,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a:hover',
+	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a:hover',
 	$css->properties(
 		[
 			'color' => 'archive_docs_list_title_hover_color_layout_7'
@@ -8440,7 +8440,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a',
+	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a',
 	$css->properties(
 		[
 			'font-size' => 'archive_docs_list_title_font_size_layout_7'
@@ -8450,7 +8450,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 span',
+	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title span',
 	$css->properties(
 		[
 			'height' => 'archive_docs_list_icon_size_layout_7',
@@ -8539,7 +8539,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a',
+	'.betterdocs-category-archive-wrapper.betterdocs-wraper .doc-category-layout-7 .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a',
 	$css->properties(
 		[
 			'padding-top'    => 'archive_docs_list_title_margin_top_layout_7',
@@ -9485,7 +9485,7 @@ $css->add_rule(
  * FAQ Layout 1 Customizer CSS
  */
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_faq_category_title_color'
@@ -9494,7 +9494,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'font-size' => 'betterdocs_faq_category_name_font_size'
@@ -9504,7 +9504,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-1 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'padding' => 'betterdocs_faq_category_name_padding'
@@ -9576,7 +9576,7 @@ $css->add_rule(
  */
 
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_faq_category_title_color_layout_2'
@@ -9585,7 +9585,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'font-size' => 'betterdocs_faq_category_name_font_size_layout_2'
@@ -9595,7 +9595,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-docs-archive-wrapper .betterdocs-faq-wrapper.betterdocs-faq-layout-2 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'padding' => 'betterdocs_faq_category_name_padding_layout_2'
@@ -10159,7 +10159,7 @@ $css->add_rule(
 
 //FAQ LAYOUT 3 Controls Start
 $css->add_rule(
-	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'color' => 'betterdocs_faq_category_title_color_layout_3'
@@ -10168,7 +10168,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'font-size' => 'betterdocs_faq_category_name_font_size_layout_3'
@@ -10178,7 +10178,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2',
+	'.betterdocs-faq-wrapper.betterdocs-faq-layout-3.layout-layout-3 .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag',
 	$css->properties(
 		[
 			'padding' => 'betterdocs_faq_category_name_padding_layout_3'

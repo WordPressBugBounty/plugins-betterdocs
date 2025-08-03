@@ -3,7 +3,8 @@
 	<div class="betterdocs-social-share-heading layout-2">
 		<?php
 		if ( $title ) {
-			echo wp_sprintf( '<h5>%s</h5>', esc_html( $title ) );
+			$title_tag = isset( $title_tag ) ? $title_tag : 'h4';
+			echo wp_sprintf( '<%1$s class="betterdocs-social-share-title-tag">%2$s</%1$s>', esc_attr( $title_tag ), esc_html( $title ) );
 		}
 		?>
 	</div>

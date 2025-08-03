@@ -456,7 +456,7 @@ class ArchiveList extends BaseWidget {
 					]
 				],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 span' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};'
+					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title span' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};'
 				]
 			]
 		);
@@ -474,7 +474,7 @@ class ArchiveList extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'list_title_typography_layout_2',
-				'selector' => '{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a'
+				'selector' => '{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a'
 			]
 		);
 
@@ -492,7 +492,25 @@ class ArchiveList extends BaseWidget {
 				],
 				'default'   => 'normal',
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a' => 'word-wrap: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a' => 'word-wrap: {{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'list_title_tag_layout_2',
+			[
+				'label'   => __( 'Title Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h3',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+					'p'  => 'P'
 				]
 			]
 		);
@@ -503,7 +521,7 @@ class ArchiveList extends BaseWidget {
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -513,7 +531,7 @@ class ArchiveList extends BaseWidget {
 				'label'     => esc_html__( 'Hover Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list h2 a:hover' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .betterdocs-entry-title a:hover' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -1020,13 +1038,14 @@ class ArchiveList extends BaseWidget {
 
 		if ( $this->attributes['section_betterdocs_archive_list_layout'] == 'layout-2' ) {
 			$term_params = [
-				'current_category' => $term,
-				'term'             => $term,
-				'orderby'          => $this->attributes['alphabetic_order'],
-				'order'            => $this->attributes['order'],
-				'posts_per_page'   => -1,
-				'archive_layout'   => $this->attributes['section_betterdocs_archive_list_layout'],
-				'query_args'       => betterdocs()->query->docs_query_args( $_docs_query ),
+				'current_category'    => $term,
+				'term'                => $term,
+				'orderby'             => $this->attributes['alphabetic_order'],
+				'order'               => $this->attributes['order'],
+				'posts_per_page'      => -1,
+				'archive_layout'      => $this->attributes['section_betterdocs_archive_list_layout'],
+				'query_args'          => betterdocs()->query->docs_query_args( $_docs_query ),
+				'docs_list_title_tag' => isset( $this->attributes['list_title_tag_layout_2'] ) ? $this->attributes['list_title_tag_layout_2'] : 'h2',
 			];
 		}
 

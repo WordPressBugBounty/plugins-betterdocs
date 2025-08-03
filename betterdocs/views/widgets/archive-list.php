@@ -12,7 +12,8 @@ if ( isset( $archive_layout ) && $archive_layout == 'layout-1' ) {
 	$view_object->get(
 		'template-parts/archive-doc-list',
 		[
-			'post_query' => $post_query
+			'post_query'          => $post_query,
+			'docs_list_title_tag' => isset( $_params['docs_list_title_tag'] ) ? $_params['docs_list_title_tag'] : 'h2'
 		]
 	);
 }

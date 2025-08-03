@@ -17,7 +17,8 @@ class DocShare extends BaseWidget {
 	use SocialShareTrait;
 
 	protected $map_view_vars = [
-		'share_title' => 'title'
+		'share_title' => 'title',
+		'share_title_tag' => 'title_tag'
 	];
 
 	public function get_name() {
@@ -384,7 +385,7 @@ class DocShare extends BaseWidget {
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-social-share-heading h5' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-social-share-heading .betterdocs-social-share-title-tag' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -393,7 +394,7 @@ class DocShare extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'share_box_title_typography',
-				'selector' => '{{WRAPPER}} .betterdocs-social-share-heading h5'
+				'selector' => '{{WRAPPER}} .betterdocs-social-share-heading .betterdocs-social-share-title-tag'
 			]
 		);
 
@@ -487,6 +488,23 @@ class DocShare extends BaseWidget {
 				'type'        => Controls_Manager::TEXT,
 				'default'     => __( 'Share This Article :', 'betterdocs' ),
 				'placeholder' => __( 'Type share title here', 'betterdocs' )
+			]
+		);
+
+		$this->add_control(
+			'share_title_tag',
+			[
+				'label'   => __( 'Title Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h5',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+				],
 			]
 		);
 

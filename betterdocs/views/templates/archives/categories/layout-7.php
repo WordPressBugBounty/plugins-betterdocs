@@ -14,8 +14,12 @@
 
 	$view_object      = betterdocs()->views;
 	$layout           = betterdocs()->customizer->defaults->get( 'betterdocs_archive_layout_select', 'layout-7' );
-	$title_tag        = betterdocs()->customizer->defaults->get( 'betterdocs_archive_title_tag', 'h2' );
-	$title_tag        = betterdocs()->template_helper->is_valid_tag( $title_tag );
+	$title_tag           = betterdocs()->customizer->defaults->get( 'content_header_title_tag_layout7', 'h2' );
+	$title_tag           = betterdocs()->template_helper->is_valid_tag( $title_tag );
+	$column_title_tag    = betterdocs()->customizer->defaults->get( 'archive_column_title_tag_layout7', 'h2' );
+	$column_title_tag    = betterdocs()->template_helper->is_valid_tag( $column_title_tag );
+	$docs_list_title_tag = betterdocs()->customizer->defaults->get( 'archive_docs_list_title_tag_layout_7', 'h2' );
+	$docs_list_title_tag = betterdocs()->template_helper->is_valid_tag( $docs_list_title_tag );
 	$number_of_faqs   = betterdocs()->customizer->defaults->get( 'search_modal_query_initial_number_of_faqs' );
 	$number_of_docs   = betterdocs()->customizer->defaults->get( 'search_modal_query_initial_number_of_docs' );
 	$enable_pagintion = betterdocs()->settings->get( 'archive_enable_pagination' );
@@ -117,7 +121,7 @@
 						echo '<div class="betterdocs-content-wrapper betterdocs-archive-wrap betterdocs-archive-main betterdocs-categories-folder">';
 						$attributes = betterdocs()->template_helper->shortcode_atts(
 							[
-								'title_tag'     => "$title_tag",
+								'title_tag'     => "$column_title_tag",
 								'terms'         => $_nested_categories,
 								'terms_order'   => betterdocs()->settings->get( 'terms_order', 'ASC' ),
 								'terms_orderby' => betterdocs()->settings->get( 'terms_orderby', 'betterdocs_order' ),
@@ -138,7 +142,8 @@
 					$view_object->get(
 						'template-parts/archive-doc-list',
 						[
-							'post_query' => $post_query
+							'post_query'          => $post_query,
+							'docs_list_title_tag' => $docs_list_title_tag
 						]
 					);
 					?>

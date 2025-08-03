@@ -4701,6 +4701,39 @@ class SingleDoc extends Section {
 		);
 	}
 
+	public function social_share_title_tag() {
+		$this->customizer->add_setting(
+			'betterdocs_social_share_title_tag',
+			[
+				'default'           => $this->defaults['betterdocs_social_share_title_tag'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_social_share_title_tag',
+				[
+					'label'    => __( 'Social Share Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_social_share_title_tag',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6'
+					],
+					'priority' => 165
+				]
+			)
+		);
+	}
+
 	public function post_social_share() {
 		$this->customizer->add_setting(
 			'betterdocs_post_social_share',
@@ -6232,6 +6265,39 @@ class SingleDoc extends Section {
 					'priority' => 159,
 					'settings' => 'betterdocs_reactions_title',
 					'section'  => 'betterdocs_single_docs_settings'
+				]
+			)
+		);
+	}
+
+	public function reactions_title_tag() {
+		$this->customizer->add_setting(
+			'betterdocs_reactions_title_tag',
+			[
+				'default'           => $this->defaults['betterdocs_reactions_title_tag'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_reactions_title_tag',
+				[
+					'label'    => __( 'Reactions Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_reactions_title_tag',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6'
+					],
+					'priority' => 160
 				]
 			)
 		);

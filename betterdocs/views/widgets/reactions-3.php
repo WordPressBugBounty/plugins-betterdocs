@@ -1,7 +1,10 @@
 <div
 	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="betterdocs-article-reactions-sidebar">
-		<h5><?php echo esc_html( $reactions_text ); ?></h5>
+		<?php
+		$text_tag = isset( $text_tag ) ? $text_tag : 'h5';
+		echo wp_sprintf( '<%1$s class="betterdocs-reactions-title-tag">%2$s</%1$s>', esc_attr( $text_tag ), esc_html( $reactions_text ) );
+		?>
 		<ul class="betterdocs-article-reaction-links layout-3">
 			<?php if ( isset( $happy ) && $happy == true ) { ?>
 			<li>

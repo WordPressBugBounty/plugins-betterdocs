@@ -193,6 +193,7 @@ class CategoryGrid extends Shortcode {
 			'button_text'            => $button_text,
 			'show_button_icon'       => true,
 			'button_icon_position'   => true,
+			'title_tag'              => $this->attributes['title_tag'],
 			'button_icon'            => true,
 			'category_title_link'    => $category_title_link,
 			'layout_type'            => $this->attributes['layout_type'],

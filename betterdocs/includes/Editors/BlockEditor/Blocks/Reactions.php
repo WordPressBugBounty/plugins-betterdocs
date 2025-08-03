@@ -31,6 +31,7 @@ class Reactions extends Block {
 		return [
 			'blockId'           => 'layout-1',
 			'reaction_text'     => __( 'What are your feelings', 'betterdocs' ),
+			'reaction_text_tag' => 'h4',
 			'layout'            => 'layout-1',
 			'show_happy_icon'   => true,
 			'happy_icon_url'    => '',
@@ -59,6 +60,7 @@ class Reactions extends Block {
 
 		$default_params = [
 			'reactions_text' => $this->attributes['reaction_text'],
+			'text_tag'       => $this->attributes['reaction_text_tag'],
 			'wrapper_attr'   => &$wrapper_class
 		];
 

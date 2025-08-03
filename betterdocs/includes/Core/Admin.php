@@ -75,6 +75,7 @@ class Admin extends Base {
 		$this->slug        = 'betterdocs-dashboard';
 
 		add_action( 'init', [ $type, 'register' ], 9 );
+		add_action('rest_api_init', [$this, 'order_terms_in_wp_terms_admin_table']);
 
 		$type->init();
 		$type->admin_init();
@@ -139,6 +140,15 @@ class Admin extends Base {
 		} catch ( Exception $e ) {
 			unset( $e );
 		}
+	}
+
+	public function order_terms_in_wp_terms_admin_table() {
+		//order the terms correctly to be shown on the admin panel categories menu with betterdocs order
+		add_action('rest_insert_doc_category', function( $term, $request, $bool ) {
+			$max_order  = Helper::get_max_doc_category_order_from_term_meta() ?? 0;
+			$next_order = $max_order + 1;
+			update_term_meta( $term->term_id, 'doc_category_order', $next_order );
+		}, 10, 3);
 	}
 
 	public function disable_deactivation() {

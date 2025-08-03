@@ -2,7 +2,6 @@
 	$current_category = get_queried_object();
 
 if ( $current_category != null && $layout == 'layout-1' ) :
-
 	?>
 			<div class='betterdocs-content-area block-archive-list <?php echo esc_attr( $blockId ); ?>'>
 				<div class="betterdocs-content-inner-area">
@@ -30,8 +29,9 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 				betterdocs()->views->get(
 					'template-parts/archive-doc-list',
 					[
-						'current_category' => $current_category,
-						'post_query'       => $post_query
+						'current_category'    => $current_category,
+						'post_query'          => $post_query,
+						'docs_list_title_tag' => isset( $docs_list_title_tag ) ? $docs_list_title_tag : 'h2'
 					]
 				);
 

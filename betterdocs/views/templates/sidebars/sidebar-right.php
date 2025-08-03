@@ -30,6 +30,7 @@
 
 			if ( isset( $feedback ) && $feedback ) {
 				$reaction_text = betterdocs()->customizer->defaults->get( 'betterdocs_post_reactions_text_2' );
+				$reaction_text_tag = betterdocs()->customizer->defaults->get( 'betterdocs_reactions_title_tag' );
 				// Collect reaction values and icons
 				$reactions_data = [
 					'happy'       => 'betterdocs_post_reactions_happy',
@@ -54,7 +55,7 @@
 				foreach ( $args as $key => $value ) {
 					$attr .= sprintf( ' %s="%s"', esc_attr( $key ), esc_attr( $value ) );
 				}
-				echo do_shortcode( '[betterdocs_article_reactions text="' . $reaction_text . '" layout="layout-3"' . $attr . ']' );
+				echo do_shortcode( '[betterdocs_article_reactions text="' . $reaction_text . '" text_tag="' . $reaction_text_tag . '" layout="layout-3"' . $attr . ']' );
 			}
 			} // End password protection check
 			?>

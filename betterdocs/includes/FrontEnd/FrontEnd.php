@@ -208,6 +208,9 @@ class FrontEnd extends Base {
 		$single_layout = $this->database->get_theme_mod( 'betterdocs_single_layout_select', true );
 		$reactions     = $this->database->get_theme_mod( 'betterdocs_post_reactions', true );
 
+		// Get the title tag from customizer
+		$text_tag = $this->database->get_theme_mod( 'betterdocs_reactions_title_tag', 'h5' );
+
 		// Collect reaction values and icons
 		$reactions_data = [
 			'happy'       => 'betterdocs_post_reactions_happy',
@@ -235,11 +238,11 @@ class FrontEnd extends Base {
 
 		// Render the shortcode based on layout and reactions availability
 		if ( $single_layout == 'layout-8' && $reactions ) {
-			echo do_shortcode( '[betterdocs_article_reactions layout="layout-2"' . $attr . ']' );
+			echo do_shortcode( '[betterdocs_article_reactions layout="layout-2" text_tag="' . esc_attr( $text_tag ) . '"' . $attr . ']' );
 		} elseif ( $single_layout == 'layout-9' && $reactions ) {
 			echo '';
 		} elseif ( $reactions ) {
-			echo do_shortcode( '[betterdocs_article_reactions' . $attr . ']' );
+			echo do_shortcode( '[betterdocs_article_reactions text_tag="' . esc_attr( $text_tag ) . '"' . $attr . ']' );
 		}
 	}
 

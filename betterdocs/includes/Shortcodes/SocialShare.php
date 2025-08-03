@@ -31,6 +31,7 @@ class SocialShare extends Shortcode {
 		return [
 			'layout'    => 'layout-1',
 			'title'     => __( 'Share This Article :', 'betterdocs' ),
+			'title_tag' => 'h5',
 			'facebook'  => '1',
 			'twitter'   => '1',
 			'linkedin'  => '1',

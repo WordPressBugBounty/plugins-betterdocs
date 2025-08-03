@@ -83,6 +83,43 @@ class FAQ extends BaseWidget {
 			]
 		);
 
+		$this->add_control(
+			'faq_section_title_tag',
+			[
+				'label'   => __( 'Section Title Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h2',
+				'options' => [
+					'h1' => __( 'H1', 'betterdocs' ),
+					'h2' => __( 'H2', 'betterdocs' ),
+					'h3' => __( 'H3', 'betterdocs' ),
+					'h4' => __( 'H4', 'betterdocs' ),
+					'h5' => __( 'H5', 'betterdocs' ),
+					'h6' => __( 'H6', 'betterdocs' )
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_group_title_tag',
+			[
+				'label'   => __( 'Group Title Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h3',
+				'options' => [
+					'h1' => __( 'H1', 'betterdocs' ),
+					'h2' => __( 'H2', 'betterdocs' ),
+					'h3' => __( 'H3', 'betterdocs' ),
+					'h4' => __( 'H4', 'betterdocs' ),
+					'h5' => __( 'H5', 'betterdocs' ),
+					'h6' => __( 'H6', 'betterdocs' )
+				],
+				'condition' => [
+					'faq_layout_selection' => ['layout-1', 'layout-2', 'layout-3']
+				]
+			]
+		);
+
 		$terms = betterdocs()->container->get( Helper::class )->get_faq_terms();
 
 		$this->add_control(
@@ -215,7 +252,7 @@ class FAQ extends BaseWidget {
 				'label'     => esc_html__( 'Title Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2' => 'color:{{VALUE}};'
+					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag' => 'color:{{VALUE}};'
 				]
 			]
 		);
@@ -226,7 +263,7 @@ class FAQ extends BaseWidget {
 				'label'     => esc_html__( 'Title Hover Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2:hover' => 'color:{{VALUE}};'
+					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag:hover' => 'color:{{VALUE}};'
 				]
 			]
 		);
@@ -235,7 +272,7 @@ class FAQ extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'faq_box_title_typography',
-				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title h2'
+				'selector' => '{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag'
 			]
 		);
 
@@ -777,10 +814,12 @@ class FAQ extends BaseWidget {
 				'have_posts'     => true,
 				'layout'         => $control_values['faq_layout_selection'],
 				'shortcode_attr' => [
-					'group_exclude' => $faqs_exclude,
-					'class'         => 'betterdocs-faq-' . $control_values['faq_layout_selection'],
-					'groups'        => $specific_faqs,
-					'faq_heading'   => $control_values['faq_layout_section']
+					'group_exclude'         => $faqs_exclude,
+					'class'                 => 'betterdocs-faq-' . $control_values['faq_layout_selection'],
+					'groups'                => $specific_faqs,
+					'faq_heading'           => $control_values['faq_layout_section'],
+					'faq_section_title_tag' => $control_values['faq_section_title_tag'],
+					'faq_group_title_tag'   => $control_values['faq_group_title_tag']
 				]
 			]
 		);

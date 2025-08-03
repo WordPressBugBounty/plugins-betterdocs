@@ -15,14 +15,16 @@ if ( ! isset( $current_category ) || $current_category === null ) {
 	if ( $post_query->have_posts() ) :
 		while ( $post_query->have_posts() ) :
 			$post_query->the_post();
+			$title_tag = isset( $docs_list_title_tag ) ? $docs_list_title_tag : 'h2';
+			$title_tag = betterdocs()->template_helper->is_valid_tag( $title_tag );
 			?>
 				<div class="betterdocs-title-excerpt-list">
-					<h2>
+					<<?php echo esc_attr( $title_tag ); ?> class="betterdocs-entry-title">
 						<span><?php betterdocs()->template_helper->icon( 'docs-icon', true ); ?></span>
 						<a href="<?php echo esc_url( get_the_permalink() ); ?>">
 						<?php echo esc_html( get_the_title() ); ?>
 						</a>
-					</h2>
+					</<?php echo esc_attr( $title_tag ); ?>>
 				<?php
 				echo wp_sprintf( '<span class="update-date">%s %s</span>', esc_html__( 'Last Updated:', 'betterdocs' ),  get_the_modified_date() ); //phpcs:ignore
 

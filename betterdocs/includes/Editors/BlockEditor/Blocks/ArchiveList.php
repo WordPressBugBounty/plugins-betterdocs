@@ -39,7 +39,9 @@ class ArchiveList extends Block {
 			'list_icon'             => 'far fa-file-alt',
 			'postsPerPageLayoutTwo' => -1,
 			'listIconImageUrl'      => '',
-			'pagination'            => false
+			'pagination'            => false,
+			'listTitleTag'          => 'h2',
+			'listEntryHeadingTag'   => 'h3'
 		];
 	}
 
@@ -98,9 +100,10 @@ class ArchiveList extends Block {
 			'term'               => $term,
 			'nested_subcategory' => (bool) $this->attributes['nested_subcategory'],
 			'list_icon_name'     => ! empty( $this->attributes['listIconImageUrl'] ) ? [ 'value' => [ 'url' => str_replace( 'blob:', '', $this->attributes['listIconImageUrl'] ) ] ] : ( ! empty( $this->attributes['list_icon'] ) ? [ 'value' => [ 'url' => $this->attributes['list_icon'] ] ] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? [ 'value' => [ 'url' => betterdocs()->settings->get( 'docs_list_icon' )['url'] ] ] : [] ) ),
-			'query_args'         => betterdocs()->query->docs_query_args( $_docs_query ),
-			'title_tag'          => 'h2',
-			'layout'             => $this->attributes['layout'],
+			'query_args'          => betterdocs()->query->docs_query_args( $_docs_query ),
+			'title_tag'           => $this->attributes['listEntryHeadingTag'] ?? 'h2',
+			'docs_list_title_tag' => $this->attributes['listTitleTag'] ?? 'h2',
+			'layout'              => $this->attributes['layout'],
 			'posts_per_page'     => $this->attributes['postsPerPageLayoutTwo'],
 			'list_icon_url'      => '',
 			'layout_type'        => 'block',

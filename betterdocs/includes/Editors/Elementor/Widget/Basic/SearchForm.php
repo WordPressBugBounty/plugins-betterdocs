@@ -280,6 +280,42 @@ class SearchForm extends BaseWidget {
 		);
 
 		$this->add_control(
+			'section_search_field_heading_tag',
+			[
+				'label'   => __( 'Heading Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h1',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+					'p'  => 'P'
+				]
+			]
+		);
+
+		$this->add_control(
+			'section_search_field_subheading_tag',
+			[
+				'label'   => __( 'Subheading Tag', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'p',
+				'options' => [
+					'h1' => 'H1',
+					'h2' => 'H2',
+					'h3' => 'H3',
+					'h4' => 'H4',
+					'h5' => 'H5',
+					'h6' => 'H6',
+					'p'  => 'P'
+				]
+			]
+		);
+
+		$this->add_control(
 			'betterdocs_search_button_toogle',
 			[
 				'label'        => __( 'Enable Search Button', 'betterdocs' ),
@@ -1408,7 +1444,7 @@ class SearchForm extends BaseWidget {
 
 			// $faq_terms          = isset( $settings['include_faq'] ) ?  implode(',', $settings['include_faq']) : '';
 			// $doc_terms          = isset( $settings['include_doc_categories'] ) ? implode(',', $settings['include_doc_categories'] ) : '';
-			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="h2" subheading_tag="h3" search_button_text="Search" layout="layout-1" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '"]' );
+			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="' . ( isset( $settings['section_search_field_heading_tag'] ) ? $settings['section_search_field_heading_tag'] : 'h2' ) . '" subheading_tag="' . ( isset( $settings['section_search_field_subheading_tag'] ) ? $settings['section_search_field_subheading_tag'] : 'h3' ) . '" search_button_text="Search" layout="layout-1" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '"]' );
 		}
 	}
 
@@ -1430,6 +1466,8 @@ class SearchForm extends BaseWidget {
 				'popular_search'       => $popular_search_toggle,
 				'heading'              => esc_html( $settings['section_search_field_heading'] ),
 				'subheading'           => esc_html( $settings['section_search_field_sub_heading'] ),
+				'heading_tag'          => esc_attr( $settings['section_search_field_heading_tag'] ),
+				'subheading_tag'       => esc_attr( $settings['section_search_field_subheading_tag'] ),
 				'placeholder'          => esc_html( $settings['section_search_field_placeholder'] )
 			],
 			$this->attributes

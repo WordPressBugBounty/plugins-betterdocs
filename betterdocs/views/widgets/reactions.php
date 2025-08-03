@@ -2,7 +2,8 @@
 	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php
 	if ( $reactions_text ) {
-		echo '<div class="betterdocs-article-reactions-heading"><h5>' . esc_html( $reactions_text ) . '</h5></div>';
+		$text_tag = isset( $text_tag ) ? $text_tag : 'h5';
+		echo wp_sprintf( '<div class="betterdocs-article-reactions-heading"><%1$s class="betterdocs-reactions-title-tag">%2$s</%1$s></div>', esc_attr( $text_tag ), esc_html( $reactions_text ) );
 	}
 	?>
 	<ul class="betterdocs-article-reaction-links layout-1">

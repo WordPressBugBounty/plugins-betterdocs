@@ -26,6 +26,7 @@ class Reactions extends Shortcode {
 	public function default_attributes() {
 		return [
 			'text'        => '',
+			'text_tag'    => 'h5',
 			'layout'      => 'layout-1',
 			'happy'       => true,
 			'happy_icon'  => '',
@@ -78,10 +79,15 @@ class Reactions extends Shortcode {
 			'betterdocs_post_reactions_text',
 			__( 'What are your Feelings', 'betterdocs' )
 		);
+		$text_tag = ! empty( $this->attributes['text_tag'] ) ? $this->attributes['text_tag'] : $this->customizer->get(
+			'betterdocs_reactions_title_tag',
+			'h5'
+		);
 
 		return [
 			'wrapper_attr'   => $wrapper_attr,
-			'reactions_text' => $reactions_text
+			'reactions_text' => $reactions_text,
+			'text_tag'       => $text_tag
 		];
 	}
 }

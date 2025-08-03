@@ -36,6 +36,8 @@ class FaqList extends Shortcode {
 			'class'                       => '',
 			'group_exclude'               => '',
 			'faq_heading'                 => __( 'Frequently Asked Questions', 'betterdocs' ),
+			'faq_section_title_tag'       => 'h2',
+			'faq_group_title_tag'         => 'h3',
 			'faq_schema'                  => false,
 			'faq_layout'                  => 'layout-1',
 			'faq_section_title_color'     => null,

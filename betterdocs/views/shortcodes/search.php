@@ -4,14 +4,10 @@
 			<?php
 			if ( ! empty( $heading ) && in_array( $heading_tag, betterdocs()->template_helper::ALLOWED_HTML_TAGS ) ) {
 				echo '<' . esc_attr( $heading_tag ) . ' class="heading"> ' . esc_html( $heading ) . ' </' . esc_attr( $heading_tag ) . '>';
-			} else {
-				echo '<h2 class="heading"> ' . esc_html( $subheading ) . ' </h2>';
 			}
 
 			if ( ! empty( $subheading ) && in_array( $subheading_tag, betterdocs()->template_helper::ALLOWED_HTML_TAGS ) ) {
 				echo '<' . esc_attr( $subheading_tag ) . ' class="subheading"> ' . esc_html( $subheading ) . ' </' . esc_attr( $subheading_tag ) . '>';
-			} else {
-				echo '<h3 class="subheading"> ' . esc_html( $subheading ) . ' </h3>';
 			}
 			?>
 		</div>

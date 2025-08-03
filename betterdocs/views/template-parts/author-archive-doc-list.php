@@ -10,7 +10,7 @@
             while ( $post_query->have_posts() ): $post_query->the_post();
                 ?>
                 <div class="betterdocs-title-excerpt-list">
-                    <h2>
+                    <h2 class="betterdocs-entry-title">
                         <span><?php betterdocs()->template_helper->icon( 'docs-icon', true ); ?></span>
                         <a href="<?php echo esc_url( get_the_permalink() ); ?>">
                             <?php echo esc_html( get_the_title() ); ?>

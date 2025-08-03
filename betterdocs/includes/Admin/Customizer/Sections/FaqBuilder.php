@@ -178,6 +178,39 @@ class FaqBuilder extends Section {
 		);
 	}
 
+	public function faq_section_title_tag() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_section_title_tag',
+			[
+				'default'           => $this->defaults['betterdocs_faq_section_title_tag'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_faq_section_title_tag',
+				[
+					'label'    => __( 'Section Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_section_title_tag',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6'
+					],
+					'priority' => 629
+				]
+			)
+		);
+	}
+
 	public function faq_title_margin() {
 		$this->customizer->add_setting(
 			'betterdocs_faq_title_margin',
@@ -267,6 +300,39 @@ class FaqBuilder extends Section {
 						'step'   => 1,
 						'suffix' => 'px' // optional suffix
 					]
+				]
+			)
+		);
+	}
+
+	public function faq_group_title_tag() {
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_title_tag',
+			[
+				'default'           => $this->defaults['betterdocs_faq_group_title_tag'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_faq_group_title_tag',
+				[
+					'label'    => __( 'Group Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_group_title_tag',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6'
+					],
+					'priority' => 631
 				]
 			)
 		);

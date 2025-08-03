@@ -259,33 +259,36 @@ class Helper extends Base {
 
             if ( is_array( $posts ) && ! empty( $posts ) ) {
                 foreach ( $posts as $post ) {
-					$term_status			   = get_term_meta( $post['term_id'], 'status', true ) ?? false;
                     $description               = isset($post['meta_data']) ? \json_decode( $post['meta_data'], true ) : '';
                     $glossary_term_description = $description['glossary_term_description'] ?? '';
-
-					if( isset( $term_status ) && $term_status == 0 ) {
-						continue;
-					}
 
                     // Remove any <p> tags or other unwanted HTML tags
                     $glossary_term_description = strip_tags( $glossary_term_description );
                     $post_excerpt              = strip_tags( $post['post_excerpt'] ?? '' );
 
                     // Prepare post data
-                    $post_data = [
-                        'id'           => $post['ID'] ?? '',
-                        'post_title'   => $post['post_title'] ?? '',
-                        'post_excerpt' => ! empty( $post_excerpt )
-                        ? $post_excerpt
-                        : ( ! empty( $glossary_term_description )
-                            ? self::get_custom_excerpt( $glossary_term_description, 15 )
-                            : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ) )
-                    ];
-
                     if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
-                        $post_data['permalink'] = isset( $post['slug'] ) ? get_term_link( $post['slug'], 'glossaries' ) : '';
+                        // For glossaries
+                        $post_data = [
+                            'id'           => $post['term_id'] ?? '',
+                            'post_title'   => $post['post_title'] ?? '',
+                            'post_excerpt' => ! empty( $post_excerpt )
+                            ? $post_excerpt
+                            : ( ! empty( $glossary_term_description )
+                                ? self::get_custom_excerpt( $glossary_term_description, 15 )
+                                : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ) ),
+                            'permalink'    => isset( $post['slug'] ) ? get_term_link( $post['slug'], 'glossaries' ) : ''
+                        ];
                     } else {
-                        $post_data['permalink'] = isset( $post['ID'] ) ? get_the_permalink( $post['ID'] ) : '';
+                        // For docs
+                        $post_data = [
+                            'id'           => $post['ID'] ?? '',
+                            'post_title'   => $post['post_title'] ?? '',
+                            'post_excerpt' => ! empty( $post_excerpt )
+                            ? $post_excerpt
+                            : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ),
+                            'permalink'    => isset( $post['ID'] ) ? get_the_permalink( $post['ID'] ) : ''
+                        ];
                     }
 
                     $docs_by_letter[$letter][] = $post_data;
@@ -520,4 +523,11 @@ class Helper extends Base {
 
         return isset( $icons[$language] ) ? $icons[$language] : '📄';
     }
+
+	public static function get_max_doc_category_order_from_term_meta() {
+		global $wpdb;
+		$sql    = $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) AS max FROM {$wpdb->prefix}termmeta WHERE meta_key = %s ", 'doc_category_order');
+		$result = $wpdb->get_var($sql);
+		return $result;
+	}
 }

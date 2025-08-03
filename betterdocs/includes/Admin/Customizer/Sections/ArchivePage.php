@@ -1401,6 +1401,39 @@ class ArchivePage extends Section {
 		);
 	}
 
+	public function content_header_title_tag_layout7() {
+		$this->customizer->add_setting(
+			'content_header_title_tag_layout7',
+			[
+				'default'           => $this->defaults['content_header_title_tag_layout7'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'select' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'content_header_title_tag_layout7',
+				[
+					'label'    => __( 'Category Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_archive_page_settings',
+					'settings' => 'content_header_title_tag_layout7',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6',
+						'p'  => 'p'
+					]
+				]
+			)
+		);
+	}
+
 	public function content_header_background_layout_7() {
 		$this->customizer->add_setting(
 			'content_header_background_layout_7',
@@ -1609,6 +1642,39 @@ class ArchivePage extends Section {
 					'label'    => __( 'Category Column Settings', 'betterdocs' ),
 					'settings' => 'archive_category_column_settings_layout_7',
 					'section'  => 'betterdocs_archive_page_settings'
+				]
+			)
+		);
+	}
+
+	public function archive_column_title_tag_layout7() {
+		$this->customizer->add_setting(
+			'archive_column_title_tag_layout7',
+			[
+				'default'           => $this->defaults['archive_column_title_tag_layout7'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'select' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'archive_column_title_tag_layout7',
+				[
+					'label'    => __( 'Category Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_archive_page_settings',
+					'settings' => 'archive_column_title_tag_layout7',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6',
+						'p'  => 'p'
+					]
 				]
 			)
 		);
@@ -2724,6 +2790,39 @@ class ArchivePage extends Section {
 					'label'    => __( 'Archive Docs List', 'betterdocs' ),
 					'settings' => 'archive_docs_list_layout_7',
 					'section'  => 'betterdocs_archive_page_settings',
+				]
+			)
+		);
+	}
+
+	public function archive_docs_list_title_tag_layout_7() {
+		$this->customizer->add_setting(
+			'archive_docs_list_title_tag_layout_7',
+			[
+				'default'           => $this->defaults['archive_docs_list_title_tag_layout_7'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'select' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'archive_docs_list_title_tag_layout_7',
+				[
+					'label'    => __( 'Docs List Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_archive_page_settings',
+					'settings' => 'archive_docs_list_title_tag_layout_7',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6',
+						'p'  => 'p'
+					]
 				]
 			)
 		);
