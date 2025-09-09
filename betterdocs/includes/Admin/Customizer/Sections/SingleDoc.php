@@ -59,6 +59,10 @@ class SingleDoc extends Section {
 				'label' => __( 'Rustic Layout', 'betterdocs' ),
 				'image' => $this->assets->icon( 'customizer/single/layout-9.png', true ),
 			],
+			'layout-10' => [
+				'label' => __( 'Slate Layout', 'betterdocs' ),
+				'image' => $this->assets->icon( 'customizer/single/layout-10.png', true ),
+			],
 			'layout-1' => [
 				'label' => __( 'Classic Layout', 'betterdocs' ),
 				'image' => $this->assets->icon( 'customizer/single/layout-1.png', true )
@@ -3418,6 +3422,30 @@ class SingleDoc extends Section {
 					'priority' => 146,
 					'section'  => 'betterdocs_single_docs_settings',
 					'settings' => 'toc_active_item_border_color_layout_8_9'
+				]
+			)
+		);
+	}
+
+	public function toc_item_hover_bg_color_layout_10() {
+		$this->customizer->add_setting(
+			'toc_item_hover_bg_color_layout_10',
+			[
+				'capability'        => 'edit_theme_options',
+				'default'           => $this->defaults['toc_item_hover_bg_color_layout_10'],
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'toc_item_hover_bg_color_layout_10',
+				[
+					'label'    => __( 'Active Item Background Color', 'betterdocs' ),
+					'priority' => 146,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'toc_item_hover_bg_color_layout_10'
 				]
 			)
 		);

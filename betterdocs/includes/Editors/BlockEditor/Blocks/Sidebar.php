@@ -80,7 +80,8 @@ class Sidebar extends Block {
 			4 => 2,
 			5 => 3,
 			6 => 6,
-			7 => 7
+			7 => 7,
+			8 => 8,
 		];
 		$sidebar_layout = isset( $layout_mapper[ $layout ] ) ? $layout_mapper[ $layout ] : 1;
 

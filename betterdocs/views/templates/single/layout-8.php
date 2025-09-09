@@ -81,31 +81,53 @@ if ( $enable_sidebar_cat_list == 1 && $enable_toc == 1 ) {
 					}
 
 					$view_object->get( 'templates/contents/layout-2' );
-					$view_object->get( 'template-parts/update-date' );
 
-					echo '<div class="betterdocs-entry-footer">';
+					// print and date
+					echo '<div class="betterdocs-print-date">';
+						if ( !betterdocs()->helper->is_tag_enabled() ) {
+							$view_object->get(
+								'templates/parts/print-icon-2',
+								[
+									'enable' => betterdocs()->settings->get( 'enable_print_icon', false )
+								]
+							);
+						}
 
-					echo '<div class="betterdocs-tags-print">';
-					$view_object->get( 'templates/parts/tags' );
-					$view_object->get(
-						'templates/parts/print-icon-2',
-						[
-							'enable' => betterdocs()->settings->get( 'enable_print_icon', false )
-						]
-					);
+						$view_object->get( 'template-parts/update-date' );
 					echo '</div>';
 
 					/**
-					 * Social Share
+					 * Tags, Print, Social Share
 					 */
-					do_action( 'betterdocs_docs_before_social' );
 
-					$view_object->get( 'templates/parts/social-2' );
+					echo '<div class="betterdocs-entry-footer">';
+						if ( betterdocs()->helper->is_tag_enabled() ) {
+							echo '<div class="betterdocs-tags-print">';
+							$view_object->get( 'templates/parts/tags',
+								[
+									'no_comma_seperator' => true
+								]
+							);
+							$view_object->get(
+								'templates/parts/print-icon-2',
+								[
+									'enable' => betterdocs()->settings->get( 'enable_print_icon', false )
+								]
+							);
+							echo '</div>';
+						}
 
-					/**
-					 * Feedback Form
-					 */
-					//$view_object->get( 'templates/feedback-form' );
+						/**
+						 * Social Share
+						 */
+						do_action( 'betterdocs_docs_before_social' );
+
+						$view_object->get( 'templates/parts/social-2' );
+
+						/**
+						 * Feedback Form
+						 */
+						//$view_object->get( 'templates/feedback-form' );
 					echo '</div>';
 					endwhile;
 					$view_object->get( 'templates/parts/navigation' );

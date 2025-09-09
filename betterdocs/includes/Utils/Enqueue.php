@@ -42,6 +42,8 @@ class Enqueue extends Base {
 			$url_portion = isset( $matches[1] ) ? $matches[1] : '';
 			if ( $url_portion == 'betterdocs-pro' ) {
 				wp_set_script_translations( $handle, 'betterdocs-pro' );
+			} elseif ( $url_portion == 'betterdocs-ai-chatbot' ) {
+				wp_set_script_translations( $handle, 'betterdocs-ai-chatbot' );
 			} elseif ( $url_portion == 'betterdocs' ) {
 				wp_set_script_translations( $handle, 'betterdocs' );
 			}

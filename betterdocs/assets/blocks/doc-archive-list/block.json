@@ -6,35 +6,5 @@
 	"category":"betterdocs",
 	"description":"Streamlines the creation of your knowledge-base archive lists.",
 	"textdomain":"betterdocs",
-    "editorScript":"betterdocs-blocks-editor",
-    "attributes": {
-        "layout": {
-            "type": "string",
-            "default": "layout-1"
-        },
-        "listEntryHeadingTag": {
-            "type": "string",
-            "default": "h3"
-        },
-        "nested_subcategory": {
-            "type": "boolean",
-            "default": false
-        },
-        "orderby": {
-            "type": "string",
-            "default": "title"
-        },
-        "order": {
-            "type": "string",
-            "default": "asc"
-        },
-        "postsPerPageLayoutTwo": {
-            "type": "number",
-            "default": -1
-        },
-        "pagination": {
-            "type": "boolean",
-            "default": false
-        }
-    }
+    "editorScript":"betterdocs-blocks-editor"
 }

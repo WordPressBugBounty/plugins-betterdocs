@@ -7,6 +7,7 @@ use WP_Customize_Image_Control;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\TitleControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\SelectControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\DimensionControl;
+use WPDeveloper\BetterDocs\Admin\Customizer\Controls\MultiDimensionControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\SeparatorControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\AlphaColorControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\RangeValueControl;
@@ -3408,25 +3409,438 @@ class Sidebar extends Section {
 		);
 	}
 
+	public function sidebar_tech_layout_wrapper() {
+		$this->customizer->add_setting(
+			'sidebar_tech_layout_wrapper',
+			[
+				'default'           => $this->defaults['sidebar_tech_layout_wrapper'],
+				'sanitize_callback' => 'esc_html'
+			]
+		);
 
-	// public function active_list_item_color_layout_7() {
-	//     $this->customizer->add_setting( 'betterdocs_sidebar_active_list_item_color_layout_7', [
-	//         'default'           => $this->defaults['betterdocs_sidebar_active_list_item_color_layout_7'],
-	//         'capability'        => 'edit_theme_options',
-	//         'transport'         => 'postMessage',
-	//         'sanitize_callback' => [$this->sanitizer, 'rgba']
-	//     ] );
+		$this->customizer->add_control(
+			new SeparatorControl(
+				$this->customizer,
+				'sidebar_tech_layout_wrapper',
+				[
+					'label'    => __( 'Slate Layout Sidebar', 'betterdocs' ),
+					'settings' => 'sidebar_tech_layout_wrapper',
+					'section'  => 'betterdocs_sidebar_settings'
+				]
+			)
+		);
+	}
 
-	//     $this->customizer->add_control(
-	//         new AlphaColorControl(
-	//             $this->customizer,
-	//             'betterdocs_sidebar_active_list_item_color_layout_7',
-	//             [
-	//                 'label'    => __( 'Active List Item Color', 'betterdocs' ),
-	//                 'section'  => 'betterdocs_sidebar_settings',
-	//                 'settings' => 'betterdocs_sidebar_active_list_item_color_layout_7'
-	//             ]
-	//         )
-	//     );
-	// }
+	// Layout-8 Controllers
+	public function border_right_width_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_border_right_width_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_border_right_width_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_sidebar_border_right_width_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_sidebar_settings',
+					'settings'    => 'betterdocs_sidebar_border_right_width_layout_8',
+					'label'       => __( 'Border Right Width', 'betterdocs' ),
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 10,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function border_right_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_border_right_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_border_right_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_border_right_color_layout_8',
+				[
+					'label'    => __( 'Border Right Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_border_right_color_layout_8'
+				]
+			)
+		);
+	}
+
+
+	public function title_tag_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_title_tag_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_title_tag_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'select' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_sidebar_title_tag_layout_8',
+				[
+					'label'    => __( 'Category Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_title_tag_layout_8',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6',
+						'p'  => 'p'
+					]
+				]
+			)
+		);
+	}
+
+	public function title_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_title_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_title_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_title_color_layout_8',
+				[
+					'label'    => __( 'Title Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_title_color_layout_8'
+				]
+			)
+		);
+	}
+
+	public function title_font_size_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_title_font_size_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_title_font_size_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_sidebar_title_font_size_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_sidebar_settings',
+					'settings'    => 'betterdocs_sidebar_title_font_size_layout_8',
+					'label'       => __( 'Title Font Size', 'betterdocs' ),
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function title_margin_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_title_margin_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_title_margin_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_sidebar_title_margin_layout_8',
+				[
+					'label'        => __( 'Title Margin (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_sidebar_settings',
+					'settings'     => 'betterdocs_sidebar_title_margin_layout_8',
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 0,
+						'input2' => 0,
+						'input3' => 0,
+						'input4' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function title_padding_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_title_padding_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_title_padding_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_sidebar_title_padding_layout_8',
+				[
+					'label'        => __( 'Title Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_sidebar_settings',
+					'settings'     => 'betterdocs_sidebar_title_padding_layout_8',
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 0,
+						'input2' => 0,
+						'input3' => 0,
+						'input4' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function collapsible_arrow_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_collapsible_arrow_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_collapsible_arrow_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_collapsible_arrow_color_layout_8',
+				[
+					'label'    => __( 'Collapsible Arrow Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_collapsible_arrow_color_layout_8'
+				]
+			)
+		);
+	}
+
+	public function list_item_font_size_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_font_size_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_font_size_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_font_size_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_sidebar_settings',
+					'settings'    => 'betterdocs_sidebar_list_item_font_size_layout_8',
+					'label'       => __( 'List Item Font Size', 'betterdocs' ),
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function list_item_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_color_layout_8',
+				[
+					'label'    => __( 'List Item Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_list_item_color_layout_8'
+				]
+			)
+		);
+	}
+
+	public function list_item_hover_background_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_hover_background_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_hover_background_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_hover_background_color_layout_8',
+				[
+					'label'    => __( 'List Item Hover Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_list_item_hover_background_color_layout_8'
+				]
+			)
+		);
+	}
+
+	public function list_item_hover_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_hover_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_hover_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_hover_color_layout_8',
+				[
+					'label'    => __( 'List Item Hover Color', 'betterdocs' ),
+					'section'  => 'betterdocs_sidebar_settings',
+					'settings' => 'betterdocs_sidebar_list_item_hover_color_layout_8'
+				]
+			)
+		);
+	}
+
+	public function list_item_margin_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_margin_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_margin_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_margin_layout_8',
+				[
+					'label'        => __( 'List Item Margin (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_sidebar_settings',
+					'settings'     => 'betterdocs_sidebar_list_item_margin_layout_8',
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 1,
+						'input2' => 0,
+						'input3' => 0,
+						'input4' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function list_item_padding_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_sidebar_list_item_padding_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_sidebar_list_item_padding_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_sidebar_list_item_padding_layout_8',
+				[
+					'label'        => __( 'List Item Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_sidebar_settings',
+					'settings'     => 'betterdocs_sidebar_list_item_padding_layout_8',
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 7,
+						'input2' => 8,
+						'input3' => 7,
+						'input4' => 8
+					]
+				]
+			)
+		);
+	}
 }

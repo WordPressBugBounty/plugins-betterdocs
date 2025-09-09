@@ -78,7 +78,6 @@ if ( $enable_sidebar_cat_list == 1 && $enable_toc == 1 ) {
 						$view_object->get( 'templates/parts/author', [ 'updated_date' => $updated_date ] );
 					}
 					$view_object->get( 'templates/contents/layout-2' );
-					$view_object->get( 'template-parts/update-date' );
 
 					echo '<div class="betterdocs-entry-footer">';
 					/**

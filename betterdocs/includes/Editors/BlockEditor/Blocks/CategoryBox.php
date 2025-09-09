@@ -36,7 +36,7 @@ class CategoryBox extends Block {
 			'includeCategories'   => '',
 			'excludeCategories'   => '',
 			'boxPerPage'          => 9,
-			'orderBy'             => 'name',
+			'orderBy'             => 'doc_category_order',
 			'order'               => 'asc',
 			'layout'              => 'default',
 			'showIcon'            => true,

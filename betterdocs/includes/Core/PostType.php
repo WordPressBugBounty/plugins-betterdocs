@@ -58,6 +58,9 @@ class PostType extends Base {
 		add_action( "edited_{$this->glossaries}", [ $this, 'save_glossary_term_fields' ] );
 		add_filter( "manage_edit-{$this->glossaries}_columns", [ $this, 'add_glossary_custom_column' ] );
 		add_filter( "manage_{$this->glossaries}_custom_column", [ $this, 'manage_glossary_custom_column' ], 10, 3 );
+
+		// Hide default description field for glossaries taxonomy
+		add_action( 'admin_head', [ $this, 'hide_glossaries_default_description' ] );
 	}
 
 	public static function permalink_structure() {
@@ -872,21 +875,17 @@ class PostType extends Base {
 		?>
 		<div class="form-field term-custom-field-wrap">
 			<label for="glossary_term_description"><?php esc_html_e( 'Glossary Term Description', 'betterdocs' ); ?></label>
-			<?php
-			wp_editor(
-				'',
-				'glossary_term_description',
-				[
-					'textarea_name' => 'glossary_term_description',
-					'textarea_rows' => 5,
-					'media_buttons' => false,
-					'tinymce'       => true,
-					'quicktags'     => true,
-				]
-			);
-			?>
+			<textarea
+				name="glossary_term_description"
+				id="glossary_term_description"
+				rows="5"
+				cols="50"
+				class="large-text"
+				placeholder="<?php esc_attr_e( 'Enter a description for the glossary term', 'betterdocs' ); ?>"
+			></textarea>
 			<p class="description"><?php echo esc_html_e( 'Enter a description for the glossary term', 'betterdocs' ); ?></p>
 		</div>
+		<?php wp_nonce_field( 'save_glossary_term_description', 'glossary_term_description_nonce' ); ?>
 		<?php
 	}
 
@@ -908,6 +907,7 @@ class PostType extends Base {
 						'quicktags'     => true,
 					]
 				);
+				wp_nonce_field( 'save_glossary_term_description', 'glossary_term_description_nonce' );
 				?>
 				<p class="description"><?php esc_html_e( 'Enter a description for the glossary term', 'betterdocs' ); ?></p>
 			</td>
@@ -915,14 +915,30 @@ class PostType extends Base {
 		<?php
 	}
 
-	public function save_glossary_term_fields( $term_id ) {
+	public function save_glossary_term_fields($term_id) {
+		// Check if we're in admin and this is a glossaries taxonomy operation
+		if (!is_admin()) {
+			return;
+		}
+
+		// Verify this is for glossaries taxonomy
+		if (!isset($_POST['taxonomy']) || $_POST['taxonomy'] !== 'glossaries') {
+			return;
+		}
+
+		// Verify nonce for security
+		if (!isset($_POST['glossary_term_description_nonce']) ||
+			!wp_verify_nonce($_POST['glossary_term_description_nonce'], 'save_glossary_term_description')) {
+			return;
+		}
+
 		// Check if 'glossary_term_description' is set in $_POST
-		if ( isset( $_POST['glossary_term_description'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			// Sanitize the input immediately upon access
-			$description = wp_kses_post( wp_unslash( $_POST['glossary_term_description'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if (isset($_POST['glossary_term_description'])) {
+			// Sanitize the content using wp_kses_post
+			$description = wp_kses_post(wp_unslash($_POST['glossary_term_description']));
 
 			// Save the sanitized value to term meta
-			update_term_meta( $term_id, 'glossary_term_description', $description );
+			update_term_meta($term_id, 'glossary_term_description', $description);
 		}
 	}
 
@@ -937,6 +953,23 @@ class PostType extends Base {
 			$content = get_term_meta( $term_id, 'glossary_term_description', true );
 		}
 		return $content;
+	}
+
+	/**
+	 * Hide default description field for glossaries taxonomy
+	 */
+	public function hide_glossaries_default_description() {
+		$screen = get_current_screen();
+		if ( $screen && $screen->taxonomy === 'glossaries' ) {
+			?>
+			<style type="text/css">
+				.term-description-wrap,
+				.form-field.term-description-wrap {
+					display: none !important;
+				}
+			</style>
+			<?php
+		}
 	}
 
 

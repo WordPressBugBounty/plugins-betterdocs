@@ -28,7 +28,7 @@ class PostContent extends Shortcode {
 	}
 
 	public function render( $atts, $content = null ) {
-		$post = get_post( $get_args['post_id'] );
+		$post = get_post( $this->attributes['post_id'] );
 
 		return betterdocs()->template_helper->content(
 			$post->post_content,

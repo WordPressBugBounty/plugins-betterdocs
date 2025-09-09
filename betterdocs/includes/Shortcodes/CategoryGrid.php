@@ -64,7 +64,9 @@ class CategoryGrid extends Shortcode {
 			'layout_type'              => '',
 			'list_icon_url'            => '',
 			'list_icon_name'           => 'list',
-			'sidebar_layout'           => ''
+			'show_list_icon'           => true,
+			'sidebar_layout'           => '',
+			'wrapper_class'            => []
 		];
 	}
 
@@ -106,6 +108,7 @@ class CategoryGrid extends Shortcode {
 				$attributes['class'][] = 'single-kb';
 			}
 		}
+
 
 		return $attributes;
 	}
@@ -177,15 +180,36 @@ class CategoryGrid extends Shortcode {
 			$inner_wrapper_attr['data-mkb-slug'] = $this->attributes['kb_slug'];
 		}
 
+		// Prepare wrapper attributes with custom classes
+		$wrapper_attr_classes = [ 'betterdocs-category-grid-wrapper' ];
+
+		// Add custom wrapper classes if provided
+		if ( $this->isset( 'wrapper_class' ) ) {
+			$wrapper_classes = $this->attributes['wrapper_class'];
+
+			// Handle both array and string formats
+			if ( is_string( $wrapper_classes ) ) {
+				// Split by comma or space and clean up
+				$wrapper_classes = preg_split( '/[,\s]+/', $wrapper_classes );
+				$wrapper_classes = array_filter( array_map( 'trim', $wrapper_classes ) );
+			} elseif ( is_array( $wrapper_classes ) ) {
+				$wrapper_classes = array_filter( $wrapper_classes );
+			}
+
+			if ( ! empty( $wrapper_classes ) ) {
+				$wrapper_attr_classes = array_merge( $wrapper_attr_classes, $wrapper_classes );
+			}
+		}
+
 		return [
-			'wrapper_attr'           => [ 'class' => [ 'betterdocs-category-grid-wrapper' ] ],
+			'wrapper_attr'           => [ 'class' => $wrapper_attr_classes ],
 			'inner_wrapper_attr'     => $inner_wrapper_attr,
 			'layout'                 => 'default',
 			'widget_type'            => 'category-grid',
 			'terms_query_args'       => $terms_query,
 			'docs_query_args'        => $docs_query,
 			'nested_docs_query_args' => $docs_query,
-			'list_icon_name'         => $this->attributes['list_icon_name'] == 'list' ? 'list' : [ 'value' => $this->attributes['list_icon_name'] ],
+			'list_icon_name'         => ($this->attributes['list_icon_name'] ?? 'list') == 'list' ? 'list' : [ 'value' => $this->attributes['list_icon_name'] ?? 'list' ],
 			'show_header'            => true,
 			'show_list'              => true,
 			'show_title'             => true,
@@ -193,12 +217,13 @@ class CategoryGrid extends Shortcode {
 			'button_text'            => $button_text,
 			'show_button_icon'       => true,
 			'button_icon_position'   => true,
-			'title_tag'              => $this->attributes['title_tag'],
+			'title_tag'              => $this->attributes['title_tag'] ?? 'h2',
 			'button_icon'            => true,
 			'category_title_link'    => $category_title_link,
-			'layout_type'            => $this->attributes['layout_type'],
-			'list_icon_url'          => $this->attributes['list_icon_url'],
-			'sidebar_layout'         => $this->attributes['sidebar_layout']
+			'layout_type'            => $this->attributes['layout_type'] ?? '',
+			'list_icon_url'          => $this->attributes['list_icon_url'] ?? '',
+			'show_list_icon'         => $this->attributes['show_list_icon'] ?? true,
+			'sidebar_layout'         => $this->attributes['sidebar_layout'] ?? ''
 		];
 	}
 }

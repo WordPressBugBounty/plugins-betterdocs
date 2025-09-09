@@ -1821,7 +1821,7 @@ class CategoryGrid extends BaseWidget {
 		$is_edit_mode = ElementorPlugin::instance()->editor->is_edit_mode();
 
 		$terms_query = [
-			'hide_empty'         => true,
+			'hide_empty'         => true, // Let template handle editor mode logic
 			'taxonomy'           => 'doc_category',
 			'orderby'            => $settings['orderby'],
 			'order'              => $settings['order'],
@@ -1838,7 +1838,7 @@ class CategoryGrid extends BaseWidget {
 			$terms_query['exclude'] = $settings['exclude'];
 		}
 
-		if ( $default_multiple_kb ) {
+		if ( $default_multiple_kb ) { // Let template handle editor mode logic
 			$object = get_queried_object();
 			if ( empty( $settings['selected_knowledge_base'] ) && is_tax( 'knowledge_base' ) ) {
 				$meta_value = $object->slug;
@@ -1846,14 +1846,17 @@ class CategoryGrid extends BaseWidget {
 				$meta_value = $settings['selected_knowledge_base'];
 			}
 
-			$terms_query['meta_query'] = [
-				'relation' => 'OR',
-				[
-					'key'     => 'doc_category_knowledge_base',
-					'value'   => $meta_value,
-					'compare' => 'LIKE'
-				]
-			];
+			// Only apply meta_query if we have a valid knowledge base value
+			if ( ! empty( $meta_value ) ) {
+				$terms_query['meta_query'] = [
+					'relation' => 'OR',
+					[
+						'key'     => 'doc_category_knowledge_base',
+						'value'   => $meta_value,
+						'compare' => 'LIKE'
+					]
+				];
+			}
 		}
 
 		$kb_slug = isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';
@@ -1875,13 +1878,15 @@ class CategoryGrid extends BaseWidget {
 			$inner_wrapper_attr
 		);
 
+		$terms_query_args = $this->betterdocs( 'query' )->terms_query( $terms_query );
+
 		$default_params = [
 			'wrapper_attr'            => $this->get_render_attributes( 'bd_category_grid_wrapper' ),
 			'inner_wrapper_attr'      => $this->get_render_attributes( 'bd_category_grid_inner' ),
 			'widget_type'             => 'category-grid',
 			'layout'                  => sanitize_file_name( $settings['layout_template'] ),
 			'is_edit_mode'            => $is_edit_mode,
-			'terms_query_args'        => $this->betterdocs( 'query' )->terms_query( $terms_query ),
+			'terms_query_args'        => $terms_query_args,
 			'list_icon_name'          => $settings['list_icon'],
 			'button_icon_position'    => $settings['icon_position'],
 			'term_icon_meta_key'      => 'doc_category_image-id',

@@ -110,6 +110,13 @@
 	content: "\e905";
 }
 
+.betterdocs-icon-category-slate-layout:before {
+	content: "\e927";
+}
+.betterdocs-icon-sidebar-slate-layout:before {
+	content: "\e928";
+}
+
 .betterdocs-icon-category-box:before {
 	content: "\e904";
 }

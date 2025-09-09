@@ -68,6 +68,10 @@ class ArchivePage extends Section {
 								'label' => __( 'Classic Layout', 'betterdocs' ),
 								'image' => $this->assets->icon( 'customizer/archive/layout-1.png', true )
 							],
+							'layout-8' => [
+								'label' => __( 'Slate Layout', 'betterdocs' ),
+								'image' => $this->assets->icon( 'customizer/archive/layout-8.png', true )
+							],
 							'layout-4' => [
 								'label' => __( 'Abstract Layout', 'betterdocs' ),
 								'image' => $this->assets->icon( 'customizer/archive/layout-4.png', true )
@@ -559,7 +563,7 @@ class ArchivePage extends Section {
 				$this->customizer,
 				'archive_search_toogle',
 				[
-					'label'    => __( 'Enable', 'betterdocs' ),
+					'label'    => __( 'Enable Search Section', 'betterdocs' ),
 					'section'  => 'betterdocs_archive_page_settings',
 					'settings' => 'archive_search_toogle',
 					'type'     => 'light', // light, ios, flat
@@ -908,6 +912,30 @@ class ArchivePage extends Section {
 					'label'    => __( 'Content Area', 'betterdocs' ),
 					'settings' => 'betterdocs_archive_content_area_settings',
 					'section'  => 'betterdocs_archive_page_settings'
+				]
+			)
+		);
+	}
+
+	public function archive_content_area_search_toogle() {
+		$this->customizer->add_setting(
+			'archive_content_area_search_toogle',
+			[
+				'default'           => $this->defaults['archive_content_area_search_toogle'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'checkbox' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new ToggleControl(
+				$this->customizer,
+				'archive_content_area_search_toogle',
+				[
+					'label'    => __( 'Enable Content Area Search', 'betterdocs' ),
+					'section'  => 'betterdocs_archive_page_settings',
+					'settings' => 'archive_content_area_search_toogle',
+					'type'     => 'light', // light, ios, flat
 				]
 			)
 		);
@@ -1504,7 +1532,7 @@ class ArchivePage extends Section {
 					'label'       => __( 'Image Size', 'betterdocs' ),
 					'input_attrs' => [
 						'min'    => 0,
-						'max'    => 50,
+						'max'    => 100,
 						'step'   => 1,
 						'suffix' => 'px'
 					]
@@ -2432,29 +2460,6 @@ class ArchivePage extends Section {
 		);
 	}
 
-	public function archive_last_updated_time_layout_7_hover_color() {
-		$this->customizer->add_setting(
-			'archive_last_updated_time_layout_7_hover_color',
-			[
-				'default'           => $this->defaults['archive_last_updated_time_layout_7_hover_color'],
-				'capability'        => 'edit_theme_options',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_last_updated_time_layout_7_hover_color',
-				[
-					'label'    => __( 'Hover Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_last_updated_time_layout_7_hover_color',
-				]
-			)
-		);
-	}
-
 	public function archive_last_updated_time_layout_7_background_color() {
 		$this->customizer->add_setting(
 			'archive_last_updated_time_layout_7_background_color',
@@ -2474,29 +2479,6 @@ class ArchivePage extends Section {
 					'label'    => __( 'Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_archive_page_settings',
 					'settings' => 'archive_last_updated_time_layout_7_background_color',
-				]
-			)
-		);
-	}
-
-	public function archive_last_updated_time_layout_7_background_hover_color() {
-		$this->customizer->add_setting(
-			'archive_last_updated_time_layout_7_background_hover_color',
-			[
-				'default'           => $this->defaults['archive_last_updated_time_layout_7_background_hover_color'],
-				'capability'        => 'edit_theme_options',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_last_updated_time_layout_7_background_hover_color',
-				[
-					'label'    => __( 'Background Hover Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_last_updated_time_layout_7_background_hover_color',
 				]
 			)
 		);
@@ -3077,134 +3059,6 @@ class ArchivePage extends Section {
 		);
 	}
 
-	public function archive_docs_list_last_updated_time_font_size_layout_7() {
-		$this->customizer->add_setting(
-			'archive_docs_list_last_updated_time_font_size_layout_7',
-			[
-				'default'           => $this->defaults['archive_docs_list_last_updated_time_font_size_layout_7'],
-				'capability'        => 'edit_theme_options',
-				'transport'         => 'postMessage',
-				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
-
-			]
-		);
-
-		$this->customizer->add_control(
-			new RangeValueControl(
-				$this->customizer,
-				'archive_docs_list_last_updated_time_font_size_layout_7',
-				[
-					'type'        => 'betterdocs-range-value',
-					'section'     => 'betterdocs_archive_page_settings',
-					'settings'    => 'archive_docs_list_last_updated_time_font_size_layout_7',
-					'label'       => __( 'List Updated Time Font Size', 'betterdocs' ),
-					'input_attrs' => [
-						'class'  => '',
-						'min'    => 0,
-						'max'    => 50,
-						'step'   => 1,
-						'suffix' => 'px' //optional suffix
-					]
-				]
-			)
-		);
-	}
-
-	public function archive_docs_list_last_updated_time_font_color_layout_7() {
-		$this->customizer->add_setting(
-			'archive_docs_list_last_updated_time_font_color_layout_7',
-			[
-				'default'           => $this->defaults['archive_docs_list_last_updated_time_font_color_layout_7'],
-				'capability'        => 'edit_theme_options',
-				'transport'         => 'postMessage',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_docs_list_last_updated_time_font_color_layout_7',
-				[
-					'label'    => __( 'List Updated Time Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_docs_list_last_updated_time_font_color_layout_7',
-				]
-			)
-		);
-	}
-
-	public function archive_docs_list_last_updated_time_font_hover_color_layout_7() {
-		$this->customizer->add_setting(
-			'archive_docs_list_last_updated_time_font_hover_color_layout_7',
-			[
-				'default'           => $this->defaults['archive_docs_list_last_updated_time_font_hover_color_layout_7'],
-				'capability'        => 'edit_theme_options',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_docs_list_last_updated_time_font_hover_color_layout_7',
-				[
-					'label'    => __( 'List Updated Time Hover Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_docs_list_last_updated_time_font_hover_color_layout_7',
-				]
-			)
-		);
-	}
-
-	public function archive_docs_list_last_updated_time_background_color_layout_7() {
-		$this->customizer->add_setting(
-			'archive_docs_list_last_updated_time_background_color_layout_7',
-			[
-				'default'           => $this->defaults['archive_docs_list_last_updated_time_background_color_layout_7'],
-				'capability'        => 'edit_theme_options',
-				'transport'         => 'postMessage',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_docs_list_last_updated_time_background_color_layout_7',
-				[
-					'label'    => __( 'List Updated Time Background Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_docs_list_last_updated_time_background_color_layout_7',
-				]
-			)
-		);
-	}
-
-
-	public function archive_docs_list_last_updated_time_background_hover_color_layout_7() {
-		$this->customizer->add_setting(
-			'archive_docs_list_last_updated_time_background_hover_color_layout_7',
-			[
-				'default'           => $this->defaults['archive_docs_list_last_updated_time_background_hover_color_layout_7'],
-				'capability'        => 'edit_theme_options',
-				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
-			]
-		);
-
-		$this->customizer->add_control(
-			new AlphaColorControl(
-				$this->customizer,
-				'archive_docs_list_last_updated_time_background_hover_color_layout_7',
-				[
-					'label'    => __( 'List Updated Time Background Hover Color', 'betterdocs' ),
-					'section'  => 'betterdocs_archive_page_settings',
-					'settings' => 'archive_docs_list_last_updated_time_background_hover_color_layout_7',
-				]
-			)
-		);
-	}
-
 	public function archive_docs_list_excerpt_font_size_layout_7() {
 		$this->customizer->add_setting(
 			'archive_docs_list_excerpt_font_size_layout_7',
@@ -3257,6 +3111,62 @@ class ArchivePage extends Section {
 					'label'    => __( 'List Excerpt Font Color', 'betterdocs' ),
 					'section'  => 'betterdocs_archive_page_settings',
 					'settings' => 'archive_docs_list_excerpt_font_color_layout_7',
+				]
+			)
+		);
+	}
+
+	public function archive_docs_list_border_width_layout_8() {
+		$this->customizer->add_setting(
+			'archive_docs_list_border_width_layout_8',
+			[
+				'default'           => $this->defaults['archive_docs_list_border_width_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'archive_docs_list_border_width_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_archive_page_settings',
+					'settings'    => 'archive_docs_list_border_width_layout_8',
+					'label'       => __( 'List Border Width', 'betterdocs' ),
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 10,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function archive_docs_list_border_color_layout_8() {
+		$this->customizer->add_setting(
+			'archive_docs_list_border_color_layout_8',
+			[
+				'default'           => $this->defaults['archive_docs_list_border_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'archive_docs_list_border_color_layout_8',
+				[
+					'label'    => __( 'List Border Color', 'betterdocs' ),
+					'section'  => 'betterdocs_archive_page_settings',
+					'settings' => 'archive_docs_list_border_color_layout_8',
 				]
 			)
 		);

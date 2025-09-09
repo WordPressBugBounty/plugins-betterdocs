@@ -55,13 +55,13 @@
 							[
 								'taxonomy' => 'doc_tag',
 								'field'    => 'slug',
-								'terms'    => $current_category->slug
+								'terms'    => isset( $current_category->slug ) ? $current_category->slug : ''
 							]
 						];
 						$post_query = betterdocs()->query->get_posts(
 							[
-								'term_id'        => $current_category->term_id,
-								'term_slug'      => $current_category->slug,
+								'term_id'        => isset( $current_category->term_id ) ? $current_category->term_id : '',
+								'term_slug'      => isset( $current_category->slug ) ? $current_category->slug : '',
 								'posts_per_page' => -1,
 								'tax_query'      => apply_filters( 'betterdocs_tag_tax_query', $_tax_query, $current_category )
 							]

@@ -36,9 +36,9 @@ use WPDeveloper\BetterDocs\Editors\Elementor\Widget\ArticleSummary;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\SearchForm;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\CategoryBox;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\CategoryGrid;
+use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\CategorySlateLayout;
 use WPDeveloper\BetterDocs\Editors\Elementor\Conditions\ArchiveCondition;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Tags;
-// use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\BetterdocsEncyclopedia;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\CategoryArchiveHeader;
 
 class Elementor extends BaseEditor {
@@ -87,6 +87,7 @@ class Elementor extends BaseEditor {
 
         add_filter( 'elementor/theme/need_override_location', [$this, 'override_location'], 10, 2 );
         add_action( 'betterdocs/elementor/widgets/query', [$this, 'betterdocs_query'], 10, 2 );
+        add_filter( 'betterdocs_base_terms_args', [$this, 'handle_editor_mode_terms_args'], 10, 1 );
 
         if ( $this->is_elementor_pro_active ) {
             add_action( 'elementor/dynamic_tags/register', [$this, 'register_basic_tags'] );
@@ -278,7 +279,7 @@ class Elementor extends BaseEditor {
                         'asc'  => 'Ascending',
                         'desc' => 'Descending'
                     ],
-                    'default' => 'desc',
+                    'default' => 'asc',
                     'condition' => [
                         'post_orderby!' => 'betterdocs_order'
                     ]
@@ -314,7 +315,7 @@ class Elementor extends BaseEditor {
                         'ASC'  => 'Ascending',
                         'DESC' => 'Descending'
                     ],
-                    'default'   => 'asc',
+                    'default'   => 'ASC',
                     'condition' => [
                         'orderby!' => 'betterdocs_order'
                     ]
@@ -323,7 +324,7 @@ class Elementor extends BaseEditor {
             );
         }
 
-        if ( $wb->get_name() === 'betterdocs-category-grid' ) {
+        if ( $wb->get_name() === 'betterdocs-category-grid' || $wb->get_name() === 'betterdocs-category-slate-layout' ) {
             $wb->add_control(
                 'grid_posts_query_heading',
                 [
@@ -348,7 +349,7 @@ class Elementor extends BaseEditor {
                     'label'   => __( 'Order By', 'betterdocs' ),
                     'type'    => Controls_Manager::SELECT,
                     'options' => $this->helper->orderby_options(),
-                    'default' => 'date'
+                    'default' => 'betterdocs_order'
                 ]
             );
 
@@ -361,46 +362,51 @@ class Elementor extends BaseEditor {
                         'asc'  => 'Ascending',
                         'desc' => 'Descending'
                     ],
-                    'default' => 'desc'
-                ]
-            );
-
-            $wb->add_control(
-                'nested_subcategory',
-                [
-                    'label'        => __( 'Enable Nested Subcategory', 'betterdocs' ),
-                    'type'         => Controls_Manager::SWITCHER,
-                    'label_on'     => __( 'Yes', 'betterdocs' ),
-                    'label_off'    => __( 'No', 'betterdocs' ),
-                    'return_value' => 'true',
-                    'default'      => false
-                ]
-            );
-
-            $wb->add_control(
-                'subcategory_per_grid',
-                [
-                    'label'     => __( 'Subcategory Per Grid', 'betterdocs' ),
-                    'type'      => Controls_Manager::NUMBER,
-                    'default'   => '2',
-                    'condition' => [
-                        'nested_subcategory' => 'true'
-                    ]
-                ]
-            );
-
-            $wb->add_control(
-                'post_per_subcat',
-                [
-                    'label'     => __( 'Post Per Subcategory', 'betterdocs' ),
-                    'type'      => Controls_Manager::NUMBER,
-                    'default'   => '6',
-                    'condition' => [
-                        'nested_subcategory' => 'true'
+                    'default' => 'asc',
+					'condition' => [
+                        'post_orderby!' => 'betterdocs_order'
                     ]
                 ]
             );
         }
+
+		if ( $wb->get_name() === 'betterdocs-category-grid' ) {
+			$wb->add_control(
+				'nested_subcategory',
+				[
+					'label'        => __( 'Enable Nested Subcategory', 'betterdocs' ),
+					'type'         => Controls_Manager::SWITCHER,
+					'label_on'     => __( 'Yes', 'betterdocs' ),
+					'label_off'    => __( 'No', 'betterdocs' ),
+					'return_value' => 'true',
+					'default'      => false
+				]
+			);
+
+			$wb->add_control(
+				'subcategory_per_grid',
+				[
+					'label'     => __( 'Subcategory Per Grid', 'betterdocs' ),
+					'type'      => Controls_Manager::NUMBER,
+					'default'   => '2',
+					'condition' => [
+						'nested_subcategory' => 'true'
+					]
+				]
+			);
+
+			$wb->add_control(
+				'post_per_subcat',
+				[
+					'label'     => __( 'Post Per Subcategory', 'betterdocs' ),
+					'type'      => Controls_Manager::NUMBER,
+					'default'   => '6',
+					'condition' => [
+						'nested_subcategory' => 'true'
+					]
+				]
+			);
+		}
 
         if ( $wb->get_name() === 'betterdocs-category-box' ) {
             $wb->add_control(
@@ -594,7 +600,8 @@ class Elementor extends BaseEditor {
             'parent'     => 0
         ];
 
-        $terms = get_terms( $args );
+        $terms_query_args = betterdocs()->query->terms_query( $args );
+        $terms = betterdocs()->query->get_terms( $terms_query_args );
 
         if ( is_wp_error( $terms ) ) {
             return [];
@@ -617,6 +624,22 @@ class Elementor extends BaseEditor {
         $module->register( new TitleTag );
     }
 
+    /**
+     * Handle editor mode for terms query args
+     *
+     * @param array $args Terms query arguments
+     * @return array Modified arguments
+     */
+    public function handle_editor_mode_terms_args( $args ) {
+        // Only modify if we're in Elementor editor mode
+        if ( $this->elementor && $this->elementor->editor->is_edit_mode() ) {
+            // Show empty categories in editor mode for better preview
+            $args['hide_empty'] = false;
+        }
+
+        return $args;
+    }
+
     public function register_basic_widgets( $widgets_manager ) {
         foreach ( $this->basic_widget_lists() as $value ) {
             $widgets_manager->register( new $value );
@@ -632,12 +655,12 @@ class Elementor extends BaseEditor {
      */
     private function basic_widget_lists() {
         $widget_arr = [
-            'betterdocs-elementor-search-form'   => SearchForm::class,
-            'betterdocs-elementor-category-grid' => CategoryGrid::class,
-            'betterdocs-elementor-category-box'  => CategoryBox::class,
-            'betterdocs-faq-widget'              => FAQ::class,
-            'betterdocs-code-snippet'            => CodeSnippet::class
-            // 'betterdocs-encyclopedia-widget'     => BetterdocsEncyclopedia::class
+            'betterdocs-elementor-search-form'       => SearchForm::class,
+            'betterdocs-elementor-category-grid'     => CategoryGrid::class,
+            'betterdocs-elementor-category-box'      => CategoryBox::class,
+            'betterdocs-elementor-category-slate'    => CategorySlateLayout::class,
+            'betterdocs-faq-widget'                  => FAQ::class,
+            'betterdocs-code-snippet'                => CodeSnippet::class
         ];
 
         return $widget_arr;

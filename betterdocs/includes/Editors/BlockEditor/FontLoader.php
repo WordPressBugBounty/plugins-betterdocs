@@ -11,6 +11,7 @@ class FontLoader extends Base {
 		'betterdocs/breadcrumb',
 		'betterdocs/categorybox',
 		'betterdocs/categorygrid',
+		'betterdocs/category-slate-layout',
 		'betterdocs/archive-doc-list',
 		'betterdocs/single-doc-content',
 		'betterdocs/date',

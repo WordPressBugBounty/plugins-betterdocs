@@ -188,6 +188,79 @@ class Helper extends Base {
 		return $excerpt;
 	}
 
+	/**
+	 * Get current language from various multilingual plugins
+	 *
+	 * @return string|null Current language code
+	 */
+	public static function get_current_language() {
+		$current_language = null;
+
+		// WPML Support
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && $sitepress->is_setup_complete() ) {
+				$current_language = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : $sitepress->get_current_language();
+			}
+		}
+		// Polylang Support
+		elseif ( function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+		}
+		// qTranslate-X Support
+		elseif ( function_exists( 'qtranxf_getLanguage' ) ) {
+			$current_language = qtranxf_getLanguage();
+		}
+		// Weglot Support
+		elseif ( function_exists( 'weglot_get_current_language' ) ) {
+			$current_language = weglot_get_current_language();
+		}
+		// TranslatePress Support
+		elseif ( class_exists( 'TRP_Translate_Press' ) && function_exists( 'trp_get_current_language' ) ) {
+			$current_language = trp_get_current_language();
+		}
+
+		return $current_language;
+	}
+
+	/**
+	 * Check if any multilingual plugin is active
+	 *
+	 * @return bool
+	 */
+	public static function is_multilingual_active() {
+		return is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ||
+			   function_exists( 'pll_current_language' ) ||
+			   function_exists( 'qtranxf_getLanguage' ) ||
+			   function_exists( 'weglot_get_current_language' ) ||
+			   ( class_exists( 'TRP_Translate_Press' ) && function_exists( 'trp_get_current_language' ) );
+	}
+
+	/**
+	 * Check if we should apply language filtering
+	 * Only apply on frontend or when specifically requested
+	 *
+	 * @return bool
+	 */
+	public static function should_apply_language_filtering() {
+		// Don't apply language filtering in admin context unless it's a frontend request
+		if ( is_admin() ) {
+			// Allow language filtering for REST API requests that are frontend-facing
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				// Check if this is a frontend REST request (not admin)
+				$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+				// Don't filter admin REST requests for glossaries management
+				if ( strpos( $request_uri, '/wp/v2/glossaries' ) !== false ) {
+					return false; // Don't filter admin glossaries management
+				}
+			}
+			return false; // Don't filter other admin requests
+		}
+
+		// Apply filtering on frontend
+		return true;
+	}
+
 	public static function get_current_letter_docs( $current_letter, $limit = '' ) {
 		global $wpdb;
 
@@ -199,6 +272,24 @@ class Helper extends Base {
 
 		// if($enable_glossaries && $encyclopeia_suorce === 'glossaries'){
 		if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
+			$lang_join = '';
+			$lang_where = '';
+
+			// Add language filtering if multilingual plugin is active and we should apply filtering
+			$current_language = self::get_current_language();
+			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// For WPML, use icl_translations table
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
+					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
+				}
+				// For Polylang, use term_relationships with language taxonomy
+				elseif ( function_exists( 'pll_current_language' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON t.term_id = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
+					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
+				}
+			}
+
 			$query = "
                 SELECT
                     t.term_id,
@@ -217,10 +308,12 @@ class Helper extends Base {
                     {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
                 LEFT JOIN
                     {$wpdb->termmeta} m ON t.term_id = m.term_id
+                $lang_join
                 WHERE
                     tt.taxonomy = 'glossaries'
                 AND
-                    LEFT(t.name, 1) = %s
+                    SUBSTRING(t.name, 1, 1) = %s
+                $lang_where
                 GROUP BY
                     t.term_id
                 ORDER BY
@@ -228,12 +321,32 @@ class Helper extends Base {
                 $limit
             ";
 		} else {
+			$lang_join = '';
+			$lang_where = '';
+
+			// Add language filtering for docs if multilingual plugin is active and we should apply filtering
+			$current_language = self::get_current_language();
+			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// For WPML, use icl_translations table
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = {$wpdb->posts}.ID AND icl_t.element_type = 'post_docs'";
+					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
+				}
+				// For Polylang, use term_relationships with language taxonomy
+				elseif ( function_exists( 'pll_current_language' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
+					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
+				}
+			}
+
 			$query = "
                 SELECT ID, post_title, post_excerpt, guid, post_content
                 FROM {$wpdb->posts}
+                $lang_join
                 WHERE post_type = 'docs'
                 AND post_status = 'publish'
-                AND LEFT(post_title, 1) = %s
+                AND SUBSTRING(post_title, 1, 1) = %s
+                $lang_where
                 ORDER BY post_date DESC
                 $limit
             ";
@@ -302,11 +415,31 @@ class Helper extends Base {
     public static function get_glossaries() {
         global $wpdb;
 
+        $lang_join = '';
+        $lang_where = '';
+
+        // Add language filtering if multilingual plugin is active and we should apply filtering
+        $current_language = self::get_current_language();
+        if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+            // For WPML, use icl_translations table
+            if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+                $lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
+                $lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
+            }
+            // For Polylang, use term_relationships with language taxonomy
+            elseif ( function_exists( 'pll_current_language' ) ) {
+                $lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON t.term_id = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
+                $lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
+            }
+        }
+
         $query = "
             SELECT t.name
             FROM {$wpdb->terms} t
             INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+            $lang_join
             WHERE tt.taxonomy = 'glossaries'
+            $lang_where
             ORDER BY t.name ASC
         ";
 
@@ -322,6 +455,10 @@ class Helper extends Base {
 	 * @return string $layout
 	 */
 	public static function determine_search_layout( $layout ) {
+		if ( $layout ) {
+			return $layout;
+		}
+
 		$search_layout       = betterdocs()->customizer->defaults->get( 'betterdocs_search_layout_select' );
 		$docs_layout         = betterdocs()->customizer->defaults->get( 'betterdocs_docs_layout_select' );
 		$archive_page_layout = betterdocs()->customizer->defaults->get( 'betterdocs_archive_layout_select' );
@@ -336,9 +473,9 @@ class Helper extends Base {
         } else if ( is_tax( 'doc_tag' ) && ! $search_layout ) {
             $layout = 'layout-1';
         } else if ( is_tax( 'doc_category' ) ) {
-            if ( $archive_page_layout != 'layout-7' && ! $search_layout ) {
+           if ( $archive_page_layout != 'layout-7' && $archive_page_layout != 'layout-8' && ! $search_layout ) {
                 $layout = 'layout-1';
-            } else if ( $archive_page_layout == 'layout-7' && ! $search_layout ) {
+            } else if ( ( $archive_page_layout == 'layout-7' && ! $search_layout ) || ( $archive_page_layout == 'layout-8' && ! $search_layout ) ) {
                 $layout = 'layout-2';
             }
         } else if ( is_singular( 'docs' ) ) {
@@ -523,6 +660,13 @@ class Helper extends Base {
 
         return isset( $icons[$language] ) ? $icons[$language] : '📄';
     }
+
+	public function is_tag_enabled() {
+		global $post;
+		$product_terms = wp_get_object_terms( $post->ID, 'doc_tag' );
+		$enable_tags = betterdocs()->settings->get( 'enable_tags', false );
+		return ! empty( $product_terms ) && $enable_tags;
+	}
 
 	public static function get_max_doc_category_order_from_term_meta() {
 		global $wpdb;

@@ -1,5 +1,5 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+	 viewBox="0 0 100 100" xml:space="preserve">
 <g id="Icon">
 	<path class="st0" d="M90.6,87c0,3.4-1.3,6.6-3.7,9c-2.4,2.4-5.6,3.7-9,3.7H22.5c-3.4,0-6.6-1.3-9-3.7c-2.4-2.4-3.7-5.6-3.7-9V13.1
 		c0-3.4,1.3-6.6,3.7-9c2.4-2.4,5.6-3.7,9-3.7h39.7c2.1,0,4.2,0.8,5.7,2.4l20.4,20.4c1.5,1.5,2.4,3.6,2.4,5.7V87z M83.7,87V28.9

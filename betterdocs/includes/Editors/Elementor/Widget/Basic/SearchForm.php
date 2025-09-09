@@ -104,6 +104,77 @@ class SearchForm extends BaseWidget {
 			]
 		);
 
+		$this->add_control(
+			'search_modal_layout',
+			[
+				'label'       => __( 'Search Modal Layout', 'betterdocs' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => 'layout-1',
+				'label_block' => false,
+				'options'     => [
+					'layout-1'     => esc_html__( 'Layout 1', 'betterdocs' ),
+					'docs-archive' => esc_html__( 'Layout 2', 'betterdocs' ),
+					'sidebar'      => esc_html__( 'Layout 3', 'betterdocs' )
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ]
+				]
+			]
+		);
+
+		$this->add_control(
+			'search_modal_width',
+			[
+				'label'      => __( 'Width', 'betterdocs' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => [ '%', 'px' ],
+				'range'      => [
+					'%' => [
+						'min' => 10,
+						'max' => 100,
+					],
+					'px' => [
+						'min' => 100,
+						'max' => 1200,
+					],
+				],
+				'default'    => [
+					'unit' => '%',
+					'size' => 100,
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-search-modal-archive' => 'width: {{SIZE}}{{UNIT}};max-width: 100%;',
+					'{{WRAPPER}} .betterdocs-search-modal-sidebar' => 'width: {{SIZE}}{{UNIT}};',
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'docs-archive', 'sidebar' ]
+				]
+			]
+		);
+
+		$this->add_control(
+			'search_modal_position',
+			[
+				'label'   => __( 'Position', 'betterdocs' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'left',
+				'options' => [
+					'left'  => __( 'Left', 'betterdocs' ),
+					'right' => __( 'Right', 'betterdocs' ),
+				],
+				'selectors' => [
+					'{{WRAPPER}}' => 'text-align: {{VALUE}};',
+					'{{WRAPPER}} .betterdocs-search-modal-archive' => 'display: inline-block; text-align: left;',
+					'{{WRAPPER}} .betterdocs-search-modal-sidebar' => 'display: inline-block; text-align: left;',
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'docs-archive', 'sidebar' ]
+				]
+			]
+		);
+
 		$this->end_controls_section();
 	}
 
@@ -114,6 +185,21 @@ class SearchForm extends BaseWidget {
 				'label'     => __( 'Modal Query', 'betterdocs' ),
 				'condition' => [
 					'layout_select' => [ 'layout-2' ]
+				]
+			]
+		);
+
+		$this->add_control(
+			'search_modal_layout',
+			[
+				'label'       => __( 'Search Modal Layout', 'betterdocs' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => 'layout-1',
+				'label_block' => false,
+				'options'     => [
+					'layout-1'     => esc_html__( 'Layout 1', 'betterdocs' ),
+					'docs-archive' => esc_html__( 'Layout 2', 'betterdocs' ),
+					'sidebar'      => esc_html__( 'Layout 3', 'betterdocs' )
 				]
 			]
 		);
@@ -239,6 +325,8 @@ class SearchForm extends BaseWidget {
 		$this->end_controls_section();
 	}
 
+
+
 	public function return_mod_terms( $accumulator, $term ) {
 		$accumulator[ $term->term_id ] = htmlspecialchars_decode( $term->name );
 		return $accumulator;
@@ -267,7 +355,36 @@ class SearchForm extends BaseWidget {
 			'section_search_field_heading',
 			[
 				'label' => __( 'Search Heading', 'betterdocs' ),
-				'type'  => Controls_Manager::TEXT
+				'type'  => Controls_Manager::TEXT,
+				'condition' => [
+					'layout_select' => 'layout-1',
+					'search_modal_layout' => 'layout-1'
+				],
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => [
+						[
+							'name' => 'layout_select',
+							'operator' => '==',
+							'value' => 'layout-1'
+						],
+						[
+							'relation' => 'and',
+							'terms' => [
+								[
+									'name' => 'layout_select',
+									'operator' => '==',
+									'value' => 'layout-2'
+								],
+								[
+									'name' => 'search_modal_layout',
+									'operator' => '==',
+									'value' => 'layout-1'
+								]
+							]
+						]
+					]
+				]
 			]
 		);
 
@@ -275,7 +392,36 @@ class SearchForm extends BaseWidget {
 			'section_search_field_sub_heading',
 			[
 				'label' => __( 'Search Subheading', 'betterdocs' ),
-				'type'  => Controls_Manager::TEXT
+				'type'  => Controls_Manager::TEXT,
+				'condition' => [
+					'layout_select' => 'layout-1',
+					'search_modal_layout' => 'layout-1'
+				],
+				'conditions' => [
+					'relation' => 'or',
+					'terms' => [
+						[
+							'name' => 'layout_select',
+							'operator' => '==',
+							'value' => 'layout-1'
+						],
+						[
+							'relation' => 'and',
+							'terms' => [
+								[
+									'name' => 'layout_select',
+									'operator' => '==',
+									'value' => 'layout-2'
+								],
+								[
+									'name' => 'search_modal_layout',
+									'operator' => '==',
+									'value' => 'layout-1'
+								]
+							]
+						]
+					]
+				]
 			]
 		);
 
@@ -409,7 +555,8 @@ class SearchForm extends BaseWidget {
 				'label'     => __( 'Search Box', 'betterdocs' ),
 				'tab'       => Controls_Manager::TAB_STYLE,
 				'condition' => [
-					'layout_select' => 'layout-2'
+					'layout_select' => 'layout-2',
+					'search_modal_layout' => [ 'layout-1' ]
 				]
 			]
 		);
@@ -687,7 +834,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Field Background Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'background: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar, {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform' => 'background: {{VALUE}};'
 				]
 			]
 		);
@@ -698,7 +845,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-input' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-input, {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform .betterdocs-searchform-input-wrap .betterdocs-search-command' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -707,7 +854,7 @@ class SearchForm extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'search_field_text_typography_layout_2',
-				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-input'
+				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-input,, {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform .betterdocs-searchform-input-wrap .betterdocs-search-command'
 			]
 		);
 
@@ -718,7 +865,7 @@ class SearchForm extends BaseWidget {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar, {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
 				]
 			]
 		);
@@ -731,6 +878,10 @@ class SearchForm extends BaseWidget {
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'layout-1' ]
 				]
 			]
 		);
@@ -743,6 +894,10 @@ class SearchForm extends BaseWidget {
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'layout-1' ]
 				]
 			]
 		);
@@ -752,8 +907,12 @@ class SearchForm extends BaseWidget {
 			[
 				'name'     => 'advanced_search_border_layout_2',
 				'label'    => esc_html__( 'Search Box Border', 'betterdocs' ),
-				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar'
-			]
+				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar',
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'layout-1' ]
+				]
+			],
 		);
 
 		$this->add_control(
@@ -768,6 +927,10 @@ class SearchForm extends BaseWidget {
 				],
 				'selectors'  => [
 					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'width: {{SIZE}}{{UNIT}}; height: auto;'
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'layout-1' ]
 				]
 			]
 		);
@@ -780,6 +943,10 @@ class SearchForm extends BaseWidget {
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+				],
+				'condition' => [
+					'layout_select' => [ 'layout-2' ],
+					'search_modal_layout' => [ 'layout-1' ]
 				]
 			]
 		);
@@ -799,7 +966,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-icon g path' => 'fill: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-icon g path, {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform .betterdocs-searchform-input-wrap svg path' => 'fill: {{VALUE}};'
 				]
 			]
 		);
@@ -816,7 +983,7 @@ class SearchForm extends BaseWidget {
 					]
 				],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-icon' => 'width: {{SIZE}}{{UNIT}}; height: auto;'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-input-wrapper .search-icon,  {{WRAPPER}} .betterdocs-search-form-widget-wrapper .betterdocs-live-search .betterdocs-searchform .betterdocs-searchform-input-wrap svg' => 'width: {{SIZE}}{{UNIT}}; height: auto;'
 				]
 			]
 		);
@@ -836,7 +1003,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button' => 'color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button, {{WRAPPER}} .betterdocs-search-modal-archive .betterdocs-live-search .betterdocs-searchform .search-button' => 'color: {{VALUE}};'
 				]
 			]
 		);
@@ -847,7 +1014,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Background Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button' => 'background-color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button, {{WRAPPER}} .betterdocs-search-modal-archive .betterdocs-live-search .betterdocs-searchform .search-button' => 'background-color: {{VALUE}};'
 				]
 			]
 		);
@@ -859,7 +1026,7 @@ class SearchForm extends BaseWidget {
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+					'{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button, {{WRAPPER}} .betterdocs-search-modal-archive .betterdocs-live-search .betterdocs-searchform .search-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
 				]
 			]
 		);
@@ -868,7 +1035,7 @@ class SearchForm extends BaseWidget {
 			Group_Control_Typography::get_type(),
 			[
 				'name'     => 'field_search_button_typography_layout_2',
-				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button'
+				'selector' => '{{WRAPPER}} .betterdocs-search-layout-1 .search-bar .search-button, {{WRAPPER}} .betterdocs-search-modal-archive .betterdocs-live-search .betterdocs-searchform .search-button'
 			]
 		);
 
@@ -913,7 +1080,7 @@ class SearchForm extends BaseWidget {
 				'label'     => esc_html__( 'Field Background Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-header .betterdocs-searchform-input-wrap' => 'background-color: {{VALUE}};'
+					'{{WRAPPER}} .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-header' => 'background-color: {{VALUE}};'
 				]
 			]
 		);
@@ -929,7 +1096,7 @@ class SearchForm extends BaseWidget {
 		$this->add_responsive_control(
 			'search_modal_field_color',
 			[
-				'label'     => esc_html__( 'Field Color', 'betterdocs' ),
+				'label'     => esc_html__( 'Field Text Color', 'betterdocs' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-header .betterdocs-searchform-input-wrap .betterdocs-search-field' => 'color: {{VALUE}};'
@@ -1432,6 +1599,8 @@ class SearchForm extends BaseWidget {
 
 	public function render_callback() {
 		$settings = &$this->attributes;
+
+		// Always ensure content is output to prevent empty widget background
 		if ( $settings['layout_select'] == 'layout-1' ) {
 			$this->views( 'widgets/search-form' );
 		} else {
@@ -1440,11 +1609,25 @@ class SearchForm extends BaseWidget {
 			$doc_categories_ids = isset( $settings['search_modal_query_term_ids'] ) ? $settings['search_modal_query_term_ids'] : '';
 			$doc_ids            = isset( $settings['search_modal_query_doc_ids'] ) ? $settings['search_modal_query_doc_ids'] : '';
 			$faq_categories_ids = isset( $settings['search_modal_query_faq_term_ids'] ) ? $settings['search_modal_query_faq_term_ids'] : '';
+			$search_modal_layout = isset( $settings['search_modal_layout'] ) ? $settings['search_modal_layout'] : 'layout-1';
 			$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
 
-			// $faq_terms          = isset( $settings['include_faq'] ) ?  implode(',', $settings['include_faq']) : '';
-			// $doc_terms          = isset( $settings['include_doc_categories'] ) ? implode(',', $settings['include_doc_categories'] ) : '';
-			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="' . ( isset( $settings['section_search_field_heading_tag'] ) ? $settings['section_search_field_heading_tag'] : 'h2' ) . '" subheading_tag="' . ( isset( $settings['section_search_field_subheading_tag'] ) ? $settings['section_search_field_subheading_tag'] : 'h3' ) . '" search_button_text="Search" layout="layout-1" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '"]' );
+			// Ensure we always output content, especially in edit mode
+			echo '<div class="betterdocs-search-form-widget-wrapper">';
+			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="' . ( isset( $settings['section_search_field_heading_tag'] ) ? $settings['section_search_field_heading_tag'] : 'h2' ) . '" subheading_tag="' . ( isset( $settings['section_search_field_subheading_tag'] ) ? $settings['section_search_field_subheading_tag'] : 'h3' ) . '" search_button_text="Search" layout="' . $search_modal_layout . '" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '"]' );
+			echo '</div>';
+		}
+
+		// Add editor-specific styles to prevent empty widget background
+		if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+			echo '<style>
+				.elementor-widget-betterdocs-search-form {
+					background-color: transparent !important;
+				}
+				.elementor-widget-betterdocs-search-form .elementor-widget-container {
+					min-height: 50px;
+				}
+			</style>';
 		}
 	}
 
@@ -1476,6 +1659,11 @@ class SearchForm extends BaseWidget {
 		return [
 			'shortcode_attr' => $_shortcode_attributes
 		];
+	}
+
+	// Prevent empty widget background in Elementor
+	protected function should_print_empty() {
+		return false;
 	}
 
 	// In plain mode, render without shortcode

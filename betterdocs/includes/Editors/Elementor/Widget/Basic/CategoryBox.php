@@ -1596,14 +1596,17 @@ class CategoryBox extends BaseWidget {
 				$meta_value = ! empty( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';
 			}
 
-			$terms_query['meta_query'] = [
-				'relation' => 'OR',
-				[
-					'key'     => 'doc_category_knowledge_base',
-					'value'   => $meta_value,
-					'compare' => 'LIKE'
-				]
-			];
+			// Only apply meta_query if we have a valid knowledge base value
+			if ( ! empty( $meta_value ) ) {
+				$terms_query['meta_query'] = [
+					'relation' => 'OR',
+					[
+						'key'     => 'doc_category_knowledge_base',
+						'value'   => $meta_value,
+						'compare' => 'LIKE'
+					]
+				];
+			}
 		}
 
 		$kb_slug = isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';

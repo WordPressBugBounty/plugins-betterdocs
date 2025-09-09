@@ -39,7 +39,14 @@ $_category_ids         = [];
 $_is_single            = false;
 $_is_doc_category      = false;
 $_current_doc_category = null;
-$_icon                 = betterdocs()->template_helper->icon( isset( $list_icon_name ) ? $list_icon_name : 'list' );
+
+// Check if list icon should be shown
+$_show_list_icon = true;
+if ( isset( $show_list_icon ) && $show_list_icon === false ) {
+	$_show_list_icon = false;
+}
+
+$_icon = $_show_list_icon ? betterdocs()->template_helper->icon( isset( $list_icon_name ) ? $list_icon_name : 'list' ) : '';
 
 if ( is_single() ) {
 	$_is_single    = true;

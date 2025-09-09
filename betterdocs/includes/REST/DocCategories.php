@@ -126,7 +126,7 @@ class DocCategories extends BaseAPI {
 
 		// Determine allowed post statuses based on user permissions
 		$post_status = ['publish'];
-		if( is_user_logged_in() ) {
+		if( current_user_can( 'read_private_docs' ) ) {
 			$post_status[] = 'private';
 		}
 

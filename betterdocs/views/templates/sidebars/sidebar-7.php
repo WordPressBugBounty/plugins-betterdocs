@@ -27,21 +27,21 @@ if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 	<?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="betterdocs-sidebar-content betterdocs-category-sidebar betterdocs-height">
 		<?php
-		if ( $enable_sidebar_search ) {
-			$search_placeholder = betterdocs()->settings->get( 'search_placeholder' );
-			$number_of_docs     = isset( $number_of_docs ) ? $number_of_docs : '';
-			$number_of_faqs     = isset( $number_of_faqs ) ? $number_of_faqs : '';
-			$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
+			if ( $enable_sidebar_search ) {
+				$search_placeholder = betterdocs()->settings->get( 'search_placeholder' );
+				$number_of_docs     = isset( $number_of_docs ) ? $number_of_docs : '';
+				$number_of_faqs     = isset( $number_of_faqs ) ? $number_of_faqs : '';
+				$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
 
-			echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" layout="sidebar" placeholder="' . esc_html( $search_placeholder ) . '"]' );
-		}
+				echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" layout="sidebar" placeholder="' . esc_html( $search_placeholder ) . '"]' );
+			}
 
 			$terms_orderby = betterdocs()->settings->get( 'terms_orderby' );
 			$terms_order   = betterdocs()->settings->get( 'terms_order' );
 
-		if ( betterdocs()->settings->get( 'alphabetically_order_term' ) ) {
-			$terms_orderby = 'name';
-		}
+			if ( betterdocs()->settings->get( 'alphabetically_order_term' ) ) {
+				$terms_orderby = 'name';
+			}
 
 			$title_tag = betterdocs()->customizer->defaults->get( 'betterdocs_sidebar_title_tag' );
 
@@ -75,6 +75,6 @@ if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 			);
 
 			echo do_shortcode( '[betterdocs_category_grid ' . $attributes . ']' );
-			?>
+		?>
 	</div>
 </aside>

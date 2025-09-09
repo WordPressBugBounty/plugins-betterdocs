@@ -34,5 +34,11 @@ if ( ! empty( $product_terms ) ) {
 	?>
 
 <div <?php echo $wrapper_class; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<?php echo implode( ', ', $_terms ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<?php
+	if ( ! isset( $no_comma_seperator ) ) {
+		echo implode( ', ', $_terms ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	} else {
+		echo implode( ' ', $_terms ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	?>
 </div>

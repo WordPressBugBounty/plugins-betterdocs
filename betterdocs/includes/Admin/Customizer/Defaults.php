@@ -131,9 +131,7 @@ class Defaults extends Base {
 			'archive_last_updated_time_layout_7'           => '',
 			'archive_last_updated_time_layout_7_font_size' => '12',
 			'archive_last_updated_time_layout_7_color'     => '#475467',
-			'archive_last_updated_time_layout_7_hover_color' => '#475467',
 			'archive_last_updated_time_layout_7_background_color' => '#FFFCF5',
-			'archive_last_updated_time_layout_7_background_hover_color' => '#FFFCF5',
 			'betterdocs_archive_page_item_count_hover_color_layout_7' => '#475467',
 			'archive_docs_list_layout_7'                   => '',
 			'archive_docs_list_title_tag_layout_7'         => 'h2',
@@ -141,10 +139,6 @@ class Defaults extends Base {
 			'archive_docs_list_title_hover_color_layout_7' => '#1D2939',
 			'archive_docs_list_title_font_size_layout_7'   => '24',
 			'archive_docs_list_icon_size_layout_7'         => '32',
-			'archive_docs_list_last_updated_time_font_size_layout_7' => '12',
-			'archive_docs_list_last_updated_time_font_color_layout_7' => '#475467',
-			'archive_docs_list_last_updated_time_font_hover_color_layout_7' => '#475467',
-			'archive_docs_list_last_updated_time_background_color_layout_7' => '#FFFCF5',
 			'archive_docs_list_last_updated_time_background_hover_color_layout_7' => '#FFFCF5',
 			'archive_docs_list_excerpt_font_size_layout_7' => '16',
 			'archive_docs_list_excerpt_font_color_layout_7' => '#475467',
@@ -1077,6 +1071,7 @@ class Defaults extends Base {
 			'archive_category_margin_left_layout_7'        => '0',
 			'archive_search_wrapper'                       => '',
 			'archive_search_toogle'                        => false,
+			'archive_content_area_search_toogle'           => true,
 			'archive_search_width'                         => '100',
 			'archive_search_max_width'                     => '1400',
 			'archive_search_margin'                        => '',
@@ -1222,7 +1217,45 @@ class Defaults extends Base {
 			'betterdocs_sidebar_list_item_padding_left_layout_7' => '0',
 			'betterdocs_sidebar_list_item_active_color_layout_7' => '#a1dcc0',
 			'betterdocs_sidebar_list_item_active_color_layout_7_2' => '#e8fff4',
-			'toc_active_item_border_color_layout_8_9'      => '#A1DCC0',
+			'toc_active_item_border_color_layout_8_9'      => '#e8fff4',
+			'toc_item_hover_bg_color_layout_10'      => '#A1DCC0',
+			'sidebar_tech_layout_wrapper'      			   => '',
+			'betterdocs_sidebar_border_right_width_layout_8' => '1',
+			'betterdocs_sidebar_border_right_color_layout_8' => '#eaecf0',
+
+			// Layout-8 Sidebar defaults
+			'betterdocs_sidebar_title_tag_layout_8'        => 'h2',
+			'betterdocs_sidebar_title_color_layout_8'      => '#3f5876',
+			'betterdocs_sidebar_title_font_size_layout_8'  => '20',
+			'betterdocs_sidebar_title_margin_layout_8' => [
+				'input1' => 0,
+				'input2' => 0,
+				'input3' => 0,
+				'input4' => 0
+			],
+			'betterdocs_sidebar_title_padding_layout_8' => [
+				'input1' => 0,
+				'input2' => 0,
+				'input3' => 0,
+				'input4' => 0
+			],
+			'betterdocs_sidebar_collapsible_arrow_color_layout_8' => '#3f5876',
+			'betterdocs_sidebar_list_item_font_size_layout_8' => '14',
+			'betterdocs_sidebar_list_item_color_layout_8'  => '#667085',
+			'betterdocs_sidebar_list_item_hover_background_color_layout_8' => '#e8fff4',
+			'betterdocs_sidebar_list_item_hover_color_layout_8' => '#667085',
+			'betterdocs_sidebar_list_item_margin_layout_8' => [
+				'input1' => 1,
+				'input2' => 0,
+				'input3' => 0,
+				'input4' => 0
+			],
+			'betterdocs_sidebar_list_item_padding_layout_8' => [
+				'input1' => 7,
+				'input2' => 8,
+				'input3' => 7,
+				'input4' => 8
+			],
 			'search_modal_query_doc_ids'                   => '',
 			'search_modal_query_doc_term_ids'              => '',
 			'search_modal_query_type'                      => 'popular_docs',
@@ -1270,6 +1303,23 @@ class Defaults extends Base {
 			'betterdocs_article_summary_border_color' => '#EAECF0',
 			'betterdocs_article_summary_border_width' => '1',
 			'betterdocs_article_summary_border_radius' => '8',
+
+			// Layout-8 specific defaults
+			'betterdocs_docs_page_column_number_layout_8' => '4',
+			'betterdocs_docs_page_column_gap_layout_8' => '48',
+			'betterdocs_docs_page_icon_size_layout_8' => '32',
+			'betterdocs_docs_page_category_title_font_size_layout_8' => '24',
+			'betterdocs_docs_page_docs_list_item_color_layout_8' => '#475467',
+			'betterdocs_docs_page_docs_list_item_hover_color_layout_8' => '#00b884',
+			'betterdocs_docs_page_docs_list_item_font_size_layout_8' => '16',
+			'betterdocs_docs_page_docs_list_item_margin_layout_8' => [
+				'input1' => 24,
+				'input2' => 0,
+				'input3' => 0,
+				'input4' => 0
+			],
+			'archive_docs_list_border_width_layout_8' => '1',
+			'archive_docs_list_border_color_layout_8' => '#EAECF0',
 		];
 
 		if ( ! empty( $key ) ) {

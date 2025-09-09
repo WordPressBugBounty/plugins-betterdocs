@@ -54,7 +54,7 @@ class SearchForm extends Shortcode {
 
 		$post_status = ['publish'];
 
-		if( is_user_logged_in() ) {
+		if( current_user_can( 'read_private_docs' ) ) {
 			array_push($post_status,  'private');
 		}
 

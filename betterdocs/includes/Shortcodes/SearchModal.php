@@ -89,6 +89,27 @@ class SearchModal extends Shortcode {
 				}
 			}
 			echo '></div>';
+		} else if ( isset( $atts['layout'] ) && $atts['layout'] == 'docs-archive' ) {
+			$attributes = [
+				'placeholder'        => isset( $atts['placeholder'] ) ? $atts['placeholder'] : '',
+				'buttontext'         => isset( $atts['search_button_text'] ) ? $atts['search_button_text'] : '',
+				'numberofdocs'       => isset( $atts['number_of_docs'] ) ? $atts['number_of_docs'] : 5,
+				'numberoffaqs'       => isset( $atts['number_of_faqs'] ) ? $atts['number_of_faqs'] : 5,
+				'faq_categories_ids' => isset( $atts['faq_categories_ids'] ) ? $atts['faq_categories_ids'] : '',
+				'doc_ids'            => isset( $atts['doc_ids'] ) ? $atts['doc_ids'] : '',
+				'doc_categories_ids' => isset( $atts['doc_categories_ids'] ) ? $atts['doc_categories_ids'] : '',
+				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
+				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search']
+			];
+			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
+
+			echo '<div class="betterdocs-search-modal-archive" id="betterdocs-search-modal"';
+			foreach ( $attributes as $key => $value ) {
+				if ( ! empty( $value ) ) {
+					echo ' data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+				}
+			}
+			echo '></div>';
 		} elseif ( isset( $atts['layout'] ) && $atts['layout'] == 'sidebar' ) {
 			$attributes = [
 				'placeholder'        => $atts['placeholder'],

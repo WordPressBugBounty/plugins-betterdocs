@@ -305,6 +305,24 @@ class CategoryArchiveHeader extends BaseWidget {
 			return [];
 		}
 
+		// Ensure we have a term object, not a post type object
+		if ( ! isset( $current_category->term_id ) || ! isset( $current_category->slug ) ) {
+			// If it's not a term object, try to get the first category as fallback
+			$args             = [
+				'taxonomy'   => 'doc_category',
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+				'hide_empty' => false,
+				'number'     => 1
+			];
+			$categories       = get_terms( $args );
+			$current_category = ! empty( $categories ) ? $categories[0] : null;
+
+			if ( ! $current_category ) {
+				return [];
+			}
+		}
+
 		$args = betterdocs()->query->docs_query_args(
 			[
 				'term_id'        => $current_category->term_id,

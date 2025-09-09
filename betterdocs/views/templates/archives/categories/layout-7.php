@@ -29,9 +29,9 @@
 
 <div class="betterdocs-wrapper betterdocs-taxonomy-wrapper betterdocs-archive-layout-7 betterdocs-category-archive-wrapper betterdocs-wraper">
 	<?php
-	if ( betterdocs()->customizer->defaults->get( 'archive_search_toogle' ) ) {
-		betterdocs()->template_helper->search();
-	}
+		if ( betterdocs()->customizer->defaults->get( 'archive_search_toogle' ) ) {
+			betterdocs()->template_helper->search();
+		}
 
 		$content_area_classes = [
 			'betterdocs-content-wrapper betterdocs-display-flex',

@@ -25,6 +25,7 @@ use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\BetterdocsPrint;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocAuthor;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocsTag;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CodeSnippet;
+use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CategorySlateLayout;
 
 return [
 	'categorygrid'      => [
@@ -40,6 +41,14 @@ return [
 		'value'      => 'categorybox',
 		'visibility' => true,
 		'object'     => CategoryBox::class,
+		'demo'       => '',
+		'docs'       => ''
+	],
+	'category-slate-layout' => [
+		'label'      => __( 'BetterDocs Slate Layout', 'betterdocs' ),
+		'value'      => 'category-slate-layout',
+		'visibility' => true,
+		'object'     => CategorySlateLayout::class,
 		'demo'       => '',
 		'docs'       => ''
 	],

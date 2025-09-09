@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\Core;
 use WP_Query;
 use WP_Error;
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class Glossaries extends Base {
 	/**
@@ -29,21 +30,53 @@ class Glossaries extends Base {
 		add_action( 'rest_api_init', [ $this, 'register_api_endpoint' ] );
 		add_action( 'rest_api_init', [ $this, 'register_glossary_rest_fields' ] );
 		add_action( 'rest_glossaries_query', array( $this, 'glossaries_orderby_meta' ), 10, 2 );
+		add_action( 'rest_glossaries_query', array( $this, 'disable_language_filtering_for_admin_rest' ), 5, 2 );
+		// Ensure meta fields are properly exposed in REST API
+		add_filter( 'rest_prepare_glossaries', array( $this, 'add_meta_to_rest_response' ), 10, 3 );
 		// Enqueue Scripts
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
+		// Ensure existing glossaries have proper status
+		add_action( 'admin_init', [ $this, 'ensure_glossaries_have_status' ] );
 	}
 
 	public function register_post() {
+		// Register term meta fields for glossaries taxonomy
+		// Force register without duplicate checks to ensure they're properly registered
 		register_term_meta(
 			$this->category,
 			'status',
 			[
 				'show_in_rest' => true,
-				'single'       => true
+				'single'       => true,
+				'type'         => 'string', // Changed to string to match React expectation
+				'default'      => '1',
+				'sanitize_callback' => 'sanitize_text_field'
 			]
 		);
 
-		register_term_meta( $this->category, 'order', [ 'show_in_rest' => true, 'single' => true ] );
+		register_term_meta(
+			$this->category,
+			'order',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'string', // Changed to string for consistency
+				'default'      => '0',
+				'sanitize_callback' => 'sanitize_text_field'
+			]
+		);
+
+		register_term_meta(
+			$this->category,
+			'glossary_term_description',
+			[
+				'show_in_rest' => true,
+				'single'       => true,
+				'type'         => 'string',
+				'default'      => '',
+				'sanitize_callback' => 'wp_kses_post'
+			]
+		);
 	}
 
 	public function enqueue( $hook ) {
@@ -60,10 +93,12 @@ class Glossaries extends Base {
 				'betterdocs-admin-glossaries',
 				'betterdocs',
 				[
-					'dir_url'      => BETTERDOCS_ABSURL,
-					'rest_url'     => esc_url_raw( rest_url() ),
-					'free_version' => betterdocs()->version,
-					'nonce'        => wp_create_nonce( 'wp_rest' )
+					'dir_url'         => BETTERDOCS_ABSURL,
+					'rest_url'        => esc_url_raw( rest_url() ),
+					'free_version'    => betterdocs()->version,
+					'nonce'           => wp_create_nonce( 'wp_rest' ),
+					'current_language' => Helper::get_current_language(),
+					'is_multilingual' => Helper::is_multilingual_active()
 				]
 			);
 		}
@@ -71,6 +106,37 @@ class Glossaries extends Base {
 
 	public function output() {
 		betterdocs()->views->get( 'admin/glossaries' );
+	}
+
+	/**
+	 * Ensure existing glossaries have proper status meta
+	 * This fixes the issue where existing glossaries appear disabled
+	 */
+	public function ensure_glossaries_have_status() {
+		// Run this every time in admin to ensure status is properly set
+		// Get all glossaries terms
+		$all_terms = get_terms( array(
+			'taxonomy' => 'glossaries',
+			'hide_empty' => false,
+			'suppress_filters' => true // Bypass language filtering
+		) );
+
+		if ( ! empty( $all_terms ) && ! is_wp_error( $all_terms ) ) {
+			foreach ( $all_terms as $term ) {
+				$current_status = get_term_meta( $term->term_id, 'status', true );
+
+				// If status is empty or not set, set it to enabled ('1')
+				if ( empty( $current_status ) || $current_status === '' ) {
+					update_term_meta( $term->term_id, 'status', '1' );
+				}
+
+				// Also ensure order meta exists
+				$current_order = get_term_meta( $term->term_id, 'order', true );
+				if ( empty( $current_order ) || $current_order === '' ) {
+					update_term_meta( $term->term_id, 'order', '0' );
+				}
+			}
+		}
 	}
 
 
@@ -82,7 +148,8 @@ class Glossaries extends Base {
 	public function action_created_betterdocs_glossaries( $term_id ) {
 		$order = $this->get_max_taxonomy_order( 'glossaries' );
 		// update_term_meta( $term_id, 'order', $order++ );
-		update_term_meta( $term_id, 'status', 1 );
+		update_term_meta( $term_id, 'status', '1' ); // Set as string
+		update_term_meta( $term_id, 'order', '0' ); // Also set order
 	}
 
 	/**
@@ -330,6 +397,7 @@ class Glossaries extends Base {
 		$title       = $params->get_param( 'title' );
 		$description = $params->get_param( 'description' );
 		$slug        = $params->get_param( 'slug' );
+		$language    = $params->get_param( 'language' );
 
 		// Create the term
 		$new_term = wp_insert_term(
@@ -347,6 +415,21 @@ class Glossaries extends Base {
 		// Set the custom field description
 		$term_id = $new_term['term_id'];
 		update_term_meta( $term_id, 'glossary_term_description', $description ); //phpcs:ignore inline styles are need for the front-end
+
+		// Set language for multilingual plugins
+		if ( $language && Helper::is_multilingual_active() ) {
+			// WPML Support
+			if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+				global $sitepress;
+				if ( $sitepress && method_exists( $sitepress, 'set_element_language_details' ) ) {
+					$sitepress->set_element_language_details( $term_id, 'tax_glossaries', null, $language );
+				}
+			}
+			// Polylang Support
+			elseif ( function_exists( 'pll_set_term_language' ) ) {
+				pll_set_term_language( $term_id, $language );
+			}
+		}
 
 		$new_term =  $this->glossary_term_in_rest_api_schema($term_id, $description);
 		return ['status' => 'success', 'data' => $new_term];
@@ -378,13 +461,35 @@ class Glossaries extends Base {
 	}
 
 	public function update_glossaries( $request ) {
-		$params = $request->get_params();
-
 		$term_id     = $request->get_param( 'term_id' );
 		$title       = $request->get_param( 'title' );
 		$description = $request->get_param( 'description' );
 		$description = ( $description !== 'undefined' ) ? $description : '';
 		$slug        = $request->get_param( 'slug' );
+		$language    = $request->get_param( 'language' );
+
+		// Verify that we're updating the correct language version of the term
+		if ( $language && Helper::is_multilingual_active() ) {
+			$term_language = null;
+
+			// WPML Support
+			if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+				global $sitepress;
+				if ( $sitepress && method_exists( $sitepress, 'get_element_language_details' ) ) {
+					$lang_details = $sitepress->get_element_language_details( $term_id, 'tax_glossaries' );
+					$term_language = $lang_details ? $lang_details->language_code : null;
+				}
+			}
+			// Polylang Support
+			elseif ( function_exists( 'pll_get_term_language' ) ) {
+				$term_language = pll_get_term_language( $term_id );
+			}
+
+			// Only update if the term belongs to the current language
+			if ( $term_language && $term_language !== $language ) {
+				return ['status' => 'failed', 'data' => new \WP_Error( 'wrong_language', 'Cannot update term from different language' )];
+			}
+		}
 
 		// Check if there's old data in the default description field and transfer it to the custom field
 		$old_description = get_term_field( 'description', $term_id, 'glossaries' );
@@ -413,8 +518,16 @@ class Glossaries extends Base {
 	}
 
 	public function save_glossary_term_meta( $term_id, $tt_id ) {
+		// Debug: Log what's happening
+		error_log( 'BetterDocs Glossaries: save_glossary_term_meta called for term_id: ' . $term_id );
+		error_log( 'BetterDocs Glossaries: $_POST data: ' . print_r( $_POST, true ) );
+
 		if ( isset( $_POST['glossary_term_description'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			update_term_meta( $term_id, 'glossary_term_description', wp_kses_post( $_POST['glossary_term_description'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$description = wp_kses_post( wp_unslash( $_POST['glossary_term_description'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			error_log( 'BetterDocs Glossaries: Saving description: ' . $description );
+			update_term_meta( $term_id, 'glossary_term_description', $description );
+		} else {
+			error_log( 'BetterDocs Glossaries: glossary_term_description not found in $_POST' );
 		}
 	}
 
@@ -590,7 +703,19 @@ class Glossaries extends Base {
 	public function update_glossary_status( $params ) {
 		$term_id = $params->get_param( 'term_id' );
 		$status  = $params->get_param( 'status' );
-		return update_term_meta( $term_id, 'status', $status );
+
+		// Ensure status is a string ('0' or '1')
+		$status = $status ? '1' : '0';
+
+		$result = update_term_meta( $term_id, 'status', $status );
+
+		// Return success response with updated status
+		return array(
+			'success' => $result !== false,
+			'term_id' => $term_id,
+			'status' => $status,
+			'message' => $result !== false ? 'Status updated successfully' : 'Failed to update status'
+		);
 	}
 
 	public function fetch_faq_posts( $params ) {
@@ -598,12 +723,21 @@ class Glossaries extends Base {
 		$type = $params->get_param( 'type' );
 
 		if ( $type == 'category' ) {
-			$taxonomy_objects = get_terms(
-				[
-					'taxonomy'   => 'glossaries',
-					'hide_empty' => false,
-				]
-			);
+			$term_args = [
+				'taxonomy'   => 'glossaries',
+				'hide_empty' => false,
+			];
+
+			// Add language filtering if multilingual plugin is active and we should apply filtering
+			$current_language = Helper::get_current_language();
+			if ( $current_language && Helper::is_multilingual_active() && Helper::should_apply_language_filtering() ) {
+				// For WPML and Polylang, use 'lang' parameter
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) || function_exists( 'pll_current_language' ) ) {
+					$term_args['lang'] = $current_language;
+				}
+			}
+
+			$taxonomy_objects = get_terms( $term_args );
 
 			if ( $taxonomy_objects && ! is_wp_error( $taxonomy_objects ) ) :
 				foreach ( $taxonomy_objects as $term ) :
@@ -645,6 +779,7 @@ class Glossaries extends Base {
 	public function glossary_search( $request ) {
 
 		$title = $request['title'];
+		$lang = $request['lang'] ?? null;
 
 		// Perform the taxonomy search
 		$taxonomy_args = array(
@@ -652,6 +787,15 @@ class Glossaries extends Base {
 			'taxonomy'   => 'glossaries',
 			'hide_empty' => false
 		);
+
+		// Add language filtering if multilingual plugin is active
+		$language_to_use = $lang ?: Helper::get_current_language();
+		if ( $language_to_use && Helper::is_multilingual_active() ) {
+			// For WPML and Polylang, use 'lang' parameter
+			if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) || function_exists( 'pll_current_language' ) ) {
+				$taxonomy_args['lang'] = $language_to_use;
+			}
+		}
 
 		$taxonomies = get_terms( $taxonomy_args );
 
@@ -673,6 +817,79 @@ class Glossaries extends Base {
 			// Taxonomy not found
 			return new WP_Error( 'taxonomy_not_found', 'Taxonomy not found.', array( 'status' => 404 ) );
 		}
+	}
+
+	public function disable_language_filtering_for_admin_rest( $args, $request ) {
+		// Check if this is an admin REST request for glossaries management
+		if ( is_user_logged_in() && current_user_can( 'edit_others_posts' ) ) {
+			// Check if language parameter is explicitly provided in the request
+			$lang_param = $request->get_param( 'lang' );
+
+			if ( $lang_param ) {
+				// If language is specified, use it for filtering
+				$args['lang'] = $lang_param;
+			} else {
+				// If no language specified, remove language filtering to show all
+				unset( $args['lang'] );
+				// Add a temporary filter to bypass language restrictions
+				add_filter( 'get_terms', array( $this, 'ensure_all_glossaries_in_admin' ), 10, 3 );
+			}
+		}
+
+		return $args;
+	}
+
+	public function ensure_all_glossaries_in_admin( $terms, $taxonomies, $args ) {
+		// Only apply to glossaries taxonomy in admin context
+		if ( in_array( 'glossaries', (array) $taxonomies ) && is_user_logged_in() && current_user_can( 'edit_others_posts' ) ) {
+			// Remove this filter to prevent infinite loops
+			remove_filter( 'get_terms', array( $this, 'ensure_all_glossaries_in_admin' ), 10 );
+
+			// Get all glossaries terms without language filtering
+			$all_args = $args;
+			unset( $all_args['lang'] );
+			$all_args['suppress_filters'] = true; // Bypass all filters including language ones
+
+			$all_terms = get_terms( $all_args );
+
+			// Re-add the filter for future calls
+			add_filter( 'get_terms', array( $this, 'ensure_all_glossaries_in_admin' ), 10, 3 );
+
+			return is_wp_error( $all_terms ) ? $terms : $all_terms;
+		}
+
+		return $terms;
+	}
+
+	/**
+	 * Add meta fields to REST API response
+	 */
+	public function add_meta_to_rest_response( $response, $term, $request ) {
+		// Ensure meta fields are properly included
+		$meta = get_term_meta( $term->term_id );
+
+		// Format meta data as expected by React component
+		$response->data['meta'] = array();
+
+		if ( isset( $meta['status'] ) ) {
+			$response->data['meta']['status'] = $meta['status'];
+		} else {
+			$response->data['meta']['status'] = array( '1' ); // Default to enabled
+		}
+
+		if ( isset( $meta['order'] ) ) {
+			$response->data['meta']['order'] = $meta['order'];
+		} else {
+			$response->data['meta']['order'] = array( '0' ); // Default order
+		}
+
+		if ( isset( $meta['glossary_term_description'] ) ) {
+			$response->data['meta']['glossary_term_description'] = $meta['glossary_term_description'];
+		} else {
+			$response->data['meta']['glossary_term_description'] = array( '' );
+		}
+
+		return $response;
 	}
 
 	public function glossaries_orderby_meta( $args, $request ) {
@@ -697,6 +914,6 @@ class Glossaries extends Base {
 			'objects'
 		);
 
-		return rest_ensuree_response( $taxo );
+		return rest_ensure_response( $taxo );
 	}
 }

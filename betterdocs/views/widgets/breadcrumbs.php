@@ -137,7 +137,7 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 				</li>
 				<?php
 				if ( next( $breadcrumbs ) ) :
-					if ( $breadcrumbs_layout == 'layout-2' ) {
+					if ( $breadcrumbs_layout == 'layout-2' || $breadcrumbs_layout == 'layout-3' ) {
 						$view_object->get( 'template-parts/breadcrumb-delimiter-2' );
 					} else {
 						$view_object->get( 'template-parts/breadcrumb-delimiter-1' );

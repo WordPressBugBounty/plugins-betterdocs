@@ -46,7 +46,15 @@ class ArchiveList extends Block {
 	}
 
 	public function render( $attributes, $content ) {
+		if ( $this->attributes['layout'] == 'layout-2' ) {
+			// Layout 2 is handled by Pro version
+			add_action( 'archive_handbook_list', [$this, 'render_handbook_view'] );
+		}
 		$this->views( 'widgets/block-archive-list' );
+	}
+
+	public function render_handbook_view() {
+		// This method can be overridden by Pro version
 	}
 
 	public function view_params() {
@@ -85,6 +93,14 @@ class ArchiveList extends Block {
 
 		$term = ! empty( get_term_by( 'slug', $_term_slug, 'doc_category' ) ) ? get_term_by( 'slug', $_term_slug, 'doc_category' ) : get_term_by( 'slug', $_term_slug, 'doc_tag' );
 
+		// Determine posts per page based on pagination settings
+		$posts_per_page = -1; // default: show all posts
+		if ( $this->attributes['pagination'] && ( $this->attributes['layout'] == 'layout-1' || $this->attributes['layout'] == 'layout-3' || $this->attributes['layout'] == 'layout-4' ) ) {
+			$posts_per_page = isset( $this->attributes['postsPerPageLayoutTwo'] ) && $this->attributes['postsPerPageLayoutTwo'] > 0
+				? $this->attributes['postsPerPageLayoutTwo']
+				: 10;
+		}
+
 		$_docs_query = [
 			'term_id'        => isset( $term->term_id ) ? $term->term_id : 0,
 			'orderby'        => $this->attributes['orderby'],
@@ -92,7 +108,7 @@ class ArchiveList extends Block {
 			'postsOrderBy'   => $this->attributes['orderby'],
 			'postsOrder'     => $this->attributes['order'],
 			'kb_slug'        => '',
-			'posts_per_page' => $term == false ? 5 : -1,
+			'posts_per_page' => $posts_per_page,
 			'term_slug'      => isset( $term->slug ) ? $term->slug : ''
 		];
 
@@ -100,21 +116,28 @@ class ArchiveList extends Block {
 			'term'               => $term,
 			'nested_subcategory' => (bool) $this->attributes['nested_subcategory'],
 			'list_icon_name'     => ! empty( $this->attributes['listIconImageUrl'] ) ? [ 'value' => [ 'url' => str_replace( 'blob:', '', $this->attributes['listIconImageUrl'] ) ] ] : ( ! empty( $this->attributes['list_icon'] ) ? [ 'value' => [ 'url' => $this->attributes['list_icon'] ] ] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? [ 'value' => [ 'url' => betterdocs()->settings->get( 'docs_list_icon' )['url'] ] ] : [] ) ),
-			'query_args'          => betterdocs()->query->docs_query_args( $_docs_query ),
+			'query_args'         => betterdocs()->query->docs_query_args( $_docs_query ),
 			'title_tag'           => $this->attributes['listEntryHeadingTag'] ?? 'h2',
 			'docs_list_title_tag' => $this->attributes['listTitleTag'] ?? 'h2',
-			'layout'              => $this->attributes['layout'],
-			'posts_per_page'     => $this->attributes['postsPerPageLayoutTwo'],
+			'layout'             => $this->attributes['layout'],
+			'posts_per_page'     => $posts_per_page,
 			'list_icon_url'      => '',
 			'layout_type'        => 'block',
-			'archive_layout'     => 'layout-1'
+			'archive_layout'     => $this->attributes['layout']
 		];
 
-		if ( $this->attributes['pagination'] && $this->attributes['layout'] == 'layout-1' || $this->attributes['pagination'] && $this->attributes['layout'] == 'layout-3' ) {
-			$page                                  = get_query_var( 'paged' ) != '' ? get_query_var( 'paged' ) : 1;
-			$default_params['query_args']['paged'] = $page;
-			$default_params['query_args']['posts_per_page'] = 10;
+		if ( $this->attributes['pagination'] && ( $this->attributes['layout'] == 'layout-1' || $this->attributes['layout'] == 'layout-3' || $this->attributes['layout'] == 'layout-4' ) ) {
+			$page = get_query_var( 'paged' ) != '' ? get_query_var( 'paged' ) : 1;
+
+			// Use postsPerPageLayoutTwo for layouts 2, 3, and 4
+			$posts_per_page = isset( $this->attributes['postsPerPageLayoutTwo'] ) && $this->attributes['postsPerPageLayoutTwo'] > 0
+				? $this->attributes['postsPerPageLayoutTwo']
+				: 10;
+
+			$default_params['query_args']['paged']          = $page;
+			$default_params['query_args']['posts_per_page'] = $posts_per_page;
 			$default_params['page']                         = $page;
+			$default_params['posts_per_page']               = $posts_per_page;
 			$default_params['pagination']                   = $this->attributes['pagination'];
 		}
 

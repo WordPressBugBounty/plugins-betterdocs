@@ -15,6 +15,7 @@ use WPDeveloper\BetterDocs\Admin\Customizer\Controls\SeparatorControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\AlphaColorControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\RadioImageControl;
 use WPDeveloper\BetterDocs\Admin\Customizer\Controls\RangeValueControl;
+use WPDeveloper\BetterDocs\Admin\Customizer\Controls\MultiDimensionControl;
 
 class DocsPage extends Section {
 	/**
@@ -75,6 +76,10 @@ class DocsPage extends Section {
 							'layout-1' => [
 								'label' => __( 'Grid Layout', 'betterdocs' ),
 								'image' => $this->assets->icon( 'customizer/docs-page/layout-1.png', true )
+							],
+							'layout-8' => [
+								'label' => __( 'Slate Layout', 'betterdocs' ),
+								'image' => $this->assets->icon( 'customizer/docs-page/layout-8.png', true )
 							],
 							'layout-2' => [
 								'label' => __( 'Box Layout', 'betterdocs' ),
@@ -4358,6 +4363,250 @@ class DocsPage extends Section {
 					'priority'    => 58.4,
 					'input_attrs' => [
 						'class' => 'betterdocs_doc_page_explore_btn_borderr betterdocs-dimension'
+					]
+				]
+			)
+		);
+	}
+
+	// Layout-8 specific controllers
+	public function column_number_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_column_number_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_column_number_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_docs_page_column_number_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_doc_page_settings',
+					'settings'    => 'betterdocs_docs_page_column_number_layout_8',
+					'label'       => __( 'Column Number', 'betterdocs' ),
+					'priority'    => 16,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 1,
+						'max'    => 8,
+						'step'   => 1
+					]
+				]
+			)
+		);
+	}
+
+	public function column_gap_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_column_gap_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_column_gap_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_docs_page_column_gap_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_doc_page_settings',
+					'settings'    => 'betterdocs_docs_page_column_gap_layout_8',
+					'label'       => __( 'Gap Between Columns', 'betterdocs' ),
+					'priority'    => 16,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 0,
+						'max'    => 100,
+						'step'   => 1
+					]
+				]
+			)
+		);
+	}
+
+	public function icon_size_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_icon_size_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_icon_size_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_docs_page_icon_size_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_doc_page_settings',
+					'settings'    => 'betterdocs_docs_page_icon_size_layout_8',
+					'label'       => __( 'Icon Size', 'betterdocs' ),
+					'priority'    => 17,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 10,
+						'max'    => 100,
+						'step'   => 1
+					]
+				]
+			)
+		);
+	}
+
+	public function category_title_font_size_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_category_title_font_size_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_category_title_font_size_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_docs_page_category_title_font_size_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_doc_page_settings',
+					'settings'    => 'betterdocs_docs_page_category_title_font_size_layout_8',
+					'label'       => __( 'Category Title Font Size', 'betterdocs' ),
+					'priority'    => 18,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 10,
+						'max'    => 50,
+						'step'   => 1
+					]
+				]
+			)
+		);
+	}
+
+	public function docs_list_item_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_docs_list_item_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_docs_list_item_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_docs_page_docs_list_item_color_layout_8',
+				[
+					'label'    => __( 'Docs List Item Color', 'betterdocs' ),
+					'section'  => 'betterdocs_doc_page_settings',
+					'settings' => 'betterdocs_docs_page_docs_list_item_color_layout_8',
+					'priority' => 35
+				]
+			)
+		);
+	}
+
+	public function docs_list_item_hover_color_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_docs_list_item_hover_color_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_docs_list_item_hover_color_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_docs_page_docs_list_item_hover_color_layout_8',
+				[
+					'label'    => __( 'Docs List Item Hover Color', 'betterdocs' ),
+					'section'  => 'betterdocs_doc_page_settings',
+					'settings' => 'betterdocs_docs_page_docs_list_item_hover_color_layout_8',
+					'priority' => 36
+				]
+			)
+		);
+	}
+
+	public function docs_list_item_font_size_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_docs_list_item_font_size_layout_8',
+			[
+				'default'           => $this->defaults['betterdocs_docs_page_docs_list_item_font_size_layout_8'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_docs_page_docs_list_item_font_size_layout_8',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_doc_page_settings',
+					'settings'    => 'betterdocs_docs_page_docs_list_item_font_size_layout_8',
+					'label'       => __( 'Docs List Item Font Size', 'betterdocs' ),
+					'priority'    => 37,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 10,
+						'max'    => 30,
+						'step'   => 1
+					]
+				]
+			)
+		);
+	}
+
+	public function docs_list_item_margin_layout_8() {
+		$this->customizer->add_setting(
+			'betterdocs_docs_page_docs_list_item_margin_layout_8',
+			[
+				'default'    => $this->defaults['betterdocs_docs_page_docs_list_item_margin_layout_8'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_docs_page_docs_list_item_margin_layout_8',
+				[
+					'label'        => __( 'Docs List Item Margin (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_doc_page_settings',
+					'settings'     => 'betterdocs_docs_page_docs_list_item_margin_layout_8',
+					'priority'     => 40,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 24,
+						'input2' => 0,
+						'input3' => 0,
+						'input4' => 0
 					]
 				]
 			)

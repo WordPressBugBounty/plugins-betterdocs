@@ -65,12 +65,13 @@ class SearchForm extends Block {
 			$faq_categories_ids = isset( $settings['searchModalQueriesFaqGroupIds'] ) ? $settings['searchModalQueriesFaqGroupIds'] : '';
 			$searchHeading      = isset( $settings['searchHeading'] ) ? $settings['searchHeading'] : '';
 			$subHeading         = isset( $settings['searchSubHeading'] ) ? $settings['searchSubHeading'] : '';
+			$search_modal_layout = isset( $settings['searchModalLayout'] ) ? $settings['searchModalLayout'] : 'layout-1';
+			$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
 			$headingTag         = isset( $settings['searchHeadingTag'] ) ? $settings['searchHeadingTag'] : 'h2';
 			$subHeadingTag      = isset( $settings['searchSubHeadingTag'] ) ? $settings['searchSubHeadingTag'] : 'h3';
 			$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
-
 			echo '<div class="' . esc_attr( $settings['blockId'] ) . '">';
-			echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . esc_attr( $faq_categories_ids ) . '" doc_ids="' . esc_attr( $doc_ids ) . '" doc_categories_ids="' . esc_attr( $doc_categories_ids ) . '" number_of_docs="' . esc_attr( $number_of_docs ) . '" number_of_faqs="' . esc_attr( $number_of_faqs ) . '" search_button_text="Search" search_button="' . esc_attr( $search_button ) . '" popular_search="' . esc_attr( $popular_search ) . '" category_search="' . esc_attr( $category_search ) . '" layout="layout-1" heading="' . esc_attr( $searchHeading ) . '" subheading="' . esc_attr( $subHeading ) . '" heading_tag="' . esc_attr( $headingTag ) . '" subheading_tag="' . esc_attr( $subHeadingTag ) . '" placeholder="' . esc_attr( $settings['placeholderText'] ) . '"]' );
+			echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . esc_attr( $faq_categories_ids ) . '" doc_ids="' . esc_attr( $doc_ids ) . '" doc_categories_ids="' . esc_attr( $doc_categories_ids ) . '" number_of_docs="' . esc_attr( $number_of_docs ) . '" number_of_faqs="' . esc_attr( $number_of_faqs ) . '" search_button_text="Search" search_button="' . esc_attr( $search_button ) . '" popular_search="' . esc_attr( $popular_search ) . '" category_search="' . esc_attr( $category_search ) . '" layout="' . esc_attr( $search_modal_layout ) . '" heading="' . esc_attr( $searchHeading ) . '" subheading="' . esc_attr( $subHeading ) . '" heading_tag="' . esc_attr( $headingTag ) . '" subheading_tag="' . esc_attr( $subHeadingTag ) . '" placeholder="' . esc_attr( $settings['placeholderText'] ) . '"]' );
 			echo '</div>';
 		}
 	}

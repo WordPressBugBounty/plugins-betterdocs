@@ -133,6 +133,8 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-fontawesome', 'vendor/css/font-awesome5.css' );
 		$assets->register( 'betterdocs-blocks-category-box', 'blocks/categorybox/default.css' );
 		$assets->register( 'betterdocs-blocks-category-grid', 'blocks/categorygrid/default.css' );
+		$assets->register( 'betterdocs-blocks-category-tech-layout', 'blocks/category-tech-layout/default.css' );
+		$assets->register( 'betterdocs-blocks-category-slate-layout', 'blocks/category-slate-layout/default.css' );
 		$assets->register( 'betterdocs-feedback-form-editor', 'blocks/feedback-form/style-feedback-editor.css' );
 		$assets->register( 'betterdocs-doc-archive-list', 'blocks/doc-archive-list/default.css' );
 	}

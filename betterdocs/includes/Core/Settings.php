@@ -1010,8 +1010,7 @@ class Settings extends Base {
 																	'type'     => 'text',
 																	'label'    => __( 'Search Button Text', 'betterdocs' ),
 																	'priority' => 7,
-																	'default'  => __( 'Search', 'betterdocs' ),
-																	'is_pro'   => true
+																	'default'  => __( 'Search', 'betterdocs' )
 																] ),
 																'search_not_found_text'  => [
 																	'name'     => 'search_not_found_text',

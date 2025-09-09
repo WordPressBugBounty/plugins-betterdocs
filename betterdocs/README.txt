@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 4.1.2
+Stable tag: 4.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -228,6 +228,22 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.2.0 - 09/09/2025 =
+
+- Added: New Tech Layout | Slate Layout for Customizer, Elementor & Gutenberg
+- Added: New layout options for Modal Layout in BetterDocs Search Form Elementor widget and Gutenberg block
+- Added: New layout options for BetterDocs Sidebar Elementor widget and Gutenberg block
+- Added: New layout options for Doc Category Archive List Elementor widget and Gutenberg block
+- Added: New patterns in Docs page, Docs Category and Single Docs menu
+- Improved: From the admin panel, Private docs, KB, categories are not visible on the front end for the admin
+- Fixed: Private Docs being visible in search bar for subscribers
+- Few minor bug fixes and improvements
+
+= 4.1.3 - 17/08/2025 =
+
+- Fixed: Categories with no docs were hidden even when their subcategories contained docs
+- Few minor bug fixes and improvements
 
 = 4.1.2 - 03/08/2025 =
 

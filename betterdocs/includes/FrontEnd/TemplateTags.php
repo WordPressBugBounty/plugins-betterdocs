@@ -469,6 +469,8 @@ class TemplateTags extends Base {
 			$_template_path = 'templates/sidebars/sidebar-4';
 		} elseif ( $layout == 'layout-7' ) {
 			$_template_path = 'templates/sidebars/sidebar-7';
+		} elseif ( $layout == 'layout-8' ) {
+			$_template_path = 'templates/sidebars/sidebar-8';
 		} elseif ( $layout == 'layout-2' ) {
 			$_template_path = 'templates/sidebars/sidebar-2';
 		} elseif ( $layout == 'layout-3' ) {
@@ -492,7 +494,7 @@ class TemplateTags extends Base {
 	public function term_options( $taxonomy = 'doc_category', $current_term = '', $parent = false ) {
 		$_args = [
 			'taxonomy'   => $taxonomy,
-			'hide_empty' => false,
+			'hide_empty' => true,
 			'number'     => 0
 		];
 

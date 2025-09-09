@@ -52,7 +52,7 @@ class Query extends Base {
 				$order              = isset( $wp_query->query['order'] ) ? $wp_query->query['order'] : '';
 				$order_by_query     = ( $order == 'ASC' || $order == 'DESC' ) ? "SUM({$wpdb->prefix}betterdocs_analytics.impressions) {$order}" : ( $order == 'MODIFIED' ? "{$wpdb->prefix}posts.post_modified_gmt DESC" : "{$wpdb->prefix}posts.post_date_gmt DESC" );
 				$clauses['join']    = "JOIN {$wpdb->prefix}betterdocs_analytics ON {$wpdb->prefix}posts.ID = {$wpdb->prefix}betterdocs_analytics.post_id";
-				$clauses['where']   = ! is_user_logged_in() ? "AND ( ( {$wpdb->prefix}posts.post_type = 'docs' ) AND ( {$wpdb->prefix}posts.post_status = 'publish' OR {$wpdb->prefix}posts.post_status = 'future' ) )" : "AND ( ( {$wpdb->prefix}posts.post_type = 'docs' ) AND ( {$wpdb->prefix}posts.post_status = 'publish' OR {$wpdb->prefix}posts.post_status = 'future' OR {$wpdb->prefix}posts.post_status = 'draft' OR {$wpdb->prefix}posts.post_status = 'pending' OR {$wpdb->prefix}posts.post_status = 'private' ) )";
+				$clauses['where']   = ! current_user_can( 'read_private_docs' ) ? "AND ( ( {$wpdb->prefix}posts.post_type = 'docs' ) AND ( {$wpdb->prefix}posts.post_status = 'publish' OR {$wpdb->prefix}posts.post_status = 'future' ) )" : "AND ( ( {$wpdb->prefix}posts.post_type = 'docs' ) AND ( {$wpdb->prefix}posts.post_status = 'publish' OR {$wpdb->prefix}posts.post_status = 'future' OR {$wpdb->prefix}posts.post_status = 'draft' OR {$wpdb->prefix}posts.post_status = 'pending' OR {$wpdb->prefix}posts.post_status = 'private' ) )";
 				$clauses['orderby'] = $order_by_query;
 				$clauses['groupby'] = "{$wpdb->prefix}betterdocs_analytics.post_id";
 				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
@@ -72,14 +72,21 @@ class Query extends Base {
 	}
 
 	/**
-	 * Modify terms args to include terms with only private docs for logged-in users
+	 * Modify terms args to include terms with only private docs for users with read_private_docs capability
 	 *
 	 * @param array $args
 	 * @return array
 	 */
 	public function modify_terms_args_for_private_docs( $args ) {
-		// Only modify for logged-in users and doc_category taxonomy
-		if ( ! is_user_logged_in() || ! isset( $args['taxonomy'] ) || $args['taxonomy'] !== 'doc_category' ) {
+		// Only modify for users with read_private_docs capability and supported taxonomies
+		if ( ! current_user_can( 'read_private_docs' ) || ! isset( $args['taxonomy'] ) ) {
+			return $args;
+		}
+
+		// Only support doc_category taxonomy for private docs filtering
+		// knowledge_base terms don't have docs directly assigned to them
+		$supported_taxonomies = ['doc_category'];
+		if ( ! in_array( $args['taxonomy'], $supported_taxonomies ) ) {
 			return $args;
 		}
 
@@ -296,7 +303,7 @@ class Query extends Base {
 		if ( empty( $_docs_order ) ) {
 			$statuses = [ 'publish' ];
 
-			if ( is_user_logged_in() ) {
+			if ( current_user_can( 'read_private_docs' ) ) {
 				$statuses[] = 'private';
 			}
 
@@ -416,10 +423,10 @@ class Query extends Base {
 		$parsed_args = $this->parse_terms_args( $args );
 		$terms = get_terms( $parsed_args );
 
-		// Filter terms manually if we need to consider private docs for logged-in users
-		if ( isset( $parsed_args['_betterdocs_filter_private'] ) && $parsed_args['_betterdocs_filter_private'] && is_user_logged_in() ) {
+		// Filter terms manually if we need to consider private docs for users with read_private_docs capability
+		if ( isset( $parsed_args['_betterdocs_filter_private'] ) && $parsed_args['_betterdocs_filter_private'] && current_user_can( 'read_private_docs' ) ) {
 			$terms = array_filter( $terms, function( $term ) {
-				// Get the actual count including private docs for logged-in users
+				// Get the actual count including private docs for users with read_private_docs capability
 				$actual_count = $this->get_docs_count( $term, false );
 				return $actual_count > 0;
 			});
@@ -511,9 +518,14 @@ class Query extends Base {
 		}
 
 		if ( 'betterdocs_order' === $_orderby ) {
-			$default_args['meta_key'] = 'doc_category_order';
-			$_orderby                 = 'meta_value_num';
-			$_order                   = 'ASC';
+			// Use different meta keys for different taxonomies
+			if ( isset( $args['taxonomy'] ) && $args['taxonomy'] === 'knowledge_base' ) {
+				$default_args['meta_key'] = 'kb_order';
+			} else {
+				$default_args['meta_key'] = 'doc_category_order';
+			}
+			$_orderby = 'meta_value_num';
+			$_order   = 'ASC';
 		} elseif ( $_orderby === true ) {
 			$_orderby = 'name';
 		}
@@ -1005,21 +1017,29 @@ class Query extends Base {
 		$counts = isset( $term->count ) ? $term->count : 0;
 
 		if ( $nested_subcategory == false ) {
-			// For non-nested categories, we need to check if logged-in users should see private docs
+			// For non-nested categories, we need to recalculate counts based on user capabilities
 			// Only proceed if we have a valid term with required properties
-			if ( is_user_logged_in() && isset( $term->term_id ) && isset( $term->taxonomy ) && is_numeric( $term->term_id ) ) {
-				// Get all post IDs for this term (including private posts for logged-in users)
+			if ( isset( $term->term_id ) && isset( $term->taxonomy ) && is_numeric( $term->term_id ) ) {
+				// Get all post IDs for this term
 				$post_ids = get_objects_in_term( $term->term_id, $term->taxonomy );
 
 				if ( ! empty( $post_ids ) ) {
-					// Filter posts to include private posts for logged-in users
-					$filtered_post_ids = array_filter( $post_ids, function( $post_id ) {
-						$post_status = get_post_status( $post_id );
-						// Include private posts for logged-in users, and all publicly viewable posts
-						return $post_status === 'private' || is_post_publicly_viewable( $post_id );
-					});
+					if ( current_user_can( 'read_private_docs' ) ) {
+						// For users with read_private_docs capability, include both private and public posts
+						$filtered_post_ids = array_filter( $post_ids, function( $post_id ) {
+							$post_status = get_post_status( $post_id );
+							return $post_status === 'private' || is_post_publicly_viewable( $post_id );
+						});
+					} else {
+						// For users without read_private_docs capability, only include public posts
+						$filtered_post_ids = array_filter( $post_ids, function( $post_id ) {
+							return is_post_publicly_viewable( $post_id );
+						});
+					}
 
 					$counts = count( $filtered_post_ids );
+				} else {
+					$counts = 0;
 				}
 			}
 
@@ -1063,7 +1083,7 @@ class Query extends Base {
         }
 
         return array_filter( $_child_terms_docs_ids, function ( $doc_id ) {
-            if ( ! is_user_logged_in() ) {
+            if ( ! current_user_can( 'read_private_docs' ) ) {
                 return is_post_publicly_viewable( $doc_id );
             }
 

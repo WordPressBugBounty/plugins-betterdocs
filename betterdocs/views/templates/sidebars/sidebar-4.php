@@ -1,9 +1,9 @@
 <?php
-if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
-	if ( ! betterdocs()->settings->get( 'enable_sidebar_cat_list' ) && isset( $layout_type ) && $layout_type == 'template' ) {
-		return;
+	if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
+		if ( ! betterdocs()->settings->get( 'enable_sidebar_cat_list' ) && isset( $layout_type ) && $layout_type == 'template' ) {
+			return;
+		}
 	}
-}
 
 	$wrapper_attributes = [
 		'class' => [ 'betterdocs-sidebar betterdocs-full-sidebar-left betterdocs-sidebar-layout-4 betterdocs-background' ],
@@ -18,7 +18,7 @@ if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 	}
 
 	$wrapper_attributes = betterdocs()->template_helper->get_html_attributes( $wrapper_attributes );
-	?>
+?>
 
 <aside
 	<?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>

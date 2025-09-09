@@ -93,7 +93,7 @@ class TemplateLoader extends Base {
 			return apply_filters( 'betterdocs_archives_template', $template, $layout, $_default_template, $this->views );
 		}
 
-		if ( get_post_type() !== 'docs' ) {
+		if ( get_post_type() !== 'docs' && ! is_tax('doc_category') && ! is_tax( 'doc_tag' ) && ! is_tax( 'knowledge_base' ) ) {
 			return $template;
 		}
 
@@ -108,10 +108,10 @@ class TemplateLoader extends Base {
 		$_default_template = 'templates/archives/layout-1';
 		$layout            = $this->database->get_theme_mod( 'betterdocs_docs_layout_select', 'layout-7' );
 		$_template         = 'templates/archives/' . $layout;
-
+		
 		if ( is_tax( 'doc_category' ) ) {
 			$category_layout = $this->database->get_theme_mod( 'betterdocs_archive_layout_select', 'layout-7' );
-			if ( $category_layout == 'layout-7' ) {
+			if ( $category_layout == 'layout-7' || $category_layout == 'layout-8' ) {
 				$_template = 'templates/archives/categories/' . $category_layout;
 			} else {
 				$_template = 'templates/taxonomy-doc_category';

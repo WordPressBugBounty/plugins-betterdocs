@@ -420,7 +420,7 @@ class ToC extends BaseWidget {
 					'isLinked' => false
 				],
 				'selectors'  => [
-					'{{WRAPPER}} .betterdocs-toc > .toc-list li a' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
+					'{{WRAPPER}} .betterdocs-toc > .toc-list' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'
 				]
 			]
 		);
@@ -666,6 +666,17 @@ class ToC extends BaseWidget {
 			]
 		);
 
+		$this->add_control(
+			'list_hover_bg_color',
+			[
+				'label'     => esc_html__( 'List Hover Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-toc ul li a:hover' => 'background-color: {{VALUE}};'
+				]
+			]
+		);
+
 		$this->add_responsive_control(
 			'list_margin',
 			[
@@ -681,11 +692,23 @@ class ToC extends BaseWidget {
 		$this->add_responsive_control(
 			'list_padding',
 			[
-				'label'      => esc_html__( 'List Item Padding', 'betterdocs' ),
+				'label'      => esc_html__( 'List Wrapper Padding', 'betterdocs' ),
 				'type'       => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .betterdocs-toc ul' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; display: inline-block;'
+				]
+			]
+		);
+
+		$this->add_responsive_control(
+			'list_item_padding',
+			[
+				'label'      => esc_html__( 'List Item Padding', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', '%' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-toc ul li a' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; display: inline-block;'
 				]
 			]
 		);

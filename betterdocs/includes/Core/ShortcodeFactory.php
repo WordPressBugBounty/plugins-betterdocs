@@ -19,6 +19,7 @@ use WPDeveloper\BetterDocs\Shortcodes\FeedbackForm;
 use WPDeveloper\BetterDocs\Shortcodes\ReadingTime;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Shortcodes\CategoryBoxThree;
+use WPDeveloper\BetterDocs\Shortcodes\CategoryGridThree;
 
 class ShortcodeFactory extends Base {
 	/**
@@ -45,6 +46,7 @@ class ShortcodeFactory extends Base {
 				CategoryBox::class,
 				CategoryBoxThree::class,
 				CategoryGrid::class,
+				CategoryGridThree::class,
 				CategoryList::class,
 				SearchForm::class,
 				SearchModal::class,

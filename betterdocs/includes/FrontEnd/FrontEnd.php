@@ -237,8 +237,8 @@ class FrontEnd extends Base {
 		}
 
 		// Render the shortcode based on layout and reactions availability
-		if ( $single_layout == 'layout-8' && $reactions ) {
-			echo do_shortcode( '[betterdocs_article_reactions layout="layout-2" text_tag="' . esc_attr( $text_tag ) . '"' . $attr . ']' );
+		if ( $single_layout == 'layout-8' || $single_layout == 'layout-10' && $reactions ) {
+			echo do_shortcode( '[betterdocs_article_reactions text_tag="' . esc_attr( $text_tag ) . '" layout="layout-2"' . $attr . ']' );
 		} elseif ( $single_layout == 'layout-9' && $reactions ) {
 			echo '';
 		} elseif ( $reactions ) {

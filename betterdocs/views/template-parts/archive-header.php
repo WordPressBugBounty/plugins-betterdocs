@@ -22,14 +22,14 @@ if ( ! isset( $current_category ) ) {
 					[
 						'show_icon'     => $show_icon,
 						'category_icon' => 'folder-open',
-						'term_id'       => $current_category->term_id
+						'term_id'       => isset( $current_category->term_id ) ? $current_category->term_id : ''
 					]
 				);
 
 				$view_object->get(
 					'template-parts/category-title',
 					[
-						'title' => $current_category->name,
+						'title' => isset( $current_category->name ) ? $current_category->name : '',
 						'tag'   => $title_tag
 					]
 				);
