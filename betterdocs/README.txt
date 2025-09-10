@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -228,6 +228,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.2.1 - 10/09/2025 =
+
+- Fixed: Search Box control panel isn't displaying in the search form block.
+- Few minor bug fixes and improvements
 
 = 4.2.0 - 09/09/2025 =
 
