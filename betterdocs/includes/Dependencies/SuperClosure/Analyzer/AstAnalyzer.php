@@ -61,7 +61,7 @@ class AstAnalyzer extends ClosureAnalyzer
         } catch (ParserError $e) {
             // @codeCoverageIgnoreStart
             throw new ClosureAnalysisException(
-                'There was an error analyzing the closure code.', 0, $e
+                'There was an error analysing the closure code.', 0, $e
             );
             // @codeCoverageIgnoreEnd
         }

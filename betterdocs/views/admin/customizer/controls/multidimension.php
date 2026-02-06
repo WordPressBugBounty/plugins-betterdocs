@@ -29,19 +29,19 @@ if ( $hasLabel ) :
 		<span class="dashicons dashicons-editor-unlink betterdocs-dimension-disconnected" data-element-connect="<?php echo esc_attr( $control->id ); ?>" title="Link Values Together"></span>
 	</li>
 	<li class="dimension-field">
-		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-1 disconnected" value="<?php echo esc_attr( $dimension_val['input1'] ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input1">
-		<span class="dimension-title"><?php echo esc_html( $control->input_fields['input1'] ); ?></span>
+		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-1 disconnected" value="<?php echo esc_attr( isset( $dimension_val['input1'] ) ? $dimension_val['input1'] : '0' ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input1">
+		<span class="dimension-title"><?php echo esc_html( isset( $control->input_fields['input1'] ) ? $control->input_fields['input1'] : '' ); ?></span>
 	</li>
 	<li class="dimension-field">
-		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-2 disconnected" value="<?php echo esc_attr( $dimension_val['input2'] ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input2">
-		<span class="dimension-title"><?php echo esc_html( $control->input_fields['input2'] ); ?></span>
+		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-2 disconnected" value="<?php echo esc_attr( isset( $dimension_val['input2'] ) ? $dimension_val['input2'] : '0' ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input2">
+		<span class="dimension-title"><?php echo esc_html( isset( $control->input_fields['input2'] ) ? $control->input_fields['input2'] : '' ); ?></span>
 	</li>
 	<li class="dimension-field">
-		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-3 disconnected" value="<?php echo esc_attr( $dimension_val['input3'] ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input3">
-		<span class="dimension-title"><?php echo esc_html( $control->input_fields['input3'] ); ?></span>
+		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-3 disconnected" value="<?php echo esc_attr( isset( $dimension_val['input3'] ) ? $dimension_val['input3'] : '0' ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input3">
+		<span class="dimension-title"><?php echo esc_html( isset( $control->input_fields['input3'] ) ? $control->input_fields['input3'] : '' ); ?></span>
 	</li>
 	<li class="dimension-field">
-		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-4 disconnected" value="<?php echo esc_attr( $dimension_val['input4'] ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input4">
-		<span class="dimension-title"><?php echo esc_html( $control->input_fields['input4'] ); ?></span>
+		<input type="number" class="betterdocs-dimension-input betterdocs-dimension-input-4 disconnected" value="<?php echo esc_attr( isset( $dimension_val['input4'] ) ? $dimension_val['input4'] : '0' ); ?>" data-element-connect="<?php echo esc_attr( $control->id ); ?>" data-input="input4">
+		<span class="dimension-title"><?php echo esc_html( isset( $control->input_fields['input4'] ) ? $control->input_fields['input4'] : '' ); ?></span>
 	</li>
 </ul>

@@ -105,13 +105,13 @@ class BlockEditor extends BaseEditor {
 		$this->assets->localize(
 			'betterdocs-blocks-editor',
 			'betterDocsBlocksHelper',
-			[
+			array_merge([
 				'is_pro_active'         => betterdocs()->is_pro_active(),
 				'resturl'               => get_rest_url(),
 				'editorType'            => $editor,
 				'betterdocs_glossaries' => Helper::get_glossaries(),
 				'docsIcon'              => isset( betterdocs()->settings->get( 'docs_list_icon' )['url'] ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : ''
-			]
+			], betterdocs()->settings->chatbot_active_localize())
 		);
 
 		if ( $hook == 'post-new.php' || $hook == 'post.php' || $hook == 'site-editor.php' ) {

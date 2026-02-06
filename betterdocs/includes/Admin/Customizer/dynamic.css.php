@@ -1295,25 +1295,13 @@ $css->add_rule(
 
 //Single Doc Common Controllers Content Area Padding Top | Right | Bottom | Left
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-single-wrapper .betterdocs-content-wrapper',
+	'.betterdocs-wrapper.betterdocs-single-wrapper .betterdocs-content-wrapper,.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-4 .betterdocs-content-wrapper,.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-content-full',
 	$css->properties(
 		[
 			'padding-top'    => 'betterdocs_doc_single_content_area_padding_top',
 			'padding-right'  => 'betterdocs_doc_single_content_area_padding_right',
 			'padding-bottom' => 'betterdocs_doc_single_content_area_padding_bottom',
 			'padding-left'   => 'betterdocs_doc_single_content_area_padding_left'
-		],
-		'px'
-	)
-);
-
-//Single Doc Common Controllers Content Area Padding Top | Right | Bottom | Left
-$css->add_rule(
-	'.betterdocs-wrapper.betterdocs-single-wrapper.betterdocs-single-layout-5 .betterdocs-content-full',
-	$css->properties(
-		[
-			'padding-top'    => 'betterdocs_doc_single_content_area_padding_top',
-			'padding-bottom' => 'betterdocs_doc_single_content_area_padding_bottom'
 		],
 		'px'
 	)
@@ -7948,7 +7936,7 @@ $css->add_rule(
 
 //Archive Page Background Color
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper.betterdocs-category-archive-wrapper',
+	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper.betterdocs-category-archive-wrapper,.tax-doc_category .betterdocs-wrapper.betterdocs-taxonomy-wrapper.betterdocs-archive-layout-7',
 	$css->properties(
 		[
 			'background-color' => 'betterdocs_archive_page_background_color'
@@ -8167,7 +8155,7 @@ $css->add_rule(
 
 //Archive List Icon Color
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body ul li svg',
+	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body ul li svg#Layer_1',
 	$css->properties(
 		[
 			'fill' => 'betterdocs_archive_list_icon_color'
@@ -8177,7 +8165,7 @@ $css->add_rule(
 
 //Archive List Icon Font Size
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body ul li svg',
+	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body ul li svg#Layer_1',
 	$css->properties(
 		[
 			'font-size' => 'betterdocs_archive_list_icon_font_size',
@@ -8284,6 +8272,16 @@ $css->add_rule(
 	)
 );
 
+$css->add_rule(
+	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body .betterdocs-nested-category-wrapper .betterdocs-nested-category-title svg',
+	$css->properties(
+		[
+			'width' => 'betterdocs_archive_subcategory_icon_font_size'
+		],
+		'px'
+	)
+);
+
 //Archive Subcategory Docs List Color
 $css->add_rule(
 	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body .betterdocs-nested-category-wrapper .betterdocs-nested-category-list li a',
@@ -8306,7 +8304,7 @@ $css->add_rule(
 
 //Archive Subcategory List Icon Color
 $css->add_rule(
-	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body .betterdocs-nested-category-wrapper .betterdocs-nested-category-list li svg',
+	'.betterdocs-wrapper.betterdocs-taxonomy-wrapper .betterdocs-content-area .betterdocs-content-inner-area .betterdocs-entry-body .betterdocs-nested-category-wrapper .betterdocs-nested-category-list li svg#Layer_1',
 	$css->properties(
 		[
 			'fill' => 'betterdocs_archive_subcategory_article_list_icon_color'
@@ -8513,7 +8511,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date',
+	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date,.betterdocs-categories-folder.layout-4 .category-box .betterdocs-single-category-inner .betterdocs-category-header-inner .betterdocs-category-title-counts .betterdocs-last-update',
 	$css->properties(
 		[
 			'font-size' => 'archive_last_updated_time_layout_7_font_size'
@@ -8523,7 +8521,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date',
+	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date,.betterdocs-categories-folder.layout-4 .category-box .betterdocs-single-category-inner .betterdocs-category-header-inner .betterdocs-category-title-counts .betterdocs-last-update',
 	$css->properties(
 		[
 			'color' => 'archive_last_updated_time_layout_7_color'
@@ -8532,7 +8530,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date',
+	'.betterdocs-content-area .betterdocs-title-excerpt-lists .betterdocs-title-excerpt-list .update-date,.betterdocs-categories-folder.layout-4 .category-box .betterdocs-single-category-inner .betterdocs-category-header-inner .betterdocs-category-title-counts .betterdocs-last-update',
 	$css->properties(
 		[
 			'background-color' => 'archive_last_updated_time_layout_7_background_color'
@@ -9083,7 +9081,7 @@ $css->add_rule(
 );
 
 $css->add_rule(
-	'.betterdocs-category-wraper .docs-listing-main .docs-category-listing .docs-list .docs-sub-cat li svg',
+	'.betterdocs-category-wraper .docs-listing-main .docs-category-listing .docs-list .docs-sub-cat li svg#Layer_1',
 	$css->properties(
 		[
 			'fill' => 'betterdocs_archive_subcategory_article_list_icon_color'

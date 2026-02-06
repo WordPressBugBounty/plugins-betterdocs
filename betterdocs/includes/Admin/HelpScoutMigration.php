@@ -158,13 +158,9 @@ class HelpScoutMigration extends WP_Background_Process {
 				}
 			}
 		} catch ( \WP_Error $wp_error ) {
-			// Handle WP_Error exceptions
-			//error_log('WP_Error occurred during migration: ' . $wp_error->get_error_message());
-			return false; // Indicate failure to process the current item
+			return false;
 		} catch ( \Exception $e ) {
-			// Handle other exceptions
-			//error_log('Error occurred during migration: ' . $e->getMessage());
-			return false; // Indicate failure to process the current item
+			return false;
 		}
 
 		return true; // Indicate success

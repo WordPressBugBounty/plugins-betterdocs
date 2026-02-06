@@ -51,7 +51,9 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 			$term_id   = $query_obj->term_id;
 
 			$term_parents = betterdocs()->query->get_term_parents( $term_id );
-			$breadcrumbs  = apply_filters( 'betterdocs_breadcrumb_after_archives', array_merge( $breadcrumbs, $term_parents ) );
+			if ( ! is_wp_error( $term_parents ) && is_array( $term_parents ) ) {
+				$breadcrumbs = apply_filters( 'betterdocs_breadcrumb_after_archives', array_merge( $breadcrumbs, $term_parents ) );
+			}
 		}
 	} elseif ( is_single() ) {
 		global $wp_query, $post;
@@ -73,7 +75,9 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 
 			if ( $cat_terms ) {
 				$term_parents = betterdocs()->query->get_term_parents( $cat_terms[0]->term_id );
-				$breadcrumbs  = array_merge( $breadcrumbs, $term_parents );
+				if ( ! is_wp_error( $term_parents ) && is_array( $term_parents ) ) {
+					$breadcrumbs  = array_merge( $breadcrumbs, $term_parents );
+				}
 			}
 		}
 

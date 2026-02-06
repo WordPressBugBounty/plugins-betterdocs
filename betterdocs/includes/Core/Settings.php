@@ -85,11 +85,21 @@ class Settings extends Base {
 
 		wp_enqueue_media();
 		wp_enqueue_script( 'betterdocs-admin' );
-		betterdocs()->assets->localize( 'betterdocs-admin', 'betterdocsAdminSettings', GlobalFields::normalize( $this->settings_args() ) );
+		
+		$settings = GlobalFields::normalize( $this->settings_args() );
+		
+		// Remove sensitive API keys if user doesn't have permission to edit settings
+		if ( ! current_user_can( 'edit_docs_settings' ) ) {
+			if ( isset( $settings['values']['ai_autowrite_api_key'] ) ) {
+				unset( $settings['values']['ai_autowrite_api_key'] );
+			}
+			if ( isset( $settings['values']['ai_chatbot_api_key'] ) ) {
+				unset( $settings['values']['ai_chatbot_api_key'] );
+			}
+		}
+		
+		betterdocs()->assets->localize( 'betterdocs-admin', 'betterdocsAdminSettings', $settings );
 		betterdocs()->assets->enqueue( 'betterdocs-icons', 'admin/btd-icon/style.css' );
-
-		// betterdocs()->assets->enqueue( 'betterdocs-settings', 'admin/css/settings.css' );
-		// betterdocs()->assets->enqueue( 'betterdocs-settings', 'admin/js/settings.js' );
 	}
 
 	public function enqueue_old( $hook ) {
@@ -2229,45 +2239,49 @@ class Settings extends Base {
 						]
 					],
 				],
-				'tab-ai-chatbot'       => [
+				'tab-ai-chatbot'   => apply_filters( 'betterdocs_settings_tab_ai_chatbot', [
 					'id'       => 'tab-ai-chatbot',
 					'name'     => 'tab-ai-chatbot',
 					'type'     => 'section',
 					'label'    => __( 'AI Chatbot', 'betterdocs' ),
-					// 'is_pro'   => ! defined('BETTERDOCS_PRO_VERSION'),
-					'priority' => 75,
-					'save'     => false,
 					'submit'   => [
 						'show' => false
 					],
-
-					'fields' => [
-						'title-ai-chatbot' => apply_filters( 'betterdocs_settings_ai_chatbot_fields', [
-							'name'     => 'title-ai-chatbot-tab',
-							'type'     => 'section',
-							'label'    => __( 'AI Chatbot', 'betterdocs' ),
-							'priority' => 60,
-							'save'     => false,
+					'save' => false,
+					'priority' => 75,
+					'fields'   => [
+						'title-ai-chatbot-tab' => [
+							'name'       => 'title-ai-chatbot-tab',
+							'type'       => 'section',
+							'label'      => __( 'AI Chatbot', 'betterdocs' ),
+							'priority'   => 80,
 							'submit'   => [
 								'show' => false
 							],
-
-							'fields' => [
-								'enable_ai_chatbot' => [
-									'name'              => 'enable_ai_chatbot',
-									'label'             => __( 'AI Chatbot', 'betterdocs' ),
-									'description'       => __( 'Enable AI Chatbot', 'betterdocs' ),
-									'type'              => 'toggle',
-									'priority'          => 5,
-									'default'           => 0,
-									'is_pro'            => true,
-									'is_license_active' => false,
-									'disabled'          => ! betterdocs()->is_pro_active() || ! defined( 'BETTERDOCS_CHATBOT_FILE' )
-								],
-							]
-						] ),
+							'save' => false,
+							'fields'     => apply_filters( 'betterdocs_ai_chatbot_fields', [
+								'ai_chatbot_fields' => [
+									'name'     => 'ai_chatbot_fields',
+									'type'     => 'section',
+									'priority' => 0,
+									'fields'   => [
+										'enable_ai_chatbot' => [
+											'name'              => 'enable_ai_chatbot',
+											'label'             => __( 'AI Chatbot', 'betterdocs' ),
+											'description'       => __( 'Enable AI Chatbot', 'betterdocs' ),
+											'type'              => 'toggle',
+											'priority'          => 5,
+											'default'           => 0,
+											'is_pro'            => true,
+											'is_license_active' => false,
+											'disabled'          => ! betterdocs()->is_pro_active() || ! defined( 'BETTERDOCS_CHATBOT_FILE' )
+										],
+									]
+								]
+							] )
+						]
 					]
-				],
+				] ),
 			] ),
 			'TAB_AI_CHATBOT'  => get_option( 'enable_ai_chatbot' ),
 			'CHATBOT_LICENSE' => get_option( 'betterdocs_chatbot_software__license_status' ),
@@ -2284,8 +2298,18 @@ class Settings extends Base {
 	 * @return array
 	 */
 	public function chatbot_active_localize() {
+		$chatbot_active = is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' );
+		$chatbot_license_valid = get_option( 'betterdocs_chatbot_software__license_status' ) === 'valid';
+		$chatbot_enabled = $this->get( 'enable_ai_chatbot', false );
+
+		// AI Search Suggestions are enabled if all conditions are met
+		$ai_search_suggestions_enabled = betterdocs()->helper->is_ai_chatbot_enabled();
+
 		return [
-			'CHATBOT_ACTIVE' => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' )
+			'CHATBOT_ACTIVE' => $chatbot_active,
+			'CHATBOT_LICENSE_VALID' => $chatbot_license_valid,
+			'CHATBOT_ENABLED' => $chatbot_enabled,
+			'AI_SEARCH_SUGGESTIONS_ENABLED' => $ai_search_suggestions_enabled
 		];
 	}
 

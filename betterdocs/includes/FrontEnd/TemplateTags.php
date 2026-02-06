@@ -343,6 +343,10 @@ class TemplateTags extends Base {
 			if ( $this->defaults->get( 'search_modal_faq_query_type' ) === 'specific_faq_term_ids' ) {
 				$shortcode_attributes_new['faq_categories_ids'] = $this->defaults->get( 'search_modal_query_faq_term_ids' );
 			}
+			// Add AI Search Suggestions setting if AI Chatbot is enabled
+			if( betterdocs()->helper->is_ai_chatbot_enabled() && $this->settings->get('enable_ai_powered_search') ) {
+				$shortcode_attributes_new['enable_ai_powered_search'] = 'true';
+			}
 		}
 
 		$_shortcode_license = $this->get_search_attributes( $shortcode_attributes_new );
@@ -363,7 +367,15 @@ class TemplateTags extends Base {
 			return;
 		}
 
-		$_shortcode_license = $this->get_search_attributes();
+		// Prepare attributes for search_2 layout
+		$shortcode_attributes_new = [];
+
+		// Add AI Search Suggestions setting if AI Chatbot is enabled
+		if( betterdocs()->helper->is_ai_chatbot_enabled() && $this->settings->get('enable_ai_powered_search') ) {
+			$shortcode_attributes_new['enable_ai_powered_search'] = 'true';
+		}
+
+		$_shortcode_license = $this->get_search_attributes( $shortcode_attributes_new );
 
 		ob_start();
 		betterdocs()->views->get(
@@ -491,7 +503,7 @@ class TemplateTags extends Base {
 		betterdocs()->views->get( $_template_path, $default_params );
 	}
 
-	public function term_options( $taxonomy = 'doc_category', $current_term = '', $parent = false ) {
+	public function term_options( $taxonomy = 'doc_category', $current_term = '', $parent = false, $kb_slug = '' ) {
 		$_args = [
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => true,
@@ -500,6 +512,17 @@ class TemplateTags extends Base {
 
 		if ( $parent ) {
 			$_args['parent'] = 0;
+		}
+
+		// Add KB filtering if kb_slug is provided
+		if ( ! empty( $kb_slug ) && $taxonomy === 'doc_category' ) {
+			$_args['meta_query'] = [
+				[
+					'key'     => 'doc_category_knowledge_base',
+					'value'   => serialize(strval($kb_slug)),
+					'compare' => 'LIKE'
+				]
+			];
 		}
 
 		$_terms = $this->query->get_terms( $this->query->terms_query( $_args ) );

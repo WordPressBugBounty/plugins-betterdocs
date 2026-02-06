@@ -129,6 +129,10 @@
 							$search_attributes['faq_categories_ids'] = betterdocs()->customizer->defaults->get( 'search_modal_query_faq_term_ids' );
 						}
 
+						if( betterdocs()->helper->is_ai_chatbot_enabled() && betterdocs()->settings->get('enable_ai_powered_search') ) {
+							$search_attributes['enable_ai_powered_search'] = true;
+						}
+
 						$search_attributes = betterdocs()->template_helper->get_html_attributes( $search_attributes );
 
 						echo do_shortcode( '[betterdocs_search_modal ' . $search_attributes . ' layout="docs-archive" search_button="true"]' );

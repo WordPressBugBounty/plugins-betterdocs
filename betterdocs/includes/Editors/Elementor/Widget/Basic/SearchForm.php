@@ -78,6 +78,7 @@ class SearchForm extends BaseWidget {
 
 		$this->search_box_layout_2();
 		$this->search_field_layout_2();
+		$this->ai_search_suggestions_controls();
 		$this->search_modal_layout();
 	}
 
@@ -188,45 +189,6 @@ class SearchForm extends BaseWidget {
 				]
 			]
 		);
-
-		$this->add_control(
-			'search_modal_layout',
-			[
-				'label'       => __( 'Search Modal Layout', 'betterdocs' ),
-				'type'        => Controls_Manager::SELECT,
-				'default'     => 'layout-1',
-				'label_block' => false,
-				'options'     => [
-					'layout-1'     => esc_html__( 'Layout 1', 'betterdocs' ),
-					'docs-archive' => esc_html__( 'Layout 2', 'betterdocs' ),
-					'sidebar'      => esc_html__( 'Layout 3', 'betterdocs' )
-				]
-			]
-		);
-
-		// $this->add_control(
-		//     'include_doc_categories',
-		//     [
-		//         'label'       => __( 'Doc Categories', 'betterdocs' ),
-		//         'label_block' => true,
-		//         'type'        => Controls_Manager::SELECT2,
-		//         'options'     => array_reduce( get_terms( ['taxonomy' => 'doc_category', 'hide_empty' => true] ), [$this, 'return_mod_terms'] ),
-		//         'multiple'    => true,
-		//         'default'     => []
-		//     ]
-		// );
-
-		// $this->add_control(
-		//     'include_faq',
-		//     [
-		//         'label'       => __( 'FAQ', 'betterdocs' ),
-		//         'label_block' => true,
-		//         'type'        => Controls_Manager::SELECT2,
-		//         'options'     => array_reduce( get_terms(['taxonomy' => 'betterdocs_faq_category']),  [$this, 'return_mod_terms'] ),
-		//         'multiple'    => true,
-		//         'default'     => []
-		//     ]
-		// );
 
 		$this->add_control(
 			'search_modal_doc_query_type',
@@ -473,7 +435,308 @@ class SearchForm extends BaseWidget {
 			]
 		);
 
+		$this->add_control(
+			'enable_ai_powered_search',
+			[
+				'label'        => __( 'AI-Powered Smart Modal Search', 'betterdocs' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => __( 'On', 'betterdocs' ),
+				'label_off'    => __( 'Off', 'betterdocs' ),
+				'return_value' => 'true',
+				'default'      => false
+			]
+		);
+
 		do_action( 'betterdocs/elementor/widgets/advanced-search/switcher', $this );
+
+		// AI Search Suggestions filter
+		apply_filters( 'betterdocs_search_form_ai_suggestions', '', $this );
+
+		$this->end_controls_section();
+	}
+
+	public function ai_search_suggestions_controls() {
+		// Check if AI Search Suggestions are available
+		if ( ! betterdocs()->helper->is_ai_chatbot_enabled() ) {
+			return;
+		}
+
+		$this->start_controls_section(
+			'ai_search_suggestions_section',
+			[
+				'label' => __( 'AI-Powered Smart Modal Search', 'betterdocs' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_background_color',
+			[
+				'label'     => __( 'Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion' => 'background-color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_hover_background_color',
+			[
+				'label'     => __( 'Hover Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion:hover' => 'background-color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'ai_suggestion_margin',
+			[
+				'label'      => __( 'Margin', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'condition'  => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'ai_suggestion_padding',
+			[
+				'label'      => __( 'Padding', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'condition'  => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		// Title Controls
+		$this->add_control(
+			'ai_suggestion_title_heading',
+			[
+				'label'     => __( 'Title', 'betterdocs' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'      => 'ai_suggestion_title_typography',
+				'selector'  => '{{WRAPPER}} .betterdocs-ai-suggestion .ai-suggestion-prompt .ai-suggestion-text .ai-suggestion-label, {{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-header .ai-response-title',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_title_color',
+			[
+				'label'     => __( 'Title Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-suggestion-prompt .ai-suggestion-text .ai-suggestion-label, , {{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-header .ai-response-title' => 'color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		// Query Controls
+		$this->add_control(
+			'ai_suggestion_query_heading',
+			[
+				'label'     => __( 'Query', 'betterdocs' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'      => 'ai_suggestion_query_typography',
+				'selector'  => '{{WRAPPER}} .betterdocs-ai-suggestion .ai-suggestion-prompt .ai-suggestion-content .ai-suggestion-query',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_query_color',
+			[
+				'label'     => __( 'Query Text Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-suggestion-prompt .ai-suggestion-content .ai-suggestion-query' => 'color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		// Response Controls
+		$this->add_control(
+			'ai_suggestion_response_heading',
+			[
+				'label'     => __( 'Response', 'betterdocs' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'      => 'ai_suggestion_response_typography',
+				'selector'  => '{{WRAPPER}} .betterdocs-ai-suggestion .ai-response-content',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_response_color',
+			[
+				'label'     => __( 'Response Text Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-response-content' => 'color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		// Button Controls
+		$this->add_control(
+			'ai_suggestion_button_heading',
+			[
+				'label'     => __( 'Continue Chat Button', 'betterdocs' ),
+				'type'      => Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			[
+				'name'      => 'ai_suggestion_button_typography',
+				'selector'  => '{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn',
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_button_color',
+			[
+				'label'     => __( 'Button Text Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn' => 'color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_control(
+			'ai_suggestion_button_bg_color',
+			[
+				'label'     => __( 'Button Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn' => 'background-color: {{VALUE}};',
+				],
+				'condition' => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'ai_suggestion_button_padding',
+			[
+				'label'      => __( 'Button Padding', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'condition'  => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'ai_suggestion_button_margin',
+			[
+				'label'      => __( 'Button Margin', 'betterdocs' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%', 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+				'condition'  => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			[
+				'name'     => 'ai_suggestion_button_border',
+				'label'    => esc_html__( 'Button Border', 'betterdocs' ),
+				'selector' => '{{WRAPPER}} .betterdocs-ai-suggestion .ai-response .ai-response-actions .continue-conversation-btn',
+				'condition'  => [
+					'enable_ai_powered_search' => 'true',
+				],
+			]
+		);
 
 		$this->end_controls_section();
 	}
@@ -1058,7 +1321,7 @@ class SearchForm extends BaseWidget {
 			'search_modal_field',
 			[
 				'label'     => esc_html__( 'Search Field', 'betterdocs' ),
-				'type'      => \Elementor\Controls_Manager::HEADING,
+				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
 		);
@@ -1119,7 +1382,7 @@ class SearchForm extends BaseWidget {
 			'search_modal_category_section',
 			[
 				'label'     => esc_html__( 'Search Category', 'betterdocs' ),
-				'type'      => \Elementor\Controls_Manager::HEADING,
+				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
 		);
@@ -1147,7 +1410,7 @@ class SearchForm extends BaseWidget {
 			'search_modal_content_tabs',
 			[
 				'label'     => esc_html__( 'Content Tabs', 'betterdocs' ),
-				'type'      => \Elementor\Controls_Manager::HEADING,
+				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
 		);
@@ -1207,7 +1470,7 @@ class SearchForm extends BaseWidget {
 			'search_modal_content_list',
 			[
 				'label'     => esc_html__( 'Content List', 'betterdocs' ),
-				'type'      => \Elementor\Controls_Manager::HEADING,
+				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
 		);
@@ -1267,7 +1530,7 @@ class SearchForm extends BaseWidget {
 			'search_modal_content_list_category',
 			[
 				'label'     => esc_html__( 'Content List Category', 'betterdocs' ),
-				'type'      => \Elementor\Controls_Manager::HEADING,
+				'type'      => Controls_Manager::HEADING,
 				'separator' => 'before',
 			]
 		);
@@ -1614,7 +1877,7 @@ class SearchForm extends BaseWidget {
 
 			// Ensure we always output content, especially in edit mode
 			echo '<div class="betterdocs-search-form-widget-wrapper">';
-			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="' . ( isset( $settings['section_search_field_heading_tag'] ) ? $settings['section_search_field_heading_tag'] : 'h2' ) . '" subheading_tag="' . ( isset( $settings['section_search_field_subheading_tag'] ) ? $settings['section_search_field_subheading_tag'] : 'h3' ) . '" search_button_text="Search" layout="' . $search_modal_layout . '" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '"]' );
+			echo do_shortcode( '[betterdocs_search_modal enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" faq_categories_ids="' . $faq_categories_ids . '" doc_ids="' . $doc_ids . '" doc_categories_ids="' . $doc_categories_ids . '" search_button="' . ( isset( $settings['betterdocs_search_button_toogle'] ) ? $settings['betterdocs_search_button_toogle'] : true ) . '" number_of_docs="' . $number_of_docs . '" number_of_faqs="' . $number_of_faqs . '" heading_tag="' . ( isset( $settings['section_search_field_heading_tag'] ) ? $settings['section_search_field_heading_tag'] : 'h2' ) . '" subheading_tag="' . ( isset( $settings['section_search_field_subheading_tag'] ) ? $settings['section_search_field_subheading_tag'] : 'h3' ) . '" search_button_text="Search" layout="' . $search_modal_layout . '" heading="' . ( isset( $settings['section_search_field_heading'] ) ? $settings['section_search_field_heading'] : '' ) . '" placeholder="' . ( isset( $settings['section_search_field_placeholder'] ) ? $settings['section_search_field_placeholder'] : '' ) . '" subheading="' . ( isset( $settings['section_search_field_sub_heading'] ) ? $settings['section_search_field_sub_heading'] : '' ) . '" category_search="' . ( isset( $settings['betterdocs_category_search_toogle'] ) ? $settings['betterdocs_category_search_toogle'] : false ) . '" popular_search="' . ( isset( $settings['betterdocs_popular_search_toogle'] ) ? $settings['betterdocs_popular_search_toogle'] : false ) . '" enable_ai_powered_search="' . ( isset( $settings['enable_ai_powered_search'] ) && $settings['enable_ai_powered_search'] === 'true' ? 'true' : 'false' ) . '"]' );
 			echo '</div>';
 		}
 

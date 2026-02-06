@@ -149,6 +149,218 @@ class AIHelper {
 	}
 
 	/**
+	 * Analyze article quality using OpenAI
+	 *
+	 * @param string $content Article content to analyze
+	 * @param string $title Article title (optional)
+	 * @return array|\WP_Error Analysis result with score and feedback
+	 */
+	public function analyze_article_quality( $content, $title = '' ) {
+		if ( empty( $content ) ) {
+			return new \WP_Error( 'empty_content', 'Article content cannot be empty.' );
+		}
+
+		// Create analysis prompt
+		$prompt = $this->build_quality_analysis_prompt( $content, $title );
+
+		$messages = [
+			[
+				'role'    => 'system',
+				'content' => 'You are an expert content analyst specializing in documentation quality assessment. Provide detailed, actionable feedback to help improve article quality.'
+			],
+			[
+				'role'    => 'user',
+				'content' => $prompt
+			]
+		];
+
+		$options = [
+			'max_tokens'  => 2000,
+			'temperature' => 0.3 // Lower temperature for more consistent analysis
+		];
+
+		$response = $this->make_openai_request( $messages, $options );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		// Parse the AI response into structured data
+		return $this->parse_quality_analysis_response( $response );
+	}
+
+	/**
+	 * Build the prompt for article quality analysis
+	 *
+	 * @param string $content Article content
+	 * @param string $title Article title
+	 * @return string Formatted prompt
+	 */
+	private function build_quality_analysis_prompt( $content, $title = '' ) {
+		$title_section = ! empty( $title ) ? "Title: {$title}\n\n" : '';
+
+		$prompt = "Please analyze the following documentation article for quality and provide a comprehensive assessment:\n\n";
+		$prompt .= $title_section;
+		$prompt .= "Content:\n{$content}\n\n";
+		$prompt .= "Please evaluate the article based on these criteria and provide your response in the following JSON format:\n\n";
+		$prompt .= "{\n";
+		$prompt .= '  "overall_score": 85,';
+		$prompt .= '  "scores": {';
+		$prompt .= '    "clarity": 90,';
+		$prompt .= '    "completeness": 80,';
+		$prompt .= '    "relevance": 95,';
+		$prompt .= '    "structure": 85,';
+		$prompt .= '    "readability": 88';
+		$prompt .= '  },';
+		$prompt .= '  "feedback": {';
+		$prompt .= '    "strengths": ["Clear headings", "Good use of examples"],';
+		$prompt .= '    "improvements": ["Add more detailed explanations in section 2", "Include troubleshooting steps"],';
+		$prompt .= '    "suggestions": ["Consider adding screenshots", "Break down complex paragraphs"]';
+		$prompt .= '  },';
+		$prompt .= '  "priority": "medium"';
+		$prompt .= "}\n\n";
+		$prompt .= "Scoring criteria (0-100):\n";
+		$prompt .= "- Clarity: How clear and understandable is the content?\n";
+		$prompt .= "- Completeness: Does it cover the topic thoroughly?\n";
+		$prompt .= "- Relevance: Is the content relevant to the stated purpose?\n";
+		$prompt .= "- Structure: Is the content well-organized with proper headings?\n";
+		$prompt .= "- Readability: Is it easy to read and follow?\n\n";
+		$prompt .= "Priority levels: low (80+), medium (60-79), high (below 60)\n";
+		$prompt .= "Provide specific, actionable feedback that content creators can implement.";
+
+		return $prompt;
+	}
+
+	/**
+	 * Parse AI response into structured quality analysis data
+	 *
+	 * @param string $response Raw AI response
+	 * @return array|\WP_Error Parsed analysis data
+	 */
+	private function parse_quality_analysis_response( $response ) {
+		// Try to extract JSON from the response
+		$json_start = strpos( $response, '{' );
+		$json_end = strrpos( $response, '}' );
+
+		if ( $json_start === false || $json_end === false ) {
+			return new \WP_Error( 'parse_error', 'Could not find valid JSON in AI response.' );
+		}
+
+		$json_string = substr( $response, $json_start, $json_end - $json_start + 1 );
+		$data = json_decode( $json_string, true );
+
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			return new \WP_Error( 'json_error', 'Invalid JSON in AI response: ' . json_last_error_msg() );
+		}
+
+		// Validate required fields
+		$required_fields = [ 'overall_score', 'scores', 'feedback' ];
+		foreach ( $required_fields as $field ) {
+			if ( ! isset( $data[ $field ] ) ) {
+				return new \WP_Error( 'missing_field', "Missing required field: {$field}" );
+			}
+		}
+
+		// Ensure scores are within valid range
+		$data['overall_score'] = max( 0, min( 100, intval( $data['overall_score'] ) ) );
+
+		if ( isset( $data['scores'] ) && is_array( $data['scores'] ) ) {
+			foreach ( $data['scores'] as $key => $score ) {
+				$data['scores'][ $key ] = max( 0, min( 100, intval( $score ) ) );
+			}
+		}
+
+		// Set default priority if not provided
+		if ( ! isset( $data['priority'] ) ) {
+			$overall_score = $data['overall_score'];
+			if ( $overall_score >= 80 ) {
+				$data['priority'] = 'low';
+			} elseif ( $overall_score >= 60 ) {
+				$data['priority'] = 'medium';
+			} else {
+				$data['priority'] = 'high';
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Save article quality score as post meta
+	 *
+	 * @param int $post_id Post ID
+	 * @param array $quality_data Quality analysis data
+	 * @return bool Success status
+	 */
+	public function save_article_quality_score( $post_id, $quality_data ) {
+		if ( empty( $post_id ) || ! is_array( $quality_data ) ) {
+			return false;
+		}
+
+		// Save the complete analysis data
+		$saved = update_post_meta( $post_id, '_betterdocs_article_quality_analysis', $quality_data );
+
+		// Save just the overall score for easy querying
+		update_post_meta( $post_id, '_betterdocs_article_quality_score', $quality_data['overall_score'] );
+
+		// Save analysis timestamp
+		update_post_meta( $post_id, '_betterdocs_article_quality_analyzed_at', current_time( 'mysql' ) );
+
+		return $saved !== false;
+	}
+
+	/**
+	 * Get article quality score from post meta
+	 *
+	 * @param int $post_id Post ID
+	 * @return array|false Quality analysis data or false if not found
+	 */
+	public function get_article_quality_score( $post_id ) {
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		$quality_data = get_post_meta( $post_id, '_betterdocs_article_quality_analysis', true );
+
+		if ( empty( $quality_data ) ) {
+			return false;
+		}
+
+		// Add timestamp if available
+		$analyzed_at = get_post_meta( $post_id, '_betterdocs_article_quality_analyzed_at', true );
+		if ( $analyzed_at ) {
+			$quality_data['analyzed_at'] = $analyzed_at;
+		}
+
+		return $quality_data;
+	}
+
+	/**
+	 * Check if article needs re-analysis based on last modified date
+	 *
+	 * @param int $post_id Post ID
+	 * @return bool True if re-analysis is needed
+	 */
+	public function needs_reanalysis( $post_id ) {
+		$analyzed_at = get_post_meta( $post_id, '_betterdocs_article_quality_analyzed_at', true );
+
+		if ( empty( $analyzed_at ) ) {
+			return true; // Never analyzed
+		}
+
+		$post = get_post( $post_id );
+		if ( ! $post ) {
+			return false;
+		}
+
+		// Check if post was modified after last analysis
+		$post_modified = strtotime( $post->post_modified );
+		$analyzed_timestamp = strtotime( $analyzed_at );
+
+		return $post_modified > $analyzed_timestamp;
+	}
+
+	/**
 	 * Create a system message for OpenAI
 	 *
 	 * @param string $content System message content

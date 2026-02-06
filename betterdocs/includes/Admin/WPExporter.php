@@ -257,7 +257,6 @@ class WPExporter {
             ]);
 
             if (is_wp_error($terms)) {
-                error_log('Error fetching terms for glossaries: ' . $terms->get_error_message());
                 return [];
             }
 

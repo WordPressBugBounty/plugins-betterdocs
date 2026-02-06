@@ -1631,8 +1631,9 @@ class CategoryBox extends BaseWidget {
 
 		$styles = '';
 		if ( $settings['layout_template'] == 'layout-4' ) {
-			$reminder = $term_count % ( $settings['box_column_layout_4'] == 0 ? 1 : $settings['box_column_layout_4'] );
-			$styles  .= "--column: $box_column;";
+			$box_column_layout_4 = (int) $settings['box_column_layout_4'];
+			$reminder = $term_count % ( $box_column_layout_4 == 0 ? 1 : $box_column_layout_4 );
+			$styles  .= "--column: $box_column_layout_4;";
 			$styles  .= "--count: $term_count;";
 			$styles  .= "--reminder: $reminder;";
 		} else {

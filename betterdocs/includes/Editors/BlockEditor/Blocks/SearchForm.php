@@ -70,8 +70,11 @@ class SearchForm extends Block {
 			$headingTag         = isset( $settings['searchHeadingTag'] ) ? $settings['searchHeadingTag'] : 'h2';
 			$subHeadingTag      = isset( $settings['searchSubHeadingTag'] ) ? $settings['searchSubHeadingTag'] : 'h3';
 			$search_modal_search_type = betterdocs()->settings->get('search_modal_search_type');
+
+			// Add AI Search Suggestions parameter
+			$enable_ai_suggestions = isset( $settings['enable_ai_powered_search'] ) ? $settings['enable_ai_powered_search'] : false;
 			echo '<div class="' . esc_attr( $settings['blockId'] ) . '">';
-			echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . esc_attr( $faq_categories_ids ) . '" doc_ids="' . esc_attr( $doc_ids ) . '" doc_categories_ids="' . esc_attr( $doc_categories_ids ) . '" number_of_docs="' . esc_attr( $number_of_docs ) . '" number_of_faqs="' . esc_attr( $number_of_faqs ) . '" search_button_text="Search" search_button="' . esc_attr( $search_button ) . '" popular_search="' . esc_attr( $popular_search ) . '" category_search="' . esc_attr( $category_search ) . '" layout="' . esc_attr( $search_modal_layout ) . '" heading="' . esc_attr( $searchHeading ) . '" subheading="' . esc_attr( $subHeading ) . '" heading_tag="' . esc_attr( $headingTag ) . '" subheading_tag="' . esc_attr( $subHeadingTag ) . '" placeholder="' . esc_attr( $settings['placeholderText'] ) . '"]' );
+			echo do_shortcode( '[betterdocs_search_modal enable_docs_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'docs' ? true : false).'" enable_faq_search="'.($search_modal_search_type == 'all' || $search_modal_search_type == 'faq' ? true : false).'" faq_categories_ids="' . esc_attr( $faq_categories_ids ). '" doc_ids="' . esc_attr( $doc_ids ) . '" doc_categories_ids="' . esc_attr( $doc_categories_ids ) . '" number_of_docs="' . esc_attr( $number_of_docs ) . '" number_of_faqs="' . esc_attr( $number_of_faqs ) . '" search_button_text="Search" search_button="' . esc_attr( $search_button ) . '" popular_search="' . esc_attr( $popular_search ) . '" category_search="' . esc_attr( $category_search ) . '" layout="' . esc_attr( $search_modal_layout ) . '" heading="' . esc_attr( $searchHeading ) . '" subheading="' . esc_attr( $subHeading ) . '" heading_tag="' . esc_attr( $headingTag ) . '" subheading_tag="' . esc_attr( $subHeadingTag ) . '" placeholder="' . esc_attr( $settings['placeholderText'] ) . '" enable_ai_powered_search="' . esc_attr( $enable_ai_suggestions ) . '"]' );
 			echo '</div>';
 		}
 	}
@@ -90,9 +93,6 @@ class SearchForm extends Block {
 			],
 			$this->attributes
 		);
-
-		// Debug: Log the shortcode attributes after filter
-		error_log('SearchForm Block - _shortcode_attributes after filter: ' . print_r($_shortcode_attributes, true));
 
 		$wrapper_classes = [];
 		if ( isset( $settings['blockId'] ) && ! empty( $settings['blockId'] ) ) {

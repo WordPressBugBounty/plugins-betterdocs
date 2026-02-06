@@ -261,6 +261,305 @@ class Helper extends Base {
 		return true;
 	}
 
+	/**
+	 * Get current admin language for multilingual sites
+	 * This is specifically for admin context where we need to detect
+	 * the language being used for editing terms/posts
+	 *
+	 * @return string|null Current admin language code
+	 */
+	public static function get_current_admin_language() {
+		$current_language = null;
+
+		// WPML Support - Admin language detection
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && $sitepress->is_setup_complete() ) {
+				// For term editing, check if we have a specific term language
+				if ( isset( $_GET['tag_ID'] ) && function_exists( 'wpml_get_language_information' ) ) {
+					$term_info = wpml_get_language_information( null, (int) $_GET['tag_ID'] );
+					if ( ! is_wp_error( $term_info ) && $term_info && isset( $term_info['language_code'] ) ) {
+						$current_language = $term_info['language_code'];
+					}
+
+				}
+
+				// Check for language parameter in URL
+				if ( ! $current_language && isset( $_GET['lang'] ) ) {
+					$current_language = sanitize_text_field( $_GET['lang'] );
+				}
+
+				// Fallback to admin language or current language
+				if ( ! $current_language ) {
+					$current_language = defined( 'ICL_LANGUAGE_CODE' ) ? ICL_LANGUAGE_CODE : $sitepress->get_current_language();
+				}
+			}
+		}
+		// Polylang Support - Admin language detection
+		elseif ( function_exists( 'pll_current_language' ) ) {
+			// For term editing, get language from term ID
+			if ( isset( $_GET['tag_ID'] ) && function_exists( 'pll_get_term_language' ) ) {
+				$term_lang = pll_get_term_language( (int) $_GET['tag_ID'] );
+				if ( $term_lang ) {
+					$current_language = $term_lang;
+				}
+			}
+
+			// Check for language parameter in URL
+			if ( ! $current_language && isset( $_GET['lang'] ) ) {
+				$current_language = sanitize_text_field( $_GET['lang'] );
+			}
+
+			// Fallback to current admin language
+			if ( ! $current_language ) {
+				$current_language = pll_current_language( 'slug' );
+			}
+		}
+		// Other multilingual plugins
+		elseif ( function_exists( 'qtranxf_getLanguage' ) ) {
+			$current_language = qtranxf_getLanguage();
+		}
+		elseif ( function_exists( 'weglot_get_current_language' ) ) {
+			$current_language = weglot_get_current_language();
+		}
+		elseif ( class_exists( 'TRP_Translate_Press' ) && function_exists( 'trp_get_current_language' ) ) {
+			$current_language = trp_get_current_language();
+		}
+
+		return $current_language;
+	}
+
+	/**
+	 * Generate language-specific meta key for category ordering
+	 * Always falls back to base key if language-specific key doesn't exist
+	 *
+	 * @param string $base_key The base meta key (e.g., 'doc_category_order')
+	 * @param string|null $language Language code, if null will auto-detect
+	 * @return string Language-specific meta key or base key as fallback
+	 */
+	public static function get_language_specific_meta_key( $base_key, $language = null ) {
+		// If no multilingual plugin is active, return the base key
+		if ( ! self::is_multilingual_active() ) {
+			return $base_key;
+		}
+
+		// Get current admin language if not provided
+		if ( $language === null ) {
+			$language = self::get_current_admin_language();
+		}
+
+		// If no language detected, return base key for backward compatibility
+		if ( ! $language ) {
+			return $base_key;
+		}
+
+		// Always return base key for now - we'll handle fallback in the query functions
+		// This ensures compatibility without requiring migration
+		return $base_key;
+	}
+
+	/**
+	 * Get the appropriate meta key with fallback logic
+	 * This function checks if language-specific meta exists, if not falls back to base key
+	 *
+	 * @param string $base_key The base meta key
+	 * @param int $term_id The term ID to check
+	 * @param string|null $language Language code
+	 * @return string The meta key to use
+	 */
+	public static function get_meta_key_with_fallback( $base_key, $term_id = null, $language = null ) {
+		// If no multilingual plugin is active, return the base key
+		if ( ! self::is_multilingual_active() ) {
+			return $base_key;
+		}
+
+		// Get current admin language if not provided
+		if ( $language === null ) {
+			$language = self::get_current_admin_language();
+		}
+
+		// If no language detected, return base key
+		if ( ! $language ) {
+			return $base_key;
+		}
+
+		$lang_meta_key = $base_key . '_' . $language;
+
+		// If we have a specific term ID, check if language-specific meta exists
+		if ( $term_id ) {
+			$lang_value = get_term_meta( $term_id, $lang_meta_key, true );
+			if ( ! empty( $lang_value ) ) {
+				return $lang_meta_key;
+			}
+			// Fall back to base key if language-specific doesn't exist
+			return $base_key;
+		}
+
+		// For queries without specific term ID, we need to check if ANY terms have language-specific meta
+		global $wpdb;
+		$has_lang_meta = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
+			INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
+			WHERE tm.meta_key = %s AND tt.taxonomy = 'doc_category' AND tm.meta_value != ''",
+			$lang_meta_key
+		) );
+
+		// If language-specific meta exists for some terms, use it (terms without it will have empty values)
+		// Otherwise, fall back to base key
+		return $has_lang_meta > 0 ? $lang_meta_key : $base_key;
+	}
+
+	/**
+	 * Migrate existing category orders to language-specific meta keys
+	 * This should be called when a multilingual plugin is activated
+	 *
+	 * @param string $base_key The base meta key (e.g., 'doc_category_order')
+	 * @param string $taxonomy The taxonomy to migrate
+	 * @return bool Success status
+	 */
+	public static function migrate_category_orders_to_multilingual( $base_key = 'doc_category_order', $taxonomy = 'doc_category' ) {
+		// Only run if multilingual plugin is active
+		if ( ! self::is_multilingual_active() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// Get all terms with the base meta key
+		$terms_with_order = $wpdb->get_results( $wpdb->prepare(
+			"SELECT tm.term_id, tm.meta_value, t.slug
+			FROM {$wpdb->termmeta} tm
+			INNER JOIN {$wpdb->terms} t ON tm.term_id = t.term_id
+			INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+			WHERE tm.meta_key = %s AND tt.taxonomy = %s",
+			$base_key,
+			$taxonomy
+		) );
+
+		if ( empty( $terms_with_order ) ) {
+			return true; // Nothing to migrate
+		}
+
+		// Get available languages
+		$languages = self::get_available_languages();
+
+		if ( empty( $languages ) ) {
+			return false; // No languages found
+		}
+
+		// Migrate orders for each language
+		foreach ( $languages as $language ) {
+			$language_meta_key = $base_key . '_' . $language;
+
+			foreach ( $terms_with_order as $term_data ) {
+				// Check if language-specific meta already exists
+				$existing_value = get_term_meta( $term_data->term_id, $language_meta_key, true );
+
+				if ( empty( $existing_value ) ) {
+					// Copy the base order to language-specific key
+					update_term_meta( $term_data->term_id, $language_meta_key, $term_data->meta_value );
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Migrate existing document orders to language-specific meta keys
+	 * This should be called when a multilingual plugin is activated
+	 *
+	 * @param string $base_key The base meta key (e.g., '_docs_order')
+	 * @param string $taxonomy The taxonomy to migrate
+	 * @return bool Success status
+	 */
+	public static function migrate_docs_orders_to_multilingual( $base_key = '_docs_order', $taxonomy = 'doc_category' ) {
+		// Only run if multilingual plugin is active
+		if ( ! self::is_multilingual_active() ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		// Get all terms with the base meta key for document ordering
+		$terms_with_docs_order = $wpdb->get_results( $wpdb->prepare(
+			"SELECT tm.term_id, tm.meta_value, t.slug
+			FROM {$wpdb->termmeta} tm
+			INNER JOIN {$wpdb->terms} t ON tm.term_id = t.term_id
+			INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+			WHERE tm.meta_key = %s AND tt.taxonomy = %s AND tm.meta_value != ''",
+			$base_key,
+			$taxonomy
+		) );
+
+		if ( empty( $terms_with_docs_order ) ) {
+			return true; // Nothing to migrate
+		}
+
+		// Get available languages
+		$languages = self::get_available_languages();
+
+		if ( empty( $languages ) ) {
+			return false; // No languages found
+		}
+
+		// Migrate document orders for each language
+		foreach ( $languages as $language ) {
+			$language_meta_key = $base_key . '_' . $language;
+
+			foreach ( $terms_with_docs_order as $term_data ) {
+				// Check if language-specific meta already exists
+				$existing_value = get_term_meta( $term_data->term_id, $language_meta_key, true );
+
+				if ( empty( $existing_value ) ) {
+					// Copy the base document order to language-specific key
+					update_term_meta( $term_data->term_id, $language_meta_key, $term_data->meta_value );
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Migrate both category and document orders to multilingual format
+	 * This is a convenience method that runs both migrations
+	 *
+	 * @return bool Success status
+	 */
+	public static function migrate_all_orders_to_multilingual() {
+		$category_result = self::migrate_category_orders_to_multilingual();
+		$docs_result = self::migrate_docs_orders_to_multilingual();
+
+		return $category_result && $docs_result;
+	}
+
+	/**
+	 * Get available languages from multilingual plugins
+	 *
+	 * @return array Array of language codes
+	 */
+	public static function get_available_languages() {
+		$languages = [];
+
+		// WPML Support
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && $sitepress->is_setup_complete() ) {
+				$active_languages = $sitepress->get_active_languages();
+				if ( is_array( $active_languages ) ) {
+					$languages = array_keys( $active_languages );
+				}
+			}
+		}
+		// Polylang Support
+		elseif ( function_exists( 'pll_languages_list' ) ) {
+			$languages = pll_languages_list();
+		}
+
+		return $languages;
+	}
+
 	public static function get_current_letter_docs( $current_letter, $limit = '' ) {
 		global $wpdb;
 
@@ -661,6 +960,25 @@ class Helper extends Base {
         return isset( $icons[$language] ) ? $icons[$language] : '📄';
     }
 
+	/**
+	 * Check if AI Chatbot is enabled
+	 *
+	 * @return bool
+	 */
+	public function is_ai_chatbot_enabled() {
+		$chatbot_active = is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' );
+		$chatbot_license_valid = get_option( 'betterdocs_chatbot_software__license_status' ) === 'valid';
+		$chatbot_enabled = betterdocs()->settings->get( 'enable_ai_chatbot', false );
+
+		// AI Search Suggestions are enabled if all conditions are met
+		return $chatbot_active && $chatbot_license_valid && $chatbot_enabled;
+	}
+
+	/**
+	 * Check if tags are enabled and post has tags
+	 *
+	 * @return bool
+	 */
 	public function is_tag_enabled() {
 		global $post;
 		$product_terms = wp_get_object_terms( $post->ID, 'doc_tag' );
@@ -668,6 +986,24 @@ class Helper extends Base {
 		return ! empty( $product_terms ) && $enable_tags;
 	}
 
+	/**
+	 * Check if AI Search Suggestions are enabled
+	 *
+	 * @return bool
+	 */
+	public function is_ai_search_suggestions_enabled() {
+		$ai_search_suggestions_active = is_plugin_active( 'betterdocs-ai-search-suggestions/betterdocs-ai-search-suggestions.php' );
+		$ai_search_suggestions_license_valid = get_option( 'betterdocs_ai_search_suggestions_software__license_status' ) === 'valid';
+		$ai_search_suggestions_enabled = betterdocs()->settings->get( 'enable_ai_powered_search', false );
+
+		return $ai_search_suggestions_active && $ai_search_suggestions_license_valid && $ai_search_suggestions_enabled;
+	}
+
+	/**
+	 * Get the maximum order value from the 'doc_category_order' term meta
+	 *
+	 * @return int
+	 */
 	public static function get_max_doc_category_order_from_term_meta() {
 		global $wpdb;
 		$sql    = $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) AS max FROM {$wpdb->prefix}termmeta WHERE meta_key = %s ", 'doc_category_order');

@@ -34,7 +34,7 @@ class ArchiveList extends Block {
 			'blockId'               => '',
 			'nested_subcategory'    => false,
 			'order'                 => 'asc',
-			'orderby'               => 'title',
+			'orderby'               => 'betterdocs_order',
 			'layout'                => 'layout-1',
 			'list_icon'             => 'far fa-file-alt',
 			'postsPerPageLayoutTwo' => -1,
@@ -105,8 +105,6 @@ class ArchiveList extends Block {
 			'term_id'        => isset( $term->term_id ) ? $term->term_id : 0,
 			'orderby'        => $this->attributes['orderby'],
 			'order'          => $this->attributes['order'],
-			'postsOrderBy'   => $this->attributes['orderby'],
-			'postsOrder'     => $this->attributes['order'],
 			'kb_slug'        => '',
 			'posts_per_page' => $posts_per_page,
 			'term_slug'      => isset( $term->slug ) ? $term->slug : ''

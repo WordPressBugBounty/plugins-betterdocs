@@ -673,6 +673,55 @@ class WPImport extends WP_Importer {
 		return $posts;
 	}
 
+	/**
+	 * Fix encoding issues in CSV data
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	private function fix_encoding_issues( $text ) {
+		if ( empty( $text ) ) {
+			return $text;
+		}
+
+		// Convert to UTF-8 if not already
+		if ( ! mb_check_encoding( $text, 'UTF-8' ) ) {
+			$detected_encoding = mb_detect_encoding( $text, ['UTF-8', 'ISO-8859-1', 'Windows-1252', 'ASCII'], true );
+			if ( $detected_encoding ) {
+				$text = mb_convert_encoding( $text, 'UTF-8', $detected_encoding );
+			} else {
+				// Fallback: assume ISO-8859-1 if detection fails
+				$text = mb_convert_encoding( $text, 'UTF-8', 'ISO-8859-1' );
+			}
+		}
+
+		// Fix common encoding issues
+		$replacements = [
+			// Smart quotes (using Unicode escape sequences)
+			"\u{2019}" => "'",  // Right single quotation mark
+			"\u{2018}" => "'",  // Left single quotation mark
+			"\u{201C}" => '"',  // Left double quotation mark
+			"\u{201D}" => '"',  // Right double quotation mark
+			"\u{2013}" => '-',  // En dash
+			"\u{2014}" => '--', // Em dash
+			"\u{2026}" => '...', // Horizontal ellipsis
+			// HTML entities that might be double-encoded
+			'&amp;' => '&',
+			'&lt;' => '<',
+			'&gt;' => '>',
+			'&quot;' => '"',
+			// Remove replacement characters
+			"\u{FFFD}" => '', // Replacement character
+		];
+
+		$text = str_replace( array_keys( $replacements ), array_values( $replacements ), $text );
+
+		// Remove any remaining non-printable characters except newlines and tabs
+		$text = preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text );
+
+		return $text;
+	}
+
 	private function import_sample_data( $posts, $action ) {
 		$result = [
 			'succeed' => [],
@@ -697,23 +746,33 @@ class WPImport extends WP_Importer {
 			// Check if the category and knowledge base term exist, if not, create them
 			$default_multiple_kb = betterdocs()->settings->get( 'multiple_kb' );
 
+			$knowledge_base_id = 0;
 			if ( $default_multiple_kb == 1 && $knowledge_base_slug ) {
-				$knowledge_base_id = term_exists( $knowledge_base_name, 'knowledge_base' );
-				if ( ! $knowledge_base_id && $knowledge_base_name ) {
-					$kb_term           = wp_insert_term( $knowledge_base_name, 'knowledge_base', [ 'slug' => $knowledge_base_slug ] );
-					$knowledge_base_id = ! is_wp_error( $kb_term ) ? $kb_term['term_id'] : 0;
+				$existing_kb = term_exists( $knowledge_base_name, 'knowledge_base' );
+				if ( ! $existing_kb && $knowledge_base_name ) {
+					$kb_term = wp_insert_term( $knowledge_base_name, 'knowledge_base', [ 'slug' => $knowledge_base_slug ] );
+					if ( is_wp_error( $kb_term ) ) {
+						$knowledge_base_id = 0;
+					} else {
+						$knowledge_base_id = $kb_term['term_id'];
+					}
+				} elseif ( $existing_kb ) {
+					$knowledge_base_id = $existing_kb['term_id'];
 				}
-			} else {
-				$knowledge_base_id = 0;
 			}
 
+			$category_id = 0;
 			if ( $category_slug ) {
-				$category_id = term_exists( $category_name, 'doc_category' );
-				if ( ! $category_id ) {
+				$existing_category = term_exists( $category_name, 'doc_category' );
+				if ( ! $existing_category ) {
 					$category_term = wp_insert_term( $category_name, 'doc_category', [ 'slug' => $category_slug ] );
-					$category_id   = ! is_wp_error( $category_term ) ? $category_term['term_id'] : 0;
+					if ( is_wp_error( $category_term ) ) {
+						$category_id = 0;
+					} else {
+						$category_id = $category_term['term_id'];
+					}
 				} else {
-					$category_id = $category_id['term_id'];
+					$category_id = $existing_category['term_id'];
 				}
 
 				if ( $default_multiple_kb == 1 && $knowledge_base_id && $category_id ) {
@@ -725,6 +784,64 @@ class WPImport extends WP_Importer {
 				}
 			}
 
+			// Validate and sanitize post data with encoding fixes
+			$post_title = $this->fix_encoding_issues( trim( $post_title ) );
+			$post_content = $this->fix_encoding_issues( trim( $post_content ) );
+			$post_name = $this->fix_encoding_issues( trim( $post_name ) );
+			$post_status = !empty( $post_status ) ? $post_status : 'publish';
+
+			// Skip posts with empty titles
+			if ( empty( $post_title ) ) {
+				$result['failed'][] = [
+					'title' => 'Empty Title',
+					'error' => 'Post title is required'
+				];
+				continue;
+			}
+
+			// Additional WordPress validation checks
+			$validation_errors = [];
+
+			// Check title length (WordPress has a 200 character limit for post_title)
+			if ( strlen( $post_title ) > 200 ) {
+				$validation_errors[] = 'Title too long (max 200 characters)';
+			}
+
+			// Check for valid post status
+			$valid_statuses = get_post_stati();
+			if ( !in_array( $post_status, array_keys( $valid_statuses ) ) ) {
+				$post_status = 'publish';
+			}
+
+			// Check if post with same title already exists
+			$existing_posts = get_posts([
+				'post_type' => 'docs',
+				'title' => $post_title,
+				'post_status' => 'any',
+				'numberposts' => 1
+			]);
+			if ( !empty( $existing_posts ) ) {
+				$validation_errors[] = 'Post with same title already exists (ID: ' . $existing_posts[0]->ID . ')';
+			}
+
+			// Check if slug already exists (if provided)
+			if ( !empty( $post_name ) ) {
+				$existing_by_slug = get_posts([
+					'post_type' => 'docs',
+					'name' => $post_name,
+					'post_status' => 'any',
+					'numberposts' => 1
+				]);
+			}
+
+			if ( !empty( $validation_errors ) ) {
+				$result['failed'][] = [
+					'title' => $post_title,
+					'error' => implode(', ', $validation_errors)
+				];
+				continue;
+			}
+
 			// Set up the post data
 			$post_data = [
 				'post_title'   => $post_title,
@@ -734,17 +851,56 @@ class WPImport extends WP_Importer {
 				'post_type'    => 'docs'
 			];
 
-			if ( $category_name ) {
+			if ( $category_name && $category_id ) {
 				$post_data['tax_input']['doc_category'] = [ $category_id ];
 			}
 
-			if ( $default_multiple_kb == 1 ) {
+			if ( $default_multiple_kb == 1 && $knowledge_base_id ) {
 				$post_data['tax_input']['knowledge_base'] = [ $knowledge_base_id ];
 			}
 
-			// Insert the post
-			$post_id = wp_insert_post( $post_data );
+			// Insert the post (without knowledge_base taxonomy to avoid capability issues)
+			$post_data_without_kb = $post_data;
+			if (isset($post_data_without_kb['tax_input']['knowledge_base'])) {
+				$kb_terms = $post_data_without_kb['tax_input']['knowledge_base'];
+				unset($post_data_without_kb['tax_input']['knowledge_base']);
+			}
 
+			$post_id = wp_insert_post( $post_data_without_kb );
+
+			// Manually assign knowledge_base terms after post creation to bypass capability check
+			if ( !is_wp_error($post_id) && $post_id > 0 && isset($kb_terms) && !empty($kb_terms) ) {
+				// Convert term IDs to integers and ensure they exist
+				$term_ids = array_map('intval', $kb_terms);
+
+				$result_kb = wp_set_object_terms( $post_id, $term_ids, 'knowledge_base' );
+				if ( !is_wp_error($result_kb) ) {
+					$assigned_terms = wp_get_object_terms($post_id, 'knowledge_base');
+					if (!empty($assigned_terms)) {
+						$term_names = array_map(function($term) { return $term->name; }, $assigned_terms);
+					}
+				}
+			}
+
+			// Enhanced debugging for failed insertions
+			if ( is_wp_error( $post_id ) ) {
+				$result['failed'][] = [
+					'title' => $post_title,
+					'error' => $post_id->get_error_message()
+				];
+				continue;
+			} elseif ( $post_id === 0 ) {
+				$result['failed'][] = [
+					'title' => $post_title,
+					'error' => 'Post insertion returned 0 - validation failed'
+				];
+				continue;
+			} else {
+				$result['succeed'][] = [
+					'title' => $post_title,
+					'id' => $post_id
+				];
+			}
 			// Set the featured image
 			if ( $featured_image_url ) {
 				$this->set_post_thumbnail( $post_id, $featured_image_url );
@@ -871,18 +1027,18 @@ class WPImport extends WP_Importer {
 
 			$postdata = [
 				'post_author'    => $author,
-				'post_content'   => isset( $post['post_content'] ) ? $post['post_content'] : '',
-				'post_excerpt'   => isset( $post['post_excerpt'] ) ? $post['post_excerpt'] : '',
-				'post_title'     => isset( $post['post_title'] ) ? $post['post_title'] : '',
+				'post_content'   => isset( $post['post_content'] ) ? $this->fix_encoding_issues( $post['post_content'] ) : '',
+				'post_excerpt'   => isset( $post['post_excerpt'] ) ? $this->fix_encoding_issues( $post['post_excerpt'] ) : '',
+				'post_title'     => isset( $post['post_title'] ) ? $this->fix_encoding_issues( $post['post_title'] ) : '',
 				'post_status'    => isset( $post['status'] ) ? $post['status'] : '',
-				'post_name'      => isset( $post['post_name'] ) ? $post['post_name'] : '',
+				'post_name'      => isset( $post['post_name'] ) ? $this->fix_encoding_issues( $post['post_name'] ) : '',
 				'comment_status' => isset( $post['comment_status'] ) ? $post['comment_status'] : '',
 				'ping_status'    => isset( $post['ping_status'] ) ? $post['ping_status'] : '',
-				'guid'           => isset( $post['guid'] ) ? $post['guid'] : '',
+				'guid'           => isset( $post['guid'] ) ? $this->fix_encoding_issues( $post['guid'] ) : '',
 				'post_parent'    => $post_parent,
 				'menu_order'     => isset( $post['menu_order'] ) ? $post['menu_order'] : '',
 				'post_type'      => isset( $post['post_type'] ) ? $post['post_type'] : '',
-				'post_password'  => isset( $post['post_password'] ) ? $post['post_password'] : ''
+				'post_password'  => isset( $post['post_password'] ) ? $this->fix_encoding_issues( $post['post_password'] ) : ''
 			];
 
 			$original_post_id = $post['post_id'];
@@ -959,10 +1115,15 @@ class WPImport extends WP_Importer {
 				foreach ( $post['terms'] as $term ) {
 					// back compat with WXR 1.0 map 'tag' to 'post_tag'
 					$taxonomy    = ( 'tag' === $term['domain'] ) ? 'post_tag' : $term['domain'];
-					$term_exists = term_exists( $term['slug'], $taxonomy );
+
+					// Apply encoding fixes to term data
+					$term_name = $this->fix_encoding_issues( $term['name'] );
+					$term_slug = $this->fix_encoding_issues( $term['slug'] );
+
+					$term_exists = term_exists( $term_slug, $taxonomy );
 					$term_id     = is_array( $term_exists ) ? $term_exists['term_id'] : $term_exists;
 					if ( ! $term_id ) {
-						$t = wp_insert_term( $term['name'], $taxonomy, [ 'slug' => $term['slug'] ] );
+						$t = wp_insert_term( $term_name, $taxonomy, [ 'slug' => $term_slug ] );
 						if ( ! is_wp_error( $t ) ) {
 							$term_id = $t['term_id'];
 
@@ -987,7 +1148,12 @@ class WPImport extends WP_Importer {
 				}
 
 				foreach ( $terms_to_set as $tax => $ids ) {
-					$tt_ids = wp_set_post_terms( $post_id, $ids, $tax );
+					// Handle knowledge_base taxonomy capability issues
+					if ( $tax === 'knowledge_base' ) {
+						$tt_ids = wp_set_object_terms( $post_id, $ids, $tax );
+					} else {
+						$tt_ids = wp_set_post_terms( $post_id, $ids, $tax );
+					}
 					do_action( 'wp_import_set_post_terms', $tt_ids, $ids, $tax, $post_id, $post );
 				}
 				unset( $post['terms'], $terms_to_set );
@@ -1056,6 +1222,8 @@ class WPImport extends WP_Importer {
 
 			// Add/update post meta.
 			if ( ! empty( $post['postmeta'] ) ) {
+				$imported_meta_keys = []; // Track imported meta keys to prevent duplicates
+				
 				foreach ( $post['postmeta'] as $meta ) {
 					$key   = apply_filters( 'import_post_meta_key', $meta['key'], $post_id, $post );
 					$value = false;
@@ -1069,6 +1237,14 @@ class WPImport extends WP_Importer {
 					}
 
 					if ( $key ) {
+						// Skip if this meta key has already been imported for this post
+						if ( isset( $imported_meta_keys[ $key ] ) ) {
+							continue;
+						}
+						
+						// Mark this meta key as imported
+						$imported_meta_keys[ $key ] = true;
+						
 						// Export gets meta straight from the DB so could have a serialized string.
 						if ( ! $value ) {
 							$value = maybe_unserialize( $meta['value'] );
@@ -1085,7 +1261,7 @@ class WPImport extends WP_Importer {
 					}
 				}
 			}
-
+			
 			do_action( 'templately_import.process_post', $post, $this, $result );
 		}
 

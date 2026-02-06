@@ -309,7 +309,7 @@ class Docs extends BaseAPI {
 	}
 
 	/**
-	 * Filter the docs query by year_month parameters.
+	 * Filter the docs query by year_month and status parameters.
 	 *
 	 * @param array $args The query arguments.
 	 * @param WP_REST_Request $request The current REST API request.
@@ -333,6 +333,12 @@ class Docs extends BaseAPI {
 			];
 		}
 
+		// Filter by post status
+		// When status is 'any' and user has edit_docs capability, show all post statuses
+		if ( isset( $request['status'] ) && $request['status'] === 'any' && current_user_can( 'edit_docs' ) ) {
+			$args['post_status'] = [ 'publish', 'draft', 'pending', 'private', 'future' ];
+		}
+
 		return $args;
 	}
 
@@ -351,6 +357,7 @@ class Docs extends BaseAPI {
 	public function search_posts( $request ) {
 		$search_query = sanitize_text_field( $request->get_param( 's' ) );
 		$doc_category = sanitize_text_field( $request->get_param( 'doc_category' ) );
+		$kb_slug      = sanitize_text_field( $request->get_param( 'knowledge_base' ) );
 		$number       = (int) $request->get_param( 'per_page' ) ? (int) $request->get_param( 'per_page' ) : 5;
 		$docs_ids     = ! empty( $request->get_param( 'doc_ids' ) ) ? explode( ',', $request->get_param( 'doc_ids' ) ) : [];
 		$doc_term_ids = ! empty( $request->get_param( 'doc_categories_ids' ) ) ? explode( ',', $request->get_param( 'doc_categories_ids' ) ) : [];
@@ -374,9 +381,19 @@ class Docs extends BaseAPI {
 			$common_args['has_password'] = false;
 		}
 
+		// Handle WPML multilingual search
 		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
-			$common_args['suppress_filters'] = false;
-			$common_args['lang']             = ICL_LANGUAGE_CODE;
+			// If search term contains non-ASCII characters (e.g., Chinese, Japanese, Bangla),
+			// search across all languages to find translated posts
+			if ( $search_query && preg_match('/[^\x00-\x7F]/', $search_query) ) {
+				// Non-ASCII search: bypass ALL filters including WPML language filtering
+				// This allows searching across all languages
+				$common_args['suppress_filters'] = true;
+			} else {
+				// ASCII-only search (English), use WPML filters to restrict to current language
+				$common_args['suppress_filters'] = false;
+				$common_args['lang'] = ICL_LANGUAGE_CODE;
+			}
 		}
 
 		if ( $search_query ) {
@@ -395,10 +412,16 @@ class Docs extends BaseAPI {
 		);
 
 		if ( ! $search_query ) {
+		// Use date ordering when KB filter is present to avoid analytics query conflicts
+		if ( ! empty( $kb_slug ) ) {
+			$docs_args['orderby'] = 'date';
+			$docs_args['order']   = 'DESC';
+		} else {
 			$docs_args['meta_key'] = '_betterdocs_meta_views';
 			$docs_args['orderby']  = 'meta_value_num';
 			$docs_args['order']    = 'DESC';
 		}
+	}
 
 		if ( ! empty( $docs_ids ) ) {
 			unset( $docs_args['meta_key'] );
@@ -431,6 +454,13 @@ class Docs extends BaseAPI {
 				],
 			];
 		}
+
+		// Knowledge base filter for docs
+	// Pass kb_slug in args to let MultipleKB filter handle it (avoid duplicate filters)
+	if ( ! empty( $kb_slug ) && taxonomy_exists( 'knowledge_base' ) ) {
+		$docs_args['kb_slug'] = $kb_slug;
+	}
+
 
 		// FAQ-specific query
 		$faq_args = array_merge(
@@ -479,10 +509,83 @@ class Docs extends BaseAPI {
 					$taxonomies = wp_list_pluck( $terms, 'name' );
 				}
 
+				// Get the correct permalink with language parameter if needed
+				$post_id = get_the_ID();
+				$permalink = get_the_permalink( $post_id );
+				
+				// If WPML is active and post language differs from site language, add lang parameter
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					$post_language = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => $post_id, 'element_type' => 'post_docs' ) );
+					
+					if ( $post_language ) {
+						global $sitepress;
+						$current_lang = $sitepress ? $sitepress->get_current_language() : '';
+						
+						// If post language is different from current site language, add language parameter
+						if ( $post_language !== $current_lang ) {
+							$permalink = add_query_arg( 'lang', $post_language, $permalink );
+						}
+					}
+				}
+				// Handle TranslatePress permalinks
+				elseif ( class_exists( '\TRP_Translate_Press' ) ) {
+					global $TRP_LANGUAGE;
+					$trp = \TRP_Translate_Press::get_trp_instance();
+					if ( isset( $trp ) && method_exists( $trp, 'get_component' ) ) {
+						$trp_settings = $trp->get_component( 'settings' );
+						$trp_url_converter = $trp->get_component( 'url_converter' );
+						
+						if ( $trp_settings && $trp_url_converter && isset( $TRP_LANGUAGE ) ) {
+							$settings = $trp_settings->get_settings();
+							$default_lang = isset( $settings['default-language'] ) ? $settings['default-language'] : 'en_US';
+							
+							// If we're not on the default language, ensure the URL has the language prefix
+							if ( $TRP_LANGUAGE && $TRP_LANGUAGE !== $default_lang ) {
+								$permalink = $trp_url_converter->get_url_for_language( $TRP_LANGUAGE, $permalink );
+								// Remove the #TRPLINKPROCESSED marker that TranslatePress adds
+								$permalink = str_replace( '#TRPLINKPROCESSED', '', $permalink );
+							}
+						}
+					}
+				}
+
+
+				// Get the title - apply TranslatePress translation if active
+				$title = get_the_title();
+				if ( class_exists( '\TRP_Translate_Press' ) ) {
+					global $TRP_LANGUAGE, $wpdb;
+					if ( isset( $TRP_LANGUAGE ) ) {
+						$trp = \TRP_Translate_Press::get_trp_instance();
+						if ( isset( $trp ) && method_exists( $trp, 'get_component' ) ) {
+							$trp_settings = $trp->get_component( 'settings' );
+							if ( $trp_settings ) {
+								$settings = $trp_settings->get_settings();
+								$default_lang = isset( $settings['default-language'] ) ? strtolower( $settings['default-language'] ) : 'en_us';
+								$current_lang = strtolower( $TRP_LANGUAGE );
+								
+								// Only query translation if not on default language
+								if ( $default_lang !== $current_lang ) {
+									$trp_table = $wpdb->prefix . 'trp_dictionary_' . $default_lang . '_' . $current_lang;
+									
+									// Query the translation dictionary for this title
+									$translated = $wpdb->get_var( $wpdb->prepare(
+										"SELECT translated FROM {$trp_table} WHERE original = %s AND status != 2 LIMIT 1",
+										$title
+									) );
+									
+									if ( $translated && ! empty( $translated ) ) {
+										$title = $translated;
+									}
+								}
+							}
+						}
+					}
+				}
+
 				$posts[] = array(
-					'title'      => get_the_title(),
+					'title'      => $title,
 					'post_type'  => get_post_type(),
-					'permalink'  => get_the_permalink(),
+					'permalink'  => $permalink,
 					'taxonomies' => implode( ', ', $taxonomies ),
 				);
 			}
@@ -533,6 +636,20 @@ class Docs extends BaseAPI {
 
 		if ( betterdocs()->settings->get( 'child_category_exclude' ) ) { //disable child terms if this is enabled
 			$default_params['parent'] = 0;
+		}
+
+		// Add KB filtering if knowledge_base parameter is provided
+		$kb_slug = $request->get_param( 'knowledge_base' );
+		if ( ! empty( $kb_slug ) && $request->get_param( 'taxonomy' ) === 'doc_category' ) {
+			// Categories can belong to multiple KBs (stored as serialized array in doc_category_knowledge_base)
+			// We need to filter categories that have the KB slug in their serialized array
+			$default_params['meta_query'] = [
+				[
+					'key'     => 'doc_category_knowledge_base',
+					'value'   => serialize(strval($kb_slug)),
+					'compare' => 'LIKE'
+				]
+			];
 		}
 
 		// Retrieve all terms for the specified taxonomy, including empty ones

@@ -1,171 +1,165 @@
 <?php
 
-namespace WPDeveloper\BetterDocs\Core;
+    namespace WPDeveloper\BetterDocs\Core;
 
-use WPDeveloper\BetterDocs\Utils\Base;
-use WPDeveloper\BetterDocs\Core\Settings;
-use WPDeveloper\BetterDocs\Core\PostType;
+    use WPDeveloper\BetterDocs\Utils\Base;
+    use WPDeveloper\BetterDocs\Core\Settings;
+    use WPDeveloper\BetterDocs\Core\PostType;
 
-use WPDeveloper\BetterDocs\Utils\Helper;
+    use WPDeveloper\BetterDocs\Utils\Helper;
 
-class WriteWithAI extends Base {
+    class WriteWithAI extends Base {
 
-	public $settings;
+    public $settings;
 
-	public function __construct( Settings $settings ) {
-		$this->settings = $settings;
-		// Get the post ID from the URL
-        $post_id = isset($_GET['post']) ? intval($_GET['post']) : 0; // phpcs:ignore
+    public function __construct( Settings $settings ) {
+        $this->settings = $settings;
+        // Get the post ID from the URL
+        $post_id = isset( $_GET[ 'post' ] ) ? intval( $_GET[ 'post' ] ) : 0; // phpcs:ignore
 
-        if (!empty($_GET['post_type'])) { // phpcs:ignore
-            $post_type = $_GET['post_type']; // phpcs:ignore
-		} elseif ( $post_id > 0 ) {
-			$post_type = get_post_type( $post_id );
-		} else {
-			$post_type = '';
-		}
+        if ( ! empty( $_GET[ 'post_type' ] ) ) { // phpcs:ignore
+            $post_type = $_GET[ 'post_type' ]; // phpcs:ignore
+        } elseif ( $post_id > 0 ) {
+            $post_type = get_post_type( $post_id );
+        } else {
+            $post_type = '';
+        }
 
-		if ( ! empty( $this->isEnabledWriteWithAI() ) && $post_type == 'docs' ) {
-			add_action( 'admin_footer', [ $this, 'ai_autowrite_button' ] );
-		}
-		add_action( 'wp_ajax_generate_openai_content', [ $this, 'generate_openai_content_callback' ] );
+        if ( ! empty( $this->isEnabledWriteWithAI() ) && 'docs' == $post_type ) {
+            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
+        }
+        add_action( 'wp_ajax_generate_openai_content', array( $this, 'generate_openai_content_callback' ) );
+    }
 
-	}
+    public function isEnabledWriteWithAI() {
+        $isEnableAutoWrite = $this->settings->get( 'enable_write_with_ai', true );
+        return $isEnableAutoWrite;
+    }
 
-	public function isEnabledWriteWithAI() {
-		$isEnableAutoWrite = $this->settings->get( 'enable_write_with_ai', true );
-		return $isEnableAutoWrite;
-	}
+    public function isValidAPIKey( $apiKey ) {
+        if ( empty( $apiKey ) ) {
+            $api_response[ 'valid' ]   = false;
+            $api_response[ 'message' ] = 'Please Insert your <a href="/admin.php?page=betterdocs-settings">OpenAI API Key</a> to use this Write with AI feature.';
 
-	public function isValidAPIKey( $apiKey ) {
-		if ( empty( $apiKey ) ) {
-			$api_response['valid']   = false;
-			$api_response['message'] = 'Please Insert your <a href="/admin.php?page=betterdocs-settings">OpenAI API Key</a> to use this Write with AI feature.';
+            return $api_response;
+        }
 
-			return $api_response;
-		}
+        $ch = curl_init( 'https://api.openai.com/v1/engines' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(  //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $apiKey
+            )
+        );
 
-		$ch = curl_init( 'https://api.openai.com/v1/engines' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-		curl_setopt(
-			$ch,
-			CURLOPT_HTTPHEADER,
-			[ //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-			'Content-Type: application/json',
-			'Authorization: Bearer ' . $apiKey,
-			]
-		);
+        $api_response = array();
 
-		$api_response = [];
+        $response = curl_exec( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
+        $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
 
-		$response = curl_exec( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
-		$httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+        curl_close( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
 
-		curl_close( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
+        if ( 200 == $httpCode ) {
+            $api_response[ 'valid' ]   = true;
+            $api_response[ 'message' ] = 'Valid API Key';
+        } else {
+            $responseData = json_decode( $response, true );
+            // Access the message data (replace 'data' with the actual key used in the response)
+            $messageData               = $responseData[ 'error' ] ? $responseData[ 'error' ] : '';
+            $api_response[ 'valid' ]   = false;
+            $api_response[ 'message' ] = $messageData[ 'message' ] ? $messageData[ 'message' ] : 'Invalid API Key';
+        }
 
-		if ( $httpCode == 200 ) {
-			$api_response['valid']   = true;
-			$api_response['message'] = 'Valid API Key';
-		} else {
-			$responseData = json_decode( $response, true );
-			// Access the message data (replace 'data' with the actual key used in the response)
-			$messageData             = $responseData['error'] ? $responseData['error'] : '';
-			$api_response['valid']   = false;
-			$api_response['message'] = $messageData['message'] ? $messageData['message'] : 'Invalid API Key';
-		}
+        // print_r($response);
 
-		// print_r($response);
+        return $api_response;
+    }
 
-		return $api_response;
-	}
+    public function get_api_key() {
+        $api_key = $this->settings->get( 'ai_autowrite_api_key', '' );
+        return $api_key;
+    }
 
-	public function get_api_key() {
-		$api_key = $this->settings->get( 'ai_autowrite_api_key', '' );
-		return $api_key;
-	}
+    public function generate_openai_response( $prompt, $keywords ) {
+        try {
+            $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
+            $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
+            $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
+            $api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
 
-	public function generate_openai_response( $prompt, $keywords ) {
-		try {
-			$api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-			$max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
-			$model = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
+            $request_options = array(
+                'headers' => array(
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $api_key
+                ),
+                'body' => json_encode(
+                    array(  //phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+                        'model' => $model, // Add the model parameter here
+                        'messages' => array(
+                            array(
+                                'role' => 'system',
+                                'content' => 'You are a helpful assistant who writes documentation for users.'
+                            ),
+                            array(
+                                'role' => 'user',
+                                'content' => $prompt
+                            )
+                        ),
+                        'max_tokens' => $max_tokens
 
-			$api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
+                    )
+                ),
+                'timeout' => 50
+            );
 
-			$request_options = array(
-				'headers' => array(
-					'Content-Type'  => 'application/json',
-					'Authorization' => 'Bearer ' . $api_key,
-				),
-				'body'    => json_encode(
-					array( //phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
-					'model'      => $model, // Add the model parameter here
-					'messages'   => array(
-						array(
-					'role'    => 'system',
-					'content' => 'You are a helpful assistant who writes documentation for users.'
-					),
-						array(
-					'role'    => 'user',
-					'content' => $prompt
-					),
-					),
-					'max_tokens' => $max_tokens,
+            $response = wp_remote_post( $api_endpoint, $request_options );
 
-					)
-				),
-				'timeout' => 50,
-			);
+            if ( is_wp_error( $response ) ) {
+                return 'Error: ' . $response->get_error_message();
+            } else {
+                $body = wp_remote_retrieve_body( $response );
 
-			$response = wp_remote_post( $api_endpoint, $request_options );
+                $data = json_decode( $body, true );
 
-			if ( is_wp_error( $response ) ) {
-				return 'Error: ' . $response->get_error_message();
-			} else {
-				$body = wp_remote_retrieve_body( $response );
+                if ( ! empty( $data[ 'error' ] ) ) {
+                    return $data[ 'error' ][ 'message' ];
+                }
 
-				$data = json_decode( $body, true );
+                return $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ]; // Update this line to get the assistant's message
+            }
+        } catch ( Exception $error ) {
+            return 'Error: ' . $error->getMessage();
+        }
+    }
 
-				if ( ! empty( $data['error'] ) ) {
-					return $data['error']['message'];
-				}
+    public function generate_openai_content_callback() {
+        // Verify the nonce
+        if ( ! isset( $_POST[ 'ai_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'ai_nonce' ], 'generate_openai_content_nonce' ) ) { //phpcs:ignore
+            wp_send_json_error( 'Invalid nonce' );
+            wp_die();
+        }
 
-				return $data['choices'][0]['message']['content']; // Update this line to get the assistant's message
-			}
-		} catch ( Exception $error ) {
-			return 'Error: ' . $error->getMessage();
-		}
-	}
+        $prompt = sanitize_text_field( $_POST[ 'prompt' ] ); //phpcs:ignore
+        // $num_of_sections = sanitize_text_field($_POST['numOfSections']);
+        // $num_of_paragraphs = sanitize_text_field($_POST['numOfParagraphs']);
+        $keywords = sanitize_text_field( $_POST[ 'keywords' ] ); //phpcs:ignore
 
+        $ai_instance = new WriteWithAI( $this->settings );
 
+        $generated_content = $ai_instance->generate_openai_response( $prompt, $keywords );
 
-	public function generate_openai_content_callback() {
-		// Verify the nonce
-        if (!isset($_POST['ai_nonce']) || !wp_verify_nonce($_POST['ai_nonce'], 'generate_openai_content_nonce')) { //phpcs:ignore
-			wp_send_json_error( 'Invalid nonce' );
-			wp_die();
-		}
+        // Send the generated content as the AJAX response
+        wp_send_json_success( $generated_content );
+        wp_die();
+    }
 
-        $prompt = sanitize_text_field($_POST['prompt']); //phpcs:ignore
-		// $num_of_sections = sanitize_text_field($_POST['numOfSections']);
-		// $num_of_paragraphs = sanitize_text_field($_POST['numOfParagraphs']);
-        $keywords = sanitize_text_field($_POST['keywords']); //phpcs:ignore
+    public function ai_autowrite_button() {
 
-		$ai_instance = new WriteWithAI( $this->settings );
-
-		$generated_content = $ai_instance->generate_openai_response( $prompt, $keywords );
-
-		// Send the generated content as the AJAX response
-		wp_send_json_success( $generated_content );
-		wp_die();
-	}
-
-
-
-	public function ai_autowrite_button() {
-
-		?>
+        ?>
 		<script>
 			var docsTitle;
 
@@ -233,12 +227,6 @@ class WriteWithAI extends Base {
 									insertContentToEditor(title, response.data, isOverwrite, keywords);
 									docGenerateBtnTxt.innerHTML = reGenerateDocLabel;
 									jQuery('.generate-btn').removeAttr('disabled');
-
-									// console.log(jQuery('.betterdocs-ai-autowrite-form-container').data('new-doc-page'));
-
-									// if(jQuery('.betterdocs-ai-autowrite-form-container')?.data('new-doc-page')) {
-									//     docGenerateBtnTxt.innerHTML = reGenerateDocLabel;
-									// }
 								}, 2000);
 							} else {
 								// alert(response.data.message);
@@ -325,7 +313,6 @@ class WriteWithAI extends Base {
 
 				// Check if match is null before accessing match[1]
 				if (match) {
-					console.log(match[1].replace(/<p>\s+/g, '<p>'));
 					return match[1].replace(/<p>\s+/g, '<p>');
 				} else {
 					return '';
@@ -344,7 +331,7 @@ class WriteWithAI extends Base {
 				htmlContent = getBodyContent(htmlContent);
 				htmlContent = removeFirstHeading(htmlContent);
 				htmlContent = wrapwithHeighlight(htmlContent, keywords);
-                const isPostContent = `<?php echo isset($_GET['post']) ? esc_html(get_the_content($_GET['post'])) : ''; // phpcs:ignore ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
 
 				const blocks = wp.blocks.rawHandler({
 					HTML: htmlContent
@@ -418,12 +405,12 @@ class WriteWithAI extends Base {
 
 			function writeWithAIForm() {
 
-                let title = `<?php echo isset($_GET['post']) ? esc_html(get_the_title($_GET['post'])) : ''; // phpcs:ignore ?>`;
+                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
 				if (docsTitle) {
 					title = docsTitle;
 				}
 
-                const promtTitle = `<?php echo isset($_GET['post']) ? esc_html(get_the_title($_GET['post'])) : '{Documentation Title}'; // phpcs:ignore ?>`;
+                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore   ?>`;
 				const titlePlaceholder = "<?php echo esc_attr__( 'Enter a descriptive title for your documentation.', 'betterdocs' ); ?>";
 				const keywords = "<?php echo esc_attr( '{Documentation Keywords}' ); ?>";
 				const keywordsPlaceholder = "<?php echo esc_attr__( 'Add keywords to generate precise & relevant documentation (comma-separated).', 'betterdocs' ); ?>";
@@ -440,16 +427,16 @@ class WriteWithAI extends Base {
 				const nonce = "<?php echo esc_attr( wp_create_nonce( 'generate_openai_content_nonce' ) ); ?>";
 
 				<?php
-				$is_valid              = $this->get_api_key();
-						$disable_field = 'disabled-input-field';
-				if ( $this->get_api_key() ) {
-					$disable_field = '';
-				}
-				?>
+                    $is_valid      = $this->get_api_key();
+                            $disable_field = 'disabled-input-field';
+                            if ( $this->get_api_key() ) {
+                                $disable_field = '';
+                            }
+                        ?>
 
 				let hiddenClass = 'hidden';
 				let newDocPageAtt = 'data-new-doc-page="true"';
-                const isPostContent = `<?php echo isset($_GET['post']) ? esc_html(get_the_content($_GET['post'])) : ''; // phpcs:ignore ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
 
 				if (isPostContent !== '') {
 					hiddenClass = '';
@@ -500,12 +487,12 @@ class WriteWithAI extends Base {
 										<p><?php echo esc_html__( 'Generate documentation effortlessly with BetterDocs AI. Simply input your doc title, keywords, prompt and let the system automatically generate comprehensive documentation tailored to your needs.', 'betterdocs' ); ?></p>
 									</div>
 
-									<?php if ( empty( $this->get_api_key() ) ) : ?>
+									<?php if ( empty( $this->get_api_key() ) ): ?>
 										<div id="betterdocs-ai-message">
 											<div class="warning-message">
 													<span class="dashicons dashicons-warning"></span>
 													<div>
-														<?php echo wp_kses_post( 'Please Insert your <a target="_blank" href="' . esc_url( admin_url( 'admin.php?page=betterdocs-settings&tab=tab-ai-autowrite' ) ) . '">OpenAI API Key</a> to use this Write with AI feature.', 'betterdocs' ); ?>
+														<?php echo wp_kses_post( 'Please Insert your <a target="_blank" href="' . esc_url( admin_url( 'admin.php?page=betterdocs-settings&tab=tab-betterdocs-ai' ) ) . '">OpenAI API Key</a> to use this Write with AI feature.', 'betterdocs' ); ?>
 													</div>
 											</div>
 
@@ -1119,5 +1106,5 @@ class WriteWithAI extends Base {
 			}
 		</style>
 		<?php
-	}
-}
+            }
+        }

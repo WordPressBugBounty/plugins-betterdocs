@@ -44,7 +44,9 @@ class DocsArchive extends Archive {
 
 		$post_type_object = get_post_type_object( $post_type );
 
-		$post_type_archives[ 'post_type_archive/' . $post_type ] = $post_type_object->label . ' ' . __( 'Archive', 'betterdocs' );
+		if ( $post_type_object ) {
+			$post_type_archives[ 'post_type_archive/' . $post_type ] = $post_type_object->label . ' ' . __( 'Archive', 'betterdocs' );
+		}
 
 		$post_type_taxonomies = get_object_taxonomies( $post_type, 'objects' );
 

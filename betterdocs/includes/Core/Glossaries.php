@@ -518,16 +518,9 @@ class Glossaries extends Base {
 	}
 
 	public function save_glossary_term_meta( $term_id, $tt_id ) {
-		// Debug: Log what's happening
-		error_log( 'BetterDocs Glossaries: save_glossary_term_meta called for term_id: ' . $term_id );
-		error_log( 'BetterDocs Glossaries: $_POST data: ' . print_r( $_POST, true ) );
-
 		if ( isset( $_POST['glossary_term_description'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$description = wp_kses_post( wp_unslash( $_POST['glossary_term_description'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			error_log( 'BetterDocs Glossaries: Saving description: ' . $description );
 			update_term_meta( $term_id, 'glossary_term_description', $description );
-		} else {
-			error_log( 'BetterDocs Glossaries: glossary_term_description not found in $_POST' );
 		}
 	}
 

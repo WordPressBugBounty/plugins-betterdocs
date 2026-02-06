@@ -23,6 +23,8 @@ use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\Core\ShortcodeFactory;
 use WPDeveloper\BetterDocs\Core\WriteWithAI;
 use WPDeveloper\BetterDocs\Core\ArticleSummary;
+use WPDeveloper\BetterDocs\Core\ArticleQualityScore;
+use WPDeveloper\BetterDocs\Core\UnifiedMetabox;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
@@ -123,7 +125,7 @@ final class Plugin {
 	 * Plugin Version
 	 * @var string
 	 */
-	public $version = '4.2.1';
+	public $version = '4.3.6';
 
 	/**
 	 * WriteWithAI Class
@@ -131,6 +133,12 @@ final class Plugin {
 	 */
 	public $ai_autowrtie;
 	public $backgroundProccessor;
+
+	/**
+	 * ArticleQualityScore Class
+	 * @var ArticleQualityScore
+	 */
+	public $article_quality_score;
 
 	/**
 	 * Plugin DB Version
@@ -247,6 +255,10 @@ final class Plugin {
 		$this->editor          = $this->container->get( Editor::class );
 		$this->ai_autowrtie    = $this->container->get( WriteWithAI::class );
 		$this->article_summary = $this->container->get( ArticleSummary::class );
+
+		// Initialize unified metabox before individual features
+		$this->container->get( UnifiedMetabox::class );
+		$this->article_quality_score = $this->container->get( ArticleQualityScore::class );
 
 		$this->container->get( Admin::class );
 		$this->container->get( Roles::class );

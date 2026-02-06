@@ -148,8 +148,8 @@ class FrontEnd extends Base {
 			case 'blocks':
 				if ( isset( $this->widget_attributes['orderBy'] ) ) {
 					if ( $this->widget_attributes['orderBy'] == 'doc_category_order' ) {
-						$args['orderby']  = 'meta_value_num';
-						$args['meta_key'] = $this->widget_attributes['orderBy'];
+						// Use betterdocs_order which handles fallback logic automatically
+						$args['orderby'] = 'betterdocs_order';
 					} else {
 						$args['orderby'] = $this->widget_attributes['orderBy'];
 					}

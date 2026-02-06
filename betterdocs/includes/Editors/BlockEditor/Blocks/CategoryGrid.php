@@ -109,8 +109,8 @@ class CategoryGrid extends Block {
 		];
 
 		if ( 'doc_category_order' === $attributes['orderBy'] ) {
-			$terms_object['meta_key'] = 'doc_category_order';
-			$terms_object['orderby']  = 'meta_value_num';
+			// Use betterdocs_order which handles fallback logic automatically
+			$terms_object['orderby'] = 'betterdocs_order';
 		}
 
 		if ( $attributes['enableNestedSubcategory'] ) {

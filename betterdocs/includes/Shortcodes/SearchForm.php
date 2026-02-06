@@ -16,6 +16,131 @@ class SearchForm extends Shortcode {
 		add_action( 'wp_ajax_betterdocs_get_search_result', [ $this, 'get_search_results' ] );
 	}
 
+	/**
+	 * Modify search query to properly handle non-English characters
+	 * 
+	 * @param string $search The search SQL for WHERE clause
+	 * @param WP_Query $query The WP_Query instance
+	 * @return string Modified search SQL
+	 */
+	public function improve_search_for_non_english( $search, $query ) {
+		global $wpdb;
+
+		// Only modify our BetterDocs search queries
+		if ( ! isset( $query->query_vars['post_type'] ) || $query->query_vars['post_type'] !== 'docs' ) {
+			return $search;
+		}
+
+		// Only modify if there's a search term
+		if ( empty( $query->query_vars['s'] ) ) {
+			return $search;
+		}
+
+		$search_term = $query->query_vars['s'];
+
+		// If the search term contains non-ASCII characters, we need to ensure proper UTF-8 handling
+		if ( preg_match('/[^\x00-\x7F]/', $search_term) ) {
+			// Get the search term with proper escaping
+			$like = '%' . $wpdb->esc_like( $search_term ) . '%';
+
+			// Build a UTF-8 compatible search query
+			// Search in post_title, post_content, and post_excerpt
+			// Note: Removed COLLATE clause to avoid collation mismatch with TranslatePress tables
+			$search = $wpdb->prepare(
+				" AND (
+					({$wpdb->posts}.post_title LIKE %s)
+					OR ({$wpdb->posts}.post_content LIKE %s)
+					OR ({$wpdb->posts}.post_excerpt LIKE %s)",
+				$like,
+				$like,
+				$like
+			);
+
+			// If TranslatePress is active, also search in the translation dictionary
+		if ( class_exists( '\TRP_Translate_Press' ) ) {
+			// Get language codes
+			$lang_codes = $this->get_trp_language_code();
+			$default_lang = $lang_codes['default_language'];
+			$current_lang = $lang_codes['current_language'];
+			
+			// Only search in translation table if current language is different from default
+			if ( $default_lang !== $current_lang ) {
+				// TranslatePress table naming: wp_trp_dictionary_{default_lang}_{current_lang}
+				$trp_table = $wpdb->prefix . 'trp_dictionary_' . $default_lang . '_' . $current_lang;
+				
+				if ( $this->table_exists( $trp_table ) ) {
+					
+					$trp_search = $wpdb->prepare(
+						" OR EXISTS (
+							SELECT 1 FROM {$trp_table} trp
+							WHERE (trp.original LIKE %s OR trp.translated LIKE %s)
+							AND trp.status != 2
+							AND (
+								{$wpdb->posts}.post_title COLLATE utf8mb4_unicode_ci = trp.original COLLATE utf8mb4_unicode_ci
+								OR {$wpdb->posts}.post_content COLLATE utf8mb4_unicode_ci LIKE CONCAT('%%', trp.original COLLATE utf8mb4_unicode_ci, '%%')
+								OR {$wpdb->posts}.post_excerpt COLLATE utf8mb4_unicode_ci = trp.original COLLATE utf8mb4_unicode_ci
+							)
+						)",
+						$like,
+						$like
+					);
+					
+					$search .= $trp_search;
+				}
+			}
+		}
+
+
+			$search .= " ) ";
+		}
+
+		return $search;
+	}
+
+	/**
+	 * Get TranslatePress language codes (default and current) for table name construction
+	 * 
+	 * @return array Array with 'default_language' and 'current_language' keys
+	 */
+	private function get_trp_language_code() {
+		$result = [
+			'default_language' => 'en_US',
+			'current_language' => 'en_US'
+		];
+		
+		if ( class_exists( '\TRP_Translate_Press' ) ) {
+			$trp = \TRP_Translate_Press::get_trp_instance();
+			if ( isset( $trp ) && method_exists( $trp, 'get_component' ) ) {
+				$trp_settings = $trp->get_component( 'settings' );
+				
+				// Get default language from settings
+				if ( $trp_settings ) {
+					$settings = $trp_settings->get_settings();
+					if ( isset( $settings['default-language'] ) ) {
+						$result['default_language'] = strtolower( $settings['default-language'] );
+					}
+				}
+				
+				// Get current language from global variable
+				global $TRP_LANGUAGE;
+				if ( isset( $TRP_LANGUAGE ) && ! empty( $TRP_LANGUAGE ) ) {
+					$result['current_language'] = strtolower( $TRP_LANGUAGE );
+				}
+			}
+		}
+		
+		return $result;
+	}
+
+	/**
+	 * Check if a database table exists
+	 */
+	private function table_exists( $table_name ) {
+		global $wpdb;
+		$result = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
+		return $result === $table_name;
+	}
+
 	public function get_style_depends() {
 		$handlers = [ 'betterdocs-search' ];
 		return $handlers;
@@ -35,7 +160,7 @@ class SearchForm extends Shortcode {
 		$search_input = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$search_cat   = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$lang         = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$search_input = preg_replace( '/[^A-Za-z0-9_\- ][]]/', '', strtolower( $search_input ) );
+		$kb_slug      = isset( $_POST['kb_slug'] ) ? sanitize_text_field( $_POST['kb_slug'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$tax_query = [];
 		if ( $search_cat ) {
@@ -50,6 +175,9 @@ class SearchForm extends Shortcode {
 			];
 		}
 
+		// Don't build KB tax_query here - let the MultipleKB filter handle it
+		// We just pass kb_slug in the args
+
 		$term = get_term_by( 'slug', $search_cat );
 
 		$post_status = ['publish'];
@@ -63,18 +191,40 @@ class SearchForm extends Shortcode {
 			'post_type'        => 'docs',
 			'post_status'      => $post_status,
 			'posts_per_page'   => -1,
-			'suppress_filters' => true,
+			'suppress_filters' => false,  // Changed to false to allow posts_search filter
 			's'                => $search_input,
 			'orderby'          => 'relevance',
-			'tax_query'        => $tax_query
+			'tax_query'        => $tax_query,
+			'kb_slug'          => $kb_slug // Pass kb_slug for filter hooks
 		];
 
+		// Handle WPML multilingual search
 		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			// If search term contains non-ASCII characters (e.g., Chinese, Japanese, Bangla),
+			// search across all languages to find translated posts
+			if ( preg_match('/[^\x00-\x7F]/', $search_input) ) {
+				// Non-ASCII search: bypass WPML language filtering but allow posts_search filter
+				// This allows searching across all languages
+				$args['suppress_filters'] = true;
+			} else {
+				// ASCII-only search (English), use WPML filters to restrict to current language
+				$args['suppress_filters'] = false;
+				$args['lang'] = ICL_LANGUAGE_CODE;
+			}
+		}
+		// Handle TranslatePress - always allow posts_search filter for non-ASCII
+		elseif ( class_exists( '\TRP_Translate_Press' ) && preg_match('/[^\x00-\x7F]/', $search_input) ) {
+			// For TranslatePress, we need posts_search filter to run
 			$args['suppress_filters'] = false;
-			$args['lang']             = ICL_LANGUAGE_CODE;
 		}
 
+		// Add filter to improve search for non-English characters
+		add_filter( 'posts_search', [ $this, 'improve_search_for_non_english' ], 10, 2 );
+
 		$search_results = $this->query->get_posts( $args );
+
+		// Remove filter after query to avoid affecting other queries
+		remove_filter( 'posts_search', [ $this, 'improve_search_for_non_english' ], 10 );
 
 		$response = [];
 
@@ -121,17 +271,22 @@ class SearchForm extends Shortcode {
 				'heading'        => '',
 				'subheading'     => '',
 				'heading_tag'    => 'h1',
-				'subheading_tag' => 'p'
+				'subheading_tag' => 'p',
+				'kb_based_search' => '' // KB slug to filter search results
 			]
 		);
 	}
 
 	public function render( $atts, $content = null ) {
+		// Get kb_based_search from shortcode attribute (KB slug)
+		$kb_based_search = isset( $atts['kb_based_search'] ) ? sanitize_text_field( $atts['kb_based_search'] ) : '';
+		
 		betterdocs()->assets->localize(
 			'betterdocs-search',
 			'betterdocsSearchConfigTwo',
 			[
 				'is_post_type_archive' => is_post_type_archive( 'docs' ),
+				'kb_based_search' => $kb_based_search,
 			]
 		);
 

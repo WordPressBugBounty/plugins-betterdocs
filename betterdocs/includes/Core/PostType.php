@@ -3,6 +3,7 @@
 namespace WPDeveloper\BetterDocs\Core;
 
 use WP_Post;
+use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
@@ -121,43 +122,71 @@ class PostType extends Base {
 	public function modify_doc_category_rest_query( $args, $request ) {
 		$order_by = $request->get_param( 'orderby' );
 		if ( isset( $order_by ) && 'doc_category_order' === $order_by ) {
-			$args['meta_key'] = $order_by;
+			// Get language-specific meta key for multilingual sites
+			$meta_key = $this->get_category_order_meta_key();
+			$args['meta_key'] = $meta_key;
 			$args['orderby']  = 'meta_value_num';
+			$args['order']    = $request->get_param( 'order' ) ?: 'ASC';
 		}
 		return $args;
 	}
 
 	public function post_link( $url, $post, $leavename = false ) {
-		if ( 'docs' != get_post_type( $post ) ) {
-			return $url;
-		}
-
-		$cat_terms = wp_get_object_terms( $post->ID, 'doc_category' );
-
-		if( is_array( $cat_terms ) && ! empty( $cat_terms ) && $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { //if nested slug is enabled, render this
-			$doccat_terms = [];
-
-			foreach( $cat_terms as $term ) {
-				$process_term = $term;
-				array_unshift( $doccat_terms, $term->slug );
-				while( $process_term->parent != 0 ) {
-					$parent_term = get_term($process_term->parent);
-					array_unshift($doccat_terms, $parent_term->slug);
-					$process_term = $parent_term;
-				}
-			}
-
-			$doccat_terms = implode('/', $doccat_terms);
-		} else if ( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
-			$doccat_terms = $cat_terms[0]->slug;
-		} else {
-			$doccat_terms = 'uncategorized';
-		}
-
-		$url = str_replace( '%doc_category%', $doccat_terms, $url );
-		return apply_filters( 'betterdocs_post_type_link', $url, $post, $leavename );
+	if ( 'docs' != get_post_type( $post ) ) {
+		return $url;
 	}
 
+	$cat_terms = wp_get_object_terms( $post->ID, 'doc_category' );
+	
+	// If Multiple KB is active, try to get the category that belongs to the current KB
+	if ( taxonomy_exists( 'knowledge_base' ) && is_array( $cat_terms ) && ! empty( $cat_terms ) && count( $cat_terms ) > 1 ) {
+		// Try to get KB slug from cookie first, then from query
+		$kb_slug = '';
+		if ( isset( $_COOKIE['last_knowledge_base'] ) ) {
+			$kb_slug = sanitize_text_field( $_COOKIE['last_knowledge_base'] );
+		}
+		
+		global $wp_query;
+		if ( empty( $kb_slug ) && isset( $wp_query->query['knowledge_base'] ) ) {
+			$kb_slug = $wp_query->query['knowledge_base'];
+		}
+		
+		// If we have a KB slug, find the category that belongs to this KB
+		if ( ! empty( $kb_slug ) ) {
+			foreach ( $cat_terms as $cat_term ) {
+				$term_kbs = get_term_meta( $cat_term->term_id, 'doc_category_knowledge_base', true );
+				if ( is_array( $term_kbs ) && in_array( $kb_slug, $term_kbs ) ) {
+					// Found a category that belongs to this KB, use it
+					$cat_terms = [ $cat_term ];
+					break;
+				}
+			}
+		}
+	}
+
+	if( is_array( $cat_terms ) && ! empty( $cat_terms ) && $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { //if nested slug is enabled, render this
+		$doccat_terms = [];
+		
+		// Only use the first category to build the hierarchy
+		$term = $cat_terms[0];
+		$process_term = $term;
+		array_unshift( $doccat_terms, $term->slug );
+		while( $process_term->parent != 0 ) {
+			$parent_term = get_term($process_term->parent);
+			array_unshift($doccat_terms, $parent_term->slug);
+			$process_term = $parent_term;
+		}
+
+		$doccat_terms = implode('/', $doccat_terms);
+	} else if ( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
+		$doccat_terms = $cat_terms[0]->slug;
+	} else {
+		$doccat_terms = 'uncategorized';
+	}
+
+	$url = str_replace( '%doc_category%', $doccat_terms, $url );
+	return apply_filters( 'betterdocs_post_type_link', $url, $post, $leavename );
+}
 	public function ajax() {
 		/**
 		 * All kind of ajax related to post type: docs
@@ -190,6 +219,114 @@ class PostType extends Base {
 
 		// Order the terms on the admin side.
 		add_action( 'admin_head', [ $this, 'order_terms' ] );
+		add_action( 'admin_notices', [ $this, 'multilingual_migration_notice' ] );
+	}
+
+	/**
+	 * Show admin notice for multilingual migration if needed
+	 */
+	public function multilingual_migration_notice() {
+		// Only show on doc_category taxonomy page
+		$screen = get_current_screen();
+		if ( ! $screen || $screen->id !== 'edit-doc_category' ) {
+			return;
+		}
+
+		// Only show if multilingual plugin is active
+		if ( ! Helper::is_multilingual_active() ) {
+			return;
+		}
+
+		// Handle migration request
+		if ( isset( $_GET['run_betterdocs_migration'] ) && wp_verify_nonce( $_GET['nonce'], 'betterdocs_migration' ) ) {
+			$this->run_category_migration();
+			return;
+		}
+
+		// Check if migration is needed for both category and document orders
+		global $wpdb;
+		$has_base_cat_orders = $wpdb->get_var(
+			"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
+			INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
+			WHERE tm.meta_key = 'doc_category_order' AND tt.taxonomy = 'doc_category'"
+		);
+
+		$has_base_docs_orders = $wpdb->get_var(
+			"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
+			INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
+			WHERE tm.meta_key = '_docs_order' AND tt.taxonomy = 'doc_category' AND tm.meta_value != ''"
+		);
+
+		$languages = Helper::get_available_languages();
+		$has_lang_cat_orders = 0;
+		$has_lang_docs_orders = 0;
+
+		if ( ! empty( $languages ) ) {
+			$first_lang = $languages[0];
+			$lang_cat_meta_key = 'doc_category_order_' . $first_lang;
+			$lang_docs_meta_key = '_docs_order_' . $first_lang;
+
+			$has_lang_cat_orders = $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
+				WHERE tm.meta_key = %s AND tt.taxonomy = 'doc_category'",
+				$lang_cat_meta_key
+			) );
+
+			$has_lang_docs_orders = $wpdb->get_var( $wpdb->prepare(
+				"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
+				WHERE tm.meta_key = %s AND tt.taxonomy = 'doc_category' AND tm.meta_value != ''",
+				$lang_docs_meta_key
+			) );
+		}
+
+		// Show notice if we have base orders but no language-specific orders
+		$needs_cat_migration = $has_base_cat_orders > 0 && $has_lang_cat_orders == 0;
+		$needs_docs_migration = $has_base_docs_orders > 0 && $has_lang_docs_orders == 0;
+
+		if ( $needs_cat_migration || $needs_docs_migration ) {
+			$migration_url = add_query_arg(
+				[ 'run_betterdocs_migration' => '1', 'nonce' => wp_create_nonce( 'betterdocs_migration' ) ],
+				admin_url( 'edit-tags.php?taxonomy=doc_category&post_type=docs' )
+			);
+
+			echo '<div class="notice notice-warning is-dismissible">';
+			echo '<p><strong>BetterDocs Multilingual Migration Required</strong></p>';
+			echo '<p>Your site uses a multilingual plugin and has existing ordering data that needs to be migrated:</p>';
+			echo '<ul style="margin-left: 20px;">';
+			if ( $needs_cat_migration ) {
+				echo '<li>• Category ordering (' . $has_base_cat_orders . ' categories)</li>';
+			}
+			if ( $needs_docs_migration ) {
+				echo '<li>• Document ordering (' . $has_base_docs_orders . ' categories with custom doc orders)</li>';
+			}
+			echo '</ul>';
+			echo '<p><a href="' . esc_url( $migration_url ) . '" class="button button-primary">Run Migration Now</a></p>';
+			echo '</div>';
+		}
+	}
+
+	/**
+	 * Run comprehensive migration for both category and document orders
+	 */
+	public function run_category_migration() {
+		$result = Helper::migrate_all_orders_to_multilingual();
+
+		if ( $result ) {
+			echo '<div class="notice notice-success is-dismissible">';
+			echo '<p><strong>Migration Completed Successfully!</strong></p>';
+			echo '<p>Both category orders and document orders have been migrated to work with your multilingual setup.</p>';
+			echo '</div>';
+		} else {
+			echo '<div class="notice notice-error is-dismissible">';
+			echo '<p><strong>Migration Failed</strong></p>';
+			echo '<p>There was an error migrating the orders. Please try again or contact support.</p>';
+			echo '</div>';
+		}
+
+		// Clear cache
+		wp_cache_flush();
 	}
 
 	public function scripts( $hook ) {
@@ -234,7 +371,9 @@ class PostType extends Base {
 
 	public function edit_form_fields( $term, $taxonomy ) {
 		$term_meta   = get_option( "doc_category_$term->term_id" );
-		$cat_order   = get_term_meta( $term->term_id, 'doc_category_order', true );
+		// Get language-specific meta key with fallback for multilingual sites
+		$meta_key    = $this->get_category_order_meta_key( null, $term->term_id );
+		$cat_order   = get_term_meta( $term->term_id, $meta_key, true );
 		$cat_icon_id = get_term_meta( $term->term_id, 'doc_category_image-id', true );
 
 		betterdocs()->views->get(
@@ -305,7 +444,9 @@ class PostType extends Base {
 			$this->update_doc_category_order_by_parent( $term_id, $term->parent );
 		} else {
 			$max_order = $this->get_max_taxonomy_order( 'doc_category' );
-			update_term_meta( $term_id, 'doc_category_order', $max_order );
+			// Get language-specific meta key for multilingual sites
+			$meta_key = $this->get_category_order_meta_key();
+			update_term_meta( $term_id, $meta_key, $max_order );
 		}
 	}
 
@@ -337,6 +478,28 @@ class PostType extends Base {
 	}
 
 	/**
+	 * Get language-specific meta key for category ordering with fallback
+	 *
+	 * @param string|null $language Language code, if null will auto-detect
+	 * @param int|null $term_id Term ID for specific term checks
+	 * @return string Language-specific meta key or base key as fallback
+	 */
+	public function get_category_order_meta_key( $language = null, $term_id = null ) {
+		return Helper::get_meta_key_with_fallback( 'doc_category_order', $term_id, $language );
+	}
+
+	/**
+	 * Get language-specific meta key for docs ordering with fallback
+	 *
+	 * @param string|null $language Language code, if null will auto-detect
+	 * @param int|null $term_id Term ID for specific term checks
+	 * @return string Language-specific meta key or base key as fallback
+	 */
+	public function get_docs_order_meta_key( $language = null, $term_id = null ) {
+		return Helper::get_meta_key_with_fallback( '_docs_order', $term_id, $language );
+	}
+
+	/**
 	 * Update the doc_category_order for a term based on its parent's order.
 	 */
 	public function update_doc_category_order_by_parent( $term_id, $term_parent_id ) {
@@ -344,16 +507,22 @@ class PostType extends Base {
 		if ( ! current_user_can( 'manage_doc_terms' ) ) {
 			return;
 		}
+		
+		// Get language-specific meta key with fallback
+		$meta_key = $this->get_category_order_meta_key( null, $term_parent_id );
 
 		// Get the parent's order or default to 1
-		$parent_order = (int) get_term_meta( $term_parent_id, 'doc_category_order', true );
+		$parent_order = (int) get_term_meta( $term_parent_id, $meta_key, true );
 
 		if ( $parent_order === 0 ) {
 			$parent_order = $this->get_max_taxonomy_order( 'doc_category', $term_parent_id );
 		}
 
 		$order = $parent_order + 1;
-		update_term_meta( $term_id, 'doc_category_order', (int) $order );
+
+		// Use the same meta key pattern for the child term
+		$child_meta_key = $this->get_category_order_meta_key( null, $term_id );
+		update_term_meta( $term_id, $child_meta_key, (int) $order );
 	}
 
 	/**
@@ -448,6 +617,7 @@ class PostType extends Base {
 
 	/**
 	 * Re-Order the taxonomies based on the doc_category_order value.
+	 * Uses fallback logic to check language-specific meta first, then base meta
 	 *
 	 * @param array $pieces     Array of SQL query clauses.
 	 * @param array $taxonomies Array of taxonomy names.
@@ -458,13 +628,33 @@ class PostType extends Base {
 
 		foreach ( $taxonomies as $taxonomy ) {
 			if ( $taxonomy === 'doc_category' ) {
-				$join_statement = " LEFT JOIN $wpdb->termmeta AS term_meta ON t.term_id = term_meta.term_id AND term_meta.meta_key = 'doc_category_order'";
+				// Check if we should use language-specific ordering
+				$current_language = Helper::get_current_admin_language();
+				$base_meta_key = 'doc_category_order';
 
-				if ( ! $this->does_substring_exist( $pieces['join'], $join_statement ) ) {
-					$pieces['join'] .= $join_statement;
+				if ( Helper::is_multilingual_active() && $current_language ) {
+					$lang_meta_key = $base_meta_key . '_' . $current_language;
+
+					// Use COALESCE to fall back from language-specific to base meta key
+					$join_statement = " LEFT JOIN $wpdb->termmeta AS term_meta_lang ON t.term_id = term_meta_lang.term_id AND term_meta_lang.meta_key = '$lang_meta_key'";
+					$join_statement .= " LEFT JOIN $wpdb->termmeta AS term_meta_base ON t.term_id = term_meta_base.term_id AND term_meta_base.meta_key = '$base_meta_key'";
+
+					if ( ! $this->does_substring_exist( $pieces['join'], 'term_meta_lang' ) ) {
+						$pieces['join'] .= $join_statement;
+					}
+
+					// Order by language-specific meta if available, otherwise use base meta
+					$pieces['orderby'] = 'ORDER BY CAST( COALESCE( NULLIF(term_meta_lang.meta_value, ""), term_meta_base.meta_value ) AS UNSIGNED )';
+				} else {
+					// Non-multilingual or no language detected - use base meta key
+					$join_statement = " LEFT JOIN $wpdb->termmeta AS term_meta ON t.term_id = term_meta.term_id AND term_meta.meta_key = '$base_meta_key'";
+
+					if ( ! $this->does_substring_exist( $pieces['join'], $join_statement ) ) {
+						$pieces['join'] .= $join_statement;
+					}
+
+					$pieces['orderby'] = 'ORDER BY CAST( term_meta.meta_value AS UNSIGNED )';
 				}
-
-				$pieces['orderby'] = 'ORDER BY CAST( term_meta.meta_value AS UNSIGNED )';
 			}
 		}
 
@@ -550,19 +740,21 @@ class PostType extends Base {
 			$base_index = 0; // Default to 0 if not set
 		}
 
+		// Get language-specific meta key for multilingual sites
+		$meta_key = $this->get_category_order_meta_key();
 		foreach ( $taxonomy_ordering_data as $order_data ) {
 			// Ensure $order_data is an array with required keys
 			if ( is_array( $order_data ) && isset( $order_data['term_id'], $order_data['order'] ) ) {
 				if ( $base_index > 0 ) {
-					$current_position = get_term_meta( $order_data['term_id'], 'doc_category_order', true );
+					$current_position = get_term_meta( $order_data['term_id'], $meta_key, true );
 
 					if ( (int) $current_position < (int) $base_index ) {
 						continue;
 					}
 				}
 
-				// Update term meta with sanitized and validated values
-				update_term_meta( $order_data['term_id'], 'doc_category_order', ( (int) $order_data['order'] + (int) $base_index ) );
+				// Update term meta with sanitized and validated values using language-specific key
+				update_term_meta( $order_data['term_id'], $meta_key, ( (int) $order_data['order'] + (int) $base_index ) );
 			}
 		}
 
@@ -581,7 +773,11 @@ class PostType extends Base {
 			wp_send_json_error( __( 'You don\'t have permission to update docs term.', 'betterdocs' ) );
 		}
 
-		wp_cache_flush();
+		// Log WPML context for debugging
+		if ( Helper::is_multilingual_active() ) {
+			$current_lang = Helper::get_current_admin_language();
+			usleep( 100000 ); // 100ms delay to prevent race conditions
+		}
 
 		if ( isset( $_POST['docs_ordering_data'] ) && is_array( $_POST['docs_ordering_data'] ) ) {
 			// Unslash and sanitize each element in the array
@@ -596,7 +792,19 @@ class PostType extends Base {
 			wp_send_json_error( __( 'Invalid term ID.', 'betterdocs' ) );
 		}
 
-		if ( update_term_meta( $term_id, '_docs_order', $docs_ordering_data ) ) {
+		// Verify term exists and user has permission to edit it
+		$term = get_term( $term_id, 'doc_category' );
+		if ( is_wp_error( $term ) || ! $term ) {
+			wp_send_json_error( __( 'Invalid category.', 'betterdocs' ) );
+		}
+
+		// Update the docs order for this category using language-specific meta key
+		$meta_key = $this->get_docs_order_meta_key( null, $term_id );
+		$result = update_term_meta( $term_id, $meta_key, $docs_ordering_data );
+
+		if ( $result !== false ) {
+			// Only flush cache after successful update
+			wp_cache_flush();
 			wp_send_json_success( __( 'Successfully updated.', 'betterdocs' ) );
 		}
 
@@ -604,7 +812,7 @@ class PostType extends Base {
 	}
 
 	/**
-	 * AJAX Handler to update docs position.
+	 * AJAX Handler to update docs term assignment.
 	 */
 	public function update_docs_term() {
 		if ( ! check_ajax_referer( 'doc_cat_order_nonce', 'doc_cat_order_nonce', false ) ) {
@@ -615,6 +823,11 @@ class PostType extends Base {
 			wp_send_json_error( __( 'You don\'t have permission to update docs term.', 'betterdocs' ) );
 		}
 
+		// Log WPML context for debugging
+		if ( Helper::is_multilingual_active() ) {
+			$current_lang = Helper::get_current_admin_language();
+		}
+
 		$object_id    = isset( $_POST['object_id'] ) ? intval( wp_unslash( $_POST['object_id'] ) ) : 0;
 		$term_id      = isset( $_POST['list_term_id'] ) ? intval( wp_unslash( $_POST['list_term_id'] ) ) : 0;
 		$prev_term_id = isset( $_POST['prev_term_id'] ) ? intval( wp_unslash( $_POST['prev_term_id'] ) ) : 0;
@@ -623,23 +836,42 @@ class PostType extends Base {
 			wp_send_json_error( __( 'Invalid object or term ID.', 'betterdocs' ) );
 		}
 
-		global $wpdb;
-
-		if ( $prev_term_id ) {
-			wp_remove_object_terms( $object_id, $prev_term_id, 'doc_category' );
+		// Verify the post exists and is a docs post
+		$post = get_post( $object_id );
+		if ( ! $post || $post->post_type !== 'docs' ) {
+			wp_send_json_error( __( 'Invalid document.', 'betterdocs' ) );
 		}
 
-		// Check if the doc has more than 0 terms assigned to it after unassignment above.
-		// This ensures other terms except the current term do not lose the current doc assignment.
+		// Verify the term exists
+		$term = get_term( $term_id, 'doc_category' );
+		if ( is_wp_error( $term ) || ! $term ) {
+			wp_send_json_error( __( 'Invalid category.', 'betterdocs' ) );
+		}
+
+		// Remove from previous category if specified
+		if ( $prev_term_id ) {
+			$prev_term = get_term( $prev_term_id, 'doc_category' );
+			if ( ! is_wp_error( $prev_term ) && $prev_term ) {
+				wp_remove_object_terms( $object_id, $prev_term_id, 'doc_category' );
+			}
+		}
+
+		// Get existing terms to preserve other category assignments
 		$extra_terms_of_doc = wp_get_post_terms( $object_id, 'doc_category', [ 'fields' => 'ids' ] );
 
+		// Prepare term IDs array
+		$term_ids = [ $term_id ];
 		if ( count( $extra_terms_of_doc ) > 0 ) {
-			$term_id .= ',' . implode( ',', $extra_terms_of_doc );
+			$term_ids = array_merge( $term_ids, $extra_terms_of_doc );
+			$term_ids = array_unique( $term_ids ); // Remove duplicates
 		}
 
-		$terms_added = wp_set_post_terms( $object_id, $term_id, 'doc_category' );
+		// Set the post terms
+		$terms_added = wp_set_post_terms( $object_id, $term_ids, 'doc_category' );
 
 		if ( ! is_wp_error( $terms_added ) ) {
+			// Clear relevant caches
+			clean_post_cache( $object_id );
 			wp_send_json_success( __( 'Successfully updated.', 'betterdocs' ) );
 		}
 

@@ -32,6 +32,7 @@ class Migration extends Base {
 		}
 
 		$this->search_migration();
+		$this->fix_search_table_collation();
 
 		/**
 		 * Settings Migration
@@ -63,12 +64,13 @@ class Migration extends Base {
 						$not_found_count = $value;
 					}
 
-					$keyword = $wpdb->get_var(
+					// Use BINARY comparison to avoid collation mismatch errors
+				$keyword = $wpdb->get_var(
 						$wpdb->prepare(
 							"
                             SELECT keyword
                             FROM {$wpdb->prefix}betterdocs_search_keyword
-                            WHERE keyword = %s",
+                            WHERE BINARY keyword = %s",
 							$key
 						)
 					);
@@ -106,5 +108,46 @@ class Migration extends Base {
 				$this->database->save( 'betterdocs_search_data_migration', '1.0' );
 			}
 		}
+	}
+
+	/**
+	 * Fix collation issues in search tables
+	 * Converts tables to proper UTF-8 charset and collation to prevent
+	 * "Illegal mix of collations" errors when searching with non-Latin characters
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	public function fix_search_table_collation() {
+		global $wpdb;
+
+		// Check if migration already ran
+		if ( $this->database->get( 'betterdocs_search_collation_fixed', false ) ) {
+			return;
+		}
+
+		// Get the WordPress default charset and collation
+		$charset = $wpdb->charset ? $wpdb->charset : 'utf8mb4';
+		$collate = $wpdb->collate ? $wpdb->collate : 'utf8mb4_unicode_520_ci';
+
+		// Fix search_keyword table
+		$search_keyword_table = $wpdb->prefix . 'betterdocs_search_keyword';
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$search_keyword_table'" ) == $search_keyword_table ) {
+			// Convert table charset and collation
+			$wpdb->query( "ALTER TABLE {$search_keyword_table} CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
+
+			// Explicitly set keyword column collation
+			$wpdb->query( "ALTER TABLE {$search_keyword_table} MODIFY keyword TEXT CHARACTER SET {$charset} COLLATE {$collate} NOT NULL" );
+		}
+
+		// Fix search_log table
+		$search_log_table = $wpdb->prefix . 'betterdocs_search_log';
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$search_log_table'" ) == $search_log_table ) {
+			// Convert table charset and collation
+			$wpdb->query( "ALTER TABLE {$search_log_table} CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
+		}
+
+		// Mark migration as complete
+		$this->database->save( 'betterdocs_search_collation_fixed', '1.0' );
 	}
 }

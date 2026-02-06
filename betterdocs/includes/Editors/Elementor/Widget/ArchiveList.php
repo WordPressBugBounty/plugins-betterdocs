@@ -1324,9 +1324,10 @@ class ArchiveList extends BaseWidget {
 		$orderby = $this->attributes['alphabetic_order'];
 		if ( $orderby == 'slug' ) {
 			$orderby = 'name';
-		} elseif ( $orderby == 'betterdocs_order' ) {
-			$orderby = 'meta_value_num';
+		} else {
+			$orderby = $this->attributes['alphabetic_order'];
 		}
+
 
 		$_docs_query = [
 			'term_id'        => isset( $term->term_id ) ? $term->term_id : 0,

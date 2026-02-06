@@ -59,7 +59,15 @@ class CategoryField extends BaseAPI {
 	}
 
 	public function doc_category_order( $object ) {
-		$doc_category_order = get_term_meta( $object['id'], 'doc_category_order', true );
+		// Get language-specific meta key with fallback for multilingual sites
+		$meta_key = \WPDeveloper\BetterDocs\Utils\Helper::get_meta_key_with_fallback( 'doc_category_order', $object['id'] );
+		$doc_category_order = get_term_meta( $object['id'], $meta_key, true );
+
+		// If still no order found, try the base key as final fallback
+		if ( ! $doc_category_order ) {
+			$doc_category_order = get_term_meta( $object['id'], 'doc_category_order', true );
+		}
+
 		if ( ! $doc_category_order ) {
 			return;
 		}

@@ -123,6 +123,7 @@ class Scripts extends Base {
 		);
 
 		$this->blocks( $assets );
+		$this->admin_assets( $assets );
 
 		return $assets;
 	}
@@ -137,5 +138,10 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-blocks-category-slate-layout', 'blocks/category-slate-layout/default.css' );
 		$assets->register( 'betterdocs-feedback-form-editor', 'blocks/feedback-form/style-feedback-editor.css' );
 		$assets->register( 'betterdocs-doc-archive-list', 'blocks/doc-archive-list/default.css' );
+	}
+
+	public function admin_assets( $assets ) {
+		$assets->register( 'betterdocs-article-quality-score', 'admin/js/article-quality-score.js', [ 'jquery' ] );
+
 	}
 }

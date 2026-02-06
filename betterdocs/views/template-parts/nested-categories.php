@@ -25,6 +25,11 @@ if ( empty( $_nested_categories ) ) {
 	return;
 }
 
+// Ensure $layout_type is set
+if ( ! isset( $layout_type ) ) {
+	$layout_type = '';
+}
+
 // if there have list icon url from customizer or shortcodes attribites format it to $list_icon_name
 if ( $layout_type == 'template' && isset( $list_icon_url ) && $list_icon_url ) {
 	$list_icon_name = array(

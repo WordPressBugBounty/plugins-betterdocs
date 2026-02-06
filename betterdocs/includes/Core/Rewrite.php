@@ -258,7 +258,6 @@ class Rewrite extends Base {
 			$rewrite_rules = get_option('rewrite_rules');
 
 			if( ! isset( $rewrite_rules[$base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$'] ) ) { // if this nested rule is not set then flush the rules
-				error_log(12);
 				flush_rewrite_rules();
 			}
 		}
