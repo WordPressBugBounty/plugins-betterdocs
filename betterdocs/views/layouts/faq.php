@@ -2,8 +2,11 @@
 $faq_terms = get_terms( betterdocs()->query->faq_terms_query_args() );
 
 if ( $enable && $have_posts && ! empty( $faq_terms ) ) {
-	$enable_faq_schema            = betterdocs()->settings->get( 'enable_faq_schema' );
-	$shortcode_attr['faq_schema'] = $enable_faq_schema;
+	// Only use settings value if faq_schema is not already set in shortcode attributes
+	if ( ! isset( $shortcode_attr['faq_schema'] ) ) {
+		$enable_faq_schema            = betterdocs()->settings->get( 'enable_faq_schema' );
+		$shortcode_attr['faq_schema'] = $enable_faq_schema;
+	}
 
 	$attributes = betterdocs()->template_helper->get_html_attributes( $shortcode_attr );
 

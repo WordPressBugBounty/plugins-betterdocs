@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 4.3.7
+Stable tag: 4.3.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -214,6 +214,15 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.3.8 - 8/03/2026 =
+
+- Fixed: Several Gutenberg block styling issues
+- Fixed: FAQ schema not working in FAQ shortcodes
+- Fixed: BetterDocs font applied across the entire WordPress admin area
+- Fixed: Glossary “Write With AI” API redirection issue
+- Fixed: Multiple KB Sleek layout block is generating uncaught error
+- Few minor bug fixes and improvements
 
 = 4.3.7 - 10/02/2026 =
 

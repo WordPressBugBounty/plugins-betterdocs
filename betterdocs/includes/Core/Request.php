@@ -32,6 +32,13 @@ class Request extends Base {
 	private $wp_query_vars = [];
 
 	/**
+	 * Stores query vars from a request that was rejected as invalid (wrong KB/category slug).
+	 * Used to block canonical redirects for those invalid URLs.
+	 * @var array|null
+	 */
+	private $invalid_request_query_vars = null;
+
+	/**
 	 * Rewrite Class Reference of BetterDocs
 	 * @var Rewrite
 	 */
@@ -52,6 +59,8 @@ class Request extends Base {
 		if ( is_admin() ) {
 			return;
 		}
+
+		add_action( 'template_redirect', [ $this, 'validate_request_path' ], 1 );
 
         $this->perma_structure = [
             'is_docs'          => trim( $this->rewrite->get_base_slug(), '/' ),
@@ -77,6 +86,12 @@ class Request extends Base {
 		 * Hook into pre_get_posts to set up taxonomy queries for category archives
 		 */
 		add_action( 'pre_get_posts', [ $this, 'setup_taxonomy_query' ], 1 );
+
+		/**
+		 * Hook into pre_get_posts at priority 20 to enforce 404 for invalid KB/category slugs.
+		 * This runs before WordPress resolves templates but after parse_request sets query vars.
+		 */
+		add_action( 'pre_get_posts', [ $this, 'enforce_404_for_invalid_docs' ], 20 );
 
 		/**
 		 * Hook into template_redirect to re-apply taxonomy query flags
@@ -111,6 +126,24 @@ class Request extends Base {
 		add_filter( 'redirect_canonical', [ $this, 'prevent_canonical_redirect_for_invalid_docs' ], 10, 2 );
 
 		/**
+		 * Hook into redirect_guess_404_permalink to prevent WordPress from guessing a redirect
+		 * when an invalid KB/category slug results in a 404.
+		 */
+		add_filter( 'redirect_guess_404_permalink', [ $this, 'prevent_guess_404_redirect_for_invalid_docs' ], 10 );
+
+		/**
+		 * Hook into WPML's redirect filter to prevent WPML from redirecting invalid docs URLs
+		 * to the canonical URL. This is the actual source of the redirect when WPML is active.
+		 */
+		add_filter( 'wpml_is_redirected', [ $this, 'prevent_wpml_redirect_for_invalid_docs' ], 10, 3 );
+
+		/**
+		 * Final catch-all: hook into wp_redirect to block any redirect for invalid docs URLs.
+		 * This fires for ALL WordPress redirects regardless of source.
+		 */
+		add_filter( 'wp_redirect', [ $this, 'prevent_any_redirect_for_invalid_docs' ], 10, 2 );
+
+		/**
 		 * Hook into template_redirect to validate category-post relationships
 		 * Priority 0 to run before WordPress canonical redirect (priority 10)
 		 */
@@ -125,6 +158,31 @@ class Request extends Base {
 	}
 
 	/**
+	 * Enforce 404 for invalid docs KB/category URLs via pre_get_posts.
+	 *
+	 * This fires before WordPress determines the template, allowing us to mark
+	 * the main query as a 404 when an invalid KB or category slug was detected
+	 * during parse_request.
+	 *
+	 * @param WP_Query $query
+	 */
+	public function enforce_404_for_invalid_docs( $query ) {
+		if ( ! $query->is_main_query() || is_admin() ) {
+			return;
+		}
+		if ( $this->invalid_request_query_vars !== null ) {
+			$query->set_404();
+			status_header( 404 );
+			nocache_headers();
+
+			// Kill the query so no post is found - preventing WP_Query from resetting is_404
+			$query->set( 'name', '' );
+			$query->set( 'pagename', '' );
+			$query->set( 'p', -1 );
+		}
+	}
+
+	/**
 	 * Prevent canonical redirect for invalid docs category-post combinations
 	 *
 	 * @param string $redirect_url The redirect URL.
@@ -134,7 +192,17 @@ class Request extends Base {
 	public function prevent_canonical_redirect_for_invalid_docs( $redirect_url, $requested_url ) {
 		global $wp_query;
 
-		// Only validate if doc_category is in the URL (to prevent wrong category access)
+		// IMPORTANT: By the time redirect_canonical fires, both $requested_url and $_SERVER['REQUEST_URI']
+		// have already had the invalid KB slug stripped (resulting in double slashes like /docs//base/post/).
+		// The only place we captured the original invalid slugs was during is_single_docs() at parse_request time.
+		// So we use the stored invalid_request_query_vars to detect and block invalid redirects.
+		if ( $this->invalid_request_query_vars !== null ) {
+			return false; // Block the redirect, show 404 instead
+		}
+
+		$actual_url = home_url( $_SERVER['REQUEST_URI'] ?? '' );
+
+		// Legacy check: if post_type=docs is already set in query vars, validate category
 		if ( isset( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'docs' &&
 			 isset( $wp_query->query_vars['doc_category'] ) && isset( $wp_query->query_vars['name'] ) ) {
 
@@ -181,12 +249,76 @@ class Request extends Base {
 	}
 
 	/**
+	 * Prevent redirect_guess_404_permalink for invalid docs KB/category URLs
+	 *
+	 * @param string|false $redirect_url The guessed redirect URL, or false.
+	 * @return string|false
+	 */
+	public function prevent_guess_404_redirect_for_invalid_docs( $redirect_url ) {
+		if ( $this->invalid_request_query_vars !== null ) {
+			return false; // Don't guess a redirect for invalid docs URLs
+		}
+		return $redirect_url;
+	}
+
+	/**
+	 * Prevent WPML from redirecting invalid docs KB/category URLs to canonical URLs.
+	 *
+	 * WPML detects that the request URL doesn't match the post's canonical permalink
+	 * and issues a 301 redirect. We must block this when the URL has an invalid KB slug.
+	 *
+	 * @param string|false $redirect The redirect URL or false.
+	 * @param int          $post_id  The post ID.
+	 * @param WP_Query     $q        The query object.
+	 * @return string|false
+	 */
+	public function prevent_wpml_redirect_for_invalid_docs( $redirect, $post_id, $q ) {
+		// If we already detected an invalid KB/category slug during parse_request, block the redirect
+		if ( $this->invalid_request_query_vars !== null ) {
+			return false;
+		}
+		return $redirect;
+	}
+
+	/**
+	 * Catch-all to prevent ANY WordPress wp_redirect() call for invalid docs URLs.
+	 *
+	 * This fires for all wp_redirect() calls regardless of source (canonical, WPML,
+	 * redirect_guess_404_permalink, etc.). Returning empty string cancels the redirect.
+	 *
+	 * @param string $location The redirect URL.
+	 * @param int    $status   The HTTP status code.
+	 * @return string The redirect URL or empty string to cancel.
+	 */
+	public function prevent_any_redirect_for_invalid_docs( $location, $status ) {
+		if ( $this->invalid_request_query_vars !== null ) {
+			return ''; // Returning empty string cancels the redirect in wp_redirect()
+		}
+		return $location;
+	}
+
+	/**
 	 * Validate single docs category relationship on template_redirect and force 404 if invalid
 	 */
 	public function validate_single_docs_category_redirect() {
-		global $wp_query;
+		global $wp_query, $wp;
 
-		// Only validate if doc_category is in the URL
+		// Use stored invalid query vars from parse time (most reliable approach)
+		if ( $this->invalid_request_query_vars !== null ) {
+			$wp_query->set_404();
+			status_header( 404 );
+			nocache_headers();
+
+			// We must actually serve the 404 template — set_404() alone doesn't stop the current template.
+			// Hook into template_include to return the 404 template instead.
+			add_filter( 'template_include', function( $template ) {
+				$not_found = get_404_template();
+				return $not_found ? $not_found : $template;
+			}, 999 );
+			return;
+		}
+
+		// Legacy check: if post_type=docs is already set in query vars, validate category
 		if ( isset( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'docs' &&
 			 isset( $wp_query->query_vars['doc_category'] ) && isset( $wp_query->query_vars['name'] ) ) {
 
@@ -240,6 +372,71 @@ class Request extends Base {
 	}
 
 	/**
+	 * Check if a URL matches a BetterDocs single docs permalink structure
+	 * but has invalid KB/category slugs that don't match the post.
+	 *
+	 * @param string $url The URL to check.
+	 * @return bool True if the URL is a BetterDocs docs URL with invalid slugs.
+	 */
+	protected function is_invalid_docs_url( $url ) {
+		// Get the path from the URL
+		$path = trim( parse_url( $url, PHP_URL_PATH ), '/' );
+		
+		// Check each permalink structure
+		foreach ( $this->perma_structure as $_type => $structure ) {
+			if ( $_type !== 'is_single_docs' ) {
+				continue;
+			}
+			
+			$_perma_vars = $this->is_perma_valid_for( $structure, $path );
+			if ( ! $_perma_vars ) {
+				continue;
+			}
+			
+			// URL matches the single docs structure - now validate the slugs
+			$name = isset( $_perma_vars['docs'] ) ? $_perma_vars['docs'] : ( isset( $_perma_vars['name'] ) ? $_perma_vars['name'] : '' );
+			if ( empty( $name ) ) {
+				continue;
+			}
+			
+			// Check if the post exists
+			$post = get_page_by_path( $name, OBJECT, 'docs' );
+			if ( ! $post ) {
+				return false; // Post doesn't exist at all - not our concern
+			}
+			
+			// Validate knowledge_base slug if present
+			if ( isset( $_perma_vars['knowledge_base'] ) && ! empty( $_perma_vars['knowledge_base'] ) ) {
+				$post_kbs = wp_get_post_terms( $post->ID, 'knowledge_base', [ 'fields' => 'slugs' ] );
+				if ( ! is_wp_error( $post_kbs ) && ! in_array( $_perma_vars['knowledge_base'], $post_kbs ) ) {
+					return true; // Invalid KB slug
+				}
+			}
+			
+			// Validate doc_category slug if present
+			if ( isset( $_perma_vars['doc_category'] ) && ! empty( $_perma_vars['doc_category'] ) ) {
+				$category_parts = explode( '/', trim( $_perma_vars['doc_category'], '/' ) );
+				$post_categories = wp_get_post_terms( $post->ID, 'doc_category', [ 'fields' => 'slugs' ] );
+				
+				if ( ! is_wp_error( $post_categories ) ) {
+					$found = false;
+					foreach ( $category_parts as $cat_slug ) {
+						if ( in_array( $cat_slug, $post_categories ) ) {
+							$found = true;
+							break;
+						}
+					}
+					if ( ! $found ) {
+						return true; // Invalid category slug
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	/**
 	 * Set up taxonomy query for category archives
 	 * This ensures WordPress recognizes requests with doc_category or knowledge_base as taxonomy archives
 	 *
@@ -247,6 +444,9 @@ class Request extends Base {
 	 */
 	public function setup_taxonomy_query( $query ) {
 		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+		if ( $this->invalid_request_query_vars !== null ) {
 			return;
 		}
 
@@ -343,43 +543,59 @@ class Request extends Base {
 
 			}
 		}
-		
-		// Check if this is a knowledge_base request
-		if ( isset( $query->query_vars['knowledge_base'] ) && ! empty( $query->query_vars['knowledge_base'] ) ) {
-			// If we also have doc_category, this is a knowledge_base_category archive
-			// Otherwise, it's just a knowledge_base archive
-			if ( ! isset( $query->query_vars['doc_category'] ) ) {
-				$query->is_tax = true;
-				$query->is_archive = true;
-				$query->is_home = false;
-				$query->is_404 = false; // Important: reset 404 flag
-				
-				$term = get_term_by( 'slug', $query->query_vars['knowledge_base'], 'knowledge_base' );
-				if ( $term ) {
-					$query->queried_object = $term;
-					$query->queried_object_id = $term->term_id;
-					
-					// Set up tax_query using proper WP_Tax_Query class
-					if ( ! isset( $query->tax_query ) || ! is_a( $query->tax_query, 'WP_Tax_Query' ) ) {
-						$tax_query_args = [
-							[
-								'taxonomy' => 'knowledge_base',
-								'field' => 'slug',
-								'terms' => [ $term->slug ]
-							]
-						];
-						$query->tax_query = new \WP_Tax_Query( $tax_query_args );
-						$query->tax_query->queried_terms = [
-							'knowledge_base' => [
-								'terms' => [ $term->slug ],
-								'field' => 'slug'
-							]
-						];
-					}
-				}
-			}
+
+	}
+
+	/**
+	 * Validate that the requested path matches the expected documentation root.
+	 * This prevents URLs with invalid prefixes (e.g., /invalid/docs/...) from showing archive templates.
+	 */
+	public function validate_request_path() {
+		if ( is_admin() || ! is_main_query() ) {
+			return;
 		}
 
+		global $wp;
+		// $wp->request contains the path relative to site root, without query string
+		$request_path = isset( $wp->request ) ? urldecode( $wp->request ) : '';
+
+		// Normalize base slug
+		$docs_slug = $this->rewrite->get_base_slug();
+		
+		// If user is using a custom page as root, use that page's path
+		if ( ! $this->settings->get( 'builtin_doc_page', true ) ) {
+			 $docs_page_id = $this->settings->get( 'docs_page', 0 );
+			 if ( $docs_page_id ) {
+				 $page_path = get_page_uri( $docs_page_id );
+				 if ( $page_path ) {
+					 $docs_slug = $page_path;
+				 }
+			 }
+		}
+		
+		$docs_slug = trim( $docs_slug, '/' );
+		
+		if ( empty( $docs_slug ) ) {
+			return; 
+		}
+
+		// Check if this is a query we should validate
+		$is_docs_query = is_singular( 'docs' ) || is_post_type_archive( 'docs' ) || is_tax( [ 'doc_category', 'knowledge_base', 'doc_tag' ] );
+		$looks_like_docs_url = strpos( $request_path, $docs_slug ) !== false;
+
+		// We validate if it's explicitly a docs query, OR if it looks like a docs URL but fell back to home/archive
+		if ( ! $is_docs_query && ! ( $looks_like_docs_url && is_home() ) ) {
+			return;
+		}
+
+		// Check if request path strictly starts with docs slug
+		// Using # as delimiter, need to preg_quote
+		if ( ! preg_match( '#^' . preg_quote( $docs_slug, '#' ) . '(/|$)#', $request_path ) ) {
+			 global $wp_query;
+			 $wp_query->set_404();
+			 status_header( 404 );
+			 nocache_headers();
+		}
 	}
 
 	/**
@@ -388,7 +604,12 @@ class Request extends Base {
 	 */
 	public function reapply_taxonomy_flags() {
 		global $wp_query;
-		
+
+		// If we found invalid query vars, do not mess with the query flags.
+		if ( $this->invalid_request_query_vars !== null ) {
+			return;
+		}
+
 		// Check if we have doc_category or knowledge_base in query vars
 		if ( isset( $wp_query->query_vars['doc_category'] ) && ! empty( $wp_query->query_vars['doc_category'] ) ) {
 			// If this is already identified as singular, don't override it
@@ -435,14 +656,23 @@ class Request extends Base {
 			}
 			
 			// If 'name' is set, check if a post with that name exists
-			// This prevents private docs from being incorrectly treated as category archives
+			// This prevents posts from being incorrectly treated as category archives
+			// (important when post slug == category slug, e.g. docs/old/new/new)
 			if ( isset( $wp_query->query_vars['name'] ) && ! empty( $wp_query->query_vars['name'] ) ) {
 				$post_exists = get_page_by_path( $wp_query->query_vars['name'], OBJECT, 'docs' );
 
 				if ( $post_exists ) {
-					// A post exists - this is a single doc request, not a category archive
-					// Don't set taxonomy flags
-
+					// A post exists - explicitly mark as single post and clear any taxonomy flags.
+					// Without this, WP may leave is_tax=true (set during parse_request because
+					// doc_category is also present), causing redirect_canonical to redirect
+					// the correct single-post URL to the category archive URL.
+					$wp_query->is_single        = true;
+					$wp_query->is_singular      = true;
+					$wp_query->is_404           = false;
+					$wp_query->is_archive       = false;
+					$wp_query->is_tax           = false;
+					$wp_query->queried_object    = $post_exists;
+					$wp_query->queried_object_id = $post_exists->ID;
 					return;
 				}
 			}
@@ -452,16 +682,30 @@ class Request extends Base {
 				 ( ! isset( $wp_query->query_vars['p'] ) || $wp_query->query_vars['p'] <= 0 ) &&
 				 ( ! isset( $wp_query->query_vars['docs'] ) || empty( $wp_query->query_vars['docs'] ) ) ) {
 
-				// Re-apply the taxonomy flags
-				$wp_query->is_tax = true;
-				$wp_query->is_archive = true;
-				$wp_query->is_home = false;
-				$wp_query->is_404 = false;
-				
-				// Ensure the queried object is set
-				if ( ! isset( $wp_query->queried_object ) || ! $wp_query->queried_object ) {
+				// Ensure the queried object is set or fetch the term
+				$term = null;
+				if ( isset( $wp_query->queried_object ) && $wp_query->queried_object ) {
+					$term = $wp_query->queried_object;
+				} else {
 					$term = get_term_by( 'slug', $wp_query->query_vars['doc_category'], 'doc_category' );
-					if ( $term ) {
+				}
+
+				// Only if the term effectively exists, we set the flags
+				if ( $term && ! is_wp_error( $term ) ) {
+					// Also validate knowledge_base if present
+					if ( isset( $wp_query->query_vars['knowledge_base'] ) && ! empty( $wp_query->query_vars['knowledge_base'] ) ) {
+						if ( ! get_term_by( 'slug', $wp_query->query_vars['knowledge_base'], 'knowledge_base' ) ) {
+							return;
+						}
+					}
+
+					// Re-apply the taxonomy flags
+					$wp_query->is_tax = true;
+					$wp_query->is_archive = true;
+					$wp_query->is_home = false;
+					$wp_query->is_404 = false;
+
+					if ( ! isset( $wp_query->queried_object ) || ! $wp_query->queried_object ) {
 						$wp_query->queried_object = $term;
 						$wp_query->queried_object_id = $term->term_id;
 						
@@ -503,14 +747,39 @@ class Request extends Base {
 	 */
 	public function prevent_404_status( $status_header, $code ) {
 		global $wp_query;
+
+		// If we've explicitly marked this request as invalid (malformed KB/category slug), respect the 404!
+		if ( $this->invalid_request_query_vars !== null ) {
+			return $status_header;
+		}
 		
-		// If this is a 404 but we have doc_category or knowledge_base query vars, change it to 200
+		// If this is a 404 but we have doc_category or doc_tag query vars, change it to 200
 		// We check the query vars instead of is_tax because the flags get reset by WordPress
 		if ( $code == 404 && (
 			(isset($wp_query->query_vars['doc_category']) && ! empty($wp_query->query_vars['doc_category'])) ||
-			(isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag'])) ||
-			(isset($wp_query->query_vars['knowledge_base']) && ! empty($wp_query->query_vars['knowledge_base']) && ! isset($wp_query->query_vars['name']))
+			(isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag']))
 		) ) {
+			// Validate existence before forcing 200
+			if ( isset($wp_query->query_vars['doc_category']) && ! empty($wp_query->query_vars['doc_category']) ) {
+				$term = get_term_by('slug', $wp_query->query_vars['doc_category'], 'doc_category');
+				if ( ! $term || is_wp_error( $term ) ) {
+					return $status_header;
+				}
+			}
+			if ( isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag']) ) {
+				$term = get_term_by('slug', $wp_query->query_vars['doc_tag'], 'doc_tag');
+				if ( ! $term || is_wp_error( $term ) ) {
+					return $status_header;
+				}
+			}
+
+			if ( isset($wp_query->query_vars['knowledge_base']) && ! empty($wp_query->query_vars['knowledge_base']) ) {
+				$term = get_term_by('slug', $wp_query->query_vars['knowledge_base'], 'knowledge_base');
+				if ( ! $term || is_wp_error( $term ) ) {
+					return $status_header;
+				}
+			}
+
 			return 'HTTP/1.1 200 OK';
 		}
 		
@@ -610,34 +879,28 @@ class Request extends Base {
 		global $wpdb;
 		$name = isset( $query_vars['docs'] ) ? $query_vars['docs'] : $query_vars['name'];
 
+
 		// If doc_category is specified in the URL, validate that the post belongs to that category
 	if ( isset( $query_vars['doc_category'] ) ) {
 		$doc_category = $query_vars['doc_category'];
-		
-		// DEBUG: Log the query vars
 
-		
-		// If knowledge_base is in query vars but doc_category is empty or just contains the KB slug,
-		// skip validation as the pro plugin will handle it
-		if ( isset( $query_vars['knowledge_base'] ) && empty( trim( $doc_category, '/' ) ) ) {
 
-			return true;
-		}
+		// Handle hierarchical category slugs (e.g., parent/child/grandchild)
+		$category_parts = explode('/', trim($doc_category, '/'));
+		$target_category_slug = end($category_parts); // Get the last part as the target category
 
-			// Handle hierarchical category slugs (e.g., parent/child/grandchild)
-			$category_parts = explode('/', trim($doc_category, '/'));
-			$target_category_slug = end($category_parts); // Get the last part as the target category
 
-			// First, check if the post exists
-			$_post_id = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
-					esc_sql( $name ),
-					'docs'
-				)
-			);
+		// First, check if the post exists
+		$_post_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+				esc_sql( $name ),
+				'docs'
+			)
+		);
 
-			// If post exists, validate it belongs to the category in the URL
+
+		// If post exists, validate it belongs to the category in the URL
 	if ( $_post_id > 0 ) {
 		
 		// When hierarchical slugs are enabled, check if post belongs to any category in the path
@@ -662,8 +925,6 @@ class Request extends Base {
 						'doc_category'
 					)
 				);
-				
-
 				
 				if ( $cat_check > 0 ) {
 					// If knowledge_base is set, verify the category belongs to that KB
@@ -703,16 +964,17 @@ class Request extends Base {
 				)
 			);
 			
-			// If knowledge_base is set and category was found, verify it belongs to that KB
+		// If knowledge_base is set and category was found, verify the POST belongs to that KB.
+			// We use the post's actual KB taxonomy terms as the source of truth,
+			// NOT the doc_category_knowledge_base meta (which can be stale or misconfigured).
+			// Only block if the post is explicitly assigned to OTHER KBs that don't include the requested one.
 			if ( $has_category && isset( $query_vars['knowledge_base'] ) ) {
-				$term = get_term_by( 'slug', $target_category_slug, 'doc_category' );
-				if ( $term ) {
-					$term_kbs = get_term_meta( $term->term_id, 'doc_category_knowledge_base', true );
-					// Only valid if category belongs to the KB in the URL
-					if ( ! is_array( $term_kbs ) || ! in_array( $query_vars['knowledge_base'], $term_kbs ) ) {
-						$has_category = false;
-					}
+				$post_kbs = wp_get_post_terms( $_post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
+				if ( ! is_wp_error( $post_kbs ) && ! empty( $post_kbs ) && ! in_array( $query_vars['knowledge_base'], $post_kbs ) ) {
+					// Post is explicitly assigned to different KB(s) — URL KB slug is wrong.
+					$has_category = false;
 				}
+				// If post has no KB terms, or KB terms include the requested KB → allow it.
 			}
 		}
 
@@ -735,31 +997,11 @@ class Request extends Base {
 			}
 		}
 
-		// If post doesn't belong to the target category, check if Multiple KB is active
-		// In MKB, the same category can exist in multiple KBs, and the doc might belong to it in one KB
-		if ( ! $has_category && taxonomy_exists( 'knowledge_base' ) ) {
-			// Check if this doc belongs to multiple knowledge bases
-			$kb_count = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->term_relationships} tr
-					INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-					WHERE tr.object_id = %d AND tt.taxonomy = %s",
-					$_post_id,
-					'knowledge_base'
-				)
-			);
-			
-			// If doc has multiple KBs, be more lenient - the pro plugin will handle the final validation
-			// based on the knowledge_base query var that gets set later
-			if ( $kb_count > 1 ) {
-				// Allow it to pass - the pro plugin's parse() method will validate the KB context
-				$has_category = true;
-			}
-		}
 
-		// If post doesn't belong to the target category, return false
+		// If post doesn't belong to the target category, return false (404)
 		if ( ! $has_category ) {
-
+			// Remember these query vars so we can block any canonical redirect for this invalid URL
+			$this->invalid_request_query_vars = $query_vars;
 			return false;
 		}
 
@@ -805,12 +1047,17 @@ class Request extends Base {
 					'docs'
 				)
 			);
-		}
 
-		// If knowledge_base is set but we haven't validated yet (MKB active),
-		// allow it to pass - the pro plugin will handle final validation
-		if ( isset( $query_vars['knowledge_base'] ) && ! isset( $query_vars['doc_category'] ) ) {
-			return $_post_id > 0;
+
+			// If knowledge_base is set, validate the post actually belongs to that KB
+			if ( $_post_id > 0 && isset( $query_vars['knowledge_base'] ) ) {
+				$post_kbs = wp_get_post_terms( $_post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
+				if ( is_wp_error( $post_kbs ) || ! in_array( $query_vars['knowledge_base'], $post_kbs ) ) {
+					// Remember these query vars so we can block any canonical redirect for this invalid URL
+					$this->invalid_request_query_vars = $query_vars;
+					return false;
+				}
+			}
 		}
 
 		return $_post_id > 0;

@@ -98,7 +98,8 @@ class FaqList extends Shortcode {
 				'wrapper_attr'     => $wrapper_attr,
 				'widget'           => $this,
 				'layout'           => 'list',
-				'terms_query_args' => $terms_query
+				'terms_query_args' => $terms_query,
+				'faq_schema'       => $this->attributes['faq_schema']
 			]
 		);
 	}

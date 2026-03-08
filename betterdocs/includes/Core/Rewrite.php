@@ -202,7 +202,7 @@ class Rewrite extends Base {
 				$carry .= ( strpos( $item, '%' ) !== false ? '([^/]+)' : $item ) . '/';
 				return $carry;
 			},
-			''
+			'^'
 		) . '?$';
 	}
 
@@ -242,22 +242,22 @@ class Rewrite extends Base {
 
 		// Add rule to handle pagination attempts
 		$this->add_rewrite_rule(
-			$base . '/page/([0-9]+)/?$',
+			'^' . $base . '/page/([0-9]+)/?$',
 			'index.php?post_type=docs',
 			'top'
 		);
 
         $base = $this->get_base_slug();
-        $this->add_rewrite_rule( $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
-        $this->add_rewrite_rule( $base . '/authors/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]' );
-		$this->add_rewrite_rule( $base . '/authors/([0-9]+)/page/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]&page=$matches[2]' );
+        $this->add_rewrite_rule( '^' . $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
+        $this->add_rewrite_rule( '^' . $base . '/authors/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]' );
+		$this->add_rewrite_rule( '^' . $base . '/authors/([0-9]+)/page/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]&page=$matches[2]' );
 
 		if( $hierarchy_slug ) { // reigster hierarchy based slug rewrite rule, for single doc permalink
-			$this->add_rewrite_rule( $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$', 'index.php?doc_category=$matches[1]&docs=$matches[2]&post_type=docs' );
+			$this->add_rewrite_rule( '^' . $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$', 'index.php?doc_category=$matches[1]&docs=$matches[2]&post_type=docs' );
 
 			$rewrite_rules = get_option('rewrite_rules');
 
-			if( ! isset( $rewrite_rules[$base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$'] ) ) { // if this nested rule is not set then flush the rules
+			if( ! isset( $rewrite_rules['^' . $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$'] ) ) { // if this nested rule is not set then flush the rules
 				flush_rewrite_rules();
 			}
 		}
@@ -280,7 +280,7 @@ class Rewrite extends Base {
 			$this->make_query( $_normalized_structure['group'] )
 		);
 
-		$this->add_rewrite_rule( $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
+		$this->add_rewrite_rule( '^' . $base . '/(feed|rdf|rss|rss2|atom)/?$', 'index.php?post_type=docs&feed=$matches[1]' );
 	}
 
 	public function add_rewrite_rule( $regex, $query, $after = 'top' ) {

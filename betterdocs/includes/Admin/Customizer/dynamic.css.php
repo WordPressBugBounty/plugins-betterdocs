@@ -10389,7 +10389,7 @@ $css->add_rule(
 	$css->properties(
 		[
 			'color' => 'betterdocs_faq_list_color_layout_4'
-		],
+		]
 	)
 );
 
@@ -10488,7 +10488,7 @@ $css->add_rule(
 	'.betterdocs-category-archive-wrapper .betterdocs-pagination ul li a',
 	$css->properties(
 		[
-			'color' => 'archive_docs_pagination_wrapper_color',
+			'color' => 'archive_docs_pagination_wrapper_color'
 		]
 	)
 );
