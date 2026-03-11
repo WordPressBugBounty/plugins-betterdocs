@@ -252,21 +252,23 @@ class Rewrite extends Base {
         $this->add_rewrite_rule( '^' . $base . '/authors/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]' );
 		$this->add_rewrite_rule( '^' . $base . '/authors/([0-9]+)/page/([0-9]+)/?$', 'index.php?post_type=docs&author=$matches[1]&page=$matches[2]' );
 
-		if( $hierarchy_slug ) { // reigster hierarchy based slug rewrite rule, for single doc permalink
-			$this->add_rewrite_rule( '^' . $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$', 'index.php?doc_category=$matches[1]&docs=$matches[2]&post_type=docs' );
-
-			$rewrite_rules = get_option('rewrite_rules');
-
-			if( ! isset( $rewrite_rules['^' . $base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$'] ) ) { // if this nested rule is not set then flush the rules
-				flush_rewrite_rules();
-			}
-		}
-
 		/**
 		 * This code of blocks used to determine single docs permalink.
 		 */
 		$_docs_perma_struct    = betterdocs()->settings->get( 'permalink_structure', 'docs' );
 		$_normalized_structure = $this->normalzie_doc_perma_structure( $_docs_perma_struct );
+
+		if( $hierarchy_slug ) { // register hierarchy based slug rewrite rule, for single doc permalink
+			// When MKB or WPML is used, the actual base for single docs might differ from the generic $base
+			$perma_base = isset( $_normalized_structure['raw'][0] ) && strpos( $_normalized_structure['raw'][0], '%' ) === false 
+				? $_normalized_structure['raw'][0] 
+				: $base;
+				
+			$this->add_rewrite_rule( '^' . $perma_base . '/(.+?)/([^/]+)(?:/([0-9]+))?/?$', 'index.php?doc_category=$matches[1]&docs=$matches[2]&post_type=docs', 'top' );
+			
+			// Removed flush_rewrite_rules() from here. Calling flush_rewrite_rules() on the 'init' hook causes 
+			// infinite database updates and destroys custom rules when WPML or MKB dynamically filters keys.
+		}
 
 		$_feed_regex   = $_normalized_structure['raw'];
 		$_feed_regex[] = '(feed|rdf|rss|rss2|atom)';

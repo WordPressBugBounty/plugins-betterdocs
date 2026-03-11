@@ -175,10 +175,26 @@ class Request extends Base {
 			status_header( 404 );
 			nocache_headers();
 
-			// Kill the query so no post is found - preventing WP_Query from resetting is_404
+			// Kill ALL query vars that could cause WordPress to route to a doc/taxonomy template.
+			// Without clearing these, WordPress still tries to build a tax_query from
+			// doc_category/knowledge_base, selects the wrong template, and loads it
+			// with a null post — causing PHP warnings in post-template functions.
 			$query->set( 'name', '' );
 			$query->set( 'pagename', '' );
 			$query->set( 'p', -1 );
+			$query->set( 'docs', '' );
+			$query->set( 'doc_category', '' );
+			$query->set( 'doc_tag', '' );
+			$query->set( 'knowledge_base', '' );
+			$query->set( 'post_type', '' );
+
+			// Reset all routing flags — only is_404 should remain true.
+			$query->is_single    = false;
+			$query->is_singular  = false;
+			$query->is_archive   = false;
+			$query->is_tax       = false;
+			$query->is_home      = false;
+			$query->is_404       = true;
 		}
 	}
 
@@ -588,13 +604,28 @@ class Request extends Base {
 			return;
 		}
 
-		// Check if request path strictly starts with docs slug
+		// If WordPress already correctly resolved this as a single docs post, trust that resolution.
+		// The post was found and is valid — no need to validate the URL prefix at all.
+		// Path validation is only meaningful for archive/tax pages whose URL leaked past the docs slug.
+		if ( is_singular( 'docs' ) ) {
+			return;
+		}
+
+		// Check if request path strictly starts with docs slug, category slug, or tag slug
 		// Using # as delimiter, need to preg_quote
-		if ( ! preg_match( '#^' . preg_quote( $docs_slug, '#' ) . '(/|$)#', $request_path ) ) {
-			 global $wp_query;
-			 $wp_query->set_404();
-			 status_header( 404 );
-			 nocache_headers();
+		$valid_prefixes = [
+			preg_quote( $docs_slug, '#' ),
+			preg_quote( trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ), '#' ),
+			preg_quote( trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ), '#' )
+		];
+		$valid_prefixes = array_filter( $valid_prefixes );
+		$prefix_pattern = '#^(' . implode( '|', $valid_prefixes ) . ')(/|$)#';
+
+		if ( ! preg_match( $prefix_pattern, $request_path ) ) {
+			global $wp_query;
+			$wp_query->set_404();
+			status_header( 404 );
+			nocache_headers();
 		}
 	}
 
@@ -752,7 +783,22 @@ class Request extends Base {
 		if ( $this->invalid_request_query_vars !== null ) {
 			return $status_header;
 		}
-		
+
+		// If a 404 is being sent but the queried object is a valid single docs post,
+		// override with 200. This guards against false 404s on single docs pages.
+		if ( $code == 404 &&
+			isset( $wp_query->queried_object ) &&
+			$wp_query->queried_object instanceof \WP_Post &&
+			$wp_query->queried_object->post_type === 'docs' &&
+			in_array( $wp_query->queried_object->post_status, [ 'publish', 'private' ], true )
+		) {
+			// Only allow if the current user can actually read this post
+			if ( 'publish' === $wp_query->queried_object->post_status ||
+				current_user_can( 'read_private_posts', $wp_query->queried_object->ID ) ) {
+				return 'HTTP/1.1 200 OK';
+			}
+		}
+
 		// If this is a 404 but we have doc_category or doc_tag query vars, change it to 200
 		// We check the query vars instead of is_tax because the flags get reset by WordPress
 		if ( $code == 404 && (
@@ -782,7 +828,7 @@ class Request extends Base {
 
 			return 'HTTP/1.1 200 OK';
 		}
-		
+
 		return $status_header;
 	}
 
@@ -1025,7 +1071,14 @@ class Request extends Base {
 					}
 
 					// Check if this hierarchy matches the URL structure
-					if ( implode('/', $hierarchy_path) === $doc_category ) {
+					$built_path = implode('/', $hierarchy_path);
+
+					// Allow partial path matching to accommodate KB-prefixed URLs or partial hierarchies.
+					// Using substr for broad PHP version compatibility (equivalent to str_ends_with).
+					$is_suffix = strlen($built_path) > 0 && substr($doc_category, -strlen($built_path)) === $built_path;
+					$is_prefix = strlen($doc_category) > 0 && substr($built_path, -strlen($doc_category)) === $doc_category;
+
+					if ( $built_path === $doc_category || $is_suffix || $is_prefix ) {
 						$found_valid_hierarchy = true;
 						break;
 					}
