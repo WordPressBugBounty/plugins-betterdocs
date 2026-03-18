@@ -97,12 +97,12 @@
                     'Authorization' => 'Bearer ' . $api_key
                 ),
                 'body' => json_encode(
-                    array(  //phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
-                        'model' => $model, // Add the model parameter here
+                    array(
+                        'model' => $model,
                         'messages' => array(
                             array(
                                 'role' => 'system',
-                                'content' => 'You are a helpful assistant who writes documentation for users.'
+                                'content' => 'You are a Senior Technical Writer specializing in comprehensive, high-quality documentation. Your goal is to write documentation that scores 100/100 on clarity, completeness, and structure.'
                             ),
                             array(
                                 'role' => 'user',
@@ -110,7 +110,6 @@
                             )
                         ),
                         'max_tokens' => $max_tokens
-
                     )
                 ),
                 'timeout' => 50
@@ -331,7 +330,7 @@
 				htmlContent = getBodyContent(htmlContent);
 				htmlContent = removeFirstHeading(htmlContent);
 				htmlContent = wrapwithHeighlight(htmlContent, keywords);
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
 
 				const blocks = wp.blocks.rawHandler({
 					HTML: htmlContent
@@ -405,12 +404,12 @@
 
 			function writeWithAIForm() {
 
-                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
+                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
 				if (docsTitle) {
 					title = docsTitle;
 				}
 
-                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore   ?>`;
+                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore                   ?>`;
 				const titlePlaceholder = "<?php echo esc_attr__( 'Enter a descriptive title for your documentation.', 'betterdocs' ); ?>";
 				const keywords = "<?php echo esc_attr( '{Documentation Keywords}' ); ?>";
 				const keywordsPlaceholder = "<?php echo esc_attr__( 'Add keywords to generate precise & relevant documentation (comma-separated).', 'betterdocs' ); ?>";
@@ -436,7 +435,7 @@
 
 				let hiddenClass = 'hidden';
 				let newDocPageAtt = 'data-new-doc-page="true"';
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore   ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
 
 				if (isPostContent !== '') {
 					hiddenClass = '';

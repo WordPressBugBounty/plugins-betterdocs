@@ -531,8 +531,9 @@ class Request extends Base {
 				$query->is_home = false;
 				$query->is_404 = false; // Important: reset 404 flag
 				
-				// Set the queried object
-				$term = get_term_by( 'slug', $query->query_vars['doc_category'], 'doc_category' );
+				// WordPress/Polylang may store non-Latin slugs URL-encoded (%e0%a6...) while the
+				// query var arrives decoded (বেটারডক্স). Try both forms so the term lookup succeeds.
+				$term = $this->get_term_by_slug_or_encoded( $query->query_vars['doc_category'], 'doc_category' );
 				if ( $term ) {
 					$query->queried_object = $term;
 					$query->queried_object_id = $term->term_id;
@@ -555,8 +556,6 @@ class Request extends Base {
 						];
 					}
 				}
-			} else {
-
 			}
 		}
 
@@ -574,6 +573,9 @@ class Request extends Base {
 		global $wp;
 		// $wp->request contains the path relative to site root, without query string
 		$request_path = isset( $wp->request ) ? urldecode( $wp->request ) : '';
+
+		// Normalize request path: remove index.php/ and leading/trailing slashes
+		$request_path = trim( preg_replace( '#^index\.php(/|$)#', '', $request_path ), '/' );
 
 		// Normalize base slug
 		$docs_slug = $this->rewrite->get_base_slug();
@@ -619,7 +621,11 @@ class Request extends Base {
 			preg_quote( trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ), '#' )
 		];
 		$valid_prefixes = array_filter( $valid_prefixes );
-		$prefix_pattern = '#^(' . implode( '|', $valid_prefixes ) . ')(/|$)#';
+		
+		// Allow optional language prefixes (e.g. /en/, /pt-br/) for WPML/Polylang/TranslatePress compatibility
+		$lang_pattern = '(?:[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,4})?/)?';
+		
+		$prefix_pattern = '#^' . $lang_pattern . '(' . implode( '|', $valid_prefixes ) . ')(/|$)#';
 
 		if ( ! preg_match( $prefix_pattern, $request_path ) ) {
 			global $wp_query;
@@ -718,14 +724,15 @@ class Request extends Base {
 				if ( isset( $wp_query->queried_object ) && $wp_query->queried_object ) {
 					$term = $wp_query->queried_object;
 				} else {
-					$term = get_term_by( 'slug', $wp_query->query_vars['doc_category'], 'doc_category' );
+					// WordPress/Polylang may store non-Latin slugs URL-encoded; try both forms.
+					$term = $this->get_term_by_slug_or_encoded( $wp_query->query_vars['doc_category'], 'doc_category' );
 				}
 
 				// Only if the term effectively exists, we set the flags
 				if ( $term && ! is_wp_error( $term ) ) {
 					// Also validate knowledge_base if present
 					if ( isset( $wp_query->query_vars['knowledge_base'] ) && ! empty( $wp_query->query_vars['knowledge_base'] ) ) {
-						if ( ! get_term_by( 'slug', $wp_query->query_vars['knowledge_base'], 'knowledge_base' ) ) {
+						if ( ! $this->get_term_by_slug_or_encoded( $wp_query->query_vars['knowledge_base'], 'knowledge_base' ) ) {
 							return;
 						}
 					}
@@ -759,8 +766,6 @@ class Request extends Base {
 						}
 					}
 				}
-			} else {
-
 			}
 		}
 
@@ -806,21 +811,21 @@ class Request extends Base {
 			(isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag']))
 		) ) {
 			// Validate existence before forcing 200
+			// Use encoded fallback so Bengali/Arabic/CJK slugs are found correctly.
 			if ( isset($wp_query->query_vars['doc_category']) && ! empty($wp_query->query_vars['doc_category']) ) {
-				$term = get_term_by('slug', $wp_query->query_vars['doc_category'], 'doc_category');
+				$term = $this->get_term_by_slug_or_encoded( $wp_query->query_vars['doc_category'], 'doc_category' );
 				if ( ! $term || is_wp_error( $term ) ) {
 					return $status_header;
 				}
 			}
 			if ( isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag']) ) {
-				$term = get_term_by('slug', $wp_query->query_vars['doc_tag'], 'doc_tag');
+				$term = $this->get_term_by_slug_or_encoded( $wp_query->query_vars['doc_tag'], 'doc_tag' );
 				if ( ! $term || is_wp_error( $term ) ) {
 					return $status_header;
 				}
 			}
-
 			if ( isset($wp_query->query_vars['knowledge_base']) && ! empty($wp_query->query_vars['knowledge_base']) ) {
-				$term = get_term_by('slug', $wp_query->query_vars['knowledge_base'], 'knowledge_base');
+				$term = $this->get_term_by_slug_or_encoded( $wp_query->query_vars['knowledge_base'], 'knowledge_base' );
 				if ( ! $term || is_wp_error( $term ) ) {
 					return $status_header;
 				}
@@ -936,15 +941,66 @@ class Request extends Base {
 		$target_category_slug = end($category_parts); // Get the last part as the target category
 
 
-		// First, check if the post exists
-		$_post_id = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
-				esc_sql( $name ),
-				'docs'
-			)
-		);
+		// First, check if the post exists.
+		// When MKB is active, multiple translated posts share the same slug — one per KB.
+		// We MUST join the KB taxonomy so we select the post for the correct language/KB.
+		// Polylang/multilingual plugins store post_name URL-encoded; try the encoded form first.
+		$_encoded_name = rawurlencode( $name );
 
+		if ( isset( $query_vars['knowledge_base'] ) && ! empty( $query_vars['knowledge_base'] ) ) {
+			// KB-aware lookup: only select the post that is assigned to this KB.
+			$_kb_slug     = $query_vars['knowledge_base'];
+			$_kb_slug_enc = strtolower( rawurlencode( $_kb_slug ) );
+			$_post_id = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT p.ID FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+					INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
+					INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+					WHERE p.post_name = %s AND p.post_type = 'docs'
+					AND t.slug IN (%s, %s)
+					LIMIT 1",
+					esc_sql( $_encoded_name ),
+					esc_sql( $_kb_slug ),
+					esc_sql( $_kb_slug_enc )
+				)
+			);
+			// Fallback: post_name stored as decoded Unicode
+			if ( ! $_post_id && $_encoded_name !== $name ) {
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT p.ID FROM {$wpdb->posts} p
+						INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+						INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
+						INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+						WHERE p.post_name = %s AND p.post_type = 'docs'
+						AND t.slug IN (%s, %s)
+						LIMIT 1",
+						esc_sql( $name ),
+						esc_sql( $_kb_slug ),
+						esc_sql( $_kb_slug_enc )
+					)
+				);
+			}
+		} else {
+			// No KB in URL — use the simple post_name lookup (single-KB sites).
+			$_post_id = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+					esc_sql( $_encoded_name ),
+					'docs'
+				)
+			);
+			if ( ! $_post_id && $_encoded_name !== $name ) {
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+						esc_sql( $name ),
+						'docs'
+					)
+				);
+			}
+		}
 
 		// If post exists, validate it belongs to the category in the URL
 	if ( $_post_id > 0 ) {
@@ -960,13 +1016,17 @@ class Request extends Base {
 			
 			foreach ( $category_slugs_to_check as $cat_slug ) {
 
+				// rawurlencode produces uppercase hex (%E0%...) but WP/Polylang stores lowercase (%e0%).
+				// Always normalise to lowercase so the slug IN (...) comparison succeeds.
+				$_encoded_cat = strtolower( rawurlencode( $cat_slug ) );
 				$cat_check = $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT COUNT(*) FROM {$wpdb->term_relationships} tr
 						INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
 						INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-						WHERE tr.object_id = %d AND t.slug = %s AND tt.taxonomy = %s",
+						WHERE tr.object_id = %d AND t.slug IN (%s, %s) AND tt.taxonomy = %s",
 						$_post_id,
+						esc_sql( $_encoded_cat ),
 						esc_sql( $cat_slug ),
 						'doc_category'
 					)
@@ -976,14 +1036,28 @@ class Request extends Base {
 					// If knowledge_base is set, verify the category belongs to that KB
 					if ( isset( $query_vars['knowledge_base'] ) ) {
 
-						// Get the term ID for this category slug
-						$term = get_term_by( 'slug', $cat_slug, 'doc_category' );
+						// Get the term ID - use our helper that tries both decoded and encoded forms.
+						$term = $this->get_term_by_slug_or_encoded( $cat_slug, 'doc_category' );
 						if ( $term ) {
 							$term_kbs = get_term_meta( $term->term_id, 'doc_category_knowledge_base', true );
 
-							// Check if this category belongs to the KB in the URL
+							// Primary check: category's stored KB meta includes the requested KB.
 							if ( is_array( $term_kbs ) && in_array( $query_vars['knowledge_base'], $term_kbs ) ) {
-
+								$has_category = true;
+								break;
+							}
+							
+							// Fallback: for Polylang/multilingual sites the term meta may store the
+							// original-language KB slug while the URL uses the translated slug.
+							// Verify instead that the post is actually assigned to the requested KB.
+							// wp_get_post_terms may return slugs URL-encoded (Polylang) or decoded (standard WP).
+							// Normalise everything to lowercase for comparison.
+							$kb_slug_url = $query_vars['knowledge_base'];
+							$kb_slug_enc = strtolower( rawurlencode( $kb_slug_url ) );
+							$post_kbs = wp_get_post_terms( $_post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
+							$post_kbs_lower = array_map( 'strtolower', is_array( $post_kbs ) ? $post_kbs : [] );
+							if ( ! is_wp_error( $post_kbs ) &&
+								 ( in_array( $kb_slug_url, $post_kbs_lower ) || in_array( $kb_slug_enc, $post_kbs_lower ) ) ) {
 								$has_category = true;
 								break;
 							}
@@ -998,13 +1072,16 @@ class Request extends Base {
 			}
 			} else {
 			// Non-hierarchical or single category - check only the target category
+			// Always lowercase-encode so the slug matches WP/Polylang's stored lowercase hex.
+			$_encoded_target = strtolower( rawurlencode( $target_category_slug ) );
 			$has_category = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$wpdb->term_relationships} tr
 					INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
 					INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-					WHERE tr.object_id = %d AND t.slug = %s AND tt.taxonomy = %s",
+					WHERE tr.object_id = %d AND t.slug IN (%s, %s) AND tt.taxonomy = %s",
 					$_post_id,
+					esc_sql( $_encoded_target ),
 					esc_sql( $target_category_slug ),
 					'doc_category'
 				)
@@ -1016,12 +1093,20 @@ class Request extends Base {
 			// Only block if the post is explicitly assigned to OTHER KBs that don't include the requested one.
 			if ( $has_category && isset( $query_vars['knowledge_base'] ) ) {
 				$post_kbs = wp_get_post_terms( $_post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
-				if ( ! is_wp_error( $post_kbs ) && ! empty( $post_kbs ) && ! in_array( $query_vars['knowledge_base'], $post_kbs ) ) {
-					// Post is explicitly assigned to different KB(s) — URL KB slug is wrong.
-					$has_category = false;
+				if ( ! is_wp_error( $post_kbs ) && ! empty( $post_kbs ) ) {
+					$kb_slug         = $query_vars['knowledge_base'];
+					// PHP's rawurlencode() produces uppercase (%E0%A6...) but WordPress/Polylang stores
+					// slugs with lowercase hex (%e0%a6...). Normalise both sides to lowercase.
+					$kb_slug_encoded = strtolower( rawurlencode( $kb_slug ) );
+					$post_kbs_lower  = array_map( 'strtolower', $post_kbs );
+					// Check decoded form (standard WP) and encoded form (Polylang).
+					if ( ! in_array( $kb_slug, $post_kbs_lower ) && ! in_array( $kb_slug_encoded, $post_kbs_lower ) ) {
+						$has_category = false;
+					}
 				}
-				// If post has no KB terms, or KB terms include the requested KB → allow it.
 			}
+
+
 		}
 
 		// Special handling for uncategorized docs
@@ -1092,24 +1177,80 @@ class Request extends Base {
 		}
 	}
 		} else {
-			// Fallback to original behavior if no category is specified
-			$_post_id = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
-					esc_sql( $name ),
-					'docs'
-				)
-			);
+			// First, check if the post exists.
+			// When MKB is active, multiple translated posts share the same slug — one per KB.
+			// Join the KB taxonomy when knowledge_base is in the URL to find the right post.
+			$_encoded_name = rawurlencode( $name );
+
+			if ( isset( $query_vars['knowledge_base'] ) && ! empty( $query_vars['knowledge_base'] ) ) {
+				$_kb_slug     = $query_vars['knowledge_base'];
+				$_kb_slug_enc = strtolower( rawurlencode( $_kb_slug ) );
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT p.ID FROM {$wpdb->posts} p
+						INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+						INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
+						INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+						WHERE p.post_name = %s AND p.post_type = 'docs'
+						AND t.slug IN (%s, %s)
+						LIMIT 1",
+						esc_sql( $_encoded_name ),
+						esc_sql( $_kb_slug ),
+						esc_sql( $_kb_slug_enc )
+					)
+				);
+				if ( ! $_post_id && $_encoded_name !== $name ) {
+					$_post_id = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT p.ID FROM {$wpdb->posts} p
+							INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+							INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
+							INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+							WHERE p.post_name = %s AND p.post_type = 'docs'
+							AND t.slug IN (%s, %s)
+							LIMIT 1",
+							esc_sql( $name ),
+							esc_sql( $_kb_slug ),
+							esc_sql( $_kb_slug_enc )
+						)
+					);
+				}
+			} else {
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+						esc_sql( $_encoded_name ),
+						'docs'
+					)
+				);
+				if ( ! $_post_id && $_encoded_name !== $name ) {
+					$_post_id = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+							esc_sql( $name ),
+							'docs'
+						)
+					);
+				}
+			}
 
 
-			// If knowledge_base is set, validate the post actually belongs to that KB
+			// If knowledge_base is set, validate the post actually belongs to that KB.
+			// wp_get_post_terms may return slugs URL-encoded (Polylang) or decoded (standard WP).
+			// Check both forms so the match works regardless of storage format.
 			if ( $_post_id > 0 && isset( $query_vars['knowledge_base'] ) ) {
 				$post_kbs = wp_get_post_terms( $_post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
-				if ( is_wp_error( $post_kbs ) || ! in_array( $query_vars['knowledge_base'], $post_kbs ) ) {
-					// Remember these query vars so we can block any canonical redirect for this invalid URL
-					$this->invalid_request_query_vars = $query_vars;
-					return false;
+				if ( ! is_wp_error( $post_kbs ) && ! empty( $post_kbs ) ) {
+					$kb_slug         = $query_vars['knowledge_base'];
+					$kb_slug_encoded = strtolower( rawurlencode( $kb_slug ) );
+					$post_kbs_lower  = array_map( 'strtolower', $post_kbs );
+					if ( ! in_array( $kb_slug, $post_kbs_lower ) && ! in_array( $kb_slug_encoded, $post_kbs_lower ) ) {
+						// Remember these query vars so we can block any canonical redirect for this invalid URL
+						$this->invalid_request_query_vars = $query_vars;
+						return false;
+					}
 				}
+				// If post has no KB terms → allow it (not assigned to any KB explicitly).
 			}
 		}
 
@@ -1130,7 +1271,37 @@ class Request extends Base {
 			return false;
 		}
 
-		return term_exists( $query_vars[ $taxonomy ], $taxonomy );
+		// WordPress/Polylang stores non-Latin slugs URL-encoded (%e0%a6...) but the query var
+		// arrives already decoded (e.g. বেটারডক্স). Try the decoded form first, then encoded.
+		if ( term_exists( $query_vars[ $taxonomy ], $taxonomy ) ) {
+			return true;
+		}
+		$encoded = strtolower( rawurlencode( $query_vars[ $taxonomy ] ) );
+		if ( $encoded !== $query_vars[ $taxonomy ] && term_exists( $encoded, $taxonomy ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Look up a taxonomy term by slug, trying both the raw (possibly Unicode-decoded) form
+	 * and the lowercase URL-encoded form that WordPress/Polylang stores for non-Latin slugs.
+	 *
+	 * @param string $slug     Slug to look up (may be decoded Unicode, e.g. বেটারডক্স).
+	 * @param string $taxonomy Taxonomy name.
+	 * @return \WP_Term|false
+	 */
+	protected function get_term_by_slug_or_encoded( $slug, $taxonomy ) {
+		$term = get_term_by( 'slug', $slug, $taxonomy );
+		if ( $term ) {
+			return $term;
+		}
+		// Fallback: WordPress/Polylang stores non-Latin slugs as lowercase percent-encoded strings.
+		$encoded = strtolower( rawurlencode( $slug ) );
+		if ( $encoded !== $slug ) {
+			$term = get_term_by( 'slug', $encoded, $taxonomy );
+		}
+		return $term ? $term : false;
 	}
 
 	public function set_perma_structure( $structures = [] ) {
@@ -1163,8 +1334,24 @@ class Request extends Base {
 		if ( ! empty( $this->perma_structure ) ) {
 			$_valid = [];
 
+			// Normalize request path: remove index.php/ and leading/trailing slashes.
+			// urldecode is correct here: $wp->request arrives decoded by PHP/Apache, and the structure
+			// regex patterns (e.g. "docs/%knowledge_base%") are plain ASCII, so matching works fine.
+			// DB lookups handle the encoding separately below.
+			$request = isset( $wp->request ) ? urldecode( $wp->request ) : '';
+			$request = trim( preg_replace( '#^index\.php(/|$)#', '', $request ), '/' );
+
+			// Strip optional language prefix injected by Polylang/WPML (e.g. "en/", "bn/", "pt-br/")
+			// so that "bn/docs/..." matches the structure "docs/..." correctly.
+			$request_without_lang = preg_replace( '#^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})?/#', '', $request );
+
 			foreach ( $this->perma_structure as $_type => $structure ) {
-				$_perma_vars = $this->is_perma_valid_for( $structure, $wp->request );
+				// First try the raw (possibly language-prefixed) request, then the lang-stripped variant.
+				// This ensures we still match non-multilingual sites without stripping valid slugs.
+				$_perma_vars = $this->is_perma_valid_for( $structure, $request );
+				if ( ! $_perma_vars && $request_without_lang !== $request ) {
+					$_perma_vars = $this->is_perma_valid_for( $structure, $request_without_lang );
+				}
 
                 // $_valid = empty( $_valid ) && $_perma_vars ? [ 'type' => $_type, 'query_vars' => $_perma_vars ] : $_valid;
                 if ( ( $_perma_vars && method_exists( $this, $_type ) && call_user_func_array( [$this, $_type], [ & $_perma_vars] ) ) ) {
@@ -1174,6 +1361,12 @@ class Request extends Base {
                         $_perma_vars['post_type'] = 'docs';
                     }
                     $_valid = ['type' => $_type, 'query_vars' => $_perma_vars];
+
+					// Single doc match is definitive — stop here so later category/KB archive
+					// structures cannot overwrite it (e.g. is_knowledge_base_category).
+					if ( $_type === 'is_single_docs' ) {
+						break;
+					}
                 }
             }
 
@@ -1230,10 +1423,24 @@ class Request extends Base {
 			}
 		);
 
-		$_perma_structure = preg_quote( $structure, '/' );
-		$_perma_structure = str_replace( $_replace_tags, '([^\/]+)', $_perma_structure );
+		// First, preg_quote the structure to safely use it in a regex
+		$_perma_structure = preg_quote( $structure, '#' );
+		
+		// Since our placeholders like %name% contain characters (like %) that preg_quote escapes,
+		// we must also preg_quote the tags before searching for them in the escaped structure.
+		foreach ( $_replace_tags as $tag ) {
+			$tag_escaped = preg_quote( $tag, '#' );
+			$replacement = '([^/]+)';
+			
+			// If hierarchical slugs are enabled, allow slashes in the %doc_category% placeholder
+			if ( $tag === '%doc_category%' && $this->settings->get( 'enable_category_hierarchy_slugs' ) ) {
+				$replacement = '(.+?)';
+			}
+			
+			$_perma_structure = str_replace( $tag_escaped, $replacement, $_perma_structure );
+		}
 
-		preg_match( "/^$_perma_structure$/", $request, $matches );
+		preg_match( "#^$_perma_structure$#", $request, $matches );
 
 		if ( empty( $matches ) || ! is_array( $matches ) ) {
 			return false;

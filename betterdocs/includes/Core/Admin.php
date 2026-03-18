@@ -1100,6 +1100,11 @@
 
                     $slug = $this->settings->get( 'encyclopedia_root_slug' );
 
+                    global $wp_rewrite;
+                    if ( $wp_rewrite->using_index_permalinks() ) {
+                        $slug = $wp_rewrite->index . '/' . $slug;
+                    }   
+
                     $encyclopedia_url = home_url( $slug );
 
                     $admin_bar->add_node(

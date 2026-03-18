@@ -416,7 +416,9 @@ class PostType extends Base {
 
 		// @todo PRO
 		if ( isset( $_POST['doc_category_kb'] ) && is_array( $_POST['doc_category_kb'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$doc_category_kb = array_map( 'sanitize_text_field', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			// Some multilingual plugins send URL-encoded slugs. We must decode them before sanitizing.
+			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$doc_category_kb = array_map( 'sanitize_text_field', $doc_category_kb );
 
 			// Update the term meta with the sanitized array
 			update_term_meta( $term_id, 'doc_category_knowledge_base', $doc_category_kb );
@@ -472,7 +474,9 @@ class PostType extends Base {
 
 		// Update 'doc_category_knowledge_base' meta data if 'doc_category_kb' is set in $_POST
 		if ( isset( $_POST['doc_category_kb'] ) && is_array( $_POST['doc_category_kb'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$doc_category_kb = array_map( 'sanitize_text_field', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			// Some multilingual plugins send URL-encoded slugs. We must decode them before sanitizing.
+			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$doc_category_kb = array_map( 'sanitize_text_field', $doc_category_kb );
 			update_term_meta( $term_id, 'doc_category_knowledge_base', $doc_category_kb );
 		}
 	}

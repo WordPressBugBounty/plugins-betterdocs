@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 4.3.9
+Stable tag: 4.3.10
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -214,6 +214,13 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.3.10 - 18/03/2026 =
+
+- Improved: Added an option to customize the "No Docs Found" text in the modal search
+- Improved: Modified "Write with AI" feature to make it aligned with "Docs Analyzer" standard
+- Fixed: Single docs returned a 404 error when using a custom permalink structure containing index.php
+- Few minor bug fixes and improvements
 
 = 4.3.9 - 11/03/2026 =
 
