@@ -246,7 +246,9 @@ class FAQBuilder extends Base {
 			[
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'fetch_faq_posts' ],
-				'permission_callback' => '__return_true'
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				}
 			]
 		);
 
@@ -364,7 +366,9 @@ class FAQBuilder extends Base {
 			[
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'get_uncategorised_faq' ],
-				'permission_callback' => '__return_true'
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				}
 			]
 		);
 
@@ -374,11 +378,14 @@ class FAQBuilder extends Base {
 			[
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'category_search' ],
-				'permission_callback' => '__return_true',
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				},
 				'args'                => [
 					'title' => [
-						'type'     => 'string',
-						'required' => true
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field'
 					]
 				]
 			]
@@ -669,7 +676,7 @@ class FAQBuilder extends Base {
 		return get_posts(
 			[
 				'post_type'      => 'betterdocs_faq',
-				'post_status'    => [ 'publish', 'draft' ],
+				'post_status'    => current_user_can( 'edit_others_posts' ) ? [ 'publish', 'draft' ] : 'publish',
 				'posts_per_page' => -1,
 				'tax_query'      => [
 					'relation' => 'AND',

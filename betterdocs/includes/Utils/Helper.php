@@ -560,8 +560,11 @@ class Helper extends Base {
 		return $languages;
 	}
 
-	public static function get_current_letter_docs( $current_letter, $limit = '' ) {
+	public static function get_current_letter_docs( $current_letter, $limit = 0 ) {
 		global $wpdb;
+
+		$limit     = absint( $limit );
+		$limit_sql = $limit > 0 ? $wpdb->prepare( 'LIMIT %d', $limit ) : '';
 
 		// Check if the encyclopedia_prefix parameter is set
 
@@ -617,7 +620,7 @@ class Helper extends Base {
                     t.term_id
                 ORDER BY
                     t.name ASC
-                $limit
+                $limit_sql
             ";
 		} else {
 			$lang_join = '';
@@ -647,7 +650,7 @@ class Helper extends Base {
                 AND SUBSTRING(post_title, 1, 1) = %s
                 $lang_where
                 ORDER BY post_date DESC
-                $limit
+                $limit_sql
             ";
 		}
 
@@ -667,7 +670,7 @@ class Helper extends Base {
         $enable_glossaries  = betterdocs()->settings->get( 'enable_glossaries', false );
 
         foreach ( $letters as $letter ) {
-            $posts = self::get_current_letter_docs( $letter, "LIMIT $limit" );
+            $posts = self::get_current_letter_docs( $letter, $limit );
 
             if ( is_array( $posts ) && ! empty( $posts ) ) {
                 foreach ( $posts as $post ) {
