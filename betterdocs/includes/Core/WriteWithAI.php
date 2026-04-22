@@ -14,21 +14,22 @@
 
     public function __construct( Settings $settings ) {
         $this->settings = $settings;
-        // Get the post ID from the URL
-        $post_id = isset( $_GET[ 'post' ] ) ? intval( $_GET[ 'post' ] ) : 0; // phpcs:ignore
 
-        if ( ! empty( $_GET[ 'post_type' ] ) ) { // phpcs:ignore
-            $post_type = $_GET[ 'post_type' ]; // phpcs:ignore
-        } elseif ( $post_id > 0 ) {
-            $post_type = get_post_type( $post_id );
-        } else {
-            $post_type = '';
-        }
-
-        if ( ! empty( $this->isEnabledWriteWithAI() ) && 'docs' == $post_type ) {
-            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
+        if ( ! empty( $this->isEnabledWriteWithAI() ) ) {
+            add_action( 'current_screen', array( $this, 'maybe_register_ai_autowrite_button' ) );
         }
         add_action( 'wp_ajax_generate_openai_content', array( $this, 'generate_openai_content_callback' ) );
+    }
+
+    public function maybe_register_ai_autowrite_button() {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if ( $screen && 'docs' === $screen->post_type && 'post' === $screen->base ) {
+            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
+        }
     }
 
     public function isEnabledWriteWithAI() {
@@ -136,6 +137,11 @@
     }
 
     public function generate_openai_content_callback() {
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( 'Unauthorized' );
+            wp_die();
+        }
+
         // Verify the nonce
         if ( ! isset( $_POST[ 'ai_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'ai_nonce' ], 'generate_openai_content_nonce' ) ) { //phpcs:ignore
             wp_send_json_error( 'Invalid nonce' );
