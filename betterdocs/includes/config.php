@@ -9,7 +9,7 @@ use WPDeveloper\BetterDocs\Utils\Enqueue;
 use WPDeveloper\BetterDocs\Editors\Editor;
 use WPDeveloper\BetterDocs\Editors\Elementor;
 use WPDeveloper\BetterDocs\Editors\BlockEditor;
-
+use WPDeveloper\BetterDocs\Core\Settings;
 return [
 	Enqueue::class => new Enqueue( BETTERDOCS_ABSURL, BETTERDOCS_ABSPATH, BETTERDOCS_VERSION ),
 	Views::class   => function ( $container ) {
@@ -23,5 +23,5 @@ return [
 				'blockEditor' => BlockEditor::class
 			]
 		);
-	}
+	},
 ];

@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 4.3.12
+Stable tag: 4.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -142,6 +142,10 @@ Build an Encyclopedia page to display your glossary or documentation in alphabet
 
 BetterDocs AI Chatbot Addon allows instant, AI-powered support for your documentation, helping users quickly find answers and improve customer service more efficiently. It integrates seamlessly and enhances user satisfaction.
 
+## 🔗 GIT INTEGRATION TO SYNC DOCS WITH GIT ACCOUNT (PRO) ##
+
+Instantly sync your documentation directly with your Git account and keep everything updated in one place. Manage changes, streamline workflows, and maintain accurate docs effortlessly with Git Integration.
+
 
 You don’t have to just take our word for it. See what one of the WordPress experts are saying:
 
@@ -214,6 +218,10 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.4.0 - 11/05/2026 =
+
+- Few minor bug fixes and improvements
 
 = 4.3.12 - 22/04/2026 =
 

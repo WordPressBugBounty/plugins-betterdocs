@@ -35,6 +35,7 @@ class Settings extends Base {
 		$this->deprecated = $this->deprecated_settings();
 
 		add_filter( 'betterdocs_settings_tabs', [ $this, 'import_export_settings' ] );
+		add_filter( 'betterdocs_settings_tabs', [ $this, 'maybe_remove_git_tab' ], 20 );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_old' ], 99 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ], 99 );
@@ -96,6 +97,14 @@ class Settings extends Base {
 			if ( isset( $settings['values']['ai_chatbot_api_key'] ) ) {
 				unset( $settings['values']['ai_chatbot_api_key'] );
 			}
+		}
+
+		// Inject raw git settings to bypass get() fallback (e.g., '' -> 'docs')
+		if ( isset( $settings['values'] ) ) {
+			$settings['values']['git_provider']       = $this->get_raw_field( 'git_provider', 'github' );
+			$settings['values']['git_repository_url'] = $this->get_raw_field( 'git_repository_url', '' );
+			$settings['values']['git_branch']         = $this->get_raw_field( 'git_branch', '' );
+			$settings['values']['git_docs_directory'] = $this->get_raw_field( 'git_docs_directory', '' );
 		}
 		
 		betterdocs()->assets->localize( 'betterdocs-admin', 'betterdocsAdminSettings', $settings );
@@ -275,6 +284,7 @@ class Settings extends Base {
 			'betterdocs_access_control_repeater'   => [],
 			'internal_knowledge_base_type' 		   => 'basic',
 			'betterdocs_access_control_repeater_kb'   => [],
+			'enable_git_integration'   			   => false,
 		];
 
 		$_default = apply_filters( 'betterdocs_default_settings', $_default );
@@ -542,6 +552,19 @@ class Settings extends Base {
 		$existing_plugins = betterdocs()->kbmigration->knowledge_base_plugins();
 		if ( ! current_user_can( 'edit_docs_settings' ) ) {
 			return new WP_Error( 'unauthorized_action', __( 'You don\'t have any rights for saving settings.', 'betterdocs' ) );
+		}
+
+		// Quickbuilder sends back the full UI-loaded payload. To avoid overwriting values that we
+		// asynchronously updated in the DB via AJAX (like Git integration fields), we strictly remove them
+		// from the incoming save payload so that the freshly loaded `$_old_settings` values persist.
+		$exclude_ajax_keys = [ 'git_provider', 'git_repository_url', 'git_branch', 'git_docs_directory' ];
+		foreach ( $exclude_ajax_keys as $key ) {
+			if ( array_key_exists( $key, $settings ) ) {
+				unset( $settings[ $key ] );
+			}
+			if ( isset( $settings['values'] ) && is_array( $settings['values'] ) && array_key_exists( $key, $settings['values'] ) ) {
+				unset( $settings['values'][ $key ] );
+			}
 		}
 
 		$_old_settings = $this->database->get( $this->base_key, $this->get_default() );
@@ -2052,6 +2075,31 @@ class Settings extends Base {
 						]
 					]
 				] ),
+				'tab-github-integration'  => apply_filters( 'betterdocs_settings_tab_github_integration', [
+					'id'       => 'tab-github-integration',
+					'label'    => __( 'Git Sync', 'betterdocs' ),
+					'priority' => 60,
+					'fields'   => [
+						'title-git-integration' => [
+							'name'     => 'title-git-integration-tab',
+							'type'     => 'section',
+							'label'    => __( 'Git Sync Settings', 'betterdocs' ),
+							'priority' => 60,
+							'fields'   => [
+								'enable_git_integration' => [
+									'name'                       => 'enable_git_integration',
+									'type'                       => 'toggle',
+									'label'                      => __( 'Enable Git Sync', 'betterdocs' ),
+									'enable_disable_text_active' => true,
+									'default'                    => false,
+									'priority'                   => 1,
+									'is_pro'                     => true,
+									'label_subtitle'             => __( 'Enable bidirectional synchronization between BetterDocs and Git repositories', 'betterdocs' )
+								]
+							]
+						]
+					]
+				] ),
 				'tab-instant-answer'   => apply_filters( 'betterdocs_settings_tab_instant_answer', [
 					'id'       => 'tab-instant-answer',
 					'name'     => 'tab-instant-answer',
@@ -2686,6 +2734,17 @@ class Settings extends Base {
 		] );
 
 		return $settings;
+	}
+
+	public function maybe_remove_git_tab( $tabs ) {
+		$pro_active  = is_plugin_active( 'betterdocs-pro/betterdocs-pro.php' );
+		$pro_has_git = apply_filters( 'betterdocs_pro_has_git_integration', false );
+
+		if ( $pro_active && ! $pro_has_git ) {
+			unset( $tabs['tab-github-integration'] );
+		}
+
+		return $tabs;
 	}
 
 	public function normalize_options( $options ) {
