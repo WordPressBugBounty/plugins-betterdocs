@@ -1859,7 +1859,7 @@ class CategoryGrid extends BaseWidget {
 			}
 		}
 
-		$kb_slug = isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';
+		$kb_slug = isset( $meta_value ) ? $meta_value : ( isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '' );
 
 		/**
 		 * Add This Attribute When Using Outside Betterdocs Templates Only
@@ -1890,7 +1890,7 @@ class CategoryGrid extends BaseWidget {
 			'list_icon_name'          => $settings['list_icon'],
 			'button_icon_position'    => $settings['icon_position'],
 			'term_icon_meta_key'      => 'doc_category_image-id',
-			'multiple_knowledge_base' => $default_multiple_kb,
+			'multiple_knowledge_base' => ( $default_multiple_kb && ! empty( $kb_slug ) ) ? true : false,
 			'kb_slug'                 => $kb_slug,
 			'docs_query_args'         => [
 				'posts_per_page'     => $settings['post_per_page'],

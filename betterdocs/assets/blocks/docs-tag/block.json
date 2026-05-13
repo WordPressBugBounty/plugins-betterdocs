@@ -1,10 +1,10 @@
 {
-    "$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion":2,
-	"title":"BetterDocs Docs Tag",
-	"name":"betterdocs/docs-tag",
-	"category":"betterdocs",
-	"description":"Single Doc Tags Block",
-	"textdomain":"betterdocs",
-    "editorScript":"betterdocs-blocks-editor"
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"title": "BetterDocs Docs Tag",
+	"name": "betterdocs/docs-tag",
+	"category": "betterdocs",
+	"description": "Single Doc Tags Block",
+	"textdomain": "betterdocs",
+	"editorScript": "betterdocs-blocks-editor"
 }

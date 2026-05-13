@@ -119,6 +119,7 @@ if ( $terms_query_args == false ) {
 
 				$template_params = apply_filters( 'betterdocs_template_params', $_params, $layout, $term, $widget_type );
 				$layout_filename = apply_filters( 'betterdocs_layout_filename', $layout, $layout, $widget_type );
+				$layout_filename = sanitize_file_name( $layout_filename );
 
 				betterdocs()->views->get( 'layouts/' . $widget_type . '/' . $layout_filename, $template_params );
 				++$terms_number;

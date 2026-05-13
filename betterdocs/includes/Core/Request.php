@@ -577,6 +577,12 @@ class Request extends Base {
 		// Normalize request path: remove index.php/ and leading/trailing slashes
 		$request_path = trim( preg_replace( '#^index\.php(/|$)#', '', $request_path ), '/' );
 
+		// If the request path is empty, this is a query-string-only request (e.g. /?post_type=docs).
+		// There is no URL prefix to validate in that case, so bail early.
+		if ( $request_path === '' ) {
+			return;
+		}
+
 		// Normalize base slug
 		$docs_slug = $this->rewrite->get_base_slug();
 		
@@ -1341,6 +1347,15 @@ class Request extends Base {
 			$request = isset( $wp->request ) ? urldecode( $wp->request ) : '';
 			$request = trim( preg_replace( '#^index\.php(/|$)#', '', $request ), '/' );
 
+			// Strip pagination segment (/page/N) before matching permalink structures.
+			// When hierarchy slugs are enabled, the (.+?) regex for %doc_category% would
+			// otherwise capture "/page/2" as part of the category slug, breaking pagination.
+			$paged = 0;
+			if ( preg_match( '#/page/([0-9]+)/?$#', $request, $page_matches ) ) {
+				$paged   = intval( $page_matches[1] );
+				$request = preg_replace( '#/page/[0-9]+/?$#', '', $request );
+			}
+
 			// Strip optional language prefix injected by Polylang/WPML (e.g. "en/", "bn/", "pt-br/")
 			// so that "bn/docs/..." matches the structure "docs/..." correctly.
 			$request_without_lang = preg_replace( '#^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})?/#', '', $request );
@@ -1373,6 +1388,11 @@ class Request extends Base {
 			$type       = isset( $_valid['type'] ) ? $_valid['type'] : '';
 			$query_vars = isset( $_valid['query_vars'] ) ? $_valid['query_vars'] : [];
 
+			// Inject the paged query var if a /page/N segment was stripped from the request.
+			if ( $paged > 0 && ! empty( $type ) ) {
+				$query_vars['paged'] = $paged;
+			}
+
 			if ( ! empty( $type ) ) {
 				unset( $this->query_vars[ $type ] );
 				array_map(
@@ -1389,7 +1409,7 @@ class Request extends Base {
 			}
 
             $wp->query_vars = is_array( $query_vars ) ? array_merge( $wp->query_vars, $query_vars ) : $wp->query_vars;
-            
+
             // Fallback
             if ( ! empty( $_valid ) ) {
                 unset( $wp->query_vars['attachment'] );

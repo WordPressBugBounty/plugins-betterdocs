@@ -834,7 +834,7 @@ class CategorySlateLayout extends BaseWidget {
 			}
 		}
 
-		$kb_slug = isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';
+		$kb_slug = isset( $meta_value ) ? $meta_value : ( isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '' );
 
 		/**
 		 * Add This Attribute When Using Outside Betterdocs Templates Only
@@ -880,7 +880,7 @@ class CategorySlateLayout extends BaseWidget {
 			'title_tag'     		  => $settings['title_tag'],
 			'category_title_link'     => $settings['category_link'],
 			'layout_type'             => 'widget',
-			'multiple_knowledge_base' => $default_multiple_kb,
+			'multiple_knowledge_base' => ( $default_multiple_kb && ! empty( $kb_slug ) ) ? true : false,
 			'kb_slug'                 => $kb_slug
 		];
 

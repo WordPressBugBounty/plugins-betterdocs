@@ -76,6 +76,9 @@ class FAQ extends Block {
 
 	public function view_params() {
 		$attributes = &$this->attributes;
+
+		// Sanitize the layout attribute to prevent path traversal (LFI).
+		$attributes['faqLayout'] = sanitize_file_name( $attributes['faqLayout'] );
 		$exclude    = $this->get_groups_ids( $attributes['excludeFaqGroup'] );
 		$include    = $this->get_groups_ids( $attributes['includeFaqGroup'] );
 

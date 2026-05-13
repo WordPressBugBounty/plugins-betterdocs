@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 4.4.0
+Stable tag: 4.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -219,6 +219,19 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
+= 4.4.1 - 13/05/2026 =  
+
+- Fixed: 404 triggered on query-string archives with plain permalinks
+- Fixed: Disable reaction option not working in Essence single doc layout
+- Fixed: Archive page pagination not working
+- Fixed: Category Box and Slate Layout blocks ignoring MKB filter when no KB selected
+- Fixed: Category Grid block rendered empty on frontend with Multiple Knowledge Base enabled
+- Fixed: Elementor Category Grid widget showing categories from only one KB when "All knowledgebase" was selected
+- Improved: Block API version updated for apiVersion 3 iframe compatibility
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
+
+
 = 4.4.0 - 11/05/2026 =
 
 - Few minor bug fixes and improvements
@@ -314,7 +327,7 @@ Yes, it will work with any standard WordPress theme.
 
 = 4.2.4 - 25/11/2025 =
 
-- Fixed: Customizer controls were not working across multiple layouts. 
+- Fixed: Customizer controls were not working across multiple layouts.
 - Fixed: BetterDocs Order not working for Archive Doc List block.
 - Fixed: Fatal error triggered by the latest WPML version.
 - Few minor bug fixes and improvements
@@ -387,7 +400,7 @@ Yes, it will work with any standard WordPress theme.
 = 4.0.0 - 18/06/2025 =
 
 - Added: New Feature | AI-powered Doc Summarizer
-- Fixed: Elementor Search Modal Layout widget | Search wasn’t working in certain cases 
+- Fixed: Elementor Search Modal Layout widget | Search wasn’t working in certain cases
 - Fixed: TOC scroll behavior causing errors when headings contained special characters
 - Few minor bug fixes and improvements
 
@@ -401,7 +414,7 @@ Yes, it will work with any standard WordPress theme.
 
 = 3.9.1 - 19/05/2025 =
 
-- Added: Setting option to search either Docs or FAQs separately from the Search Modal layout. 
+- Added: Setting option to search either Docs or FAQs separately from the Search Modal layout.
 - Added: Pagination support in the Glossaries Builder.
 - Fixed: Glossary drag-and-drop was not functioning and caused an uncaught error in the browser console.
 - Few minor bug fixes and improvements

@@ -7,6 +7,21 @@ use function WPML\PHP\Logger\error;
 
 class Helper extends Base {
 
+	/**
+	 * Mask an API key for safe display: first 3 chars + 8 asterisks + last 4 chars.
+	 * Fixed asterisk count avoids leaking the real key length.
+	 */
+	public static function mask_api_key( $key ) {
+		if ( ! is_string( $key ) || $key === '' ) {
+			return '';
+		}
+		$key = trim( $key );
+		if ( strlen( $key ) < 8 ) {
+			return str_repeat( '*', strlen( $key ) );
+		}
+		return substr( $key, 0, 3 ) . str_repeat( '*', 8 ) . substr( $key, -4 );
+	}
+
 	public static function get_plugins( $plugin_basename = null ) {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';

@@ -75,6 +75,9 @@ final class StyleHandler {
 							foreach ( $post_ids as $id ) {
 								$post_id        = (int) $id['ID'];
 								$post           = get_post( $post_id );
+								if ( ! $post ) {
+									continue;
+								}
 								$parsed_content = parse_blocks( $post->post_content );
 								$this->write_css_from_content( $post, $post_id, $parsed_content );
 							}
@@ -85,6 +88,9 @@ final class StyleHandler {
 							foreach ( $post_ids as $id ) {
 								$post_id        = (int) $id['ID'];
 								$post           = get_post( $post_id );
+								if ( ! $post ) {
+									continue;
+								}
 								$parsed_content = parse_blocks( $post->post_content );
 								$this->write_css_from_content( $post, $post_id, $parsed_content );
 							}
@@ -247,6 +253,10 @@ final class StyleHandler {
 			$post = get_post( $post_id );
 		}
 
+		if ( ! $post ) {
+			return [];
+		}
+
 		$parsed_content = parse_blocks( $post->post_content );
 
 		if ( empty( $parsed_content ) ) {
@@ -288,6 +298,10 @@ final class StyleHandler {
 	 * @since 1.0.2
 	 */
 	private function write_block_css( $block_styles, $post ) {
+		if ( ! $post ) {
+			return;
+		}
+
 		//Write CSS for FSE
 		if ( isset( $post->post_type ) && ( $post->post_type === 'wp_template_part' || $post->post_type === 'wp_template' && ! empty( $block_styles ) ) ) {
 			$this->single_file_css_generator( $block_styles, $this->style_dir, $this->prefix . '-edit-site.min.css' );

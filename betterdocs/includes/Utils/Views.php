@@ -92,13 +92,25 @@ class Views extends Base {
 	public function path( $name, $default = '' ) {
 		$this->_view_type = 'free';
 		$name             = str_replace( $this->path, '', $name );
-		$_filename        = $this->path . $name . '.php';
+
+		// Sanitize: strip any directory traversal sequences to prevent LFI.
+		$name = str_replace( array( '../', '..\\' ), '', $name );
+
+		$_filename = $this->path . $name . '.php';
 
 		if ( ! file_exists( $_filename ) ) {
 			$_filename = $this->path . $default . '.php';
 		}
 
 		if ( file_exists( $_filename ) ) {
+			// Verify the resolved path stays within the plugin's base directory.
+			$_real_path = realpath( $_filename );
+			$_base_path = realpath( $this->path );
+
+			if ( $_real_path === false || $_base_path === false || strpos( $_real_path, $_base_path ) !== 0 ) {
+				return null;
+			}
+
 			return $_filename;
 		}
 	}

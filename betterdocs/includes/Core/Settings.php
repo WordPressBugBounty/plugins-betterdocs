@@ -8,6 +8,7 @@ use WPDeveloper\BetterDocs\Admin\Builder\GlobalFields;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 
 class Settings extends Base {
@@ -88,14 +89,20 @@ class Settings extends Base {
 		wp_enqueue_script( 'betterdocs-admin' );
 		
 		$settings = GlobalFields::normalize( $this->settings_args() );
-		
-		// Remove sensitive API keys if user doesn't have permission to edit settings
-		if ( ! current_user_can( 'edit_docs_settings' ) ) {
-			if ( isset( $settings['values']['ai_autowrite_api_key'] ) ) {
-				unset( $settings['values']['ai_autowrite_api_key'] );
+
+		// Mask sensitive API keys before they reach the browser. Non-admins still get them stripped entirely below.
+		$sensitive_api_keys = [ 'ai_autowrite_api_key', 'ai_chatbot_api_key' ];
+		foreach ( $sensitive_api_keys as $api_key_field ) {
+			if ( ! empty( $settings['values'][ $api_key_field ] ) ) {
+				$settings['values'][ $api_key_field ] = Helper::mask_api_key( $settings['values'][ $api_key_field ] );
 			}
-			if ( isset( $settings['values']['ai_chatbot_api_key'] ) ) {
-				unset( $settings['values']['ai_chatbot_api_key'] );
+		}
+
+		if ( ! current_user_can( 'edit_docs_settings' ) ) {
+			foreach ( $sensitive_api_keys as $api_key_field ) {
+				if ( isset( $settings['values'][ $api_key_field ] ) ) {
+					unset( $settings['values'][ $api_key_field ] );
+				}
 			}
 		}
 
@@ -568,17 +575,41 @@ class Settings extends Base {
 		}
 
 		$_old_settings = $this->database->get( $this->base_key, $this->get_default() );
+
+		// The frontend only ever sees masked API keys. If a submitted value matches the mask of
+		// the stored value, the user did not change it — restore the original so the mask string
+		// is never persisted.
+		$sensitive_api_keys = [ 'ai_autowrite_api_key', 'ai_chatbot_api_key' ];
+		foreach ( $sensitive_api_keys as $api_key_field ) {
+			if ( ! isset( $settings[ $api_key_field ] ) ) {
+				continue;
+			}
+			$stored = isset( $_old_settings[ $api_key_field ] ) ? $_old_settings[ $api_key_field ] : '';
+			if ( $stored !== '' && trim( (string) $settings[ $api_key_field ] ) === Helper::mask_api_key( $stored ) ) {
+				$settings[ $api_key_field ] = $stored;
+			}
+		}
+
 		// @todo: sanitize the data before inject in DB.
 		$_normalized_settings = $this->get_normalized_values( $settings );
 		if ( $existing_plugins && isset( $_normalized_settings['migration_step'] ) && $_normalized_settings['migration_step'] == true ) {
 			betterdocs()->kbmigration->migrate();
 		}
 		$_settings = wp_parse_args( $_normalized_settings, $_old_settings );
-		$_saved    = $this->database->save( $this->base_key, $_settings );
+
+		// Check if there are actual changes before saving.
+		// update_option returns false when values serialize identically, which can happen
+		// due to object caching or type normalization even when user made changes.
+		$_has_changes = $_settings != $_old_settings;
+
+		$_saved = $this->database->save( $this->base_key, $_settings );
 
 		do_action_ref_array( 'betterdocs::settings::saved', [ $_saved, $_settings, $_old_settings, &$this ] );
 
-		return $_saved;
+		// Return true if save succeeded OR if there were changes to attempt saving.
+		// This handles cases where update_option returns false due to identical serialization
+		// (e.g., object caching, type coercion during serialization).
+		return $_saved || $_has_changes;
 	}
 
 	public function views( $hook ) {

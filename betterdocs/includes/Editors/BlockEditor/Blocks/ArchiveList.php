@@ -58,6 +58,9 @@ class ArchiveList extends Block {
 	}
 
 	public function view_params() {
+		// Sanitize the layout attribute to prevent path traversal (LFI).
+		$this->attributes['layout'] = sanitize_file_name( $this->attributes['layout'] );
+
 		global $wp_query;
 		$_term_slug = '';
 		if ( isset( $wp_query->query ) && array_key_exists( 'doc_category', $wp_query->query ) ) {

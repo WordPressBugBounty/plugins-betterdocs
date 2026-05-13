@@ -102,6 +102,9 @@ class CategorySlateLayout extends Block {
     public function view_params() {
         $attributes = &$this->attributes;
 
+        // Sanitize the layout attribute to prevent path traversal (LFI).
+        $attributes['layout'] = sanitize_file_name( $attributes['layout'] );
+
         $terms_object = [
             'taxonomy'   => 'doc_category',
             'order'      => $attributes['order'],
@@ -158,21 +161,20 @@ class CategorySlateLayout extends Block {
         ];
 
         $default_multiple_kb = betterdocs()->settings->get( 'multiple_kb' );
-        $kb_slug             = ! empty( $attributes['selectKB'] ) && isset( $attributes['selectKB'] ) ? json_decode( $attributes['selectKB'] )->value : '';
+
+        $select_kb = isset( $attributes['selectKB'] ) ? $attributes['selectKB'] : '';
+        if ( is_string( $select_kb ) && $select_kb !== '' ) {
+            $decoded   = json_decode( $select_kb, true );
+            $select_kb = is_array( $decoded ) ? $decoded : [];
+        }
+        $kb_slug = is_array( $select_kb ) && isset( $select_kb['value'] ) ? $select_kb['value'] : '';
 
         if ( is_tax( 'knowledge_base' ) && $default_multiple_kb == 1 ) {
             $object                     = get_queried_object();
-            $terms_object['meta_query'] = [
-                'relation' => 'OR',
-                [
-                    'key'     => 'doc_category_knowledge_base',
-                    'value'   => $object->slug,
-                    'compare' => 'LIKE'
-                ]
-            ];
+            $kb_slug                    = $object->slug;
         }
 
-        if ( ! empty( $kb_slug ) ) {
+        if ( ! empty( $kb_slug ) && $default_multiple_kb == 1 ) {
             $terms_object['meta_query'] = [
                 'relation' => 'OR',
                 [
@@ -197,7 +199,8 @@ class CategorySlateLayout extends Block {
             'docs_query_args'         => $docs_query,
             'widget_type'             => 'category-grid',
             'layout'                  => $attributes['layout'],
-            'multiple_knowledge_base' => $default_multiple_kb,
+            'multiple_knowledge_base' => ( $default_multiple_kb && ! empty( $kb_slug ) ) ? true : false,
+            'kb_slug'                 => $kb_slug,
             'layout_type'             => 'block',
             'show_title'              => $attributes['showTitle'],
             'title_tag'               => $attributes['titleTag'],

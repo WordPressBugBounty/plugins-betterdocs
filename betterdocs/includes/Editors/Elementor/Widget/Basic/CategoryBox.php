@@ -1609,7 +1609,7 @@ class CategoryBox extends BaseWidget {
 			}
 		}
 
-		$kb_slug = isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '';
+		$kb_slug = isset( $meta_value ) ? $meta_value : ( isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '' );
 
 		$term_count = count( get_terms( $terms_query ) );
 
@@ -1658,7 +1658,7 @@ class CategoryBox extends BaseWidget {
 			'reminder'                => $reminder,
 			'column'                  => $box_column == 0 ? 1 : $box_column,
 			'widget_type'             => 'category-box',
-			'multiple_knowledge_base' => $default_multiple_kb,
+			'multiple_knowledge_base' => ( $default_multiple_kb && ! empty( $kb_slug ) ) ? true : false,
 			'kb_slug'                 => $kb_slug,
 			'is_edit_mode'            => $is_edit_mode,
 			'term_icon_meta_key'      => 'doc_category_image-id',
