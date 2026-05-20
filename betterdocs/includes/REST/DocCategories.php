@@ -4,6 +4,7 @@ namespace WPDeveloper\BetterDocs\REST;
 
 use stdClass;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class DocCategories extends BaseAPI {
     public function permission_check(): bool {
@@ -57,6 +58,37 @@ class DocCategories extends BaseAPI {
         $terms = $this->convert_terms_to_array_of_std_objects( $terms );
 
         return $terms;
+    }
+
+    /**
+     * Reorder a list of doc rows according to a saved id sequence.
+     * Ids in $saved_order keep that order; ids not present are appended.
+     *
+     * @param array $docs        Doc data rows (each has an 'id' key).
+     * @param array $saved_order Ordered list of post ids from `_docs_order_<lang>`.
+     * @return array
+     */
+    private function sort_by_saved_order( $docs, $saved_order ) {
+        if ( empty( $docs ) || empty( $saved_order ) ) {
+            return $docs;
+        }
+
+        $saved_order = array_map( 'intval', (array) $saved_order );
+        $position    = array_flip( $saved_order );
+        $tail_index  = count( $saved_order );
+
+        $sorted = $docs;
+        usort( $sorted, function ( $a, $b ) use ( $position, &$tail_index ) {
+            $a_id = isset( $a['id'] ) ? (int) $a['id'] : 0;
+            $b_id = isset( $b['id'] ) ? (int) $b['id'] : 0;
+
+            $a_pos = isset( $position[ $a_id ] ) ? $position[ $a_id ] : PHP_INT_MAX;
+            $b_pos = isset( $position[ $b_id ] ) ? $position[ $b_id ] : PHP_INT_MAX;
+
+            return $a_pos <=> $b_pos;
+        } );
+
+        return $sorted;
     }
 
     private function convert_terms_to_array_of_std_objects( $payload ) {
@@ -179,6 +211,15 @@ class DocCategories extends BaseAPI {
 
             wp_reset_postdata();
             wp_reset_query();
+
+            // WP_Query's `orderby=post__in` is stripped by some plugins/filters
+            // (notably WPML on REST requests), so apply the saved order in PHP
+            // here as the source of truth. Posts not in the saved order are
+            // appended at the end in their existing query order.
+            $response[ $term->term_id ] = $this->sort_by_saved_order(
+                $response[ $term->term_id ],
+                betterdocs()->query->get_docs_order_by_terms( $term->term_id )
+            );
         }
 
         /**

@@ -27,14 +27,13 @@ if ( is_array( $counts ) ) {
                 // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
 					_n(
 						'%1$s %2$s %3$s',
-						'%1$s %2$s %4$s',
+						'%1$s %2$s %3$s',
 						$counts,
 						'betterdocs'
 					),
 					esc_html( $prefix ),
 					esc_html( $counts ),
-					esc_html( $suffix_singular ),
-					esc_html( $suffix )
+					esc_html( $counts === 1 ? $suffix_singular : $suffix )
 				)
 			);
 			?>

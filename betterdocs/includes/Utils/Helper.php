@@ -286,6 +286,21 @@ class Helper extends Base {
 	public static function get_current_admin_language() {
 		$current_language = null;
 
+		// Explicit language passed by the admin client takes priority.
+		// Covers AJAX (POST) and REST/admin requests (GET) where WPML may
+		// otherwise resolve to the site's default language instead of the
+		// admin UI language.
+		if ( isset( $_POST['lang'] ) && ! empty( $_POST['lang'] ) ) {
+			return sanitize_text_field( wp_unslash( $_POST['lang'] ) );
+		}
+
+		// Limit GET handling to admin/REST contexts so a frontend ?lang= switch
+		// doesn't hijack admin meta-key resolution.
+		if ( isset( $_GET['lang'] ) && ! empty( $_GET['lang'] )
+			&& ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) ) {
+			return sanitize_text_field( wp_unslash( $_GET['lang'] ) );
+		}
+
 		// WPML Support - Admin language detection
 		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
 			global $sitepress;
@@ -302,6 +317,11 @@ class Helper extends Base {
 				// Check for language parameter in URL
 				if ( ! $current_language && isset( $_GET['lang'] ) ) {
 					$current_language = sanitize_text_field( $_GET['lang'] );
+				}
+
+				// Check WPML admin language cookie (persists during AJAX)
+				if ( ! $current_language && isset( $_COOKIE['_icl_current_admin_language'] ) ) {
+					$current_language = sanitize_text_field( wp_unslash( $_COOKIE['_icl_current_admin_language'] ) );
 				}
 
 				// Fallback to admin language or current language
@@ -371,6 +391,35 @@ class Helper extends Base {
 		// Always return base key for now - we'll handle fallback in the query functions
 		// This ensures compatibility without requiring migration
 		return $base_key;
+	}
+
+	/**
+	 * Get the meta key to write to.
+	 *
+	 * Unlike `get_meta_key_with_fallback`, this never falls back to the base
+	 * key when the language-specific key is empty — that fallback is what
+	 * caused secondary-language drag-and-drop saves to clobber the base meta
+	 * (and on WPML setups that copy term meta from the original language,
+	 * the next read would re-overwrite it from the primary language).
+	 *
+	 * @param string      $base_key The base meta key.
+	 * @param string|null $language Language code, auto-detected when null.
+	 * @return string Language-specific key when multilingual + language known, else base.
+	 */
+	public static function get_meta_key_for_save( $base_key, $language = null ) {
+		if ( ! self::is_multilingual_active() ) {
+			return $base_key;
+		}
+
+		if ( $language === null ) {
+			$language = self::get_current_admin_language();
+		}
+
+		if ( ! $language ) {
+			return $base_key;
+		}
+
+		return $base_key . '_' . $language;
 	}
 
 	/**

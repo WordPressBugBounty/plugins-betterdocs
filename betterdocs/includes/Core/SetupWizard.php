@@ -204,7 +204,10 @@ class SetupWizard extends Base {
 											'enable_disable_text_active' => true,
 											'default'  => 1,
 											'priority' => 1,
-											'label_subtitle' => __( 'If you disable root slug for KB Archives, your individual knowledge base URL will be like this: https://example.com/knowledgebase-1', 'betterdocs' )
+											'label_subtitle' => sprintf(
+												__( 'If you disable root slug for KB Archives, your individual knowledge base URL will be like this: %s', 'betterdocs' ),
+												'https://example.com/knowledgebase-1'
+											)
 										],
 										'docs_page'        => [
 											'name'     => 'docs_page',

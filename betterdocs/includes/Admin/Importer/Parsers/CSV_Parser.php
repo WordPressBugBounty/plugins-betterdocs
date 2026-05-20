@@ -33,7 +33,7 @@ class CSV_Parser {
 	 *             than the second.
 	 */
 	public function csvSort( $a, $b ) {
-		$order = [ 'Term', 'Author', 'Docs' ];
+		$order = [ 'Term', 'Author', 'Docs', 'FAQ' ];
 
 		$keyA = array_search( $a[0], $order );
 		$keyB = array_search( $b[0], $order );
@@ -186,7 +186,7 @@ class CSV_Parser {
                     'author_first_name'   => sanitize_text_field( $author_data['Author first name'] ),
                     'author_last_name'    => sanitize_text_field( $author_data['Author last name'] )
                 ];
-            } else if ( $type === 'Docs' ) {
+            } else if ( $type === 'Docs' || $type === 'FAQ' ) {
                 $post_headers = array_slice( $headers, 1, 21 );
                 $post_row     = array_slice( $row, 1, 21 );
                 $post_row     = array_pad( $post_row, count( $post_headers ), '' );
@@ -195,7 +195,7 @@ class CSV_Parser {
 
                 $post_args = [
                     'post_id'           => sanitize_text_field( $post_data['Docs ID'] ) ?? '',
-                    'post_type'         => 'docs',
+                    'post_type'         => $type === 'FAQ' ? 'betterdocs_faq' : 'docs',
                     'post_author'       => sanitize_text_field( $post_data['Docs author'] ) ?? '',
                     'post_content'      => sanitize_text_field( $post_data['Docs content'] ) ?? '',
                     'post_title'        => sanitize_text_field( $post_data['Docs title'] ) ?? '',

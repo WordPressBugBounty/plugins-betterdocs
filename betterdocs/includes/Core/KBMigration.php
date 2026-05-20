@@ -46,7 +46,7 @@ class KBMigration extends Base {
 						'<strong>' . esc_html( $this->existing_plugins[0][1] ) . '</strong>'
 					)
 				),
-				esc_url( admin_url( 'admin.php?page=betterdocs-settings&tab=tab-migration' ) ),
+				esc_url( admin_url( 'admin.php?page=betterdocs-settings#migration' ) ),
 				esc_html__( 'Start Migration', 'betterdocs' ),
 				esc_html__( 'Maybe Later', 'betterdocs' ),
 				esc_html__( 'Never Show Again', 'betterdocs' )

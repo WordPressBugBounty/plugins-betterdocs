@@ -28,20 +28,29 @@ $subcategory_plural_text   = isset( $subcategories_text ) ? $subcategories_text 
 			/* translators: %s: Number of categories. */
 			echo esc_html(
 				sprintf(
-                // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-					_n( '%s Category', '%s Categories', $sub_terms_count, 'betterdocs' ),
+				// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
+					_n(
+						'%1$s Category',
+						'%1$s Categories',
+						$sub_terms_count,
+						'betterdocs'
+					),
 					number_format_i18n( $sub_terms_count )
 				)
-			);
+			);	
 		} else {
 			/* translators: %1$s: Number of items, %2$s: Singular text, %3$s: Plural text. */
 			echo esc_html(
 				sprintf(
-                // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-					_n( '%1$s %2$s', '%1$s %3$s', $sub_terms_count, 'betterdocs' ),
+				// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
+					_n(
+						'%1$s %2$s',
+						'%1$s %2$s',
+						$sub_terms_count,
+						'betterdocs'
+					),
 					esc_html( $sub_terms_count ),
-					esc_html( $subcategory_singular_text ),
-					esc_html( $subcategory_plural_text )
+					esc_html( $sub_terms_count === 1 ? $subcategory_singular_text : $subcategory_plural_text )
 				)
 			);
 		}
@@ -53,12 +62,16 @@ $subcategory_plural_text   = isset( $subcategories_text ) ? $subcategories_text 
 		/* translators: %1$s: Number of items, %2$s: Prefix text, %3$s: Singular suffix, %4$s: Plural suffix. */
 		echo esc_html(
 			sprintf(
-            // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-				_n( '%2$s %1$s %3$s', '%2$s %1$s %4$s', $counts, 'betterdocs' ),
+			// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
+				_n(
+					'%2$s %1$s %3$s',
+					'%2$s %1$s %3$s',
+					$counts,
+					'betterdocs'
+				),
 				esc_html( $counts ),
 				esc_html( $prefix ),
-				esc_html( $suffix_singular ),
-				esc_html( $suffix )
+				esc_html( $counts === 1 ? $suffix_singular : $suffix )
 			)
 		);
 		?>

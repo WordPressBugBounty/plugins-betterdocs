@@ -274,6 +274,7 @@ class Settings extends Base {
 			'reporting_email'                      => get_option( 'admin_email' ),
 			'enable_write_with_ai'                 => true,
 			'enable_faq_write_with_ai'             => true,
+			'enable_glossaries_write_with_ai'      => true,
 			'write_with_ai_model'             	   => 'gpt-4o-mini',
 			'ai_autowrite_api_key'                 => '',
 			'ai_autowrite_max_token'               => 1500,
@@ -2106,13 +2107,13 @@ class Settings extends Base {
 						]
 					]
 				] ),
-				'tab-github-integration'  => apply_filters( 'betterdocs_settings_tab_github_integration', [
-					'id'       => 'tab-github-integration',
+				'tab-git-sync'  => apply_filters( 'betterdocs_settings_tab_github_integration', [
+					'id'       => 'tab-git-sync',
 					'label'    => __( 'Git Sync', 'betterdocs' ),
 					'priority' => 60,
 					'fields'   => [
-						'title-git-integration' => [
-							'name'     => 'title-git-integration-tab',
+						'title-git-sync' => [
+							'name'     => 'title-git-sync-tab',
 							'type'     => 'section',
 							'label'    => __( 'Git Sync Settings', 'betterdocs' ),
 							'priority' => 60,
@@ -2246,6 +2247,15 @@ class Settings extends Base {
 														'priority'                   => 5,
 														'label'                      => __( 'Write FAQ with AI', 'betterdocs' ),
 														'label_subtitle'             => __( 'Generate AI based FAQ in your Editor', 'betterdocs' ),
+														'enable_disable_text_active' => true,
+														'default'                    => true
+													],
+													'enable_glossaries_write_with_ai' => [
+														'name'                       => 'enable_glossaries_write_with_ai',
+														'type'                       => 'toggle',
+														'priority'                   => 6,
+														'label'                      => __( 'Write Glossaries with AI', 'betterdocs' ),
+														'label_subtitle'             => __( 'Generate AI based Glossary definitions from the Glossaries admin page', 'betterdocs' ),
 														'enable_disable_text_active' => true,
 														'default'                    => true
 													],
@@ -2772,7 +2782,7 @@ class Settings extends Base {
 		$pro_has_git = apply_filters( 'betterdocs_pro_has_git_integration', false );
 
 		if ( $pro_active && ! $pro_has_git ) {
-			unset( $tabs['tab-github-integration'] );
+			unset( $tabs['tab-git-sync'] );
 		}
 
 		return $tabs;

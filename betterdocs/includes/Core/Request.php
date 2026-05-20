@@ -334,16 +334,19 @@ class Request extends Base {
 			return;
 		}
 
-		// Legacy check: if post_type=docs is already set in query vars, validate category
+		// Legacy check: if post_type=docs is already set in query vars, validate category.
+		// `name` must be a non-empty string — WP populates it with '' for taxonomy archive
+		// requests (e.g. comma-separated multi-category URLs like /docs-category/a,b/),
+		// which `isset()` would treat as present and incorrectly trigger this single-doc branch.
 		if ( isset( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'docs' &&
-			 isset( $wp_query->query_vars['doc_category'] ) && isset( $wp_query->query_vars['name'] ) ) {
+			 isset( $wp_query->query_vars['doc_category'] ) && ! empty( $wp_query->query_vars['name'] ) ) {
 
 			$doc_category = $wp_query->query_vars['doc_category'];
 			$post_name = $wp_query->query_vars['name'];
 
 			// Get the post
 			$post = get_page_by_path( $post_name, OBJECT, 'docs' );
-			
+
 			if ( ! $post ) {
 				$wp_query->set_404();
 				status_header( 404 );
@@ -621,16 +624,43 @@ class Request extends Base {
 
 		// Check if request path strictly starts with docs slug, category slug, or tag slug
 		// Using # as delimiter, need to preg_quote
-		$valid_prefixes = [
-			preg_quote( $docs_slug, '#' ),
-			preg_quote( trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ), '#' ),
-			preg_quote( trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ), '#' )
+		$valid_slugs = [
+			$docs_slug,
+			trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ),
+			trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' )
 		];
-		$valid_prefixes = array_filter( $valid_prefixes );
-		
+
+		// WPML/Polylang translate the registered rewrite slug per active language,
+		// while $docs_slug from settings is always the default-language slug. Include
+		// the post type's / taxonomies' currently-registered rewrite slugs so that
+		// translated archive URLs (e.g. /en/support/ when settings.docs_slug is
+		// "soporte") are accepted instead of being 404'd.
+		$docs_pt = get_post_type_object( 'docs' );
+		if ( $docs_pt && ! empty( $docs_pt->rewrite['slug'] ) ) {
+			$valid_slugs[] = trim( $docs_pt->rewrite['slug'], '/' );
+		}
+		foreach ( [ 'doc_category', 'doc_tag', 'knowledge_base' ] as $tax ) {
+			$tax_obj = get_taxonomy( $tax );
+			if ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) {
+				$valid_slugs[] = trim( $tax_obj->rewrite['slug'], '/' );
+			}
+		}
+
+		// Belt-and-suspenders for WPML's slug-translation feature, which may store
+		// the translated slug separately from the post type's rewrite['slug'].
+		if ( has_filter( 'wpml_get_translated_slug' ) ) {
+			$wpml_slug = apply_filters( 'wpml_get_translated_slug', $docs_slug, 'docs' );
+			if ( is_string( $wpml_slug ) && $wpml_slug !== '' ) {
+				$valid_slugs[] = trim( $wpml_slug, '/' );
+			}
+		}
+
+		$valid_prefixes = array_unique( array_filter( $valid_slugs ) );
+		$valid_prefixes = array_map( function ( $slug ) { return preg_quote( $slug, '#' ); }, $valid_prefixes );
+
 		// Allow optional language prefixes (e.g. /en/, /pt-br/) for WPML/Polylang/TranslatePress compatibility
 		$lang_pattern = '(?:[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,4})?/)?';
-		
+
 		$prefix_pattern = '#^' . $lang_pattern . '(' . implode( '|', $valid_prefixes ) . ')(/|$)#';
 
 		if ( ! preg_match( $prefix_pattern, $request_path ) ) {
@@ -955,24 +985,66 @@ class Request extends Base {
 
 		if ( isset( $query_vars['knowledge_base'] ) && ! empty( $query_vars['knowledge_base'] ) ) {
 			// KB-aware lookup: only select the post that is assigned to this KB.
+			// Also join doc_category when present so that, on Polylang/WPML sites
+			// where multiple translated posts share both the same post_name and
+			// the same KB term (e.g. all language variants assigned to the
+			// "advice" KB), we land on the translation whose doc_category matches
+			// the URL — not the one the DB happens to return first.
 			$_kb_slug     = $query_vars['knowledge_base'];
 			$_kb_slug_enc = strtolower( rawurlencode( $_kb_slug ) );
+
+			$_cat_target     = $target_category_slug;
+			$_cat_target_enc = strtolower( rawurlencode( $_cat_target ) );
+
 			$_post_id = (int) $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT p.ID FROM {$wpdb->posts} p
-					INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
-					INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
-					INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+					INNER JOIN {$wpdb->term_relationships} tr_kb ON tr_kb.object_id = p.ID
+					INNER JOIN {$wpdb->term_taxonomy} tt_kb ON tt_kb.term_taxonomy_id = tr_kb.term_taxonomy_id AND tt_kb.taxonomy = 'knowledge_base'
+					INNER JOIN {$wpdb->terms} t_kb ON t_kb.term_id = tt_kb.term_id
+					INNER JOIN {$wpdb->term_relationships} tr_cat ON tr_cat.object_id = p.ID
+					INNER JOIN {$wpdb->term_taxonomy} tt_cat ON tt_cat.term_taxonomy_id = tr_cat.term_taxonomy_id AND tt_cat.taxonomy = 'doc_category'
+					INNER JOIN {$wpdb->terms} t_cat ON t_cat.term_id = tt_cat.term_id
 					WHERE p.post_name = %s AND p.post_type = 'docs'
-					AND t.slug IN (%s, %s)
+					AND t_kb.slug IN (%s, %s)
+					AND t_cat.slug IN (%s, %s)
 					LIMIT 1",
 					esc_sql( $_encoded_name ),
 					esc_sql( $_kb_slug ),
-					esc_sql( $_kb_slug_enc )
+					esc_sql( $_kb_slug_enc ),
+					esc_sql( $_cat_target_enc ),
+					esc_sql( $_cat_target )
 				)
 			);
 			// Fallback: post_name stored as decoded Unicode
 			if ( ! $_post_id && $_encoded_name !== $name ) {
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT p.ID FROM {$wpdb->posts} p
+						INNER JOIN {$wpdb->term_relationships} tr_kb ON tr_kb.object_id = p.ID
+						INNER JOIN {$wpdb->term_taxonomy} tt_kb ON tt_kb.term_taxonomy_id = tr_kb.term_taxonomy_id AND tt_kb.taxonomy = 'knowledge_base'
+						INNER JOIN {$wpdb->terms} t_kb ON t_kb.term_id = tt_kb.term_id
+						INNER JOIN {$wpdb->term_relationships} tr_cat ON tr_cat.object_id = p.ID
+						INNER JOIN {$wpdb->term_taxonomy} tt_cat ON tt_cat.term_taxonomy_id = tr_cat.term_taxonomy_id AND tt_cat.taxonomy = 'doc_category'
+						INNER JOIN {$wpdb->terms} t_cat ON t_cat.term_id = tt_cat.term_id
+						WHERE p.post_name = %s AND p.post_type = 'docs'
+						AND t_kb.slug IN (%s, %s)
+						AND t_cat.slug IN (%s, %s)
+						LIMIT 1",
+						esc_sql( $name ),
+						esc_sql( $_kb_slug ),
+						esc_sql( $_kb_slug_enc ),
+						esc_sql( $_cat_target_enc ),
+						esc_sql( $_cat_target )
+					)
+				);
+			}
+
+			// Fallback to the KB-only lookup (no category filter) when nothing
+			// matched both KB + category. Keeps single-language behaviour intact
+			// and lets the category-validation block below handle any genuine
+			// mismatch by setting invalid_request_query_vars.
+			if ( ! $_post_id ) {
 				$_post_id = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT p.ID FROM {$wpdb->posts} p
@@ -982,29 +1054,89 @@ class Request extends Base {
 						WHERE p.post_name = %s AND p.post_type = 'docs'
 						AND t.slug IN (%s, %s)
 						LIMIT 1",
-						esc_sql( $name ),
+						esc_sql( $_encoded_name ),
 						esc_sql( $_kb_slug ),
 						esc_sql( $_kb_slug_enc )
 					)
 				);
+				if ( ! $_post_id && $_encoded_name !== $name ) {
+					$_post_id = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT p.ID FROM {$wpdb->posts} p
+							INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+							INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'knowledge_base'
+							INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+							WHERE p.post_name = %s AND p.post_type = 'docs'
+							AND t.slug IN (%s, %s)
+							LIMIT 1",
+							esc_sql( $name ),
+							esc_sql( $_kb_slug ),
+							esc_sql( $_kb_slug_enc )
+						)
+					);
+				}
 			}
 		} else {
-			// No KB in URL — use the simple post_name lookup (single-KB sites).
-			$_post_id = (int) $wpdb->get_var(
+			// No KB in URL — disambiguate via doc_category. WPML/Polylang assign each
+			// translated post the same post_name (e.g. "spacious-family-home..."),
+			// so a plain `WHERE post_name = ... LIMIT 1` returns whichever language
+			// the DB serves first. When that pick does not belong to the category in
+			// the URL, the validation below falsely fires a 404 even though the
+			// correctly-translated post exists. Join doc_category so we land on the
+			// translation that actually owns the requested category.
+			$_cat_target     = $target_category_slug;
+			$_cat_target_enc = strtolower( rawurlencode( $_cat_target ) );
+			$_post_id        = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+					"SELECT p.ID FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+					INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'doc_category'
+					INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+					WHERE p.post_name = %s AND p.post_type = 'docs'
+					AND t.slug IN (%s, %s)
+					LIMIT 1",
 					esc_sql( $_encoded_name ),
-					'docs'
+					esc_sql( $_cat_target_enc ),
+					esc_sql( $_cat_target )
 				)
 			);
 			if ( ! $_post_id && $_encoded_name !== $name ) {
 				$_post_id = (int) $wpdb->get_var(
 					$wpdb->prepare(
-						"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+						"SELECT p.ID FROM {$wpdb->posts} p
+						INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+						INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'doc_category'
+						INNER JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+						WHERE p.post_name = %s AND p.post_type = 'docs'
+						AND t.slug IN (%s, %s)
+						LIMIT 1",
 						esc_sql( $name ),
+						esc_sql( $_cat_target_enc ),
+						esc_sql( $_cat_target )
+					)
+				);
+			}
+
+			// Fallback: post exists with this name but not under the requested
+			// category. Let the category-validation block below handle the 404 so
+			// we keep the existing single-language behaviour intact.
+			if ( ! $_post_id ) {
+				$_post_id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+						esc_sql( $_encoded_name ),
 						'docs'
 					)
 				);
+				if ( ! $_post_id && $_encoded_name !== $name ) {
+					$_post_id = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s LIMIT 1",
+							esc_sql( $name ),
+							'docs'
+						)
+					);
+				}
 			}
 		}
 
@@ -1161,15 +1293,21 @@ class Request extends Base {
 						$current_term = $current_term->parent ? get_term( $current_term->parent, 'doc_category' ) : null;
 					}
 
-					// Check if this hierarchy matches the URL structure
+					// Check if this hierarchy matches the URL structure.
+					// WordPress/Polylang store non-Latin term slugs URL-encoded
+					// (%e0%a6...) while $doc_category arrives decoded from
+					// is_perma_valid_for. Compare in the decoded form so Bengali,
+					// Arabic, CJK, etc. hierarchies actually match.
 					$built_path = implode('/', $hierarchy_path);
+					$built_path_norm = urldecode( $built_path );
+					$doc_cat_norm    = urldecode( $doc_category );
 
 					// Allow partial path matching to accommodate KB-prefixed URLs or partial hierarchies.
 					// Using substr for broad PHP version compatibility (equivalent to str_ends_with).
-					$is_suffix = strlen($built_path) > 0 && substr($doc_category, -strlen($built_path)) === $built_path;
-					$is_prefix = strlen($doc_category) > 0 && substr($built_path, -strlen($doc_category)) === $doc_category;
+					$is_suffix = strlen( $built_path_norm ) > 0 && substr( $doc_cat_norm, -strlen( $built_path_norm ) ) === $built_path_norm;
+					$is_prefix = strlen( $doc_cat_norm ) > 0 && substr( $built_path_norm, -strlen( $doc_cat_norm ) ) === $doc_cat_norm;
 
-					if ( $built_path === $doc_category || $is_suffix || $is_prefix ) {
+					if ( $built_path_norm === $doc_cat_norm || $is_suffix || $is_prefix ) {
 						$found_valid_hierarchy = true;
 						break;
 					}

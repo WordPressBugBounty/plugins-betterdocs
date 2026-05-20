@@ -14,22 +14,50 @@
 
     public function __construct( Settings $settings ) {
         $this->settings = $settings;
+        // Get the post ID from the URL
+        $post_id = isset( $_GET[ 'post' ] ) ? intval( $_GET[ 'post' ] ) : 0; // phpcs:ignore
 
-        if ( ! empty( $this->isEnabledWriteWithAI() ) ) {
-            add_action( 'current_screen', array( $this, 'maybe_register_ai_autowrite_button' ) );
+        if ( ! empty( $_GET[ 'post_type' ] ) ) { // phpcs:ignore
+            $post_type = $_GET[ 'post_type' ]; // phpcs:ignore
+        } elseif ( $post_id > 0 ) {
+            $post_type = get_post_type( $post_id );
+        } else {
+            $post_type = '';
+        }
+
+        if ( ! empty( $this->isEnabledWriteWithAI() ) && 'docs' == $post_type ) {
+            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_ai_edit_assets' ) );
         }
         add_action( 'wp_ajax_generate_openai_content', array( $this, 'generate_openai_content_callback' ) );
     }
 
-    public function maybe_register_ai_autowrite_button() {
-        if ( ! current_user_can( 'edit_posts' ) ) {
+    public function enqueue_ai_edit_assets( $hook ) {
+        if ( $hook !== 'post.php' && $hook !== 'post-new.php' ) {
             return;
         }
 
-        $screen = get_current_screen();
-        if ( $screen && 'docs' === $screen->post_type && 'post' === $screen->base ) {
-            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
+        global $post_type;
+        if ( $post_type !== 'docs' ) {
+            return;
         }
+
+        if ( empty( $this->get_api_key() ) ) {
+            return;
+        }
+
+        betterdocs()->assets->enqueue( 'betterdocs-ai-edit', 'blocks/ai-edit.js' );
+        betterdocs()->assets->enqueue( 'betterdocs-ai-edit-style', 'blocks/ai-edit-style.css' );
+
+        wp_localize_script(
+            'betterdocs-ai-edit',
+            'betterdocsAIEdit',
+            array(
+                'rest_url'   => esc_url_raw( rest_url( 'betterdocs/v1/ai-edit' ) ),
+                'rest_nonce' => wp_create_nonce( 'wp_rest' ),
+                'post_id'    => get_the_ID(),
+            )
+        );
     }
 
     public function isEnabledWriteWithAI() {
@@ -40,7 +68,7 @@
     public function isValidAPIKey( $apiKey ) {
         if ( empty( $apiKey ) ) {
             $api_response[ 'valid' ]   = false;
-            $api_response[ 'message' ] = 'Please Insert your <a href="/admin.php?page=betterdocs-settings">OpenAI API Key</a> to use this Write with AI feature.';
+            $api_response[ 'message' ] = 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">OpenAI API Key</a> to use this Write with AI feature.';
 
             return $api_response;
         }
@@ -84,6 +112,35 @@
         return $api_key;
     }
 
+    public function get_system_prompt() {
+        $prompt = <<<'PROMPT'
+You are a Senior Technical Writer specializing in comprehensive, high-quality documentation. Your goal is to produce documentation that scores 100/100 on clarity, completeness, and structure.
+
+## Output format
+
+Return only HTML body content. Never wrap output in `<!doctype>`, `<html>`, `<head>`, `<body>`, or markdown code fences (no ```html ... ```).
+
+Use semantic, Gutenberg-friendly tags only:
+- Headings: `<h2>`, `<h3>`, `<h4>` (do not emit `<h1>` — it is reserved for the document title)
+- Paragraphs: `<p>` for prose
+- Lists: `<ul>`/`<ol>` with `<li>` for any list of items, steps, or bullet points — never fake a list with paragraphs or `<br>`
+- Links: `<a href="https://...">link text</a>` with absolute URLs
+- Inline emphasis: `<strong>`, `<em>`, `<code>`
+- Code blocks: `<pre><code>...</code></pre>` for multi-line code or commands
+- Quotes: `<blockquote>`
+- Tables: `<table>` with `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>`
+- Images: `<img src="..." alt="...">`
+
+Apply `<span class="highlight">key term</span>` to important topic terms inside headings and to the first occurrence of each keyword in body text. Use it sparingly — never wrap whole sentences or wrap text inside `href`, `src`, `alt`, or other attributes.
+
+Do not emit `<style>`, `<script>`, `<iframe>`, `<form>`, or inline `style=""` / `class=""` attributes (other than the `highlight` class above).
+
+If — and only if — the user's prompt explicitly asks for raw/custom HTML, embed code, or a non-standard structure, follow that request instead of these defaults.
+PROMPT;
+
+        return apply_filters( 'betterdocs_write_with_ai_system_prompt', $prompt );
+    }
+
     public function generate_openai_response( $prompt, $keywords ) {
         try {
             $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
@@ -92,27 +149,27 @@
 
             $api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
 
-            $request_options = array(
-                'headers' => array(
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $api_key
-                ),
-                'body' => json_encode(
+            $request_body = array(
+                'model'      => $model,
+                'messages'   => array(
                     array(
-                        'model' => $model,
-                        'messages' => array(
-                            array(
-                                'role' => 'system',
-                                'content' => 'You are a Senior Technical Writer specializing in comprehensive, high-quality documentation. Your goal is to write documentation that scores 100/100 on clarity, completeness, and structure.'
-                            ),
-                            array(
-                                'role' => 'user',
-                                'content' => $prompt
-                            )
-                        ),
-                        'max_tokens' => $max_tokens
+                        'role'    => 'system',
+                        'content' => $this->get_system_prompt()
+                    ),
+                    array(
+                        'role'    => 'user',
+                        'content' => $prompt
                     )
                 ),
+                'max_tokens' => $max_tokens
+            );
+
+            $request_options = array(
+                'headers' => array(
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $api_key
+                ),
+                'body'    => json_encode( $request_body ),
                 'timeout' => 50
             );
 
@@ -136,15 +193,82 @@
         }
     }
 
-    public function generate_openai_content_callback() {
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( 'Unauthorized' );
-            wp_die();
+    public function generate_openai_response_full( $prompt ) {
+        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
+        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
+        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
+
+        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
+
+        $payload = array(
+            'model'      => $model,
+            'messages'   => array(
+                array(
+                    'role'    => 'system',
+                    'content' => $this->get_system_prompt()
+                ),
+                array(
+                    'role'    => 'user',
+                    'content' => $prompt
+                )
+            ),
+            'max_tokens' => $max_tokens
+        );
+
+        $request_options = array(
+            'headers' => array(
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $api_key
+            ),
+            'body'    => wp_json_encode( $payload ),
+            'timeout' => 50
+        );
+
+        $response = wp_remote_post( $api_endpoint, $request_options );
+
+        if ( is_wp_error( $response ) ) {
+            return array(
+                'success' => false,
+                'error'   => $response->get_error_message(),
+                'model'   => $model,
+            );
         }
 
+        $body = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body, true );
+
+        if ( ! empty( $data['error'] ) ) {
+            return array(
+                'success' => false,
+                'error'   => isset( $data['error']['message'] ) ? $data['error']['message'] : 'OpenAI error',
+                'model'   => $model,
+                'raw'     => $data,
+            );
+        }
+
+        $content = isset( $data['choices'][0]['message']['content'] ) ? $data['choices'][0]['message']['content'] : '';
+        $usage   = isset( $data['usage'] ) && is_array( $data['usage'] ) ? $data['usage'] : array();
+
+        return array(
+            'success'           => true,
+            'content'           => $content,
+            'model'             => $model,
+            'prompt_tokens'     => isset( $usage['prompt_tokens'] ) ? (int) $usage['prompt_tokens'] : null,
+            'completion_tokens' => isset( $usage['completion_tokens'] ) ? (int) $usage['completion_tokens'] : null,
+            'total_tokens'      => isset( $usage['total_tokens'] ) ? (int) $usage['total_tokens'] : null,
+            'finish_reason'     => isset( $data['choices'][0]['finish_reason'] ) ? $data['choices'][0]['finish_reason'] : null,
+        );
+    }
+
+    public function generate_openai_content_callback() {
         // Verify the nonce
         if ( ! isset( $_POST[ 'ai_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'ai_nonce' ], 'generate_openai_content_nonce' ) ) { //phpcs:ignore
             wp_send_json_error( 'Invalid nonce' );
+            wp_die();
+        }
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( 'Insufficient permissions' );
             wp_die();
         }
 
@@ -269,7 +393,7 @@
 					jQuery('#betterdocs-ai-error-message').parent().addClass('hidden');
 				}
 
-				contentTextArea.value = `Generate a documentation using HTML heading tags for '${title}'. Include relevant details on ${keywords} in the documentation. Ensure all content is enclosed with <p> tags and apply a <span> tag with the class 'highlight' to headings and topic tags for emphasis.`;
+				contentTextArea.value = `Write documentation for '${title}'. Cover these topics in depth: ${keywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
 			}
 
 			function convertMarkdownToHTML(markdownContent) {
@@ -301,27 +425,105 @@
 			}
 
 
+			function escapeHtml(str) {
+				return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			}
+
+			function escapeRegex(str) {
+				return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			}
+
+			function stripCodeFences(htmlString) {
+				if (!htmlString) {
+					return '';
+				}
+				return htmlString
+					.replace(/^\s*```(?:html|HTML)?\s*\n?/, '')
+					.replace(/\n?\s*```\s*$/, '');
+			}
+
 			function wrapwithHeighlight(inputString, keywords) {
-				let modifiedString = inputString.replace(/<(h\d)(.*?)>(.*?)<\/\1>/g, '<$1$2><span class="highlight">$3</span></$1>');
+				if (!inputString) {
+					return '';
+				}
 
-				const keywordArray = keywords.split(',').map(keyword => keyword.trim());
+				const container = document.createElement('div');
+				container.innerHTML = inputString;
 
-				keywordArray.forEach(keyword => {
-					modifiedString = modifiedString.replace(new RegExp(`\\b(${keyword})\\b`, 'gi'), '<span class="highlight">$1</span>');
+				// Wrap each heading's visible text with the highlight span (skip if already present)
+				container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(function (heading) {
+					if (heading.querySelector('.highlight')) {
+						return;
+					}
+					const text = heading.textContent;
+					if (!text || !text.trim()) {
+						return;
+					}
+					heading.innerHTML = '<span class="highlight">' + escapeHtml(text) + '</span>';
 				});
 
-				return modifiedString;
+				// Wrap keywords only inside text nodes — never inside attributes, code, or existing highlights
+				const keywordList = (keywords || '')
+					.split(',')
+					.map(function (k) { return k.trim(); })
+					.filter(Boolean);
+
+				if (keywordList.length) {
+					const pattern = new RegExp('\\b(' + keywordList.map(escapeRegex).join('|') + ')\\b', 'gi');
+					const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+						acceptNode: function (node) {
+							let parent = node.parentNode;
+							while (parent && parent !== container) {
+								if (parent.nodeType === 1) {
+									const tag = parent.tagName.toLowerCase();
+									if (tag === 'code' || tag === 'pre') {
+										return NodeFilter.FILTER_REJECT;
+									}
+									if (parent.classList && parent.classList.contains('highlight')) {
+										return NodeFilter.FILTER_REJECT;
+									}
+								}
+								parent = parent.parentNode;
+							}
+							return NodeFilter.FILTER_ACCEPT;
+						}
+					});
+
+					const textNodes = [];
+					let current;
+					while ((current = walker.nextNode())) {
+						textNodes.push(current);
+					}
+
+					textNodes.forEach(function (textNode) {
+						pattern.lastIndex = 0;
+						if (!pattern.test(textNode.nodeValue)) {
+							return;
+						}
+						pattern.lastIndex = 0;
+						const fragmentHost = document.createElement('span');
+						fragmentHost.innerHTML = escapeHtml(textNode.nodeValue).replace(pattern, '<span class="highlight">$1</span>');
+						const parent = textNode.parentNode;
+						while (fragmentHost.firstChild) {
+							parent.insertBefore(fragmentHost.firstChild, textNode);
+						}
+						parent.removeChild(textNode);
+					});
+				}
+
+				return container.innerHTML;
 			}
 
 			function getBodyContent(htmlString) {
-				var match = htmlString.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-
-				// Check if match is null before accessing match[1]
-				if (match) {
-					return match[1].replace(/<p>\s+/g, '<p>');
-				} else {
+				if (!htmlString) {
 					return '';
 				}
+				const cleaned = stripCodeFences(htmlString);
+				const match = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+				if (match) {
+					return match[1].replace(/<p>\s+/g, '<p>');
+				}
+				return cleaned;
 			}
 
 
@@ -391,7 +593,7 @@
 						if (!currentKeywords) {
 							currentKeywords = '{Documentation Keywords}';
 						}
-						const currentPrompt = `Generate documentation using HTML heading tags for '${docsTitle?docsTitle:'{Documentation title}'}'. Include relevant details on ${currentKeywords} in the documentation. Ensure all content is enclosed with <p> tags and apply a <span> tag with the class 'highlight' to headings and topic tags for emphasis.`;
+						const currentPrompt = `Write documentation for '${docsTitle?docsTitle:'{Documentation title}'}'. Cover these topics in depth: ${currentKeywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
 						jQuery('#betterdocs-ai-content').val(currentPrompt);
 
 						jQuery('#betterdocs-ai-title').val(docsTitle);
@@ -453,7 +655,7 @@
 
 				// const prompt = `Create a details knowledge base article in [${language}] about [${title}] with html heading tags. Here is some topic to describe the article: [${keywords}]. And wrap the content with p tag also add a span tag with a class named 'highlight' to all the heading and topic tags in the article.`;
 
-				const prompt = `Generate a documentation using HTML heading tags for '${promtTitle}'. Include relevant details on ${keywords} in the documentation. Ensure all content is enclosed with <p> tags and apply a <span> tag with the class 'highlight' to headings and topic tags for emphasis.`;
+				const prompt = `Write documentation for '${promtTitle}'. Cover these topics in depth: ${keywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
 
 				const aiIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
 						<g clip-path="url(#clip0_2460_1729)">
@@ -497,7 +699,7 @@
 											<div class="warning-message">
 													<span class="dashicons dashicons-warning"></span>
 													<div>
-														<?php echo wp_kses_post( 'Please Insert your <a target="_blank" href="' . esc_url( admin_url( 'admin.php?page=betterdocs-settings&tab=tab-betterdocs-ai' ) ) . '">OpenAI API Key</a> to use this Write with AI feature.', 'betterdocs' ); ?>
+														<?php echo wp_kses_post( 'Please Insert your <a target="_blank" href="' . esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ) . '">OpenAI API Key</a> to use this Write with AI feature.', 'betterdocs' ); ?>
 													</div>
 											</div>
 

@@ -1,11 +1,11 @@
 === BetterDocs –  Knowledge Base Docs & FAQ Solution for Elementor & Block Editor ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, fencermonir, sapanmozammel, seakashdiu, bashar94, jamilbd07
+Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, bashar94, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
-Tested up to: 6.9
-Requires PHP: 7.0
-Stable tag: 4.4.1
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 4.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -219,7 +219,21 @@ Yes, it will work with any standard WordPress theme.
 
 == Changelog ==
 
-= 4.4.1 - 13/05/2026 =  
+= 4.5.0 - 20/05/2026 =
+
+- Added: Bulk Define with AI for Glossary terms
+- Added: Edit with AI for any existing section or content
+- Improved: Write with AI now supports core Paragraph, Heading, and more
+- Improved: Settings tabs now support direct deep links
+- Fixed: Translation issues in the Elementor Sidebar widget
+- Fixed: WPML-related issues with doc ordering, archive slugs, translated permalinks, and secondary languages
+- Fixed: FAQ CSV import not creating FAQs
+- Fixed: FSE block inspector color settings leaking across templates
+- Fixed: Multi-category feed URLs returning 404
+- Few minor bug fixes and improvements
+
+
+= 4.4.1 - 13/05/2026 =
 
 - Fixed: 404 triggered on query-string archives with plain permalinks
 - Fixed: Disable reaction option not working in Essence single doc layout

@@ -175,7 +175,7 @@ class ArticleQualityScore extends Base {
 				<div class="error-text">
 					<strong><?php esc_html_e( 'Configuration Required', 'betterdocs' ); ?></strong>
 					<div class="error-message"></div>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=betterdocs-settings' ) ); ?>" class="error-action-button" style="display: none;">
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ); ?>" class="error-action-button" style="display: none;">
 						<?php esc_html_e( 'Go to Settings', 'betterdocs' ); ?>
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
 					</a>

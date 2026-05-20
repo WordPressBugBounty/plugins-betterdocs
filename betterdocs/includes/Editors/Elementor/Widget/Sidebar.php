@@ -160,7 +160,7 @@ class Sidebar extends BaseWidget {
                 'label'   => __( "Doc Term ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
                 'description' => __('Example: 8, 9'),
-                'default' => esc_html__( "", 'betterdocs' ),
+                'default' => "",
                 'condition'  => [
                     'search_modal_doc_query_type' => 'specific_doc_term_ids'
                 ]
@@ -173,7 +173,7 @@ class Sidebar extends BaseWidget {
                 'label'   => __( "Doc ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
                 'description' => __('Example: 15, 16'),
-                'default' => esc_html__( "", 'betterdocs' ),
+                'default' => "",
                 'condition'  => [
                     'search_modal_doc_query_type' => 'specific_doc_ids'
                 ]
@@ -201,7 +201,7 @@ class Sidebar extends BaseWidget {
                 'label'   => __( "FAQ Term ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
                 'description' => __('Example: 8, 9'),
-                'default' => esc_html__( "", 'betterdocs' ),
+                'default' => "",
                 'condition'  => [
                     'search_modal_faq_query_type' => 'specific_faq_term_ids'
                 ]

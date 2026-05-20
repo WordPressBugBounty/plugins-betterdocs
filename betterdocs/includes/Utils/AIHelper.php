@@ -50,7 +50,7 @@ class AIHelper {
         if ( empty( $api_key ) ) {
             return array(
                 'valid' => false,
-                'message' => 'Please Insert your <a href="/admin.php?page=betterdocs-settings">OpenAI API Key</a> to use AI features.'
+                'message' => 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">OpenAI API Key</a> to use AI features.'
             );
         }
 

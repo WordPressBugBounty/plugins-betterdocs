@@ -802,8 +802,21 @@ class PostType extends Base {
 			wp_send_json_error( __( 'Invalid category.', 'betterdocs' ) );
 		}
 
-		// Update the docs order for this category using language-specific meta key
-		$meta_key = $this->get_docs_order_meta_key( null, $term_id );
+		// Always write the language-specific key when a language is detected.
+		// Falling back to the base key on first save lets WPML's "copy from
+		// original" term-meta behavior overwrite our save with the primary
+		// language's order on the next read, which is what made the order
+		// appear to revert after reload on secondary-language admin UIs.
+		$meta_key = Helper::get_meta_key_for_save( '_docs_order' );
+		$existing = (string) get_term_meta( $term_id, $meta_key, true );
+
+		if ( $existing === (string) $docs_ordering_data ) {
+			// Already at this order — nothing to update. update_term_meta()
+			// would return false in this case, which the old code mis-reported
+			// as a failure ("Something went wrong.").
+			wp_send_json_success( __( 'Successfully updated.', 'betterdocs' ) );
+		}
+
 		$result = update_term_meta( $term_id, $meta_key, $docs_ordering_data );
 
 		if ( $result !== false ) {

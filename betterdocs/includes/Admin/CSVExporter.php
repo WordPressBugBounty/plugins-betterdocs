@@ -208,17 +208,10 @@ class CSVExporter {
 		// Initialize the combined array with headers
 		$csv_data_combined = [ $headers_combined ];
 
-		// Combine posts data
-		for ( $i = 1; $i < count( $csv_data_posts ); $i++ ) {
-			$combined_row        = array_merge(
-				$csv_data_posts[ $i ],
-				array_fill( 0, count( $headers_combined ) - count( $csv_data_posts[ $i ] ), '' )
-			);
-			$csv_data_combined[] = $combined_row;
-		}
-
-		// Combine author data
 		$author_start_index = count( $csv_data_posts[0] );
+		$terms_start_index  = $author_start_index + count( $csv_data_author[0] ) - 1;
+
+		// Author rows
 		for ( $i = 1; $i < count( $csv_data_author ); $i++ ) {
 			$combined_row        = array_merge(
 				[ $csv_data_author[ $i ][0] ],
@@ -228,13 +221,36 @@ class CSVExporter {
 			$csv_data_combined[] = $combined_row;
 		}
 
-		// Combine terms data
-		$terms_start_index = $author_start_index + count( $csv_data_author[0] ) - 1;
+		// Docs post rows
+		for ( $i = 1; $i < count( $csv_data_posts ); $i++ ) {
+			if ( $csv_data_posts[ $i ][0] === 'FAQ' ) {
+				continue;
+			}
+			$combined_row        = array_merge(
+				$csv_data_posts[ $i ],
+				array_fill( 0, count( $headers_combined ) - count( $csv_data_posts[ $i ] ), '' )
+			);
+			$csv_data_combined[] = $combined_row;
+		}
+
+		// Term rows just before FAQ rows so category IDs can be resolved on import
 		for ( $i = 1; $i < count( $csv_data_terms ); $i++ ) {
 			$combined_row        = array_merge(
 				[ $csv_data_terms[ $i ][0] ],
 				array_fill( 1, $terms_start_index - 1, '' ),
 				array_slice( $csv_data_terms[ $i ], 1 )
+			);
+			$csv_data_combined[] = $combined_row;
+		}
+
+		// FAQ post rows last
+		for ( $i = 1; $i < count( $csv_data_posts ); $i++ ) {
+			if ( $csv_data_posts[ $i ][0] !== 'FAQ' ) {
+				continue;
+			}
+			$combined_row        = array_merge(
+				$csv_data_posts[ $i ],
+				array_fill( 0, count( $headers_combined ) - count( $csv_data_posts[ $i ] ), '' )
 			);
 			$csv_data_combined[] = $combined_row;
 		}
@@ -586,7 +602,7 @@ class CSVExporter {
 				$post->menu_order,
 				$post->post_mime_type,
 				$post->comment_count,
-				$this->get_term_ids( $post->ID, 'doc_category' ),
+				$this->get_term_ids( $post->ID, $post->post_type === 'betterdocs_faq' ? 'betterdocs_faq_category' : 'doc_category' ),
 				$this->get_term_ids( $post->ID, 'doc_tag' ),
 				$this->get_term_ids( $post->ID, 'knowledge_base' ),
 				$attachment_url ? $attachment_url : '',

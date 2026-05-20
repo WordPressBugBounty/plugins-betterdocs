@@ -364,6 +364,25 @@ class Glossaries extends Base {
 				}
 			]
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/glossary/check_existing',
+			[
+				'methods'             => [ 'POST' ],
+				'callback'            => [ $this, 'check_existing_glossaries' ],
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				},
+				'args'                => array(
+					'terms' => array(
+						'type'     => 'array',
+						'required' => true,
+						'items'    => array( 'type' => 'string' ),
+					),
+				),
+			]
+		);
 		register_rest_route(
 			$this->namespace,
 			'/glossary/get_glossaries',
@@ -896,6 +915,42 @@ class Glossaries extends Base {
 	public function get_glossary_count( $request ) {
 		$options = get_option( 'store_glossary_count' );
 		return rest_ensure_response( $options );
+	}
+
+	/**
+	 * Given a list of candidate glossary term names, return which ones already
+	 * exist in the `glossaries` taxonomy. Used by the bulk Define-with-AI flow
+	 * to surface conflicts before generation rather than at save time.
+	 */
+	public function check_existing_glossaries( $request ) {
+		$terms = $request->get_param( 'terms' );
+		if ( ! is_array( $terms ) ) {
+			return rest_ensure_response( array( 'existing' => array() ) );
+		}
+
+		$existing = array();
+		$seen     = array();
+
+		foreach ( $terms as $term ) {
+			if ( ! is_string( $term ) ) {
+				continue;
+			}
+			$trimmed = trim( $term );
+			if ( $trimmed === '' ) {
+				continue;
+			}
+			$key = strtolower( $trimmed );
+			if ( isset( $seen[ $key ] ) ) {
+				continue;
+			}
+			$seen[ $key ] = true;
+
+			if ( term_exists( $trimmed, 'glossaries' ) ) {
+				$existing[] = $trimmed;
+			}
+		}
+
+		return rest_ensure_response( array( 'existing' => $existing ) );
 	}
 	public function get_glossaries( $request ) {
 		$taxo = get_taxonomies(
