@@ -21,16 +21,13 @@ if ( is_array( $counts ) ) {
 <div data-count="<?php echo esc_attr( $counts ); ?>" class="betterdocs-category-items-counts">
 	<span>
 		<?php
+			// Layout-only format string — not wrapped in _n() because it contains
+			// nothing but positional placeholders, and translator typos in the
+			// placeholder numbers (e.g. %4$s instead of %3$s) crash sprintf() on
+			// PHP 8.x with ArgumentCountError.
 			echo esc_html(
 				sprintf(
-				/* translators: %s: Number of items. */
-                // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-					_n(
-						'%1$s %2$s %3$s',
-						'%1$s %2$s %3$s',
-						$counts,
-						'betterdocs'
-					),
+					'%1$s %2$s %3$s',
 					esc_html( $prefix ),
 					esc_html( $counts ),
 					esc_html( $counts === 1 ? $suffix_singular : $suffix )

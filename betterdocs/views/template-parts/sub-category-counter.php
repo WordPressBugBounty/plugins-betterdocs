@@ -39,16 +39,12 @@ $subcategory_plural_text   = isset( $subcategories_text ) ? $subcategories_text 
 				)
 			);	
 		} else {
-			/* translators: %1$s: Number of items, %2$s: Singular text, %3$s: Plural text. */
+			// Layout-only format string — not wrapped in _n() because it contains
+			// nothing but positional placeholders, and translator typos in the
+			// placeholder numbers crash sprintf() on PHP 8.x with ArgumentCountError.
 			echo esc_html(
 				sprintf(
-				// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-					_n(
-						'%1$s %2$s',
-						'%1$s %2$s',
-						$sub_terms_count,
-						'betterdocs'
-					),
+					'%1$s %2$s',
 					esc_html( $sub_terms_count ),
 					esc_html( $sub_terms_count === 1 ? $subcategory_singular_text : $subcategory_plural_text )
 				)
@@ -59,16 +55,12 @@ $subcategory_plural_text   = isset( $subcategories_text ) ? $subcategories_text 
 	?>
 	<span>
 		<?php
-		/* translators: %1$s: Number of items, %2$s: Prefix text, %3$s: Singular suffix, %4$s: Plural suffix. */
+		// Layout-only format string — not wrapped in _n() because it contains
+		// nothing but positional placeholders, and translator typos in the
+		// placeholder numbers crash sprintf() on PHP 8.x with ArgumentCountError.
 		echo esc_html(
 			sprintf(
-			// phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.MismatchedPlaceholders
-				_n(
-					'%2$s %1$s %3$s',
-					'%2$s %1$s %3$s',
-					$counts,
-					'betterdocs'
-				),
+				'%2$s %1$s %3$s',
 				esc_html( $counts ),
 				esc_html( $prefix ),
 				esc_html( $counts === 1 ? $suffix_singular : $suffix )
