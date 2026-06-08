@@ -85,11 +85,11 @@ class SearchForm extends Block {
 		$_shortcode_attributes = apply_filters(
 			'betterdocs_elementor_search_form_params',
 			[
-				'placeholder'    => esc_html( $settings['placeholderText'] ),
-				'heading'        => isset( $settings['searchHeading'] ) ? esc_html( $settings['searchHeading'] ) : '',
-				'subheading'     => isset( $settings['searchSubHeading'] ) ? esc_html( $settings['searchSubHeading'] ) : '',
-				'heading_tag'    => isset( $settings['searchHeadingTag'] ) ? esc_attr( $settings['searchHeadingTag'] ) : 'h2',
-				'subheading_tag' => isset( $settings['searchSubHeadingTag'] ) ? esc_attr( $settings['searchSubHeadingTag'] ) : 'h3'
+				'placeholder'       => esc_html( $settings['placeholderText'] ),
+				'heading'           => isset( $settings['searchHeading'] ) ? esc_html( $settings['searchHeading'] ) : '',
+				'subheading'        => isset( $settings['searchSubHeading'] ) ? esc_html( $settings['searchSubHeading'] ) : '',
+				'heading_tag'       => isset( $settings['searchHeadingTag'] ) ? esc_attr( $settings['searchHeadingTag'] ) : 'h2',
+				'subheading_tag'    => isset( $settings['searchSubHeadingTag'] ) ? esc_attr( $settings['searchSubHeadingTag'] ) : 'h3'
 			],
 			$this->attributes
 		);

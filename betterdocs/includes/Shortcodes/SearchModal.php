@@ -146,9 +146,9 @@ class SearchModal extends Shortcode {
 
 	public function get_search_results() {
 		global $wpdb;
-		$search_input = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$search_cat   = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$lang         = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$search_input      = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$search_cat        = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$lang              = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		// Removed preg_replace that was stripping non-Latin characters - sanitize_text_field() already handles security
 
 		$tax_query = [];
@@ -177,7 +177,7 @@ class SearchModal extends Shortcode {
 			'post_type'        => 'docs',
 			'post_status'      => $post_status,
 			'posts_per_page'   => -1,
-			'suppress_filters' => false,  // Changed to false to allow posts_search filter
+			'suppress_filters' => false,
 			's'                => $search_input,
 			'orderby'          => 'relevance',
 			'tax_query'        => $tax_query
@@ -267,7 +267,7 @@ class SearchModal extends Shortcode {
 				'enable_docs_search' => true,
 				'enable_faq_search'  => true,
 				'enable_ai_powered_search' => false,
-				'kb_based_search' => '' // KB slug to filter search results
+				'kb_based_search'    => '' // KB slug to filter search results
 			]
 		);
 	}
@@ -299,7 +299,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 			echo '<div class="betterdocs-search-modal-layout-1" id="betterdocs-search-modal"';
@@ -321,7 +321,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 
@@ -343,7 +343,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 

@@ -85,6 +85,144 @@ class AIHelper {
     }
 
     /**
+     * Minimum token policy by (feature context, model family). Used as the
+     * single source of truth for:
+     *  - server-side save validation (Core/Settings.php)
+     *  - field UI props sent to the React notice (Core/Settings.php)
+     *  - runtime payload floor in build_openai_payload()
+     *
+     * Override the whole map (or any cell) via the `betterdocs_ai_min_tokens`
+     * filter. Returns 0 when no minimum applies (unknown context or model).
+     *
+     * @param string $context Feature key, e.g. 'write_with_ai' or 'article_summary'.
+     * @param string $model   OpenAI model identifier.
+     * @return int Minimum recommended max_tokens for that pair.
+     */
+    public static function get_min_tokens( $context, $model ) {
+        $family = self::token_family( $model );
+        $map = apply_filters( 'betterdocs_ai_min_tokens', array(
+            'write_with_ai'   => array( 'gpt-4' => 2500, 'gpt-5' => 4500, 'gpt-5.5' => 10000 ),
+            'article_summary' => array( 'gpt-4' => 1500, 'gpt-5' => 2500, 'gpt-5.5' => 10000 ),
+        ) );
+        return isset( $map[ $context ][ $family ] ) ? (int) $map[ $context ][ $family ] : 0;
+    }
+
+    /**
+     * Map a model id to its token-floor family key.
+     *
+     * gpt-5.x point releases (gpt-5.5, gpt-5.1, ...) generate much larger, slower
+     * responses and need a heavier floor than the base gpt-5 family, so they get
+     * their own 'gpt-5.5' key. Plain gpt-5* stays 'gpt-5'; everything else 'gpt-4'.
+     *
+     * @param string $model OpenAI model identifier.
+     * @return string Family key used in the min-token map.
+     */
+    private static function token_family( $model ) {
+        if ( self::is_gpt5_point_release( $model ) ) {
+            return 'gpt-5.5';
+        }
+        return ( 0 === strpos( (string) $model, 'gpt-5' ) ) ? 'gpt-5' : 'gpt-4';
+    }
+
+    /**
+     * Whether a model is a gpt-5.x point release (gpt-5.5, gpt-5.1, ...), which
+     * use the newer reasoning_effort vocabulary and need a heavier token floor.
+     *
+     * @param string $model OpenAI model identifier.
+     * @return bool
+     */
+    private static function is_gpt5_point_release( $model ) {
+        return (bool) preg_match( '/^gpt-5\.\d/', (string) $model );
+    }
+
+    /**
+     * Return the threshold map for one context, in {family => min} shape, so
+     * Settings.php can serialize it onto a field for the React notice to read.
+     *
+     * @param string $context Feature key.
+     * @return array<string,int>
+     */
+    public static function get_min_tokens_map( $context ) {
+        return array(
+            'gpt-4'   => self::get_min_tokens( $context, 'gpt-4o' ),
+            'gpt-5'   => self::get_min_tokens( $context, 'gpt-5' ),
+            'gpt-5.5' => self::get_min_tokens( $context, 'gpt-5.5' ),
+        );
+    }
+
+    /**
+     * Build an OpenAI Chat Completions request body, switching parameter shape
+     * for model families that reject the legacy max_tokens / custom temperature.
+     *
+     * GPT-5 family requires max_completion_tokens and rejects any non-default
+     * temperature, so we omit both. It is also a reasoning model: internal
+     * reasoning tokens are billed against max_completion_tokens before any
+     * visible output is produced, so we send a low reasoning_effort by default
+     * (see default_reasoning_effort()). Without that the model can spend the
+     * entire budget on reasoning and return empty content with
+     * finish_reason=length.
+     *
+     * When `$context` is provided we also raise `$max_tokens` to the per-family
+     * minimum from get_min_tokens(), so the request never goes out below the
+     * policy floor regardless of what's stored in settings.
+     *
+     * @param string      $model       OpenAI model identifier (e.g. 'gpt-4o', 'gpt-5-mini').
+     * @param array       $messages    Chat messages array.
+     * @param int         $max_tokens  Token cap (will be raised to feature minimum if $context is set).
+     * @param float|null  $temperature Optional sampling temperature; ignored for gpt-5*.
+     * @param string|null $context     Feature key for runtime min-token enforcement. Pass null for back-compat.
+     * @return array Request body ready to JSON-encode.
+     */
+    public static function build_openai_payload( $model, $messages, $max_tokens, $temperature = null, $context = null ) {
+        if ( null !== $context ) {
+            $min = self::get_min_tokens( $context, $model );
+            if ( $min > 0 && (int) $max_tokens < $min ) {
+                $max_tokens = $min;
+            }
+        }
+
+        $payload = array(
+            'model'    => $model,
+            'messages' => $messages,
+        );
+
+        if ( 0 === strpos( $model, 'gpt-5' ) ) {
+            $payload['max_completion_tokens'] = $max_tokens;
+            $payload['reasoning_effort']      = apply_filters( 'betterdocs_openai_gpt5_reasoning_effort', self::default_reasoning_effort( $model ), $model, $max_tokens );
+            return $payload;
+        }
+
+        $payload['max_tokens'] = $max_tokens;
+        if ( null !== $temperature ) {
+            $payload['temperature'] = $temperature;
+        }
+        return $payload;
+    }
+
+    /**
+     * Default reasoning_effort for a gpt-5* model.
+     *
+     * The original GPT-5 generation (gpt-5, gpt-5-mini, gpt-5-nano) accepts
+     * 'minimal'. The gpt-5.x point releases (e.g. gpt-5.5) dropped 'minimal'
+     * from the API and only accept none|low|medium|high|xhigh; sending
+     * 'minimal' returns a 400 "Unsupported value: 'reasoning_effort'". For
+     * those we default to 'none' — no reasoning tokens, which is the fastest
+     * option and leaves the whole token budget for visible output (the closest
+     * equivalent to the gpt-5 'minimal' behaviour). Override per model via the
+     * betterdocs_openai_gpt5_reasoning_effort filter.
+     *
+     * @param string $model OpenAI model identifier.
+     * @return string reasoning_effort value.
+     */
+    private static function default_reasoning_effort( $model ) {
+        // Point releases like gpt-5.5 use the new vocabulary; plain gpt-5* keep 'minimal'.
+        if ( self::is_gpt5_point_release( $model ) ) {
+            return 'none';
+        }
+        return 'minimal';
+    }
+
+    /**
      * Make a request to OpenAI API
      *
      * @param array $messages Array of messages for the chat completion
@@ -112,11 +250,12 @@ class AIHelper {
 
         $api_endpoint = 'https://api.openai.com/v1/chat/completions';
 
-        $request_body = array(
-            'model' => $options[ 'model' ],
-            'messages' => $messages,
-            'max_tokens' => $options[ 'max_tokens' ],
-            'temperature' => $options[ 'temperature' ]
+        $request_body = self::build_openai_payload(
+            $options[ 'model' ],
+            $messages,
+            $options[ 'max_tokens' ],
+            $options[ 'temperature' ],
+            'article_summary'
         );
 
         $request_options = array(

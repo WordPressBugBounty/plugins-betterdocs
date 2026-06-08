@@ -294,7 +294,11 @@ class Settings extends BaseAPI {
 	}
 
 	public function save_settings( WP_REST_Request $request ) {
-		if ( betterdocs()->settings->save_settings( $request->get_params() ) ) {
+		$result = betterdocs()->settings->save_settings( $request->get_params() );
+		if ( is_wp_error( $result ) ) {
+			return $this->error( $result->get_error_code(), $result->get_error_message(), 400 );
+		}
+		if ( $result ) {
 			return $this->success( __( 'Settings Saved!', 'betterdocs' ) );
 		}
 

@@ -748,6 +748,16 @@ class Helper extends Base {
                     // Prepare post data
                     if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
                         // For glossaries
+                        $permalink = '';
+
+                        if ( isset( $post['slug'] ) ) {
+                            $term_link = get_term_link( $post['slug'], 'glossaries' );
+
+                            if ( ! is_wp_error( $term_link ) ) {
+                                $permalink = $term_link;
+                            }
+                        }
+
                         $post_data = [
                             'id'           => $post['term_id'] ?? '',
                             'post_title'   => $post['post_title'] ?? '',
@@ -756,7 +766,7 @@ class Helper extends Base {
                             : ( ! empty( $glossary_term_description )
                                 ? self::get_custom_excerpt( $glossary_term_description, 15 )
                                 : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ) ),
-                            'permalink'    => isset( $post['slug'] ) ? get_term_link( $post['slug'], 'glossaries' ) : ''
+                            'permalink'    => $permalink,
                         ];
                     } else {
                         // For docs

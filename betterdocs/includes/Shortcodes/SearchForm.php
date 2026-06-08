@@ -157,10 +157,10 @@ class SearchForm extends Shortcode {
 
 	public function get_search_results() {
 		global $wpdb;
-		$search_input = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$search_cat   = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$lang         = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$kb_slug      = isset( $_POST['kb_slug'] ) ? sanitize_text_field( $_POST['kb_slug'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$search_input      = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$search_cat        = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$lang              = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$kb_slug           = isset( $_POST['kb_slug'] ) ? sanitize_text_field( $_POST['kb_slug'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$tax_query = [];
 		if ( $search_cat ) {
@@ -187,15 +187,15 @@ class SearchForm extends Shortcode {
 		}
 
 		$args = [
-			'term_id'          => isset( $term->term_id ) ? $term->term_id : 0,
-			'post_type'        => 'docs',
-			'post_status'      => $post_status,
-			'posts_per_page'   => -1,
-			'suppress_filters' => false,  // Changed to false to allow posts_search filter
-			's'                => $search_input,
-			'orderby'          => 'relevance',
-			'tax_query'        => $tax_query,
-			'kb_slug'          => $kb_slug // Pass kb_slug for filter hooks
+			'term_id'                => isset( $term->term_id ) ? $term->term_id : 0,
+			'post_type'              => 'docs',
+			'post_status'            => $post_status,
+			'posts_per_page'         => -1,
+			'suppress_filters'       => false,
+			's'                      => $search_input,
+			'orderby'                => 'relevance',
+			'tax_query'              => $tax_query,
+			'kb_slug'                => $kb_slug
 		];
 
 		// Handle WPML multilingual search
@@ -267,26 +267,25 @@ class SearchForm extends Shortcode {
 		return apply_filters(
 			'betterdocs_search_form_attr',
 			[
-				'placeholder'    => __( 'Search', 'betterdocs' ),
-				'heading'        => '',
-				'subheading'     => '',
-				'heading_tag'    => 'h1',
-				'subheading_tag' => 'p',
-				'kb_based_search' => '' // KB slug to filter search results
+				'placeholder'     => __( 'Search', 'betterdocs' ),
+				'heading'         => '',
+				'subheading'      => '',
+				'heading_tag'     => 'h1',
+				'subheading_tag'  => 'p',
+				'kb_based_search' => ''
 			]
 		);
 	}
 
 	public function render( $atts, $content = null ) {
-		// Get kb_based_search from shortcode attribute (KB slug)
 		$kb_based_search = isset( $atts['kb_based_search'] ) ? sanitize_text_field( $atts['kb_based_search'] ) : '';
-		
+
 		betterdocs()->assets->localize(
 			'betterdocs-search',
 			'betterdocsSearchConfigTwo',
 			[
 				'is_post_type_archive' => is_post_type_archive( 'docs' ),
-				'kb_based_search' => $kb_based_search,
+				'kb_based_search'      => $kb_based_search
 			]
 		);
 

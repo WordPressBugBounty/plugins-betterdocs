@@ -29,6 +29,7 @@ use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
 use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
+use WPDeveloper\BetterDocs\FrontEnd\SearchExtender;
 use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
 use WPDeveloper\BetterDocs\Modules\StyleHandler as ModulesStyleHandler;
 use WPDeveloper\BetterDocs\Utils\Database;
@@ -125,7 +126,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.5.1';
+    public $version = '4.5.2';
 
     /**
      * WriteWithAI Class
@@ -270,6 +271,7 @@ final class Plugin {
         $this->container->get( ShortcodeFactory::class )->init();
 
         $this->container->get( FrontEnd::class );
+        $this->container->get( SearchExtender::class );
 
         do_action( 'betterdocs_init' );
 

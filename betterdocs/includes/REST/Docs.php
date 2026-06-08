@@ -355,15 +355,15 @@ class Docs extends BaseAPI {
 	}
 
 	public function search_posts( $request ) {
-		$search_query = sanitize_text_field( $request->get_param( 's' ) );
-		$doc_category = sanitize_text_field( $request->get_param( 'doc_category' ) );
-		$kb_slug      = sanitize_text_field( $request->get_param( 'knowledge_base' ) );
-		$number       = (int) $request->get_param( 'per_page' ) ? (int) $request->get_param( 'per_page' ) : 5;
-		$docs_ids     = ! empty( $request->get_param( 'doc_ids' ) ) ? explode( ',', $request->get_param( 'doc_ids' ) ) : [];
-		$doc_term_ids = ! empty( $request->get_param( 'doc_categories_ids' ) ) ? explode( ',', $request->get_param( 'doc_categories_ids' ) ) : [];
-		$faq_term_ids = ! empty( $request->get_param( 'faq_categories_ids' ) ) ? explode( ',', $request->get_param( 'faq_categories_ids' ) ) : [];
-		$posts        = array();
-		$post_status  = ['publish'];
+		$search_query      = sanitize_text_field( $request->get_param( 's' ) );
+		$doc_category      = sanitize_text_field( $request->get_param( 'doc_category' ) );
+		$kb_slug           = sanitize_text_field( $request->get_param( 'knowledge_base' ) );
+		$number            = (int) $request->get_param( 'per_page' ) ? (int) $request->get_param( 'per_page' ) : 5;
+		$docs_ids          = ! empty( $request->get_param( 'doc_ids' ) ) ? explode( ',', $request->get_param( 'doc_ids' ) ) : [];
+		$doc_term_ids      = ! empty( $request->get_param( 'doc_categories_ids' ) ) ? explode( ',', $request->get_param( 'doc_categories_ids' ) ) : [];
+		$faq_term_ids      = ! empty( $request->get_param( 'faq_categories_ids' ) ) ? explode( ',', $request->get_param( 'faq_categories_ids' ) ) : [];
+		$posts                  = array();
+		$post_status            = ['publish'];
 
 		if( current_user_can( 'read_private_docs' ) ) {
 			array_push($post_status,  'private');
@@ -398,7 +398,12 @@ class Docs extends BaseAPI {
 
 		if ( $search_query ) {
 			$common_args['s']              = $search_query;
-			$common_args['posts_per_page'] = -1;
+			// Respect per_page from the client; cap at 50 so a slow LIKE query can't load thousands of rows.
+			$common_args['posts_per_page'] = $number > 0 ? min( $number, 50 ) : 20;
+
+			// SearchExtender's posts_search filter must run so docs with matching
+			// tag/category term names are included in results.
+			$common_args['suppress_filters'] = false;
 		} else {
 			$common_args['posts_per_page'] = $number;
 		}
@@ -484,9 +489,9 @@ class Docs extends BaseAPI {
 			];
 		}
 
-		// Run individual queries
 		$docs_query = betterdocs()->query->get_posts( $docs_args );
-		$faq_query  = new WP_Query( $faq_args );
+
+		$faq_query = new WP_Query( $faq_args );
 
 		// Process docs posts
 		if ( $docs_query->have_posts() ) {

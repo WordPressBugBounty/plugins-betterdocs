@@ -7,6 +7,7 @@
     use WPDeveloper\BetterDocs\Core\PostType;
 
     use WPDeveloper\BetterDocs\Utils\Helper;
+    use WPDeveloper\BetterDocs\Utils\AIHelper;
 
     class WriteWithAI extends Base {
 
@@ -33,12 +34,12 @@
     }
 
     public function enqueue_ai_edit_assets( $hook ) {
-        if ( $hook !== 'post.php' && $hook !== 'post-new.php' ) {
+        if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
             return;
         }
 
         global $post_type;
-        if ( $post_type !== 'docs' ) {
+        if ( 'docs' !== $post_type ) {
             return;
         }
 
@@ -53,9 +54,9 @@
             'betterdocs-ai-edit',
             'betterdocsAIEdit',
             array(
-                'rest_url'   => esc_url_raw( rest_url( 'betterdocs/v1/ai-edit' ) ),
+                'rest_url' => esc_url_raw( rest_url( 'betterdocs/v1/ai-edit' ) ),
                 'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-                'post_id'    => get_the_ID(),
+                'post_id' => get_the_ID()
             )
         );
     }
@@ -144,34 +145,42 @@ PROMPT;
     public function generate_openai_response( $prompt, $keywords ) {
         try {
             $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-            $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
+            $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
             $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
             $api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
 
-            $request_body = array(
-                'model'      => $model,
-                'messages'   => array(
+            $request_body = AIHelper::build_openai_payload(
+                $model,
+                array(
                     array(
-                        'role'    => 'system',
+                        'role' => 'system',
                         'content' => $this->get_system_prompt()
                     ),
                     array(
-                        'role'    => 'user',
+                        'role' => 'user',
                         'content' => $prompt
                     )
                 ),
-                'max_tokens' => $max_tokens
+                $max_tokens,
+                null,
+                'write_with_ai'
             );
 
             $request_options = array(
                 'headers' => array(
-                    'Content-Type'  => 'application/json',
+                    'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $api_key
                 ),
-                'body'    => json_encode( $request_body ),
-                'timeout' => 50
+                'body' => json_encode( $request_body ),
+                'timeout' => 300
             );
+
+            // GPT-5.5 reasoning can run well past the default limits; give PHP and
+            // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
+            if ( function_exists( 'set_time_limit' ) ) {
+                set_time_limit( 300 );
+            }
 
             $response = wp_remote_post( $api_endpoint, $request_options );
 
@@ -193,70 +202,78 @@ PROMPT;
         }
     }
 
-    public function generate_openai_response_full( $prompt ) {
+    public function generate_openai_response_ai_edit( $prompt ) {
         $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 1500 );
+        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
         $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
         $api_endpoint = 'https://api.openai.com/v1/chat/completions';
 
-        $payload = array(
-            'model'      => $model,
-            'messages'   => array(
+        $payload = AIHelper::build_openai_payload(
+            $model,
+            array(
                 array(
-                    'role'    => 'system',
+                    'role' => 'system',
                     'content' => $this->get_system_prompt()
                 ),
                 array(
-                    'role'    => 'user',
+                    'role' => 'user',
                     'content' => $prompt
                 )
             ),
-            'max_tokens' => $max_tokens
+            $max_tokens,
+            null,
+            'write_with_ai'
         );
 
         $request_options = array(
             'headers' => array(
-                'Content-Type'  => 'application/json',
+                'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $api_key
             ),
-            'body'    => wp_json_encode( $payload ),
-            'timeout' => 50
+            'body' => wp_json_encode( $payload ),
+            'timeout' => 300
         );
+
+        // GPT-5.5 reasoning can run well past the default limits; give PHP and
+        // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
+        if ( function_exists( 'set_time_limit' ) ) {
+            set_time_limit( 300 );
+        }
 
         $response = wp_remote_post( $api_endpoint, $request_options );
 
         if ( is_wp_error( $response ) ) {
             return array(
                 'success' => false,
-                'error'   => $response->get_error_message(),
-                'model'   => $model,
+                'error' => $response->get_error_message(),
+                'model' => $model
             );
         }
 
         $body = wp_remote_retrieve_body( $response );
         $data = json_decode( $body, true );
 
-        if ( ! empty( $data['error'] ) ) {
+        if ( ! empty( $data[ 'error' ] ) ) {
             return array(
                 'success' => false,
-                'error'   => isset( $data['error']['message'] ) ? $data['error']['message'] : 'OpenAI error',
-                'model'   => $model,
-                'raw'     => $data,
+                'error' => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
+                'model' => $model,
+                'raw' => $data
             );
         }
 
-        $content = isset( $data['choices'][0]['message']['content'] ) ? $data['choices'][0]['message']['content'] : '';
-        $usage   = isset( $data['usage'] ) && is_array( $data['usage'] ) ? $data['usage'] : array();
+        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
+        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
 
         return array(
-            'success'           => true,
-            'content'           => $content,
-            'model'             => $model,
-            'prompt_tokens'     => isset( $usage['prompt_tokens'] ) ? (int) $usage['prompt_tokens'] : null,
-            'completion_tokens' => isset( $usage['completion_tokens'] ) ? (int) $usage['completion_tokens'] : null,
-            'total_tokens'      => isset( $usage['total_tokens'] ) ? (int) $usage['total_tokens'] : null,
-            'finish_reason'     => isset( $data['choices'][0]['finish_reason'] ) ? $data['choices'][0]['finish_reason'] : null,
+            'success' => true,
+            'content' => $content,
+            'model' => $model,
+            'prompt_tokens' => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
+            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
+            'total_tokens' => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
+            'finish_reason' => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
         );
     }
 
@@ -366,8 +383,19 @@ PROMPT;
 
 							}
 						},
-						error: function(error) {
-							console.error(error);
+						error: function(jqXHR, textStatus, errorThrown) {
+							console.error(jqXHR, textStatus, errorThrown);
+
+							// Reset the UI so a slow/failed request never leaves a permanent "Generating...".
+							var timedOut = ( textStatus === 'timeout' ) || ( jqXHR && jqXHR.status === 504 ) || ( jqXHR && jqXHR.status === 0 );
+							var errMessage = timedOut
+								? "<?php echo esc_html__( 'The request timed out before a response came back. The AI may still have generated content on the server — try again, or pick a faster model / lower the token limit.', 'betterdocs' ); ?>"
+								: "<?php echo esc_html__( 'Something went wrong while generating. Please try again.', 'betterdocs' ); ?>";
+
+							jQuery('#betterdocs-ai-error-message').parent().removeClass('hidden');
+							jQuery('#betterdocs-ai-error-message').html(responseMessage(errMessage));
+							docGenerateBtnTxt.innerHTML = generateDocLabel;
+							jQuery('.generate-btn').removeAttr('disabled');
 						},
 					});
 
@@ -538,7 +566,7 @@ PROMPT;
 				htmlContent = getBodyContent(htmlContent);
 				htmlContent = removeFirstHeading(htmlContent);
 				htmlContent = wrapwithHeighlight(htmlContent, keywords);
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
 
 				const blocks = wp.blocks.rawHandler({
 					HTML: htmlContent
@@ -612,12 +640,12 @@ PROMPT;
 
 			function writeWithAIForm() {
 
-                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
+                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
 				if (docsTitle) {
 					title = docsTitle;
 				}
 
-                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore                   ?>`;
+                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore                                         ?>`;
 				const titlePlaceholder = "<?php echo esc_attr__( 'Enter a descriptive title for your documentation.', 'betterdocs' ); ?>";
 				const keywords = "<?php echo esc_attr( '{Documentation Keywords}' ); ?>";
 				const keywordsPlaceholder = "<?php echo esc_attr__( 'Add keywords to generate precise & relevant documentation (comma-separated).', 'betterdocs' ); ?>";
@@ -643,7 +671,7 @@ PROMPT;
 
 				let hiddenClass = 'hidden';
 				let newDocPageAtt = 'data-new-doc-page="true"';
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                   ?>`;
+                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
 
 				if (isPostContent !== '') {
 					hiddenClass = '';

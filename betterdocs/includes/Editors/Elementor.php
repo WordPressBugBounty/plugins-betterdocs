@@ -889,15 +889,20 @@ class Elementor extends BaseEditor {
      * @since 2.0.0
      */
     public function get_templates() {
-        $_cache_key = 'betterdocs_template_library_' . betterdocs()->version;
-        $templates  = get_transient( $_cache_key );
+        $_cache_key  = 'betterdocs_template_library_' . betterdocs()->version;
+        $source      = new TemplateSource;
+        $local_ids   = array_column( $source->get_local_templates(), 'template_id' );
+        $templates   = get_transient( $_cache_key );
 
         if ( ! $templates ) {
-            $source    = new TemplateSource;
-            $templates = $source->get_items();
+            // Only cache remote templates — local templates are always appended fresh below
+            $all_templates = $source->get_items();
+            $remote_only   = array_values( array_filter( $all_templates, function ( $t ) use ( $local_ids ) {
+                return ! in_array( $t['template_id'], $local_ids, true );
+            } ) );
 
-            if ( ! empty( $templates ) ) {
-                $templates = array_map( function ( $template ) {
+            if ( ! empty( $remote_only ) ) {
+                $remote_only = array_map( function ( $template ) {
                     $template['id']                = $template['template_id'];
                     $template['tmpl_created']      = $template['date'];
                     $template['tags']              = json_encode( $template['tags'] );
@@ -908,15 +913,36 @@ class Elementor extends BaseEditor {
                     $template['has_page_settings'] = $template['hasPageSettings'];
 
                     return $template;
-                }, $templates );
+                }, $remote_only );
 
-                set_transient( $_cache_key, $templates, WEEK_IN_SECONDS );
+                set_transient( $_cache_key, $remote_only, WEEK_IN_SECONDS );
+                $templates = $remote_only;
             } else {
                 $templates = [];
             }
+        } else {
+            // Strip any local templates that may have been cached in a previous version
+            $templates = array_values( array_filter( $templates, function ( $t ) use ( $local_ids ) {
+                $id = isset( $t['template_id'] ) ? $t['template_id'] : ( isset( $t['id'] ) ? $t['id'] : '' );
+                return ! in_array( $id, $local_ids, true );
+            } ) );
         }
 
-        return $templates;
+        // Always append local templates fresh so they are never stale-cached
+        $local_templates = array_map( function ( $template ) {
+            $template['id']                = $template['template_id'];
+            $template['tmpl_created']      = $template['date'];
+            $template['tags']              = json_encode( $template['tags'] );
+            $template['is_pro']            = $template['isPro'];
+            $template['access_level']      = $template['accessLevel'];
+            $template['popularity_index']  = $template['popularityIndex'];
+            $template['trend_index']       = $template['trendIndex'];
+            $template['has_page_settings'] = $template['hasPageSettings'];
+
+            return $template;
+        }, $source->get_local_templates() );
+
+        return array_merge( $templates, $local_templates );
     }
 
     public function modified_ajax_action( $ajax ) {

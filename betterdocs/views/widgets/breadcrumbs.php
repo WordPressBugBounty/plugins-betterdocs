@@ -45,7 +45,12 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 	}
 
 	$breadcrumbs = apply_filters( 'betterdocs_breadcrumb_before_archives', $breadcrumbs );
-	if ( $taxanomy == 'doc_category' || is_tax( 'doc_tag' ) ) {
+
+	// Detect the current archive taxonomy via the queried object (reliable in Elementor theme builder context)
+	$_queried_obj = get_queried_object();
+	$_is_doc_tag  = $_queried_obj instanceof \WP_Term && $_queried_obj->taxonomy === 'doc_tag';
+
+	if ( $taxanomy == 'doc_category' ) {
 		if ( $enable_breadcrumb_category ) {
 			$query_obj = get_queried_object();
 			$term_id   = $query_obj->term_id;
@@ -55,6 +60,16 @@ if ( $builtin_doc_page || ( ! $builtin_doc_page && $docs_page <= 0 ) ) {
 				$breadcrumbs = apply_filters( 'betterdocs_breadcrumb_after_archives', array_merge( $breadcrumbs, $term_parents ) );
 			}
 		}
+	} elseif ( $_is_doc_tag ) {
+		// Always append the current tag name: Home > Docs > Tag Title
+		$tag_crumb   = [
+			[
+				'li_classes' => [ 'item-current', 'item-tag-' . esc_attr( $_queried_obj->term_id ), 'current' ],
+				'url'        => '',
+				'text'       => $_queried_obj->name,
+			],
+		];
+		$breadcrumbs = apply_filters( 'betterdocs_breadcrumb_after_archives', array_merge( $breadcrumbs, $tag_crumb ) );
 	} elseif ( is_single() ) {
 		global $wp_query, $post;
 

@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.5.1
+Stable tag: 4.5.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -218,6 +218,16 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.5.2 - 08/06/2026 =
+
+- Added: Tag archive template for the Elementor theme builder
+- Added: GPT-5 and GPT-5.5 support for the BetterDocs AI Content Suite
+- Improved: Tag and category based search support across Customizer, blocks, widgets, and WordPress search
+- Fixed: Search modal results jumping while typing and returning no results for known keywords
+- Fixed: Non-heading options (H6, Div, Nav, P) for the sidebar block Category Title Tag
+- Few minor bug fixes and improvements
+
 
 = 4.5.1 - 25/05/2026 =
 
