@@ -1,16 +1,15 @@
-=== BetterDocs –  Knowledge Base Docs & FAQ Solution for Elementor & Block Editor ===
+=== BetterDocs –  AI Documentation, Knowledge Base, Docs, FAQ with Chatbot ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, bashar94, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.5.2
+Stable tag: 4.5.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A full-featured documentation plugin including AI writing assistance to create knowledge bases, docs, FAQs, wikis, and more with easy drag & drop UI.
-
+Documentation & Knowledge Base plugin to create docs, FAQs, product FAQ, wikis & help center with AI writing, instant answers & AI Chatbot.
 == Description ==
 
 Do you want to reduce support tickets immediately? How about you creating a resourceful knowledge base for your customers with AI-powered documentation and FAQs? 🤔
@@ -132,6 +131,9 @@ Include attachments within each document to offer supplementary content and extr
 ## 📚 EMBED RELATED DOCS IN SINGLE DOCUMENTATION ##
 Incorporate relevant documentation into each document to promote supporting content and additional information.
 
+## ⚡ AI-POWERED REAL-TIME RELATED DOCS (PRO) ##
+Automatically suggest the most relevant documentation to your readers using AI-powered, real-time related docs, helping users discover answers faster and stay engaged.
+
 ## 📙 GLOSSARY (PRO) ##
 Create glossaries for frequently used terms or technical jargon and showcase them as tooltips so readers can easily understand them.
 
@@ -218,6 +220,10 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.5.3 - 10/06/2026 =
+
+- Fixed: AI Chatbot tab — Save failing with 'Could not get a valid response from the server' error
 
 = 4.5.2 - 08/06/2026 =
 
