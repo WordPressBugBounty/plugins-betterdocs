@@ -40,7 +40,7 @@ class DefinitionArray implements DefinitionSource, MutableDefinitionSource
     /**
      * @param array $definitions
      */
-    public function __construct(array $definitions = [], Autowiring $autowiring = null)
+    public function __construct(array $definitions = [], ?Autowiring $autowiring = null)
     {
         if (isset($definitions[0])) {
             throw new \Exception('The PHP-WPDeveloper\BetterDocs\Dependencies\DI definition is not indexed by an entry name in the definition array');

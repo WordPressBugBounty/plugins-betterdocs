@@ -70,6 +70,11 @@ class PostType extends Base {
 
 	public function init() {
 		add_filter( 'post_type_link', [ $this, 'post_link' ], 1, 3 );
+		// Sync the modified date to the publish date when a scheduled doc is published.
+		// Registered here (not in admin_init) so it also runs during WP-Cron, where is_admin() is false.
+		add_action( 'transition_post_status', [ $this, 'sync_modified_date_on_publish' ], 10, 3 );
+		// One-time backfill for docs that were already published from a schedule before this fix.
+		$this->maybe_backfill_modified_dates();
 		add_filter( 'rest_docs_collection_params', [ $this, 'add_rest_orderby_params' ], 10, 1 );
 		add_filter( 'rest_doc_category_collection_params', [ $this, 'add_rest_orderby_params_on_doc_category' ], 10, 1 );
 		add_filter( 'rest_doc_category_query', [ $this, 'modify_doc_category_rest_query' ], 10, 2 );
@@ -363,6 +368,75 @@ class PostType extends Base {
 		if ( $post->post_type === 'docs' && $new_status === 'publish' ) {
 			wp_cache_flush();
 		}
+	}
+
+	/**
+	 * Sync the modified date to the publish date when a scheduled 'docs' post goes live.
+	 *
+	 * When a doc is scheduled, WordPress stores `post_modified` as the time it was last
+	 * edited (i.e. when it was scheduled), while `post_date` holds the future publish time.
+	 * On the scheduled run, wp_publish_post() only flips the status to 'publish' and never
+	 * touches `post_modified`. As a result the single doc "Updated on" line (which uses
+	 * get_the_modified_date()) shows the scheduling date instead of the actual published
+	 * date. Here we align `post_modified`/`post_modified_gmt` with the publish date so the
+	 * "Updated on" metadata matches the WordPress published date.
+	 *
+	 * @param string  $new_status New post status.
+	 * @param string  $old_status Old post status.
+	 * @param WP_Post $post       Post object.
+	 */
+	public function sync_modified_date_on_publish( $new_status, $old_status, $post ) {
+		if ( $post->post_type !== 'docs' ) {
+			return;
+		}
+
+		if ( $old_status !== 'future' || $new_status !== 'publish' ) {
+			return;
+		}
+
+		global $wpdb;
+
+		// Update directly to avoid re-triggering save/transition hooks (and an infinite loop).
+		$wpdb->update(
+			$wpdb->posts,
+			[
+				'post_modified'     => $post->post_date,
+				'post_modified_gmt' => $post->post_date_gmt,
+			],
+			[ 'ID' => $post->ID ]
+		);
+
+		clean_post_cache( $post->ID );
+	}
+
+	/**
+	 * One-time backfill of the modified date for docs that were published from a
+	 * schedule *before* the sync_modified_date_on_publish() fix existed.
+	 *
+	 * For a scheduled post, `post_modified` is the time it was last edited (the
+	 * scheduling time), which is earlier than `post_date` (the future publish time).
+	 * A normally-published doc never has post_modified earlier than post_date, so
+	 * `post_modified_gmt < post_date_gmt` cleanly identifies the affected docs.
+	 * Runs once, guarded by an option flag.
+	 */
+	public function maybe_backfill_modified_dates() {
+		if ( get_option( 'betterdocs_scheduled_modified_backfill_done' ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		$wpdb->query(
+			"UPDATE {$wpdb->posts}
+			 SET post_modified = post_date, post_modified_gmt = post_date_gmt
+			 WHERE post_type = 'docs'
+			   AND post_status = 'publish'
+			   AND post_modified_gmt < post_date_gmt"
+		);
+
+		update_option( 'betterdocs_scheduled_modified_backfill_done', 1, false );
+
+		wp_cache_flush();
 	}
 
 	public function add_form_fields( $taxonomy ) {

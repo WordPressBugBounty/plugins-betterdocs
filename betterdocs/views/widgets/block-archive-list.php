@@ -8,10 +8,11 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 				<div class="betterdocs-content-inner-area">
 							<div class="betterdocs-entry-title">
 							<?php
+								$title_tag = betterdocs()->template_helper->is_valid_tag( isset( $title_tag ) ? $title_tag : 'h2' );
 								echo wp_sprintf(
 									'<%1$s class="betterdocs-entry-heading">%2$s</%1$s>',
-									$title_tag, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-									$current_category->name //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									$title_tag,
+									esc_html( $current_category->name )
 								);
 								echo wp_sprintf( '<p>%s</p>', wp_kses_post( $current_category->description ) );
 							?>
@@ -32,7 +33,7 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 		$css_class = $layout == 'layout-3' ? 'doc-category-layout-7' : 'doc-category-layout-4';
 		$template = $layout == 'layout-3' ? 'template-parts/archive-doc-list' : 'template-parts/archive-doc-list-2';
 
-		echo '<div class="' . $blockId . ' ' . $css_class . '">'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<div class="' . esc_attr( $blockId ) . ' ' . $css_class . '">';
 		betterdocs()->views->get(
 			$template,
 			[

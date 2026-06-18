@@ -1,11 +1,11 @@
-=== BetterDocs –  AI Documentation, Knowledge Base, Docs, FAQ with Chatbot ===
+=== BetterDocs –  AI Documentation, Knowledge Base, Docs, Wikis, FAQ with Chatbot ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, bashar94, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.5.3
+Stable tag: 4.5.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -220,6 +220,15 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.5.4 - 18/06/2026 =
+
+- Added: Translated documents support in BetterDocs Export
+- Fixed: Scheduled doc showing wrong "Updated on" date after publish
+- Improved: Plugin integration list completeness during initial setup
+- Improved: Compatibility with PHP 8.4 and PHP 8.5
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.5.3 - 10/06/2026 =
 

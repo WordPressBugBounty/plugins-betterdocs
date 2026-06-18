@@ -177,11 +177,14 @@ class CSVExporter {
 					'post_type'      => 'betterdocs_faq',
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
-					'post_status'    => 'publish'
+					'post_status'    => 'publish',
+					'suppress_filters' => true,
 				]
 			);
 			$post_ids = array_merge( $post_ids, $faq_ids );
 		}
+
+		$post_ids = WPMLSupport::expand_with_translations( $post_ids );
 
 		if ( empty( $post_ids ) ) {
 			return [
@@ -577,12 +580,15 @@ class CSVExporter {
 			'Doc Tags',
 			'Knowledge Bases',
 			'Docs attachement url',
-			'Docs attachement ID'
+			'Docs attachement ID',
+			'Docs language code',
+			'Docs translation source slug',
 		];
 
 		foreach ( $posts as $post ) {
 			$attachment_id  = get_post_thumbnail_id( $post->ID );
 			$attachment_url = get_the_post_thumbnail_url( $post->ID );
+			$wpml           = WPMLSupport::get_post_language_meta( (int) $post->ID );
 			// Add CSV row for post
 			$csv_data_posts[] = [
 				$post->post_type == 'betterdocs_faq' ? 'FAQ' : 'Docs',
@@ -606,7 +612,9 @@ class CSVExporter {
 				$this->get_term_ids( $post->ID, 'doc_tag' ),
 				$this->get_term_ids( $post->ID, 'knowledge_base' ),
 				$attachment_url ? $attachment_url : '',
-				$attachment_id ? $attachment_id : ''
+				$attachment_id ? $attachment_id : '',
+				$wpml ? $wpml['language_code'] : '',
+				$wpml ? $wpml['source_slug'] : '',
 			];
 		}
 

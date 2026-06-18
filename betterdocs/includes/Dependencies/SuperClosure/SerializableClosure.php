@@ -41,7 +41,7 @@ class SerializableClosure implements \Serializable
      */
     public function __construct(
         \Closure $closure,
-        SerializerInterface $serializer = null
+        ?SerializerInterface $serializer = null
     ) {
         $this->closure = $closure;
         $this->serializer = $serializer ?: new Serializer;

@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\Admin\Importer;
 use WP_Error;
 use WP_Importer;
 use WPDeveloper\BetterDocs\Admin\Importer\Parsers\CSV_Parser;
+use WPDeveloper\BetterDocs\Admin\WPMLSupport;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -1220,11 +1221,26 @@ class WPImport extends WP_Importer {
 
 			$post['postmeta'] = apply_filters( 'wp_import_post_meta', $post['postmeta'], $post_id, $post );
 
+			// WPML language metadata transported via synthetic postmeta — captured
+			// here so the keys never persist on the post (WPML's icl_translations
+			// is the source of truth on the target site).
+			$wpml_lang        = '';
+			$wpml_source_slug = '';
+
 			// Add/update post meta.
 			if ( ! empty( $post['postmeta'] ) ) {
 				$imported_meta_keys = []; // Track imported meta keys to prevent duplicates
-				
+
 				foreach ( $post['postmeta'] as $meta ) {
+					if ( WPMLSupport::META_LANG === $meta['key'] ) {
+						$wpml_lang = (string) $meta['value'];
+						continue;
+					}
+					if ( WPMLSupport::META_SOURCE_SLUG === $meta['key'] ) {
+						$wpml_source_slug = (string) $meta['value'];
+						continue;
+					}
+
 					$key   = apply_filters( 'import_post_meta_key', $meta['key'], $post_id, $post );
 					$value = false;
 
@@ -1241,10 +1257,10 @@ class WPImport extends WP_Importer {
 						if ( isset( $imported_meta_keys[ $key ] ) ) {
 							continue;
 						}
-						
+
 						// Mark this meta key as imported
 						$imported_meta_keys[ $key ] = true;
-						
+
 						// Export gets meta straight from the DB so could have a serialized string.
 						if ( ! $value ) {
 							$value = maybe_unserialize( $meta['value'] );
@@ -1261,7 +1277,11 @@ class WPImport extends WP_Importer {
 					}
 				}
 			}
-			
+
+			if ( $wpml_lang !== '' ) {
+				WPMLSupport::assign_post_language( (int) $post_id, $wpml_lang, $wpml_source_slug );
+			}
+
 			do_action( 'templately_import.process_post', $post, $this, $result );
 		}
 

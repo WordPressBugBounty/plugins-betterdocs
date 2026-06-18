@@ -94,6 +94,30 @@ class CSV_Parser {
 
 		usort( $csv_data, [ $this, 'csvSort' ] );
 
+		// The combined CSV packs three blocks side by side: Docs (from index 1),
+		// then Author, then Term. CSVs exported after the WPML language columns
+		// were added widen the Docs block by 2 columns (Docs language code +
+		// translation source slug), shifting the Author/Term offsets. Locate
+		// each block by its header name rather than a fixed position, so the
+		// layout is detected wherever the columns land (and adding a column to
+		// one block can't silently corrupt the others).
+		$has_wpml_columns = in_array( 'Docs language code', $headers, true );
+
+		$author_offset = array_search( 'Author id', $headers, true );
+		$term_offset   = array_search( 'Taxonomy', $headers, true );
+
+		// Fall back to the historical fixed offsets if a block header is missing
+		// (malformed file) so such files still parse exactly as they did before.
+		if ( $author_offset === false ) {
+			$author_offset = $has_wpml_columns ? 24 : 22;
+		}
+		if ( $term_offset === false ) {
+			$term_offset = $has_wpml_columns ? 30 : 28;
+		}
+
+		// The Docs block runs from index 1 up to the start of the Author block.
+		$post_block_len = $author_offset - 1;
+
 		foreach ( $csv_data as $row ) {
 			$type = $row[0];
 
@@ -123,8 +147,8 @@ class CSV_Parser {
 
 				$data['terms'][] = $term_args;
 			} elseif ( $type === 'Term' ) {
-				$term_headers = array_slice( $headers, 28, 11 );
-				$term_row     = array_slice( $row, 28, 11 );
+				$term_headers = array_slice( $headers, $term_offset, 11 );
+				$term_row     = array_slice( $row, $term_offset, 11 );
 				$term_row     = array_pad( $term_row, count( $term_headers ), '' );
 
 				$term_data = array_combine( $term_headers, $term_row );
@@ -172,8 +196,8 @@ class CSV_Parser {
 
 				$data['terms'][] = $term_args;
 			} elseif ( $type === 'Author' ) {
-				$author_headers = array_slice( $headers, 22, 6 );
-				$author_row     = array_slice( $row, 22, 6 );
+				$author_headers = array_slice( $headers, $author_offset, 6 );
+				$author_row     = array_slice( $row, $author_offset, 6 );
 				$author_row     = array_pad( $author_row, count( $author_headers ), '' );
 
 				$author_data = array_combine( $author_headers, $author_row );
@@ -187,8 +211,11 @@ class CSV_Parser {
                     'author_last_name'    => sanitize_text_field( $author_data['Author last name'] )
                 ];
             } else if ( $type === 'Docs' || $type === 'FAQ' ) {
-                $post_headers = array_slice( $headers, 1, 21 );
-                $post_row     = array_slice( $row, 1, 21 );
+                // Keep FAQ import (HEAD) and use the dynamic post-block length
+                // from the WPML branch so the variable WPML language columns are
+                // handled instead of a hardcoded count.
+                $post_headers = array_slice( $headers, 1, $post_block_len );
+                $post_row     = array_slice( $row, 1, $post_block_len );
                 $post_row     = array_pad( $post_row, count( $post_headers ), '' );
 
 				$post_data = array_combine( $post_headers, $post_row );
@@ -219,6 +246,21 @@ class CSV_Parser {
                         $this->searchTermsByIds( $data['terms'], sanitize_text_field( $post_data['Doc Tags'] ) ),
                         $this->searchTermsByIds( $data['terms'], sanitize_text_field( $post_data['Knowledge Bases'] ) )
                     );
+                }
+
+                if ( $has_wpml_columns ) {
+                    if ( ! empty( $post_data['Docs language code'] ) ) {
+                        $post_args['postmeta'][] = [
+                            'key'   => '_betterdocs_wpml_lang',
+                            'value' => sanitize_text_field( $post_data['Docs language code'] ),
+                        ];
+                    }
+                    if ( ! empty( $post_data['Docs translation source slug'] ) ) {
+                        $post_args['postmeta'][] = [
+                            'key'   => '_betterdocs_wpml_source_slug',
+                            'value' => sanitize_text_field( $post_data['Docs translation source slug'] ),
+                        ];
+                    }
                 }
 
 				$data['posts'][] = $post_args;

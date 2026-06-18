@@ -74,6 +74,8 @@ class WPExporter {
 		// Combine post IDs
 		$all_post_ids = array_merge( $post_ids, $faq_post_ids );
 
+		$all_post_ids = WPMLSupport::expand_with_translations( $all_post_ids );
+
 		// Handle featured images
 		$thumbnail_ids = $this->get_thumbnail_ids( $all_post_ids );
 
@@ -200,10 +202,11 @@ class WPExporter {
 
     public function get_faq_posts(): array {
         return get_posts([
-            'numberposts' => -1,
-            'post_type' => 'betterdocs_faq',
-            'fields' => 'ids',
-            'post_status' => 'publish'
+            'numberposts'      => -1,
+            'post_type'        => 'betterdocs_faq',
+            'fields'           => 'ids',
+            'post_status'      => 'publish',
+            'suppress_filters' => true,
         ]);
     }
 

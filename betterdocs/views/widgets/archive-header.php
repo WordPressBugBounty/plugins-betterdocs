@@ -13,7 +13,7 @@ if ( ! isset( $current_category ) ) {
 	];
 	?>
 
-<div class="<?php echo $blockId; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> betterdocs-main-category-folder">
+<div class="<?php echo esc_attr( $blockId ); ?> betterdocs-main-category-folder">
 	<div class="betterdocs-category-header">
 		<div class="betterdocs-category-header-inner">
 			<?php

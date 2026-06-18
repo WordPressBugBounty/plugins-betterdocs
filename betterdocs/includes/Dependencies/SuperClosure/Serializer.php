@@ -54,7 +54,7 @@ class Serializer implements SerializerInterface
      * @param string|null          $signingKey HMAC key to sign closure data.
      */
     public function __construct(
-        ClosureAnalyzer $analyzer = null,
+        ?ClosureAnalyzer $analyzer = null,
         $signingKey = null
     ) {
         $this->analyzer = $analyzer ?: new DefaultAnalyzer;

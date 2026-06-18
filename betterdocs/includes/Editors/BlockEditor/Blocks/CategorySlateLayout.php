@@ -94,7 +94,7 @@ class CategorySlateLayout extends Block {
      */
     public function render( $attributes, $content ) {
 		$attributes = &$this->attributes;
-		echo '<div class="betterdocs-blocks betterdocs-category-layout-8 '.$attributes['blockId'].'">';
+		echo '<div class="betterdocs-blocks betterdocs-category-layout-8 ' . esc_attr( $attributes['blockId'] ) . '">';
         $this->views( 'layouts/base' );
 		echo '</div>';
     }

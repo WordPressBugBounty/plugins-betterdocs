@@ -269,7 +269,7 @@ class XMLExporter {
 	 *
 	 * @return string
 	 */
-	private function wxr_authors_list( array $post_ids = null ): string {
+	private function wxr_authors_list( ?array $post_ids = null ): string {
 		$result = '';
 
 		if ( ! empty( $post_ids ) ) {
@@ -511,6 +511,21 @@ class XMLExporter {
 						$result .= $this->indent( 4 ) . '<wp:meta_value>' . $this->wxr_cdata( $meta->meta_value ) . '</wp:meta_value>' . PHP_EOL;
 
 						$result .= $this->indent( 3 ) . '</wp:postmeta>' . PHP_EOL;
+					}
+
+					$wpml_meta = WPMLSupport::get_post_language_meta( (int) $post->ID );
+					if ( $wpml_meta !== null ) {
+						$result .= $this->indent( 3 ) . '<wp:postmeta>' . PHP_EOL;
+						$result .= $this->indent( 4 ) . '<wp:meta_key>' . $this->wxr_cdata( WPMLSupport::META_LANG ) . '</wp:meta_key>' . PHP_EOL;
+						$result .= $this->indent( 4 ) . '<wp:meta_value>' . $this->wxr_cdata( $wpml_meta['language_code'] ) . '</wp:meta_value>' . PHP_EOL;
+						$result .= $this->indent( 3 ) . '</wp:postmeta>' . PHP_EOL;
+
+						if ( $wpml_meta['source_slug'] !== '' ) {
+							$result .= $this->indent( 3 ) . '<wp:postmeta>' . PHP_EOL;
+							$result .= $this->indent( 4 ) . '<wp:meta_key>' . $this->wxr_cdata( WPMLSupport::META_SOURCE_SLUG ) . '</wp:meta_key>' . PHP_EOL;
+							$result .= $this->indent( 4 ) . '<wp:meta_value>' . $this->wxr_cdata( $wpml_meta['source_slug'] ) . '</wp:meta_value>' . PHP_EOL;
+							$result .= $this->indent( 3 ) . '</wp:postmeta>' . PHP_EOL;
+						}
 					}
 
 					$_comments = $this->wpdb->get_results( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->comments} WHERE comment_post_ID = %d AND comment_approved <> 'spam'", $post->ID ) );// phpcs:ignore

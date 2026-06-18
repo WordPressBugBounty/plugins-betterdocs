@@ -51,7 +51,7 @@ class Emulative extends \WPDeveloper\BetterDocs\Dependencies\PhpParser\Lexer
         $this->tokenMap[self::T_POW_EQUAL] = Tokens::T_POW_EQUAL;
     }
 
-    public function startLexing($code, ErrorHandler $errorHandler = null) {
+    public function startLexing($code, ?ErrorHandler $errorHandler = null) {
         $this->inObjectAccess = false;
 
         parent::startLexing($code, $errorHandler);

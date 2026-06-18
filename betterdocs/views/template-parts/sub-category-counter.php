@@ -18,6 +18,12 @@ $suffix                    = apply_filters( 'betterdocs_category_items_counts_su
 $suffix_singular           = apply_filters( 'betterdocs_category_items_counts_suffix_singular', $suffix_singular, get_defined_vars() );
 $subcategory_singular_text = isset( $subcategory_text ) ? $subcategory_text : __( 'Sub Category', 'betterdocs' ); // Default singular subcategory text.
 $subcategory_plural_text   = isset( $subcategories_text ) ? $subcategories_text : __( 'Sub Categories', 'betterdocs' ); // Default plural subcategory text.
+
+// These are not always supplied by the caller (e.g. TemplateTags::sub_category_counts()
+// only passes show_count + counts). Default them so PHP 8.x does not emit
+// "Undefined variable" warnings; the defaults preserve the existing branch outcomes.
+$taxonomy        = isset( $taxonomy ) ? $taxonomy : '';
+$sub_terms_count = isset( $sub_terms_count ) ? $sub_terms_count : 0;
 ?>
 
 <div data-count="<?php echo esc_attr( $counts ); ?>" class="betterdocs-sub-category-items-counts">

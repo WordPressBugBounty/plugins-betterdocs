@@ -21,7 +21,7 @@ class ArrayItem extends Expr
      * @param bool      $byRef      Whether to assign by reference
      * @param array     $attributes Additional attributes
      */
-    public function __construct(Expr $value, Expr $key = null, $byRef = false, array $attributes = array()) {
+    public function __construct(Expr $value, ?Expr $key = null, $byRef = false, array $attributes = array()) {
         parent::__construct($attributes);
         $this->key = $key;
         $this->value = $value;

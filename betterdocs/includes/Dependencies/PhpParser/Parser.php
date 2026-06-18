@@ -13,5 +13,5 @@ interface Parser {
      * @return Node[]|null Array of statements (or null if the 'throwOnError' option is disabled and the parser was
      *                     unable to recover from an error).
      */
-    public function parse($code, ErrorHandler $errorHandler = null);
+    public function parse($code, ?ErrorHandler $errorHandler = null);
 }

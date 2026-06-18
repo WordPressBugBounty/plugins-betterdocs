@@ -15,11 +15,57 @@ class Roles extends Base {
 	public function __construct( Database $database ) {
 		$this->database = $database;
 
-		$this->assgin_faq_builder_capability_to_admin(); //will run when it is called
+		$this->assign_admin_capabilities(); //will run when it is called
+	}
+
+	/**
+	 * Ensure the administrator role always has every BetterDocs capability.
+	 *
+	 * Capabilities are normally granted on activation via Install::activate() ->
+	 * setup(). But when BetterDocs is installed/activated silently by another
+	 * plugin (e.g. Essential Addons from its Integrations screen, or BetterDocs
+	 * Pro), the activation hook does not fire, so setup() never runs and the
+	 * administrator never receives caps like edit_docs, edit_docs_settings or
+	 * read_docs_analytics. That hides most of the BetterDocs admin menu (leaving
+	 * only Quick Setup, gated by the core `delete_users` cap, and FAQ Builder)
+	 * and makes the pages return "Sorry, you are not allowed to access this page."
+	 *
+	 * This self-heals that on every request: any missing admin cap is added back.
+	 * add_cap() is only called for caps the role lacks, so once healed there are
+	 * no further DB writes.
+	 *
+	 * @return void
+	 */
+	public function assign_admin_capabilities() {
+		if ( ! current_user_can( 'administrator' ) ) {
+			return;
+		}
+
+		$capabilities = $this->defaults_capabilities();
+		$admin_caps   = isset( $capabilities['administrator'] ) ? $capabilities['administrator'] : [];
+
+		if ( empty( $admin_caps ) ) {
+			return;
+		}
+
+		$administrator = get_role( 'administrator' );
+		if ( ! $administrator ) {
+			return;
+		}
+
+		foreach ( $admin_caps as $cap ) {
+			if ( ! $administrator->has_cap( $cap ) ) {
+				$administrator->add_cap( $cap );
+			}
+		}
 	}
 
 	/**
 	 * Assign FAQ Builder Capability To The Admin
+	 *
+	 * @deprecated Use assign_admin_capabilities() which grants the full admin
+	 *             capability set (including read_faq_builder). Kept for backward
+	 *             compatibility with any external callers.
 	 */
 	public function assgin_faq_builder_capability_to_admin() {
 		if( current_user_can('administrator') && ! current_user_can('read_faq_builder') ) { // if the current user is admin, and current user does not have faq menu visibility option, then assign the faq menu visibility capability
@@ -131,6 +177,6 @@ class Roles extends Base {
 			}
 		}
 
-		$this->database->get( '_betterdocs_caps_initialized', ! $remove );
+		$this->database->save( '_betterdocs_caps_initialized', ! $remove );
 	}
 }

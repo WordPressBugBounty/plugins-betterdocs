@@ -34,7 +34,7 @@ class NameResolver extends NodeVisitorAbstract
      * @param ErrorHandler|null $errorHandler Error handler
      * @param array $options Options
      */
-    public function __construct(ErrorHandler $errorHandler = null, array $options = []) {
+    public function __construct(?ErrorHandler $errorHandler = null, array $options = []) {
         $this->errorHandler = $errorHandler ?: new ErrorHandler\Throwing;
         $this->preserveOriginalNames = !empty($options['preserveOriginalNames']);
     }
@@ -123,7 +123,7 @@ class NameResolver extends NodeVisitorAbstract
         }
     }
 
-    protected function resetState(Name $namespace = null) {
+    protected function resetState(?Name $namespace = null) {
         $this->namespace = $namespace;
         $this->aliases   = array(
             Stmt\Use_::TYPE_NORMAL   => array(),
@@ -132,7 +132,7 @@ class NameResolver extends NodeVisitorAbstract
         );
     }
 
-    protected function addAlias(Stmt\UseUse $use, $type, Name $prefix = null) {
+    protected function addAlias(Stmt\UseUse $use, $type, ?Name $prefix = null) {
         // Add prefix for group uses
         $name = $prefix ? Name::concat($prefix, $use->name) : $use->name;
         // Type is determined either by individual element or whole use declaration
