@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- inherited WP Importer hook contract preserved for compat with external listeners.
 namespace WPDeveloper\BetterDocs\Admin\Importer\Parsers;
 
 use WP_Error;
@@ -354,6 +355,7 @@ class WXR_Parser_Regex {
 			return gzopen( $filename, $mode );
 		}
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming read; WP_Filesystem cannot replace this.
 		return fopen( $filename, $mode );
 	}
 
@@ -378,6 +380,7 @@ class WXR_Parser_Regex {
 			return gzclose( $fp );
 		}
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- streaming close; WP_Filesystem cannot replace this.
 		return fclose( $fp );
 	}
 

@@ -1,5 +1,9 @@
 <!-- <div class="betterdocs-settings-wrap">
-	<?php do_action( 'betterdocs_settings_header', 'settings' ); ?>
+	<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+do_action( 'betterdocs_settings_header', 'settings' ); ?>
 	<div class="betterdocs-left-right-settings">
 		<?php do_action( 'betterdocs_before_settings_left' ); ?>
 		<div class="betterdocs-settings">

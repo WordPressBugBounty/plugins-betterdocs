@@ -1,6 +1,10 @@
 <div class="betterdocs-faq-post">
 	<?php
-		/**
+		
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 		 * do_action(')
 		 */
 

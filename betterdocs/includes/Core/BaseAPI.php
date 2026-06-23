@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WP_Error;
 use WP_REST_Server;

@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * Template for BetterDocs Code Snippet Widget
  *

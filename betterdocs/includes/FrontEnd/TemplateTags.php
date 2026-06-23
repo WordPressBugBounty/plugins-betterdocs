@@ -312,6 +312,8 @@ class TemplateTags extends Base {
 		}
 
 		$layout = $this->defaults->get( 'betterdocs_search_layout_select' );
+		// Public hook name predates the prefix convention; renaming would break third-party integrations.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$layout = apply_filters( 'select_live_search_template', Helper::determine_search_layout( $layout ) );
 
 		$shortcode_attributes_new = [];
@@ -516,6 +518,7 @@ class TemplateTags extends Base {
 
 		// Add KB filtering if kb_slug is provided
 		if ( ! empty( $kb_slug ) && $taxonomy === 'doc_category' ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- KB filtering is core functionality and requires meta_query.
 			$_args['meta_query'] = [
 				[
 					'key'     => 'doc_category_knowledge_base',
@@ -661,6 +664,8 @@ class TemplateTags extends Base {
 			$tagname = 'betterdocs_sidebar_template_shortcode_params';
 		}
 
+		// $tagname is selected from an internal allowlist of betterdocs_*_shortcode_params hook names above.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 		$_shortcode_attributes = apply_filters( $tagname, $atts, $shortcode, $layout, $args );
 		return betterdocs()->template_helper->get_html_attributes( $_shortcode_attributes );
 	}

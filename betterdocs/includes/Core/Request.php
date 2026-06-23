@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 
@@ -216,7 +220,7 @@ class Request extends Base {
 			return false; // Block the redirect, show 404 instead
 		}
 
-		$actual_url = home_url( $_SERVER['REQUEST_URI'] ?? '' );
+		$actual_url = home_url( isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
 
 		// Legacy check: if post_type=docs is already set in query vars, validate category
 		if ( isset( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === 'docs' &&
@@ -399,7 +403,7 @@ class Request extends Base {
 	 */
 	protected function is_invalid_docs_url( $url ) {
 		// Get the path from the URL
-		$path = trim( parse_url( $url, PHP_URL_PATH ), '/' );
+		$path = trim( (string) wp_parse_url( $url, PHP_URL_PATH ), '/' );
 		
 		// Check each permalink structure
 		foreach ( $this->perma_structure as $_type => $structure ) {
@@ -649,6 +653,7 @@ class Request extends Base {
 		// Belt-and-suspenders for WPML's slug-translation feature, which may store
 		// the translated slug separately from the post type's rewrite['slug'].
 		if ( has_filter( 'wpml_get_translated_slug' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML-owned filter; name must be used verbatim.
 			$wpml_slug = apply_filters( 'wpml_get_translated_slug', $docs_slug, 'docs' );
 			if ( is_string( $wpml_slug ) && $wpml_slug !== '' ) {
 				$valid_slugs[] = trim( $wpml_slug, '/' );
@@ -963,6 +968,7 @@ class Request extends Base {
             return false;
         }
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- frontend single-doc URL resolution; queries vary per request and run on `parse_request`, before object cache is reliable.
 		global $wpdb;
 		$name = isset( $query_vars['docs'] ) ? $query_vars['docs'] : $query_vars['name'];
 
@@ -1399,6 +1405,7 @@ class Request extends Base {
 		}
 
 		return $_post_id > 0;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	protected function is_docs_category( $query_vars ) {
@@ -1467,6 +1474,7 @@ class Request extends Base {
 	public function parse( $wp ) {
 		static::$already_parsed = true;
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- legacy public filter name, retained for back-compat with Pro/extensions.
         $this->perma_structure = apply_filters('docs_rewrite_rules', $this->perma_structure);
 
         $this->permalink_magic( $wp );

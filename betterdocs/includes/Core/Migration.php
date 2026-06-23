@@ -1,6 +1,10 @@
 <?php
-
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-shot data/schema migrations; caching unwanted.
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 use WP_Query;
 use WPDeveloper\BetterDocs\Utils\Base;
@@ -51,7 +55,7 @@ class Migration extends Base {
 						'post_type'        => 'docs',
 						'post_status'      => 'publish',
 						'posts_per_page'   => -1,
-						'suppress_filters' => true,
+						'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- migration must run on raw posts without language filters.
 						's'                => $key
 					];
 
@@ -97,7 +101,7 @@ class Migration extends Base {
 										$wpdb->insert_id,
 										$count,
 										$not_found_count,
-										date( 'Y-m-d' )
+										gmdate( 'Y-m-d' )
 									]
 								)
 							);
@@ -126,25 +130,27 @@ class Migration extends Base {
 			return;
 		}
 
-		// Get the WordPress default charset and collation
-		$charset = $wpdb->charset ? $wpdb->charset : 'utf8mb4';
-		$collate = $wpdb->collate ? $wpdb->collate : 'utf8mb4_unicode_520_ci';
+		// Get the WordPress default charset and collation; restrict to a safe identifier
+		// alphabet because they're interpolated into ALTER TABLE statements below.
+		$charset = preg_replace( '/[^A-Za-z0-9_]/', '', $wpdb->charset ? $wpdb->charset : 'utf8mb4' );
+		$collate = preg_replace( '/[^A-Za-z0-9_]/', '', $wpdb->collate ? $wpdb->collate : 'utf8mb4_unicode_520_ci' );
 
 		// Fix search_keyword table
 		$search_keyword_table = $wpdb->prefix . 'betterdocs_search_keyword';
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$search_keyword_table'" ) == $search_keyword_table ) {
-			// Convert table charset and collation
-			$wpdb->query( "ALTER TABLE {$search_keyword_table} CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
-
-			// Explicitly set keyword column collation
-			$wpdb->query( "ALTER TABLE {$search_keyword_table} MODIFY keyword TEXT CHARACTER SET {$charset} COLLATE {$collate} NOT NULL" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange -- one-shot collation migration; identifiers come from $wpdb only.
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $search_keyword_table ) ) === $search_keyword_table ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$wpdb->query( "ALTER TABLE `{$search_keyword_table}` CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$wpdb->query( "ALTER TABLE `{$search_keyword_table}` MODIFY keyword TEXT CHARACTER SET {$charset} COLLATE {$collate} NOT NULL" );
 		}
 
 		// Fix search_log table
 		$search_log_table = $wpdb->prefix . 'betterdocs_search_log';
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$search_log_table'" ) == $search_log_table ) {
-			// Convert table charset and collation
-			$wpdb->query( "ALTER TABLE {$search_log_table} CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $search_log_table ) ) === $search_log_table ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$wpdb->query( "ALTER TABLE `{$search_log_table}` CONVERT TO CHARACTER SET {$charset} COLLATE {$collate}" );
 		}
 
 		// Mark migration as complete

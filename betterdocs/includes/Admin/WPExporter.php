@@ -11,6 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+/**
+ * SQL building helpers below interpolate WP-provided $wpdb table identifiers
+ * (`$wpdb->posts`, `$wpdb->term_relationships`, `$wpdb->term_taxonomy`) and use
+ * dynamic %d placeholder lists derived from integer arrays. Suppressing the
+ * related PHPCS notices class-wide rather than per-call.
+ *
+ * phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+ * phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+ * phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+ */
 #[\AllowDynamicProperties]
 class WPExporter {
 	/**
@@ -62,7 +73,8 @@ class WPExporter {
 		// Handle additional filters (author, dates, meta)
 		$where .= $this->build_additional_filters();
 
-		// Get the main doc post IDs
+		// $join/$where are composed from prepared fragments above; identifiers are WP-provided.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$post_ids = $this->wpdb->get_col( "SELECT DISTINCT {$this->wpdb->posts}.ID FROM {$this->wpdb->posts} $join WHERE $where" );
 
 		// Handle FAQ posts separately
@@ -95,12 +107,24 @@ class WPExporter {
                 }
             }
         } else {
-            $glossary_term_ids = $this->wpdb->get_col( "SELECT term_id from {$this->wpdb->term_taxonomy} where taxonomy='{$this->args['content']}';" );
+            // $this->wpdb->term_taxonomy is a WP-core table identifier; %s placeholder binds taxonomy name.
+            // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $glossary_term_ids = $this->wpdb->get_col(
+                $this->wpdb->prepare(
+                    "SELECT term_id FROM {$this->wpdb->term_taxonomy} WHERE taxonomy = %s",
+                    (string) $this->args['content']
+                )
+            );
+            // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
         }
 
         return $glossary_term_ids;
     }
 
+    // The query-builder methods below interpolate only $wpdb core table names
+    // ({$this->wpdb->posts}, etc.) — never user input — and bind every value via
+    // %s/%d placeholders, so the InterpolatedNotPrepared warnings are spurious.
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     public function build_base_query(): array {
         $where = $this->wpdb->prepare("{$this->wpdb->posts}.post_type = %s", 'docs');
         return [
@@ -200,12 +224,14 @@ class WPExporter {
 		return $where;
 	}
 
+    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     public function get_faq_posts(): array {
         return get_posts([
             'numberposts'      => -1,
             'post_type'        => 'betterdocs_faq',
             'fields'           => 'ids',
             'post_status'      => 'publish',
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- intentional: export the raw, untranslated FAQ set so multilingual filters don't drop or swap rows during export.
             'suppress_filters' => true,
         ]);
     }

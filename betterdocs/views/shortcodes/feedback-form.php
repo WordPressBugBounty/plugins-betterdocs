@@ -3,7 +3,11 @@
 	<form id="betterdocs-feedback-form" class="betterdocs-feedback-form" action="" method="post">
 		<p>
 			<label for="message_name" class="form-name">
-				<?php echo esc_html( $feedback_form_name_label_text ); ?> <span>*</span> <br>
+				<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo esc_html( $feedback_form_name_label_text ); ?> <span>*</span> <br>
 				<input type="text" id="message_name" name="message_name" aria-label="<?php echo esc_html( 'Name', 'betterdocs' ); ?>" value="<?php echo esc_attr( $name ); ?>" />
 			</label>
 		</p>

@@ -94,7 +94,9 @@ class BlockEditor extends BaseEditor {
 	 */
 	public function enqueue( $hook ) {
 		$editor = 'core/edit-post';
-		if ( $hook == 'site-editor.php' || ( $hook == 'themes.php' && isset( $_GET['page'] ) && $_GET['page'] == 'gutenberg-edit-site' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( $hook === 'site-editor.php' || ( $hook === 'themes.php' && $page === 'gutenberg-edit-site' ) ) {
 			$editor = 'core/edit-site';
 		}
 

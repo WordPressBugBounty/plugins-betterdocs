@@ -1,5 +1,10 @@
 <?php
-	/**
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 	 * The template for single doc page
 	 *
 	 * @author WPDeveloper

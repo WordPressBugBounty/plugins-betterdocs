@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <div class="betterdocs-settings-header">
     <div class="betterdocs-header-full">
         <svg height="50" viewBox="0 0 207 49" xmlns="http://www.w3.org/2000/svg">

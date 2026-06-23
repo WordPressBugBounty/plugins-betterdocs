@@ -58,18 +58,29 @@ class CSV_Parser {
 
 		$fileContent = str_replace( [ "\r\n", "\r" ], "\n", $fileContent );
 
+		// Parse through a stream so fgetcsv() correctly assembles records whose
+		// quoted fields span multiple lines (e.g. multi-line doc content). A plain
+		// explode( "\n" ) + str_getcsv() per line splits such records apart, producing
+		// rows whose column count no longer matches the headers — which makes the
+		// array_combine() calls below fatal (500 error on Sample Docs import).
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- in-memory stream, no filesystem access; required for multi-line CSV records.
 		$handle = fopen( 'php://temp', 'r+' );
-		fwrite( $handle, $fileContent );
-		rewind( $handle );
-
 		if ( $handle !== false ) {
-			while ( ( $row = fgetcsv( $handle, 1000, ',' ) ) !== false ) {
+			fwrite( $handle, $fileContent );
+			rewind( $handle );
+			while ( ( $row = fgetcsv( $handle, 0, ',' ) ) !== false ) {
 				$csv_data[] = $row;
 			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing in-memory stream; WP_Filesystem does not apply.
 			fclose( $handle );
 		}
 
 		$headers = array_shift( $csv_data );
+
+		// Bail out cleanly on an empty/malformed file instead of fataling below.
+		if ( ! is_array( $headers ) || empty( $headers ) ) {
+			return $data;
+		}
 
 		// Process specific headers for 'Docs Title'
 		if ( $headers[0] == 'Docs Title' ) {

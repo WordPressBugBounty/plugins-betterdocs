@@ -1,5 +1,10 @@
 <?php
-	$email_feedback = betterdocs()->settings->get( 'email_feedback' );
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$email_feedback = betterdocs()->settings->get( 'email_feedback' );
 
 if ( ! $email_feedback ) {
 	return;

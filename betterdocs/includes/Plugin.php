@@ -126,7 +126,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.5.4';
+    public $version = '4.5.5';
 
     /**
      * WriteWithAI Class
@@ -199,6 +199,8 @@ final class Plugin {
          * WPML compatibility with Polylang
          */
         if ( Helper::is_plugin_active( 'polylang/polylang.php' ) ) {
+            // Polylang's documented integration constant — must use the upstream-defined name.
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
             define( 'PLL_WPML_COMPAT', false );
         }
     }
@@ -211,6 +213,8 @@ final class Plugin {
      */
     private function define( $name, $value ) {
         if ( ! defined( $name ) ) {
+            // Caller passes plugin-prefixed names (BETTERDOCS_*); $name comes from a controlled internal allowlist.
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound
             define( $name, $value );
         }
     }
@@ -288,14 +292,14 @@ final class Plugin {
         /**
          * Filter to adjust the BetterDocs locale to use for translations.
          */
+        // 'plugin_locale' is a WP-core filter; using its documented name is required.
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         $locale = apply_filters( 'plugin_locale', $locale, $textdomain );
 
         if ( file_exists( WP_LANG_DIR . "/$textdomain-" . $locale . '.mo' ) ) {
             unload_textdomain( $textdomain );
             load_textdomain( $textdomain, WP_LANG_DIR . "/$textdomain-" . $locale . '.mo' );
         }
-
-        load_plugin_textdomain( $textdomain, false, plugin_basename( dirname( $plugin_file ) ) . '/languages' );
     }
 
     /**

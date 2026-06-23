@@ -21,7 +21,11 @@
 	</style>
 
 	<?php
-	if ( $major ) {
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+if ( $major ) {
 		printf(
 			'<p class="betterdocs-major-update-title">%s</p>',
 			__( 'Heads up, Please backup before upgrade!', 'betterdocs' ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Not Required For Ecaping Because This Is A Static String Without Html Tags

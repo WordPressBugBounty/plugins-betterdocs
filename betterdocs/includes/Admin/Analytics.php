@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Admin;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
@@ -18,7 +22,9 @@ class Analytics extends Base {
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, '_enqueue' ] );
 
-		if ( isset( $_GET['page'] ) && $_GET['page'] === 'betterdocs-analytics' ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( 'betterdocs-analytics' === $page ) {
 			add_action( 'betterdocs_settings_header', [ $this, 'header' ] );
 		}
 	}

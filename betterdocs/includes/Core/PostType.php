@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WP_Post;
 use WPDeveloper\BetterDocs\Utils\Helper;
@@ -129,6 +133,7 @@ class PostType extends Base {
 		if ( isset( $order_by ) && 'doc_category_order' === $order_by ) {
 			// Get language-specific meta key for multilingual sites
 			$meta_key = $this->get_category_order_meta_key();
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by user-assigned doc_category_order meta is core feature.
 			$args['meta_key'] = $meta_key;
 			$args['orderby']  = 'meta_value_num';
 			$args['order']    = $request->get_param( 'order' ) ?: 'ASC';
@@ -148,7 +153,7 @@ class PostType extends Base {
 		// Try to get KB slug from cookie first, then from query
 		$kb_slug = '';
 		if ( isset( $_COOKIE['last_knowledge_base'] ) ) {
-			$kb_slug = sanitize_text_field( $_COOKIE['last_knowledge_base'] );
+			$kb_slug = sanitize_text_field( wp_unslash( $_COOKIE['last_knowledge_base'] ) );
 		}
 		
 		global $wp_query;
@@ -243,13 +248,15 @@ class PostType extends Base {
 		}
 
 		// Handle migration request
-		if ( isset( $_GET['run_betterdocs_migration'] ) && wp_verify_nonce( $_GET['nonce'], 'betterdocs_migration' ) ) {
+		$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : '';
+		if ( isset( $_GET['run_betterdocs_migration'] ) && wp_verify_nonce( $nonce, 'betterdocs_migration' ) ) {
 			$this->run_category_migration();
 			return;
 		}
 
 		// Check if migration is needed for both category and document orders
 		global $wpdb;
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time admin migration check; cache would mask migration completion.
 		$has_base_cat_orders = $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
 			INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
@@ -285,6 +292,7 @@ class PostType extends Base {
 				$lang_docs_meta_key
 			) );
 		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		// Show notice if we have base orders but no language-specific orders
 		$needs_cat_migration = $has_base_cat_orders > 0 && $has_lang_cat_orders == 0;
@@ -297,17 +305,17 @@ class PostType extends Base {
 			);
 
 			echo '<div class="notice notice-warning is-dismissible">';
-			echo '<p><strong>BetterDocs Multilingual Migration Required</strong></p>';
-			echo '<p>Your site uses a multilingual plugin and has existing ordering data that needs to be migrated:</p>';
+			echo '<p><strong>' . esc_html__( 'BetterDocs Multilingual Migration Required', 'betterdocs' ) . '</strong></p>';
+			echo '<p>' . esc_html__( 'Your site uses a multilingual plugin and has existing ordering data that needs to be migrated:', 'betterdocs' ) . '</p>';
 			echo '<ul style="margin-left: 20px;">';
 			if ( $needs_cat_migration ) {
-				echo '<li>• Category ordering (' . $has_base_cat_orders . ' categories)</li>';
+				echo '<li>' . esc_html( sprintf( /* translators: %d: number of categories */ __( '• Category ordering (%d categories)', 'betterdocs' ), (int) $has_base_cat_orders ) ) . '</li>';
 			}
 			if ( $needs_docs_migration ) {
-				echo '<li>• Document ordering (' . $has_base_docs_orders . ' categories with custom doc orders)</li>';
+				echo '<li>' . esc_html( sprintf( /* translators: %d: number of categories */ __( '• Document ordering (%d categories with custom doc orders)', 'betterdocs' ), (int) $has_base_docs_orders ) ) . '</li>';
 			}
 			echo '</ul>';
-			echo '<p><a href="' . esc_url( $migration_url ) . '" class="button button-primary">Run Migration Now</a></p>';
+			echo '<p><a href="' . esc_url( $migration_url ) . '" class="button button-primary">' . esc_html__( 'Run Migration Now', 'betterdocs' ) . '</a></p>';
 			echo '</div>';
 		}
 	}
@@ -397,6 +405,7 @@ class PostType extends Base {
 		global $wpdb;
 
 		// Update directly to avoid re-triggering save/transition hooks (and an infinite loop).
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- deliberate raw write to skip save_post/transition hooks; clean_post_cache() below refreshes caches.
 		$wpdb->update(
 			$wpdb->posts,
 			[
@@ -426,6 +435,7 @@ class PostType extends Base {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time bulk backfill of post_modified for scheduled docs; runs once behind an option flag, no per-row caching applies.
 		$wpdb->query(
 			"UPDATE {$wpdb->posts}
 			 SET post_modified = post_date, post_modified_gmt = post_date_gmt
@@ -491,7 +501,8 @@ class PostType extends Base {
 		// @todo PRO
 		if ( isset( $_POST['doc_category_kb'] ) && is_array( $_POST['doc_category_kb'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			// Some multilingual plugins send URL-encoded slugs. We must decode them before sanitizing.
-			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) );
 			$doc_category_kb = array_map( 'sanitize_text_field', $doc_category_kb );
 
 			// Update the term meta with the sanitized array
@@ -549,7 +560,8 @@ class PostType extends Base {
 		// Update 'doc_category_knowledge_base' meta data if 'doc_category_kb' is set in $_POST
 		if ( isset( $_POST['doc_category_kb'] ) && is_array( $_POST['doc_category_kb'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			// Some multilingual plugins send URL-encoded slugs. We must decode them before sanitizing.
-			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$doc_category_kb = array_map( 'urldecode', wp_unslash( $_POST['doc_category_kb'] ) );
 			$doc_category_kb = array_map( 'sanitize_text_field', $doc_category_kb );
 			update_term_meta( $term_id, 'doc_category_knowledge_base', $doc_category_kb );
 		}
@@ -660,7 +672,8 @@ class PostType extends Base {
 			$this->default_term_order( 'doc_category' );
 		}
 
-        if ( ! isset( $_GET['orderby'] ) && ! empty( $current_screen->base ) && $current_screen->base === 'edit-tags' && $current_screen->taxonomy === 'doc_category' ) { // phpcs:ignore
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+        if ( ! isset( $_GET['orderby'] ) && ! empty( $current_screen->base ) && $current_screen->base === 'edit-tags' && $current_screen->taxonomy === 'doc_category' ) {
 			$this->default_term_order( $current_screen->taxonomy );
 			add_filter( 'terms_clauses', [ $this, 'set_tax_order' ], 10, 3 );
 		}
@@ -769,12 +782,14 @@ class PostType extends Base {
 			return;
 		}
 
-        if ( empty( $_GET['cat'] ) ) { // phpcs:ignore
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read from new-post URL.
+        if ( empty( $_GET['cat'] ) ) {
 			return;
 		}
 
 		// Sanitize and unslash the 'cat' parameter
-        $cat = sanitize_text_field( wp_unslash( $_GET['cat'] ) ); // phpcs:ignore
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read from new-post URL.
+        $cat = sanitize_text_field( wp_unslash( $_GET['cat'] ) );
 		if ( false === ( $cat = get_term_by( 'term_id', $cat, 'doc_category' ) ) ) {
 			return;
 		}
@@ -989,7 +1004,7 @@ class PostType extends Base {
 		$term_list = wp_get_post_terms( $post_id, 'doc_category', [ 'fields' => 'ids' ] );
 
 		//save estimated reading text in post
-		$est_reading_text = isset( $_POST['estimated_reading_text'] ) ? sanitize_text_field( wp_unslash( $_POST['estimated_reading_text'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$est_reading_text = isset( $_POST['estimated_reading_text'] ) ? sanitize_text_field( wp_unslash( $_POST['estimated_reading_text'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- runs on save_post, WP verifies post-edit nonce upstream.
 
 		update_post_meta( $post_id, '_betterdocs_est_reading_text', $est_reading_text );
 
@@ -1245,13 +1260,14 @@ class PostType extends Base {
 		}
 
 		// Verify this is for glossaries taxonomy
-		if (!isset($_POST['taxonomy']) || $_POST['taxonomy'] !== 'glossaries') {
+		$taxonomy = isset( $_POST['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : '';
+		if ( $taxonomy !== 'glossaries' ) {
 			return;
 		}
 
 		// Verify nonce for security
-		if (!isset($_POST['glossary_term_description_nonce']) ||
-			!wp_verify_nonce($_POST['glossary_term_description_nonce'], 'save_glossary_term_description')) {
+		$nonce = isset( $_POST['glossary_term_description_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['glossary_term_description_nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'save_glossary_term_description' ) ) {
 			return;
 		}
 

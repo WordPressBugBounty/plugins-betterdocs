@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-down"
     class="betterdocs-category-collapse cat-list-arrow-down svg-inline--fa fa-angle-down fa-w-10"
     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"

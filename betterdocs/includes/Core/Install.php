@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;

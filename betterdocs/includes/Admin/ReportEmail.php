@@ -1,6 +1,11 @@
 <?php
-
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- weekly/monthly analytics aggregation; runs once per email send.
 namespace WPDeveloper\BetterDocs\Admin;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WP_Error;
 use WP_Query;
@@ -92,31 +97,33 @@ class ReportEmail extends Base {
 	}
 
 	public function create_date( $count = '-7days' ) {
-		return date( 'Y-m-d', strtotime( $count, self::timestamps() ) );
+		return gmdate( 'Y-m-d', strtotime( $count, self::timestamps() ) );
 	}
 
 	public function get_views( $start_date, $end_date = null ) {
 		global $wpdb;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$query = $wpdb->get_results(
-			"
-            SELECT sum(impressions) as views, sum(unique_visit) as unique_visit, sum(happy + sad + normal) as reactions
-            FROM {$wpdb->prefix}betterdocs_analytics
-            WHERE (created_at BETWEEN '" . $start_date . "' AND '" . $end_date . "')
-        "
+			$wpdb->prepare(
+				"SELECT sum(impressions) as views, sum(unique_visit) as unique_visit, sum(happy + sad + normal) as reactions
+				FROM {$wpdb->prefix}betterdocs_analytics
+				WHERE created_at BETWEEN %s AND %s",
+				(string) $start_date,
+				(string) $end_date
+			)
 		);
 		return $query;
 	}
 
 	public function get_search( $start_date, $end_date = null ) {
 		global $wpdb;
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$query = $wpdb->get_results(
-			"
-            SELECT SUM(count + not_found_count) as search_count, SUM(count) as search_found, SUM(not_found_count) as search_not_found_count
-            FROM {$wpdb->prefix}betterdocs_search_log as search_log
-            WHERE (search_log.created_at BETWEEN '" . $start_date . "' AND '" . $end_date . "')
-        "
+			$wpdb->prepare(
+				"SELECT SUM(count + not_found_count) as search_count, SUM(count) as search_found, SUM(not_found_count) as search_not_found_count
+				FROM {$wpdb->prefix}betterdocs_search_log as search_log
+				WHERE search_log.created_at BETWEEN %s AND %s",
+				(string) $start_date,
+				(string) $end_date
+			)
 		);
 
 		return $query;
@@ -142,18 +149,20 @@ class ReportEmail extends Base {
 
 	public function get_search_keywords( $start_date, $end_date = null ) {
 		global $wpdb;
-		$select = 'SELECT search_keyword.keyword, search_log.keyword_id, SUM(search_log.count + search_log.not_found_count) as total_search, SUM(search_log.count) as count, SUM(search_log.not_found_count) as not_found';
-		$join   = "FROM {$wpdb->prefix}betterdocs_search_keyword as search_keyword
-                JOIN {$wpdb->prefix}betterdocs_search_log as search_log on search_keyword.id = search_log.keyword_id";
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$query = $wpdb->get_results(
-			"
-            {$select}
-            {$join}
-            WHERE (search_log.created_at BETWEEN '" . $start_date . "' AND '" . $end_date . "')
-            GROUP BY search_log.keyword_id
-            ORDER BY count DESC LIMIT 5
-        "
+			$wpdb->prepare(
+				"SELECT search_keyword.keyword, search_log.keyword_id,
+					SUM(search_log.count + search_log.not_found_count) as total_search,
+					SUM(search_log.count) as count,
+					SUM(search_log.not_found_count) as not_found
+				FROM {$wpdb->prefix}betterdocs_search_keyword as search_keyword
+				JOIN {$wpdb->prefix}betterdocs_search_log as search_log ON search_keyword.id = search_log.keyword_id
+				WHERE search_log.created_at BETWEEN %s AND %s
+				GROUP BY search_log.keyword_id
+				ORDER BY count DESC LIMIT 5",
+				(string) $start_date,
+				(string) $end_date
+			)
 		);
 
 		return $query;
@@ -192,18 +201,23 @@ class ReportEmail extends Base {
 	public function get_leading_docs( $start_date, $end_date = null ) {
 		global $wpdb;
 
-		$select = 'SELECT docs.ID, docs.post_author, docs.post_title, SUM(analytics.impressions) as total_views, SUM(analytics.unique_visit) as total_unique_visit, SUM(analytics.happy + analytics.sad + analytics.normal) as total_reactions';
-		$join   = "FROM {$wpdb->prefix}posts as docs
-                JOIN {$wpdb->prefix}betterdocs_analytics as analytics on docs.ID = analytics.post_id";
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$query = $wpdb->get_results(
-			"
-            {$select}
-            {$join}
-            WHERE post_type = 'docs' AND post_status = 'publish' AND (analytics.created_at BETWEEN '" . $start_date . "' AND '" . $end_date . "')
-            GROUP BY analytics.post_id
-            ORDER BY total_views DESC LIMIT 5
-        "
+			$wpdb->prepare(
+				"SELECT docs.ID, docs.post_author, docs.post_title,
+					SUM(analytics.impressions) as total_views,
+					SUM(analytics.unique_visit) as total_unique_visit,
+					SUM(analytics.happy + analytics.sad + analytics.normal) as total_reactions
+				FROM {$wpdb->posts} as docs
+				JOIN {$wpdb->prefix}betterdocs_analytics as analytics ON docs.ID = analytics.post_id
+				WHERE post_type = %s AND post_status = %s
+				AND analytics.created_at BETWEEN %s AND %s
+				GROUP BY analytics.post_id
+				ORDER BY total_views DESC LIMIT 5",
+				'docs',
+				'publish',
+				(string) $start_date,
+				(string) $end_date
+			)
 		);
 
 		$docs = [];
@@ -458,7 +472,7 @@ class ReportEmail extends Base {
 				break;
 			case 'betterdocs_monthly':
 				$initial_timestamp  = strtotime( 'first day of last month', current_time( 'timestamp' ) );
-				$days_in_last_month = cal_days_in_month( CAL_GREGORIAN, date( 'm', $initial_timestamp ), date( 'Y', $initial_timestamp ) );
+				$days_in_last_month = cal_days_in_month( CAL_GREGORIAN, (int) gmdate( 'm', $initial_timestamp ), (int) gmdate( 'Y', $initial_timestamp ) );
 				$days_ago           = $days_in_last_month . ' days';
 				break;
 		}

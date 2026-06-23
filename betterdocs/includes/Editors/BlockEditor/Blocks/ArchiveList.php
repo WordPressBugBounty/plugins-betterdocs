@@ -1,6 +1,11 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core block query; tax filtering required.
 namespace WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Block;
 

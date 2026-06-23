@@ -1,4 +1,8 @@
-<?php do_action( 'betterdocs_doc_category_add_form_before' ); ?>
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+do_action( 'betterdocs_doc_category_add_form_before' ); ?>
 
 <div class="form-field term-group">
 	<label for="doc-category-order">

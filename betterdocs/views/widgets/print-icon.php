@@ -1,4 +1,8 @@
-<div class="betterdocs-print-pdf <?php echo esc_attr( $blockId ); ?>">
+<div class="betterdocs-print-pdf <?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo esc_attr( $blockId ); ?>">
 	<span class="betterdocs-print-btn">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="20px">
 			<path fill="#66798f" d="M14 16H66V24H14z"></path>

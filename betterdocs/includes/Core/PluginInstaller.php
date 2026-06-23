@@ -152,10 +152,11 @@ class PluginInstaller
             wp_send_json_error(__('you are not allowed to do this action', 'betterdocs'));
         }
 
-	    $slug   = isset( $_POST['slug'] ) ? sanitize_text_field( $_POST['slug'] ) : '';
+	    $slug   = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
 	    $result = $this->install_plugin( $slug );
 
-        if( isset( $_POST['promotype'] ) && 'eb-banner' === $_POST['promotype'] ) {
+        $promotype = isset( $_POST['promotype'] ) ? sanitize_text_field( wp_unslash( $_POST['promotype'] ) ) : '';
+        if ( 'eb-banner' === $promotype ) {
             wp_remote_get( 'https://essential-addons.com/essential-blocks-install-gutenberg' );
         }
 
@@ -174,7 +175,7 @@ class PluginInstaller
             wp_send_json_error(__('you are not allowed to do this action', 'betterdocs'));
         }
 
-	    $basename = isset( $_POST['basename'] ) ? sanitize_text_field( $_POST['basename'] ) : '';
+	    $basename = isset( $_POST['basename'] ) ? sanitize_text_field( wp_unslash( $_POST['basename'] ) ) : '';
 	    $result   = $this->upgrade_plugin( $basename );
 
         if (is_wp_error($result)) {
@@ -193,7 +194,7 @@ class PluginInstaller
             wp_send_json_error(__('you are not allowed to do this action', 'betterdocs'));
         }
 
-	    $basename = isset( $_POST['basename'] ) ? sanitize_text_field( $_POST['basename'] ) : '';
+	    $basename = isset( $_POST['basename'] ) ? sanitize_text_field( wp_unslash( $_POST['basename'] ) ) : '';
 	    $result   = activate_plugin( $basename, '', false, true );
 
 	    if ( is_wp_error( $result ) ) {
@@ -214,7 +215,7 @@ class PluginInstaller
 			wp_send_json_error( __( 'you are not allowed to do this action', 'betterdocs' ) );
 		}
 
-		$basename = isset( $_POST['basename'] ) ? sanitize_text_field( $_POST['basename'] ) : '';
+		$basename = isset( $_POST['basename'] ) ? sanitize_text_field( wp_unslash( $_POST['basename'] ) ) : '';
 		deactivate_plugins( $basename, true );
 
 		wp_send_json_success( __( 'Plugin is deactivated successfully!', 'betterdocs' ) );
@@ -223,7 +224,8 @@ class PluginInstaller
 	public function ajax_auto_active_even_not_installed() {
 		check_ajax_referer( 'betterdocs-wpdeveloper-plugins', 'security' );
 
-		if ( $this->get_local_plugin_data( $_POST['basename'] ) === false ) {
+		$basename = isset( $_POST['basename'] ) ? sanitize_text_field( wp_unslash( $_POST['basename'] ) ) : '';
+		if ( $this->get_local_plugin_data( $basename ) === false ) {
 			$this->ajax_install_plugin();
 		} else {
 			$this->ajax_activate_plugin();

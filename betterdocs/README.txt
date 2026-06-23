@@ -2,14 +2,14 @@
 Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, bashar94, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
-Requires at least: 5.0
+Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.5.4
+Stable tag: 4.5.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Documentation & Knowledge Base plugin to create docs, FAQs, product FAQ, wikis & help center with AI writing, instant answers & AI Chatbot.
+Documentation, FAQ & Knowledge Base plugin to create docs, FAQs, product FAQ, wikis & help center with AI writing, instant answers & AI Chatbot.
 == Description ==
 
 Do you want to reduce support tickets immediately? How about you creating a resourceful knowledge base for your customers with AI-powered documentation and FAQs? 🤔
@@ -220,6 +220,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.5.5 - 23/06/2026 =
+
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.5.4 - 18/06/2026 =
 
@@ -712,6 +717,4 @@ Yes, it will work with any standard WordPress theme.
 == Upgrade Notice ==
 
 = 2.5.6 =
-Attention! Please Backup your site before updating.
-
-The latest version of **BetterDocs v2.5** includes massive changes across different areas of the plugin with revamped code structure for optimized performance. We would highly recommend you to [backup your entire site](https://wpdeveloper.com/backup-wordpress-site/) before updating the plugin & test it on your staging website. [Contact our Support](https://wpdeveloper.com/support/) if you encounter any kind of errors or if you need any kind of assistance.
+Attention! Please backup your site before updating. v2.5 includes massive changes with revamped code for optimized performance. Test on staging first; [contact support](https://wpdeveloper.com/support/) if needed.

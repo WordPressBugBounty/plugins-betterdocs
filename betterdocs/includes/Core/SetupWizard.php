@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
@@ -205,6 +209,7 @@ class SetupWizard extends Base {
 											'default'  => 1,
 											'priority' => 1,
 											'label_subtitle' => sprintf(
+												/* translators: %s: example knowledge base URL */
 												__( 'If you disable root slug for KB Archives, your individual knowledge base URL will be like this: %s', 'betterdocs' ),
 												'https://example.com/knowledgebase-1'
 											)

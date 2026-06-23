@@ -1,6 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-    if ( ! betterdocs()->settings->get( 'enable_navigation' ) ) {
+    
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+if ( ! betterdocs()->settings->get( 'enable_navigation' ) ) {
         return;
     }
 

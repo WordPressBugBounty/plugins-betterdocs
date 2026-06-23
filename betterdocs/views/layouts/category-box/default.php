@@ -1,6 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-	$attributes = [
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$attributes = [
 		'href'    => esc_url( $permalink ),
 		'data-id' => isset( $term->term_id ) ? $term->term_id : 0,
 		'class'   => [ 'betterdocs-single-category-wrapper category-box' ]

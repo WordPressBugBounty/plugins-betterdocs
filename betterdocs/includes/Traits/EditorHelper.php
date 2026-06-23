@@ -234,6 +234,8 @@ trait EditorHelper {
 	 */
 	protected function error( $key, $new_key ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// Developer-only deprecation notice; gated by WP_DEBUG so production never reaches it.
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 			trigger_error(
 				sprintf(
 					'"<strong>%1$s</strong>" attribute used in a %4$s called "%2$s" is no longer supported and will be removed in a future version. Instead, you should use the attribute <strong>%3$s</strong>.',

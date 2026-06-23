@@ -1,5 +1,9 @@
 <div class="betterdocs-live-search">
-	<?php if ( $heading || $subheading ) : ?>
+	<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+if ( $heading || $subheading ) : ?>
 		<div class="betterdocs-search-heading">
 			<?php
 			if ( ! empty( $heading ) && in_array( $heading_tag, betterdocs()->template_helper::ALLOWED_HTML_TAGS ) ) {

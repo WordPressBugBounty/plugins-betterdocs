@@ -1,5 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound,WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- vendored Deliciousbrains WP_Async_Request; dynamic hook names use $this->identifier which is set per consumer.
 namespace WPDeveloper\BetterDocs\Admin\BackgroundProcess;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 /**
  * WP Async Request

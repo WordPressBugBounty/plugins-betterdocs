@@ -1,4 +1,6 @@
 <?php
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- widget settings expose user-controlled exclusion lists; matches widget UX.
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query,WordPress.DB.SlowDBQuery.slow_db_query_tax_query,WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- core docs widget queries; meta/tax filtering is required functionality.
 namespace WPDeveloper\BetterDocs\Editors\Elementor\Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -159,8 +161,8 @@ class Sidebar extends BaseWidget {
             [
                 'label'   => __( "Doc Term ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
-                'description' => __('Example: 8, 9'),
-                'default' => "",
+                'description' => __( 'Example: 8, 9', 'betterdocs' ),
+                'default' => '',
                 'condition'  => [
                     'search_modal_doc_query_type' => 'specific_doc_term_ids'
                 ]
@@ -172,8 +174,8 @@ class Sidebar extends BaseWidget {
             [
                 'label'   => __( "Doc ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
-                'description' => __('Example: 15, 16'),
-                'default' => "",
+                'description' => __( 'Example: 15, 16', 'betterdocs' ),
+                'default' => '',
                 'condition'  => [
                     'search_modal_doc_query_type' => 'specific_doc_ids'
                 ]
@@ -200,8 +202,8 @@ class Sidebar extends BaseWidget {
             [
                 'label'   => __( "FAQ Term ID's", 'betterdocs' ),
                 'type'    => Controls_Manager::TEXT,
-                'description' => __('Example: 8, 9'),
-                'default' => "",
+                'description' => __( 'Example: 8, 9', 'betterdocs' ),
+                'default' => '',
                 'condition'  => [
                     'search_modal_faq_query_type' => 'specific_faq_term_ids'
                 ]
@@ -444,7 +446,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'column_height',
             [
-                'label'      => __( 'Height', 'plugin-domain' ),
+                'label'      => __( 'Height', 'betterdocs' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%'],
                 'range'      => [
@@ -733,7 +735,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'arrow_color',
             [
-                'label'     => __( 'Arrow Color', 'plugin-domain' ),
+                'label'     => __( 'Arrow Color', 'betterdocs' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .betterdocs-category-collapse' => 'color: {{VALUE}}'
@@ -846,7 +848,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'arrow_color_hover',
             [
-                'label'     => __( 'Arrow Color', 'plugin-domain' ),
+                'label'     => __( 'Arrow Color', 'betterdocs' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .betterdocs-category-grid-wrapper .betterdocs-category-header:hover .betterdocs-category-arrow' => 'color: {{VALUE}}'
@@ -1548,7 +1550,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'second_color_seperator',
             [
-                'label'     => esc_html__( 'Second Color', 'textdomain' ),
+                'label'     => esc_html__( 'Second Color', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
                 'condition' => [
@@ -1660,7 +1662,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'hover_second_color_seperator',
             [
-                'label'     => esc_html__( 'Second Color', 'textdomain' ),
+                'label'     => esc_html__( 'Second Color', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before',
                 'condition' => [
@@ -2505,7 +2507,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_field',
             [
-                'label'     => esc_html__( 'Search Field', 'textdomain' ),
+                'label'     => esc_html__( 'Search Field', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before'
             ]
@@ -2566,7 +2568,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_category_section',
             [
-                'label'     => esc_html__( 'Search Category', 'textdomain' ),
+                'label'     => esc_html__( 'Search Category', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before'
             ]
@@ -2594,7 +2596,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_tabs',
             [
-                'label'     => esc_html__( 'Content Tabs', 'textdomain' ),
+                'label'     => esc_html__( 'Content Tabs', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before'
             ]
@@ -2611,7 +2613,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_tabs_icon_size',
             [
-                'label'      => __( 'Icon Size', 'plugin-domain' ),
+                'label'      => __( 'Icon Size', 'betterdocs' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%'],
                 'range'      => [
@@ -2643,7 +2645,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_list',
             [
-                'label'     => esc_html__( 'Content List', 'textdomain' ),
+                'label'     => esc_html__( 'Content List', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before'
             ]
@@ -2671,7 +2673,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_list_icon_size',
             [
-                'label'      => __( 'Icon Size', 'plugin-domain' ),
+                'label'      => __( 'Icon Size', 'betterdocs' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%'],
                 'range'      => [
@@ -2703,7 +2705,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_list_category',
             [
-                'label'     => esc_html__( 'Content List Category', 'textdomain' ),
+                'label'     => esc_html__( 'Content List Category', 'betterdocs' ),
                 'type'      => \Elementor\Controls_Manager::HEADING,
                 'separator' => 'before'
             ]
@@ -2731,7 +2733,7 @@ class Sidebar extends BaseWidget {
         $this->add_control(
             'sidebar_search_modal_content_list_category_icon_size',
             [
-                'label'      => __( 'Icon Size', 'plugin-domain' ),
+                'label'      => __( 'Icon Size', 'betterdocs' ),
                 'type'       => Controls_Manager::SLIDER,
                 'size_units' => ['px', '%'],
                 'range'      => [

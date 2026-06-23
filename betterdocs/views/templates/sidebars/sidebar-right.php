@@ -1,7 +1,11 @@
 <aside id="betterdocs-sidebar-right"  class="betterdocs-sidebar betterdocs-full-sidebar-right right-sidebar-toc-wrap">
 	<div data-simplebar class="layout3-toc-container right-sidebar-toc-container">
 		<?php
-			// Check if post is password protected and user hasn't provided correct password
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// Check if post is password protected and user hasn't provided correct password
 			if ( post_password_required() ) {
 				// Don't show ToC sidebar for password-protected posts until password is provided
 				echo '<div class="betterdocs-toc-password-protected">';

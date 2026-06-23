@@ -2,6 +2,19 @@
 
 namespace WPDeveloper\BetterDocs\Utils;
 
+// Helper utilities mix per-language URL detection (read-only $_GET reads),
+// dynamic alphabet-letter / glossary queries composed via $wpdb->prepare,
+// and meta-key term lookups that are core to BetterDocs functionality.
+// phpcs:disable WordPress.Security.NonceVerification.Recommended
+// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
+// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+
 use function BetterLinksPro\Dependencies\GuzzleHttp\json_decode;
 use function WPML\PHP\Logger\error;
 
@@ -99,8 +112,12 @@ class Helper extends Base {
 	 */
 	public static function admin_tab() {
 		$admin_ui = 'grid';
-		if ( isset( $_GET['mode'], $_GET['page'] ) && $_GET['page'] === 'betterdocs-admin' && ! empty( $_GET['mode'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$admin_ui = $_GET['mode'] === 'grid' ? 'grid' : 'list'; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin UI selection, no state change.
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin UI selection, no state change.
+		$mode = isset( $_GET['mode'] ) ? sanitize_text_field( wp_unslash( $_GET['mode'] ) ) : '';
+		if ( $page === 'betterdocs-admin' && ! empty( $mode ) ) {
+			$admin_ui = $mode === 'grid' ? 'grid' : 'list';
 		}
 
 		return $admin_ui;
@@ -263,7 +280,7 @@ class Helper extends Base {
 			// Allow language filtering for REST API requests that are frontend-facing
 			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 				// Check if this is a frontend REST request (not admin)
-				$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+				$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 				// Don't filter admin REST requests for glossaries management
 				if ( strpos( $request_uri, '/wp/v2/glossaries' ) !== false ) {
 					return false; // Don't filter admin glossaries management
@@ -290,8 +307,9 @@ class Helper extends Base {
 		// Covers AJAX (POST) and REST/admin requests (GET) where WPML may
 		// otherwise resolve to the site's default language instead of the
 		// admin UI language.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only UI language hint, sanitized; not a state-changing form submission.
 		if ( isset( $_POST['lang'] ) && ! empty( $_POST['lang'] ) ) {
-			return sanitize_text_field( wp_unslash( $_POST['lang'] ) );
+			return sanitize_text_field( wp_unslash( $_POST['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see note above.
 		}
 
 		// Limit GET handling to admin/REST contexts so a frontend ?lang= switch
@@ -305,9 +323,11 @@ class Helper extends Base {
 		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
 			global $sitepress;
 			if ( $sitepress && $sitepress->is_setup_complete() ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only language detection from URL.
+				$tag_id = isset( $_GET['tag_ID'] ) ? (int) $_GET['tag_ID'] : 0;
 				// For term editing, check if we have a specific term language
-				if ( isset( $_GET['tag_ID'] ) && function_exists( 'wpml_get_language_information' ) ) {
-					$term_info = wpml_get_language_information( null, (int) $_GET['tag_ID'] );
+				if ( $tag_id && function_exists( 'wpml_get_language_information' ) ) {
+					$term_info = wpml_get_language_information( null, $tag_id );
 					if ( ! is_wp_error( $term_info ) && $term_info && isset( $term_info['language_code'] ) ) {
 						$current_language = $term_info['language_code'];
 					}
@@ -315,8 +335,9 @@ class Helper extends Base {
 				}
 
 				// Check for language parameter in URL
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only language detection from URL.
 				if ( ! $current_language && isset( $_GET['lang'] ) ) {
-					$current_language = sanitize_text_field( $_GET['lang'] );
+					$current_language = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
 				}
 
 				// Check WPML admin language cookie (persists during AJAX)
@@ -332,17 +353,20 @@ class Helper extends Base {
 		}
 		// Polylang Support - Admin language detection
 		elseif ( function_exists( 'pll_current_language' ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only language detection from URL.
+			$tag_id = isset( $_GET['tag_ID'] ) ? (int) $_GET['tag_ID'] : 0;
 			// For term editing, get language from term ID
-			if ( isset( $_GET['tag_ID'] ) && function_exists( 'pll_get_term_language' ) ) {
-				$term_lang = pll_get_term_language( (int) $_GET['tag_ID'] );
+			if ( $tag_id && function_exists( 'pll_get_term_language' ) ) {
+				$term_lang = pll_get_term_language( $tag_id );
 				if ( $term_lang ) {
 					$current_language = $term_lang;
 				}
 			}
 
 			// Check for language parameter in URL
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only language detection from URL.
 			if ( ! $current_language && isset( $_GET['lang'] ) ) {
-				$current_language = sanitize_text_field( $_GET['lang'] );
+				$current_language = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
 			}
 
 			// Fallback to current admin language
@@ -461,6 +485,7 @@ class Helper extends Base {
 
 		// For queries without specific term ID, we need to check if ANY terms have language-specific meta
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live multilingual meta-key resolution; result varies per active language.
 		$has_lang_meta = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->termmeta} tm
 			INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id
@@ -490,6 +515,7 @@ class Helper extends Base {
 		global $wpdb;
 
 		// Get all terms with the base meta key
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-shot multilingual migration; cache would be stale immediately after writes.
 		$terms_with_order = $wpdb->get_results( $wpdb->prepare(
 			"SELECT tm.term_id, tm.meta_value, t.slug
 			FROM {$wpdb->termmeta} tm
@@ -546,6 +572,7 @@ class Helper extends Base {
 		global $wpdb;
 
 		// Get all terms with the base meta key for document ordering
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- one-shot multilingual migration; cache would be stale immediately after writes.
 		$terms_with_docs_order = $wpdb->get_results( $wpdb->prepare(
 			"SELECT tm.term_id, tm.meta_value, t.slug
 			FROM {$wpdb->termmeta} tm
@@ -635,6 +662,8 @@ class Helper extends Base {
         $encyclopeia_suorce     = betterdocs()->settings->get( 'encyclopedia_source', 'docs' );
         $enable_glossaries      = betterdocs()->settings->get( 'enable_glossaries', false );
         $encyclopedia_root_slug = betterdocs()->settings->get( 'encyclopedia_root_slug', 'encyclopdia' );
+        // Sanitize values that may be interpolated into raw SQL fragments below.
+        $encyclopedia_root_slug = sanitize_title( $encyclopedia_root_slug );
 
 		// if($enable_glossaries && $encyclopeia_suorce === 'glossaries'){
 		if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
@@ -644,6 +673,8 @@ class Helper extends Base {
 			// Add language filtering if multilingual plugin is active and we should apply filtering
 			$current_language = self::get_current_language();
 			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// Restrict language code to a safe character set before SQL interpolation.
+				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
 				// For WPML, use icl_translations table
 				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
 					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
@@ -693,6 +724,8 @@ class Helper extends Base {
 			// Add language filtering for docs if multilingual plugin is active and we should apply filtering
 			$current_language = self::get_current_language();
 			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// Restrict language code to a safe character set before SQL interpolation.
+				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
 				// For WPML, use icl_translations table
 				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
 					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = {$wpdb->posts}.ID AND icl_t.element_type = 'post_docs'";
@@ -742,8 +775,8 @@ class Helper extends Base {
                     $glossary_term_description = $description['glossary_term_description'] ?? '';
 
                     // Remove any <p> tags or other unwanted HTML tags
-                    $glossary_term_description = strip_tags( $glossary_term_description );
-                    $post_excerpt              = strip_tags( $post['post_excerpt'] ?? '' );
+                    $glossary_term_description = wp_strip_all_tags( $glossary_term_description );
+                    $post_excerpt              = wp_strip_all_tags( $post['post_excerpt'] ?? '' );
 
                     // Prepare post data
                     if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
@@ -765,7 +798,7 @@ class Helper extends Base {
                             ? $post_excerpt
                             : ( ! empty( $glossary_term_description )
                                 ? self::get_custom_excerpt( $glossary_term_description, 15 )
-                                : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ) ),
+                                : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ) ),
                             'permalink'    => $permalink,
                         ];
                     } else {
@@ -775,7 +808,7 @@ class Helper extends Base {
                             'post_title'   => $post['post_title'] ?? '',
                             'post_excerpt' => ! empty( $post_excerpt )
                             ? $post_excerpt
-                            : self::get_custom_excerpt( strip_tags( $post['post_content'] ?? '' ), 15 ),
+                            : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ),
                             'permalink'    => isset( $post['ID'] ) ? get_the_permalink( $post['ID'] ) : ''
                         ];
                     }
@@ -797,6 +830,8 @@ class Helper extends Base {
         // Add language filtering if multilingual plugin is active and we should apply filtering
         $current_language = self::get_current_language();
         if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+            // Restrict language code to a safe character set before SQL interpolation.
+            $current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
             // For WPML, use icl_translations table
             if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
                 $lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
@@ -925,6 +960,7 @@ class Helper extends Base {
     }
 
     public static function delete_specific_faq_posts_by_faq_category( $term_id ) {
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- targeted bulk delete by FAQ category; tax filter is required.
         $args = [
             'post_type'      => 'betterdocs_faq',
             'posts_per_page' => -1,
@@ -1083,8 +1119,8 @@ class Helper extends Base {
 	 */
 	public static function get_max_doc_category_order_from_term_meta() {
 		global $wpdb;
-		$sql    = $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) AS max FROM {$wpdb->prefix}termmeta WHERE meta_key = %s ", 'doc_category_order');
-		$result = $wpdb->get_var($sql);
+		$sql    = $wpdb->prepare( "SELECT MAX(CAST(meta_value AS UNSIGNED)) AS max FROM {$wpdb->termmeta} WHERE meta_key = %s ", 'doc_category_order' );
+		$result = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query is prepared above.
 		return $result;
 	}
 }

@@ -1,4 +1,8 @@
-<?php do_action( 'betterdocs_doc_category_update_form_before', $term ); ?>
+<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+do_action( 'betterdocs_doc_category_update_form_before', $term ); ?>
 <tr class="form-field term-group-wrap">
 	<th scope="row">
 		<label for="doc-category-id"><?php esc_html_e( 'Category Id', 'betterdocs' ); ?></label>

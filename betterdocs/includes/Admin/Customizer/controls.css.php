@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <style>
     .betterdocs-customize-control-title {
         margin-top: 0;

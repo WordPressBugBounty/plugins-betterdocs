@@ -1,5 +1,7 @@
 <?php
-
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- bulk-import write paths from upstream WP Importer; caching unwanted.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- inherited WP Importer hook contract (import_*, wp_import_*) preserved for compat with external listeners.
 namespace WPDeveloper\BetterDocs\Admin\Importer;
 
 use WP_Error;
@@ -1356,7 +1358,7 @@ class WPImport extends WP_Importer {
 		include_once ABSPATH . '/wp-admin/includes/file.php';
 
 		// Extract the file name from the URL.
-		$file_name = basename( parse_url( $url, PHP_URL_PATH ) );
+		$file_name = basename( (string) wp_parse_url( $url, PHP_URL_PATH ) );
 
 		if ( ! $file_name ) {
 			$file_name = md5( $url );
@@ -1381,7 +1383,7 @@ class WPImport extends WP_Importer {
 		);
 
 		if ( is_wp_error( $remote_response ) ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', sprintf( /* translators: 1: WordPress error message, 2: WordPress error code. */esc_html__( 'Request failed due to an error: %1$s (%2$s)', 'betterdocs' ), esc_html( $remote_response->get_error_message() ), esc_html( $remote_response->get_error_code() ) ) );
 		}
@@ -1390,7 +1392,7 @@ class WPImport extends WP_Importer {
 
 		// Make sure the fetch was successful.
 		if ( 200 !== $remote_response_code ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', sprintf( /* translators: 1: HTTP error message, 2: HTTP error code. */esc_html__( 'Remote server returned the following unexpected result: %1$s (%2$s)', 'betterdocs' ), get_status_header_desc( $remote_response_code ), esc_html( $remote_response_code ) ) );
 		}
@@ -1399,7 +1401,7 @@ class WPImport extends WP_Importer {
 
 		// Request failed.
 		if ( ! $headers ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', esc_html__( 'Remote server did not respond', 'betterdocs' ) );
 		}
@@ -1407,20 +1409,20 @@ class WPImport extends WP_Importer {
 		$filesize = (int) filesize( $tmp_file_name );
 
 		if ( 0 === $filesize ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', esc_html__( 'Zero size file downloaded', 'betterdocs' ) );
 		}
 
 		if ( ! isset( $headers['content-encoding'] ) && isset( $headers['content-length'] ) && $filesize !== (int) $headers['content-length'] ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', esc_html__( 'Downloaded file has incorrect size', 'betterdocs' ) );
 		}
 
 		$max_size = (int) apply_filters( 'import_attachment_size_limit', self::DEFAULT_IMPORT_ATTACHMENT_SIZE_LIMIT );
 		if ( ! empty( $max_size ) && $filesize > $max_size ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			/* translators: %s: Max file size. */
 
@@ -1470,14 +1472,15 @@ class WPImport extends WP_Importer {
 		$move_new_file = copy( $tmp_file_name, $new_file );
 
 		if ( ! $move_new_file ) {
-			@unlink( $tmp_file_name );
+			wp_delete_file( $tmp_file_name );
 
 			return new WP_Error( 'import_file_error', esc_html__( 'The uploaded file could not be moved', 'betterdocs' ) );
 		}
 
-		// Set correct file permissions.
+		// Set correct file permissions to match parent directory.
 		$stat  = stat( dirname( $new_file ) );
 		$perms = $stat['mode'] & 0000666;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- WP_Filesystem chmod requires init; mirrors WP core media handler.
 		chmod( $new_file, $perms );
 
 		$upload = [

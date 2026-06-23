@@ -2,6 +2,10 @@
 
 namespace WPDeveloper\BetterDocs\FrontEnd;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 /**
  * Extends WordPress search SQL on `docs` queries to also match docs whose
  * assigned `doc_tag` or `doc_category` term names contain the search term.
@@ -51,6 +55,9 @@ class SearchExtender {
 		$args         = $taxonomies;
 		$args[]       = $like;
 
+		// $placeholders is a generated run of %s tokens bound via $args below; all
+		// interpolated identifiers are $wpdb core table names, not user input.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$subquery = $wpdb->prepare(
 			"{$wpdb->posts}.ID IN (
 				SELECT DISTINCT tr.object_id
@@ -61,6 +68,7 @@ class SearchExtender {
 			)",
 			$args
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return preg_replace( '/^\s*AND\s*\(/', " AND ({$subquery} OR ", $search, 1 );
 	}

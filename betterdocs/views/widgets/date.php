@@ -1,5 +1,10 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 if ( betterdocs()->settings->get( 'show_last_update_time' ) ) {
 	$doc_date_text = isset( $doc_date_text ) ? $doc_date_text : __( 'Updated on', 'betterdocs' );
 	echo wp_sprintf(

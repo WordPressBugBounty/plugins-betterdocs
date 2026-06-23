@@ -98,16 +98,19 @@ final class StyleHandler extends Base {
 	 * @since 1.0.2
 	 */
 	public function write_block_css() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_style_handler_nonce' ) || ! current_user_can( 'manage_options' ) ) {
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'betterdocs_style_handler_nonce' ) || ! current_user_can( 'manage_options' ) ) {
 			echo 'Invalid request';
 			wp_die();
 		}
 
-		$block_styles = (array) json_decode( stripslashes( $_POST['data'] ) );
+		$raw_data     = isset( $_POST['data'] ) ? wp_unslash( $_POST['data'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- decoded JSON; values are sanitized in build_css().
+		$block_styles = (array) json_decode( $raw_data );
 
-		if ( isset( $_POST['editorType'] ) && $_POST['editorType'] === 'edit-site' ) {
+		$editor_type = isset( $_POST['editorType'] ) ? sanitize_key( wp_unslash( $_POST['editorType'] ) ) : '';
+		if ( 'edit-site' === $editor_type ) {
 			$upload_dir      = wp_upload_dir()['basedir'] . '/betterdocs-style/';
-			$editSiteCssPath = $upload_dir . 'betterdocs-style-' . $_POST['editorType'] . '.min.css';
+			$editSiteCssPath = $upload_dir . 'betterdocs-style-' . $editor_type . '.min.css';
 			if ( file_exists( $editSiteCssPath ) ) {
 				$existingCss = file_get_contents( $editSiteCssPath );
 				$pattern     = '~\/\*(.*?)\*\/~';
@@ -135,7 +138,7 @@ final class StyleHandler extends Base {
 				if ( ! empty( $css = $this->build_css( $finalCSSArray ) ) ) {
 					$upload_dir = wp_upload_dir()['basedir'] . '/betterdocs-style/';
 					if ( ! file_exists( $upload_dir ) ) {
-						mkdir( $upload_dir );
+						wp_mkdir_p( $upload_dir );
 					}
 
 					file_put_contents( $editSiteCssPath, $css );
@@ -143,7 +146,7 @@ final class StyleHandler extends Base {
 			} elseif ( ! empty( $css = $this->build_css( $block_styles ) ) ) {
 					$upload_dir = wp_upload_dir()['basedir'] . '/betterdocs-style/';
 				if ( ! file_exists( $upload_dir ) ) {
-					mkdir( $upload_dir );
+					wp_mkdir_p( $upload_dir );
 				}
 
 					file_put_contents( $editSiteCssPath, $css );
@@ -151,9 +154,10 @@ final class StyleHandler extends Base {
 		} elseif ( ! empty( $css = $this->build_css( $block_styles ) ) ) {
 				$upload_dir = wp_upload_dir()['basedir'] . '/betterdocs-style/';
 			if ( ! file_exists( $upload_dir ) ) {
-				mkdir( $upload_dir );
+				wp_mkdir_p( $upload_dir );
 			}
-				file_put_contents( $upload_dir . 'betterdocs-style-' . abs( $_POST['id'] ) . '.min.css', $css );
+				$post_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+				file_put_contents( $upload_dir . 'betterdocs-style-' . $post_id . '.min.css', $css );
 		}
 
 		wp_send_json_success( 'done' );

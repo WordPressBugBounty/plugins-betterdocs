@@ -78,9 +78,10 @@ class ArticleSummary extends Block {
 	 * @return bool
 	 */
 	private function is_editor_mode() {
-		// Check if we're in Gutenberg editor
-		return defined( 'REST_REQUEST' ) && REST_REQUEST &&
-			   isset( $_REQUEST['context'] ) && $_REQUEST['context'] === 'edit';
+		// Check if we're in Gutenberg editor.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- REST request context check; nonce verified by REST cookie auth.
+		$context = isset( $_REQUEST['context'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['context'] ) ) : '';
+		return defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === $context;
 	}
 
 	/**

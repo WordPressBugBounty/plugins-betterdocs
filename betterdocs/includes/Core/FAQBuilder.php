@@ -1,6 +1,14 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+// FAQ-by-category lookups require tax_query / meta_key filters by design.
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
 use WP_Error;
 use WP_Query;
@@ -165,12 +173,12 @@ class FAQBuilder extends Base {
 	 */
 	private function get_max_taxonomy_order( $tax_slug ) {
 		global $wpdb;
-        // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live max-order needed when assigning new terms; cache would be stale.
 		$max_term_order = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT MAX( CAST( tm.meta_value AS UNSIGNED ) )
 				FROM $wpdb->terms t
-				JOIN $wpdb->term_taxonomy tt ON t.term_id = tt.term_id AND tt.taxonomy = '%s'
+				JOIN $wpdb->term_taxonomy tt ON t.term_id = tt.term_id AND tt.taxonomy = %s
 				JOIN $wpdb->termmeta tm ON tm.term_id = t.term_id WHERE tm.meta_key = 'order'",
 				$tax_slug
 			)
@@ -626,6 +634,7 @@ class FAQBuilder extends Base {
 
 			if ( $taxonomy_objects && ! is_wp_error( $taxonomy_objects ) ) :
 				foreach ( $taxonomy_objects as $term ) :
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core FAQ-by-category query; tax filtering is required functionality.
 					$args = [
 						'post_type'     => 'betterdocs_faq',
 						'post_status'   => 'publish',
@@ -673,6 +682,7 @@ class FAQBuilder extends Base {
 			)
 		);
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional NOT-IN scan to find FAQs without any category assignment.
 		return get_posts(
 			[
 				'post_type'      => 'betterdocs_faq',
@@ -727,6 +737,7 @@ class FAQBuilder extends Base {
 	public function faq_category_orderby_meta( $args, $request ) {
 		if ( $args['taxonomy'] === 'betterdocs_faq_category' ) {
 			$args['orderby']  = 'meta_value_num';
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by user-assigned 'order' meta is required UX.
 			$args['meta_key'] = 'order';
 		}
 		return $args;

@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Block;
 
@@ -76,7 +80,9 @@ class CodeSnippet extends Block {
 	 * @return bool
 	 */
 	public function is_editor_mode() {
-		return defined( 'REST_REQUEST' ) && REST_REQUEST && ! empty( $_REQUEST['context'] ) && $_REQUEST['context'] === 'edit';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- REST request context check.
+		$context = isset( $_REQUEST['context'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['context'] ) ) : '';
+		return defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === $context;
 	}
 
 	/**

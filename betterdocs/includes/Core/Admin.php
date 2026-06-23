@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use Exception;
 use PriyoMukul\WPNotice\Notices;
@@ -532,24 +536,27 @@ class Admin extends Base {
 		global $wpdb;
 		switch ( $column ) {
 			case 'betterdocs_word_count':
-				$content_without_html_tags = trim( strip_tags( get_post_field( 'post_content', $post_id ) ) );
+				$content_without_html_tags = trim( wp_strip_all_tags( get_post_field( 'post_content', $post_id ) ) );
 				preg_match_all( '/<[^>]*>|[\p{L}\p{M}]+/u', $content_without_html_tags, $matches );
 				$total_words = ! empty( $matches[0] ) ? count( $matches[0] ) : count( array() );
 				$word_count  = $total_words;
 				echo '<span>' . esc_html( intval( $word_count ) ) . '</span>';
 				break;
 			case 'betterdocs_reaction':
-				$where     = "WHERE post_id='" . esc_sql( $post_id ) . "'";
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- per-post analytics aggregation rendered in admin list table; cache would mask live reactions.
 				$analytics = $wpdb->get_results(
-					"SELECT
-                        sum(impressions) as totalViews,
-                        sum(unique_visit) as totalUniqueViews,
-                        sum(happy + sad + normal) as totalReactions,
-                        sum(happy) as totalHappy,
-                        sum(normal) as totalNormal,
-                        sum(sad) as totalSad
-                    FROM {$wpdb->prefix}betterdocs_analytics
-                    $where"
+					$wpdb->prepare(
+						"SELECT
+							sum(impressions) as totalViews,
+							sum(unique_visit) as totalUniqueViews,
+							sum(happy + sad + normal) as totalReactions,
+							sum(happy) as totalHappy,
+							sum(normal) as totalNormal,
+							sum(sad) as totalSad
+						FROM {$wpdb->prefix}betterdocs_analytics
+						WHERE post_id = %d",
+						$post_id
+					)
 				);
 
 				echo '<ul class="reactions-count">
@@ -675,7 +682,7 @@ class Admin extends Base {
 				'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
 				'doc_cat_order_nonce'        => wp_create_nonce( 'doc_cat_order_nonce' ),
 				'knowledge_base_order_nonce' => wp_create_nonce( 'knowledge_base_order_nonce' ),
-				'paged'                      => isset( $_GET['paged'] ) ? absint( wp_unslash( $_GET['paged'] ) ) : 0, // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				'paged'                      => isset( $_GET['paged'] ) ? absint( wp_unslash( $_GET['paged'] ) ) : 0, // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- pagination read from URL.
                 'per_page_id'                    => 'edit_doc_category_per_page',
                 'menu_title'                     => __( 'Switch to BetterDocs UI', 'betterdocs' ),
                 'dark_mode'                      => $dark_mode,
@@ -1147,9 +1154,16 @@ class Admin extends Base {
 	 * @since 3.0.1
 	 */
 	public function save_admin_page() {
-		if ( isset( $_GET['post_type'] ) && 'docs' === $_GET['post_type'] && isset( $_GET['bdocs_view'] ) && 'classic' === $_GET['bdocs_view'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$post_type  = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$bdocs_view = isset( $_GET['bdocs_view'] ) ? sanitize_text_field( wp_unslash( $_GET['bdocs_view'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection.
+		$page       = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( 'docs' === $post_type && 'classic' === $bdocs_view ) {
 			update_user_meta( get_current_user_id(), 'last_visited_docs_admin_page', 'classic_ui' );
-		} elseif ( isset( $_GET['page'] ) && 'betterdocs-admin' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		} elseif ( 'betterdocs-admin' === $page ) {
 			update_user_meta( get_current_user_id(), 'last_visited_docs_admin_page', 'modern_ui' );
 		}
 	}
@@ -1218,7 +1232,8 @@ class Admin extends Base {
 	 */
 	public function ajax_dismiss_black_friday_pointer() {
 		// Verify nonce
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_dismiss_pointer' ) ) {
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'betterdocs_dismiss_pointer' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'betterdocs' ) ) );
 		}
 
@@ -1228,7 +1243,7 @@ class Admin extends Base {
 		}
 
 		// Get the introduction key
-		$introduction_key = isset( $_POST['introduction_key'] ) ? sanitize_text_field( $_POST['introduction_key'] ) : '';
+		$introduction_key = isset( $_POST['introduction_key'] ) ? sanitize_text_field( wp_unslash( $_POST['introduction_key'] ) ) : '';
 
 		if ( empty( $introduction_key ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid introduction key', 'betterdocs' ) ) );

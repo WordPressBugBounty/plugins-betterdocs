@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Shortcodes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Core\Query;
 use WPDeveloper\BetterDocs\Utils\Helper;
@@ -73,10 +77,15 @@ class SearchModal extends Shortcode {
 			
 			// Only search in translation table if current language is different from default
 			if ( $default_lang !== $current_lang ) {
+				$default_lang = preg_replace( '/[^a-z0-9_]/', '', $default_lang );
+				$current_lang = preg_replace( '/[^a-z0-9_]/', '', $current_lang );
 				// TranslatePress table naming: wp_trp_dictionary_{default_lang}_{current_lang}
 				$trp_table = $wpdb->prefix . 'trp_dictionary_' . $default_lang . '_' . $current_lang;
-				
+
 				if ( $this->table_exists( $trp_table ) ) {
+					// $trp_table is composed from $wpdb->prefix + sanitized lang slugs (preg_replace allowlist above);
+					// $like is esc_like()-wrapped with intentional % wildcards; CONCAT() wildcards are query literals, not user input.
+					// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$search .= $wpdb->prepare(
 						" OR EXISTS (
 							SELECT 1 FROM {$trp_table} trp
@@ -91,6 +100,7 @@ class SearchModal extends Shortcode {
 						$like,
 						$like
 					);
+					// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.LikeWildcardsInQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				}
 			}
 		}
@@ -140,15 +150,18 @@ class SearchModal extends Shortcode {
 	 */
 	private function table_exists( $table_name ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check, caching would mask plugin-activation state.
 		$result = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
 		return $result === $table_name;
 	}
 
 	public function get_search_results() {
 		global $wpdb;
-		$search_input      = isset( $_POST['search_input'] ) ? sanitize_text_field( $_POST['search_input'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$search_cat        = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( $_POST['search_cat'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$lang              = isset( $_POST['lang'] ) ? wp_strip_all_tags( $_POST['lang'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- public live-search endpoint, no state change.
+		$search_input = isset( $_POST['search_input'] ) ? sanitize_text_field( wp_unslash( $_POST['search_input'] ) ) : '';
+		$search_cat   = isset( $_POST['search_cat'] ) ? wp_strip_all_tags( wp_unslash( $_POST['search_cat'] ) ) : '';
+		$lang         = isset( $_POST['lang'] ) ? wp_strip_all_tags( wp_unslash( $_POST['lang'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		// Removed preg_replace that was stripping non-Latin characters - sanitize_text_field() already handles security
 
 		$tax_query = [];
@@ -172,14 +185,16 @@ class SearchModal extends Shortcode {
 			array_push($post_status,  'private');
 		}
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- search query supports user-selected category filter.
 		$args = [
 			'term_id'          => isset( $term->term_id ) ? $term->term_id : 0,
 			'post_type'        => 'docs',
 			'post_status'      => $post_status,
 			'posts_per_page'   => -1,
-			'suppress_filters' => false,
+			'suppress_filters' => false,  // Changed to false to allow posts_search filter
 			's'                => $search_input,
 			'orderby'          => 'relevance',
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- category-scoped search is a core BetterDocs feature; the taxonomy filter is intrinsic to the query.
 			'tax_query'        => $tax_query
 		];
 
@@ -190,7 +205,7 @@ class SearchModal extends Shortcode {
 			if ( preg_match('/[^\x00-\x7F]/', $search_input) ) {
 				// Non-ASCII search: bypass WPML language filtering but allow posts_search filter
 				// This allows searching across all languages
-				$args['suppress_filters'] = true;
+				$args['suppress_filters'] = true; // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- non-ASCII search must reach all WPML translations.
 			} else {
 				// ASCII-only search (English), use WPML filters to restrict to current language
 				$args['suppress_filters'] = false;
@@ -267,7 +282,7 @@ class SearchModal extends Shortcode {
 				'enable_docs_search' => true,
 				'enable_faq_search'  => true,
 				'enable_ai_powered_search' => false,
-				'kb_based_search'    => '' // KB slug to filter search results
+				'kb_based_search' => '' // KB slug to filter search results
 			]
 		);
 	}
@@ -299,7 +314,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 			echo '<div class="betterdocs-search-modal-layout-1" id="betterdocs-search-modal"';
@@ -321,7 +336,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 
@@ -343,7 +358,7 @@ class SearchModal extends Shortcode {
 				'enable_faq_search'  => isset( $atts['enable_faq_search'] ) ? $atts['enable_faq_search'] : $defaults_attrs['enable_faq_search'],
 				'enable_docs_search' => isset( $atts['enable_docs_search'] ) ? $atts['enable_docs_search'] : $defaults_attrs['enable_docs_search'],
 				'enable_ai_powered_search' => isset( $atts['enable_ai_powered_search'] ) ? $atts['enable_ai_powered_search'] : $defaults_attrs['enable_ai_powered_search'],
-				'kb_based_search'    => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
+				'kb_based_search' => isset( $atts['kb_based_search'] ) ? $atts['kb_based_search'] : $defaults_attrs['kb_based_search']
 			];
 			$attributes = apply_filters( 'betterdocs_search_modal_shortcode_attributes', $attributes );
 

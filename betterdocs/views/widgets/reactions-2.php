@@ -1,5 +1,9 @@
 <div
-	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="betterdocs-article-reactions-box">
 		<p class="betterdocs-article-reactions-subheading"><?php echo esc_html( $reactions_text ); ?></p>
 		<ul class="betterdocs-article-reaction-links layout-2">

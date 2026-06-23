@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 if ( ! betterdocs()->settings->get( 'enable_post_title' ) ) {
 	return;
 }

@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <li class="betterdocs-breadcrumb-item breadcrumb-delimiter">
     <span class="icon-container">
         <svg class="breadcrumb-delimiter-icon" width="4" height="12" viewBox="0 0 4 12" fill="none" xmlns="http://www.w3.org/2000/svg">

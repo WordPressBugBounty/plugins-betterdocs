@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Shortcodes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Core\Query;
 use WPDeveloper\BetterDocs\Utils\Helper;
@@ -33,11 +37,11 @@ class FeedbackForm extends Shortcode {
 
         check_ajax_referer( 'betterdocs_submit_data', 'security' );
 
-        $postID       = isset( $_POST['postID'] ) ? $_POST['postID'] : null;
+        $postID       = isset( $_POST['postID'] ) ? absint( wp_unslash( $_POST['postID'] ) ) : 0;
         $article      = get_the_title( $postID );
-        $name         = isset( $_POST['message_name'] ) ? sanitize_text_field( stripslashes( $_POST['message_name'] ) ) : '';
-        $email        = isset( $_POST['message_email'] ) ? sanitize_email( stripslashes( $_POST['message_email'] ) ) : '';
-        $message_text = isset( $_POST['message_text'] ) ? sanitize_textarea_field( stripslashes( $_POST['message_text'] ) ) : '';
+        $name         = isset( $_POST['message_name'] ) ? sanitize_text_field( wp_unslash( $_POST['message_name'] ) ) : '';
+        $email        = isset( $_POST['message_email'] ) ? sanitize_email( wp_unslash( $_POST['message_email'] ) ) : '';
+        $message_text = isset( $_POST['message_text'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message_text'] ) ) : '';
 
         $_errors = [];
 

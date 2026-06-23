@@ -61,6 +61,7 @@ class ToC extends Shortcode {
 
 		if ( $use_full_filter ) {
 			// Use the full content filter if explicitly enabled
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- intentional WP core filter integration to render content as the platform would.
 			return apply_filters( 'the_content', $content );
 		}
 

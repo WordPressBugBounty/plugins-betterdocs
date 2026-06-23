@@ -2,6 +2,11 @@
 
     namespace WPDeveloper\BetterDocs\Core;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+
     use WPDeveloper\BetterDocs\Utils\Base;
     use WPDeveloper\BetterDocs\Core\Settings;
     use WPDeveloper\BetterDocs\Core\PostType;
@@ -74,33 +79,36 @@
             return $api_response;
         }
 
-        $ch = curl_init( 'https://api.openai.com/v1/engines' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-        curl_setopt(
-            $ch,
-            CURLOPT_HTTPHEADER,
-            array(  //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $apiKey
+        $api_response = array();
+
+        $response = wp_safe_remote_get(
+            'https://api.openai.com/v1/engines',
+            array(
+                'headers' => array(
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $apiKey,
+                ),
+                'timeout' => 15,
             )
         );
 
-        $api_response = array();
+        if ( is_wp_error( $response ) ) {
+            $api_response[ 'valid' ]   = false;
+            $api_response[ 'message' ] = $response->get_error_message();
+            return $api_response;
+        }
 
-        $response = curl_exec( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
-        $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
+        $httpCode = (int) wp_remote_retrieve_response_code( $response );
+        $body     = wp_remote_retrieve_body( $response );
 
-        curl_close( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
-
-        if ( 200 == $httpCode ) {
+        if ( 200 === $httpCode ) {
             $api_response[ 'valid' ]   = true;
             $api_response[ 'message' ] = 'Valid API Key';
         } else {
-            $responseData = json_decode( $response, true );
-            // Access the message data (replace 'data' with the actual key used in the response)
-            $messageData               = $responseData[ 'error' ] ? $responseData[ 'error' ] : '';
+            $responseData              = json_decode( $body, true );
+            $messageData               = ! empty( $responseData[ 'error' ] ) ? $responseData[ 'error' ] : array();
             $api_response[ 'valid' ]   = false;
-            $api_response[ 'message' ] = $messageData[ 'message' ] ? $messageData[ 'message' ] : 'Invalid API Key';
+            $api_response[ 'message' ] = ! empty( $messageData[ 'message' ] ) ? $messageData[ 'message' ] : 'Invalid API Key';
         }
 
         // print_r($response);
@@ -179,7 +187,7 @@ PROMPT;
             // GPT-5.5 reasoning can run well past the default limits; give PHP and
             // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
             if ( function_exists( 'set_time_limit' ) ) {
-                set_time_limit( 300 );
+                set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- long-running AI generation needs an extended limit; still bounded by server fpm/nginx timeouts.
             }
 
             $response = wp_remote_post( $api_endpoint, $request_options );
@@ -238,7 +246,7 @@ PROMPT;
         // GPT-5.5 reasoning can run well past the default limits; give PHP and
         // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
         if ( function_exists( 'set_time_limit' ) ) {
-            set_time_limit( 300 );
+            set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- long-running AI generation needs an extended limit; still bounded by server fpm/nginx timeouts.
         }
 
         $response = wp_remote_post( $api_endpoint, $request_options );
@@ -279,7 +287,8 @@ PROMPT;
 
     public function generate_openai_content_callback() {
         // Verify the nonce
-        if ( ! isset( $_POST[ 'ai_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'ai_nonce' ], 'generate_openai_content_nonce' ) ) { //phpcs:ignore
+        $ai_nonce = isset( $_POST['ai_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['ai_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $ai_nonce, 'generate_openai_content_nonce' ) ) {
             wp_send_json_error( 'Invalid nonce' );
             wp_die();
         }
@@ -289,10 +298,8 @@ PROMPT;
             wp_die();
         }
 
-        $prompt = sanitize_text_field( $_POST[ 'prompt' ] ); //phpcs:ignore
-        // $num_of_sections = sanitize_text_field($_POST['numOfSections']);
-        // $num_of_paragraphs = sanitize_text_field($_POST['numOfParagraphs']);
-        $keywords = sanitize_text_field( $_POST[ 'keywords' ] ); //phpcs:ignore
+        $prompt   = isset( $_POST['prompt'] ) ? sanitize_text_field( wp_unslash( $_POST['prompt'] ) ) : '';
+        $keywords = isset( $_POST['keywords'] ) ? sanitize_text_field( wp_unslash( $_POST['keywords'] ) ) : '';
 
         $ai_instance = new WriteWithAI( $this->settings );
 
@@ -566,7 +573,7 @@ PROMPT;
 				htmlContent = getBodyContent(htmlContent);
 				htmlContent = removeFirstHeading(htmlContent);
 				htmlContent = wrapwithHeighlight(htmlContent, keywords);
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
+                const isPostContent = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_content( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
 
 				const blocks = wp.blocks.rawHandler({
 					HTML: htmlContent
@@ -640,12 +647,12 @@ PROMPT;
 
 			function writeWithAIForm() {
 
-                let title = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
+                let title = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_title( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
 				if (docsTitle) {
 					title = docsTitle;
 				}
 
-                const promtTitle = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_title( $_GET[ 'post' ] ) ) : '{Documentation Title}'; // phpcs:ignore                                         ?>`;
+                const promtTitle = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_title( absint( wp_unslash( $_GET['post'] ) ) ) ) : '{Documentation Title}'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
 				const titlePlaceholder = "<?php echo esc_attr__( 'Enter a descriptive title for your documentation.', 'betterdocs' ); ?>";
 				const keywords = "<?php echo esc_attr( '{Documentation Keywords}' ); ?>";
 				const keywordsPlaceholder = "<?php echo esc_attr__( 'Add keywords to generate precise & relevant documentation (comma-separated).', 'betterdocs' ); ?>";
@@ -671,7 +678,7 @@ PROMPT;
 
 				let hiddenClass = 'hidden';
 				let newDocPageAtt = 'data-new-doc-page="true"';
-                const isPostContent = `<?php echo isset( $_GET[ 'post' ] ) ? esc_html( get_the_content( $_GET[ 'post' ] ) ) : ''; // phpcs:ignore                                         ?>`;
+                const isPostContent = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_content( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
 
 				if (isPostContent !== '') {
 					hiddenClass = '';

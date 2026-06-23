@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Shortcodes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Core\Shortcode;
 

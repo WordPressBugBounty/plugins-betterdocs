@@ -1,5 +1,10 @@
 <div
-	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="betterdocs-article-reactions-sidebar">
 		<?php
 		$text_tag = isset( $text_tag ) ? $text_tag : 'h5';

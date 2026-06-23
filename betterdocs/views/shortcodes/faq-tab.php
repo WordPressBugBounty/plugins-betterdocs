@@ -1,5 +1,10 @@
 <div
-	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contains attriutes and values together which are required here ?>>
+	<?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contains attriutes and values together which are required here ?>>
 	<?php
 		$section_tag = betterdocs()->template_helper->is_valid_tag( $faq_section_title_tag );
 		echo wp_kses_post( '<' . $section_tag . ' class="' . esc_attr( $faq_heading_class ) . ' betterdocs-faq-section-title">' . esc_html( $faq_heading ) . '</' . $section_tag . '>' );
@@ -29,7 +34,7 @@
 					}
 					$faq_icon_url = get_term_meta($term->term_id, 'faq_group_icon', true);
 					echo '<div class="betterdocs-faq-tab" data-term-id="' . esc_attr( $term->term_id ) . '">';
-						echo ( ! empty( $faq_icon_url ) ) ? '<img src="'.$faq_icon_url.'" width="24" height="24" class="faq-group-image" />' : '';
+						echo ( ! empty( $faq_icon_url ) ) ? '<img src="' . esc_url( $faq_icon_url ) . '" width="24" height="24" class="faq-group-image" />' : '';
 						echo '<span class="faq-tab-title">' . esc_html( $term->name ) . '</span>';
 					echo '</div>';
 				}
@@ -43,7 +48,7 @@
 
 				$faq_icon_url = get_term_meta($term->term_id, 'faq_group_icon', true);
 				echo '<div class="betterdocs-faq-tab" data-term-id="' . esc_attr( $term->term_id ) . '">';
-					echo ( ! empty( $faq_icon_url ) ) ? '<img src="'.$faq_icon_url.'" width="24" height="24" class="faq-group-image" />' : '';
+					echo ( ! empty( $faq_icon_url ) ) ? '<img src="' . esc_url( $faq_icon_url ) . '" width="24" height="24" class="faq-group-image" />' : '';
 					echo '<span class="faq-tab-title">' . esc_html( $term->name ) . '</span>';
 
 					$faq_markup  = '<svg class="betterdocs-faq-iconplus" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">

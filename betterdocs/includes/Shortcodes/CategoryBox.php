@@ -1,6 +1,11 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by user-assigned meta is required UX.
 namespace WPDeveloper\BetterDocs\Shortcodes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Core\Shortcode;
 

@@ -1,5 +1,10 @@
 <?php
-	use WPDeveloper\BetterDocs\Utils\Helper;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 	$attributes = [
 		'data-id' => isset( $term->term_id ) ? $term->term_id : 0,

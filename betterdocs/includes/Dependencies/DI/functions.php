@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 declare(strict_types=1);
 
@@ -12,6 +13,8 @@ use WPDeveloper\BetterDocs\Dependencies\DI\Definition\Helper\FactoryDefinitionHe
 use WPDeveloper\BetterDocs\Dependencies\DI\Definition\Reference;
 use WPDeveloper\BetterDocs\Dependencies\DI\Definition\StringDefinition;
 use WPDeveloper\BetterDocs\Dependencies\DI\Definition\ValueDefinition;
+
+if ( ! defined( 'ABSPATH' ) ) { exit; } // Prevent direct file access.
 
 if (! function_exists('WPDeveloper\BetterDocs\Dependencies\DI\value')) {
     /**

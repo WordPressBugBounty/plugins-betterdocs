@@ -1,5 +1,6 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query,WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core block query; meta/tax filtering required.
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- block exposes user-driven exclusion controls.
 namespace WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks;
 
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Block;

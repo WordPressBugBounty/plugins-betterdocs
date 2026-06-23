@@ -1,6 +1,10 @@
 <tr>
 	<td>
-		<h2 id="<?php print( isset( $args['id'] ) ? esc_html( $args['id'] ) : '' ); ?>"><?php print( isset( $args['title'] ) ? esc_html( $args['title'] ) : '' ); ?></h2>
+		<h2 id="<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+print( isset( $args['id'] ) ? esc_html( $args['id'] ) : '' ); ?>"><?php print( isset( $args['title'] ) ? esc_html( $args['title'] ) : '' ); ?></h2>
 		<p class="welcome-sub-title"><?php print( isset( $args['sub_title'] ) ? esc_html( $args['sub_title'] ) : '' ); ?></p>
 		<?php
 		if ( isset( $args['video_url'] ) ) :

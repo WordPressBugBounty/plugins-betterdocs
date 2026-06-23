@@ -1,6 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-	wp_enqueue_style('betterdocs-pagination');
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+wp_enqueue_style('betterdocs-pagination');
 
     $author_id         = get_query_var( 'author' );
     $page              = get_query_var( 'page' );

@@ -1,6 +1,10 @@
 <div class="betterdocs-entry-footer">
 	<?php
-		/**
+		
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 		 * Tags
 		 */
 		echo '<div class="betterdocs-tags-print">';

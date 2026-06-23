@@ -1,5 +1,10 @@
 <?php
-	$_defined_vars    = get_defined_vars();
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$_defined_vars    = get_defined_vars();
 
 	$_layout_sequence = [ 'category_icon', 'category_title', 'category_counts' ];
 

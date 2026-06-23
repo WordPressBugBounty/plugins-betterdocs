@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Editors\BlockEditor;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\BlockTemplate;

@@ -1,6 +1,9 @@
 <?php
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 namespace WPDeveloper\BetterDocs\Dependencies\PhpParser;
+
+if ( ! defined( 'ABSPATH' ) ) { exit; } // Prevent direct file access.
 
 interface NodeTraverserInterface
 {

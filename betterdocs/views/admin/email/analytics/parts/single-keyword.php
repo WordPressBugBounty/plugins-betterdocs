@@ -1,6 +1,10 @@
 <?php
-
-	/**
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+// phpcs:disable PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- HTML email assets must be remote.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 	 * @var object $keyword
 	 */
 

@@ -1,5 +1,10 @@
 <?php
-	$attributes = [
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$attributes = [
 		'href'    => esc_url( $permalink ),
 		'data-id' => isset( $term->term_id ) ? esc_attr( $term->term_id ) : 0,
 		'class'   => [ 'category-box category-' . esc_attr( $term->slug ) ]

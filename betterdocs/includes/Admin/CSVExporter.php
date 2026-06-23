@@ -18,6 +18,7 @@ class CSVExporter {
 		'status'     => false,
 		'offset'     => 0,
 		'limit'      => -1,
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- exporter accepts user-defined meta filters by design.
 		'meta_query' => [], // If specified `meta_key` then will include all post(s) that have this meta_key.
 		'query_args' => []
 	];
@@ -74,6 +75,9 @@ class CSVExporter {
 			return [];
 		}
 
+		// $this->wpdb->posts and $this->wpdb->term_relationships are WP-provided table identifiers.
+		// Dynamic %d placeholder lists are built to match the corresponding integer arrays.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$where = $this->wpdb->prepare(
 			"{$this->wpdb->posts}.post_type = %s",
 			$this->args['content']
@@ -89,7 +93,7 @@ class CSVExporter {
 		}
 
 		if ( ! empty( $this->args['post__in'] ) ) {
-			$post_in         = $this->args['post__in'];
+			$post_in         = array_map( 'intval', $this->args['post__in'] );
 			$ids_placeholder = implode( ', ', array_fill( 0, count( $post_in ), '%d' ) );
 			$where          .= $this->wpdb->prepare(
 				" AND {$this->wpdb->posts}.ID IN ($ids_placeholder)",
@@ -107,7 +111,7 @@ class CSVExporter {
 			foreach ( $this->args['category_terms'] as $term_slug ) {
 				$term = get_term_by( 'slug', $term_slug, 'doc_category' );
 				if ( $term ) {
-					$tax_terms[] = $term->term_taxonomy_id;
+					$tax_terms[] = (int) $term->term_taxonomy_id;
 				}
 			}
 
@@ -121,14 +125,14 @@ class CSVExporter {
 		} elseif ( isset( $this->args['kb_terms'] ) ) {
 			$join = "INNER JOIN {$this->wpdb->term_relationships} ON ({$this->wpdb->posts}.ID = {$this->wpdb->term_relationships}.object_id)";
 			$kb_terms = [];
-			
+
 			foreach ( $this->args['kb_terms'] as $term_slug ) {
 				$term = get_term_by( 'slug', $term_slug, 'knowledge_base' );
 				if ( $term ) {
-					$kb_terms[] = $term->term_taxonomy_id;
+					$kb_terms[] = (int) $term->term_taxonomy_id;
 				}
 			}
-			
+
 			if ( ! empty( $kb_terms ) ) {
 				$term_placeholder = implode( ', ', array_fill( 0, count( $kb_terms ), '%d' ) );
 				$where .= $this->wpdb->prepare(
@@ -167,7 +171,8 @@ class CSVExporter {
 			$where .= ' ' . $query_clauses['where'];
 		}
 
-		// Get post IDs
+		// $where and $join are composed from prepared fragments above; identifiers are WP-provided.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$post_ids = $this->wpdb->get_col( "SELECT ID FROM {$this->wpdb->posts} $join WHERE $where" );
 
 		// Add FAQ post IDs if include_faq is true
@@ -178,6 +183,7 @@ class CSVExporter {
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
 					'post_status'    => 'publish',
+					// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- intentional: export the raw, untranslated FAQ set so multilingual filters don't drop or swap rows during export.
 					'suppress_filters' => true,
 				]
 			);
@@ -258,7 +264,7 @@ class CSVExporter {
 			$csv_data_combined[] = $combined_row;
 		}
 
-		$filename    = 'betterdocs.' . date( 'Y-m-d' ) . '.csv';
+		$filename    = 'betterdocs.' . gmdate( 'Y-m-d' ) . '.csv';
 		$csv_content = $this->generate_csv( $csv_data_combined );
 
 		return [
@@ -444,10 +450,18 @@ class CSVExporter {
 				}
 			}
 		} else {
-			$glossary_term_ids = $this->wpdb->get_col( "SELECT term_id from {$this->wpdb->term_taxonomy} where taxonomy='{$this->args['content']}';" );
+			// $this->wpdb->term_taxonomy is a WP-core table identifier; %s placeholder binds taxonomy name.
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$glossary_term_ids = $this->wpdb->get_col(
+				$this->wpdb->prepare(
+					"SELECT term_id FROM {$this->wpdb->term_taxonomy} WHERE taxonomy = %s",
+					(string) $this->args['content']
+				)
+			);
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter
 		}
 
-		$filename          = 'betterdocs.' . date( 'Y-m-d' ) . '.csv';
+		$filename          = 'betterdocs.' . gmdate( 'Y-m-d' ) . '.csv';
 		$csv_data_combined = $this->get_glossaries_csv_data( $glossary_term_ids );
 		$csv_content       = $this->generate_csv( $csv_data_combined );
 
@@ -642,6 +656,7 @@ class CSVExporter {
 			fputcsv( $output, $row );
 		}
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing php://output stream; WP_Filesystem does not apply.
 		fclose( $output );
 
 		return ob_get_clean();

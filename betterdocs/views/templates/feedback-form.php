@@ -1,6 +1,10 @@
 <div class="feedback-update-form">
 	<?php
-		betterdocs()->views->get( 'templates/feedback-parts/form' );
+		
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+betterdocs()->views->get( 'templates/feedback-parts/form' );
 
 		betterdocs()->views->get( 'template-parts/update-date' );
 	?>

@@ -1,6 +1,10 @@
 <div class="overlay-content">
 	<h3>
-		<?php esc_html_e( 'Unlock Analytics With BetterDocs PRO', 'betterdocs' ); ?>
+		<?php 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+esc_html_e( 'Unlock Analytics With BetterDocs PRO', 'betterdocs' ); ?>
 		<img src="<?php echo betterdocs()->assets->icon( 'analytics/lock.png', true ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is a markup so escaping is not needed here ?>" id="img-teaser" alt="">
 	</h3>
 	<p class="teaser-text teaser-desc">

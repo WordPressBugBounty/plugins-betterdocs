@@ -1,6 +1,11 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query,WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core docs REST endpoints; meta/tax filtering required.
 namespace WPDeveloper\BetterDocs\REST;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use Error;
 use WP_Query;
@@ -15,7 +20,7 @@ class Docs extends BaseAPI {
     public function register() {
         $this->get( 'search', [$this, 'search_posts'], [
             'password' => [
-                'description' => __( 'The password for password-protected docs.' ),
+                'description' => __( 'The password for password-protected docs.', 'betterdocs' ),
                 'type'        => 'string',
             ],
         ] );
@@ -24,7 +29,7 @@ class Docs extends BaseAPI {
         $this->get( 'months-with-posts', [$this, 'get_months_with_posts'] );
         $this->get( 'order_docs', [$this, 'render_betterdocs_order_docs'], [
             'password' => [
-                'description' => __( 'The password for password-protected docs.' ),
+                'description' => __( 'The password for password-protected docs.', 'betterdocs' ),
                 'type'        => 'string',
             ],
         ] );
@@ -71,7 +76,7 @@ class Docs extends BaseAPI {
         $posts = betterdocs()->query->get_posts( $args, true );
 
         if ( ! $posts->have_posts() ) {
-            wp_reset_query();
+            wp_reset_postdata();
         }
 
         $post_datas = [];
@@ -93,7 +98,7 @@ class Docs extends BaseAPI {
         endwhile;
 
         wp_reset_postdata();
-        wp_reset_query();
+        wp_reset_postdata();
 
         return $post_datas;
     }
@@ -263,6 +268,7 @@ class Docs extends BaseAPI {
         global $wpdb;
 
 		// Query to get distinct year and month from posts of type 'docs'
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- aggregation across the posts table; no user input.
 		$results = $wpdb->get_results(
 			"SELECT DISTINCT YEAR(post_date) AS year, MONTH(post_date) AS month
             FROM $wpdb->posts
@@ -372,7 +378,7 @@ class Docs extends BaseAPI {
 		// Common query args
 		$common_args = [
 			'post_status'      => $post_status,
-			'suppress_filters' => true,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- search bypasses content filters; WPML override below.
 			'orderby'          => 'relevance',
 		];
 
@@ -388,7 +394,7 @@ class Docs extends BaseAPI {
 			if ( $search_query && preg_match('/[^\x00-\x7F]/', $search_query) ) {
 				// Non-ASCII search: bypass ALL filters including WPML language filtering
 				// This allows searching across all languages
-				$common_args['suppress_filters'] = true;
+				$common_args['suppress_filters'] = true; // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- non-ASCII search must reach all WPML translations.
 			} else {
 				// ASCII-only search (English), use WPML filters to restrict to current language
 				$common_args['suppress_filters'] = false;
@@ -520,6 +526,7 @@ class Docs extends BaseAPI {
 				
 				// If WPML is active and post language differs from site language, add lang parameter
 				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML public integration filter.
 					$post_language = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => $post_id, 'element_type' => 'post_docs' ) );
 					
 					if ( $post_language ) {
@@ -570,13 +577,18 @@ class Docs extends BaseAPI {
 								
 								// Only query translation if not on default language
 								if ( $default_lang !== $current_lang ) {
-									$trp_table = $wpdb->prefix . 'trp_dictionary_' . $default_lang . '_' . $current_lang;
-									
-									// Query the translation dictionary for this title
+									$default_lang = preg_replace( '/[^a-z0-9_]/', '', $default_lang );
+									$current_lang = preg_replace( '/[^a-z0-9_]/', '', $current_lang );
+									$trp_table    = $wpdb->prefix . 'trp_dictionary_' . $default_lang . '_' . $current_lang;
+
+									// Query the translation dictionary for this title.
+									// $trp_table is composed from $wpdb->prefix + sanitized lang slugs (preg_replace allowlist above), safe to interpolate.
+									// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- TranslatePress dynamic dictionary table; cache would defeat live translation lookup.
 									$translated = $wpdb->get_var( $wpdb->prepare(
 										"SELECT translated FROM {$trp_table} WHERE original = %s AND status != 2 LIMIT 1",
 										$title
 									) );
+									// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 									
 									if ( $translated && ! empty( $translated ) ) {
 										$title = $translated;

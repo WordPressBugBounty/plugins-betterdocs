@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <div class="sticky-toc-container">
     <a class="close-toc" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" width="16px" viewBox="0 0 24 24">

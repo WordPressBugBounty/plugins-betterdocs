@@ -1,4 +1,9 @@
-<div class="tab-content" id="<?php print( isset( $section['id'] ) ? esc_html( $section['id'] ) : 'default-nav' ); ?>">
+<div class="tab-content" id="<?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+print( isset( $section['id'] ) ? esc_html( $section['id'] ) : 'default-nav' ); ?>">
 	<table class="form-table" role="presentation">
 		<tbody>
 			<?php

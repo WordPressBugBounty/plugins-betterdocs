@@ -6,6 +6,9 @@
  */
 
 namespace Better_Docs_Elementor\Traits {
+	if ( ! defined( 'ABSPATH' ) ) {
+		exit;
+	}
 	trait Template_Query {
 		private function get_default() {}
 		private function template_options() {}

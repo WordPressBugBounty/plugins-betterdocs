@@ -1,5 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound,WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- vendored Deliciousbrains WP_Background_Process; dynamic hook names use $this->identifier which is set per consumer.
 namespace WPDeveloper\BetterDocs\Admin\BackgroundProcess;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Admin\BackgroundProcess\WP_Async_Request;
 
@@ -481,7 +487,8 @@ abstract class WP_Background_Process extends WP_Async_Request {
 			$args[] = $limit;
 		}
 
-		$items = $wpdb->get_results( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- $table and $column are WP-provided ($wpdb->options/$wpdb->sitemeta) or hardcoded literals.
+		$items = $wpdb->get_results( $wpdb->prepare( $sql, $args ) );
 
 		$batches = array();
 

@@ -205,7 +205,9 @@ class Elementor extends BaseEditor {
             $wb->add_control(
                 'box_per_page',
                 [
-                    'label'   => __( $wb->get_name() == 'betterdocs-tab-view-list' ? 'Tabs Per Page' : 'Box Per Page', 'betterdocs' ),
+                    'label'   => $wb->get_name() == 'betterdocs-tab-view-list'
+                        ? __( 'Tabs Per Page', 'betterdocs' )
+                        : __( 'Box Per Page', 'betterdocs' ),
                     'type'    => Controls_Manager::NUMBER,
                     'default' => '8'
                 ]
@@ -946,11 +948,17 @@ class Elementor extends BaseEditor {
     }
 
     public function modified_ajax_action( $ajax ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Elementor's own ajax handler verifies nonce upstream.
         if ( ! isset( $_REQUEST['actions'] ) ) {
             return;
         }
 
-        $actions = json_decode( stripslashes( $_REQUEST['actions'] ), true );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Elementor's ajax handler verifies nonce; raw JSON is structure-validated below.
+        $raw_actions = wp_unslash( $_REQUEST['actions'] );
+        $actions     = json_decode( $raw_actions, true );
+        if ( ! is_array( $actions ) ) {
+            return;
+        }
         $data    = false;
 
         foreach ( $actions as $id => $action_data ) {

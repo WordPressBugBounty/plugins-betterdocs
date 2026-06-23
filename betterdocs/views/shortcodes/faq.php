@@ -1,5 +1,10 @@
 <div
-	<?php echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contains attriutes and values together which are required here ?>>
+	<?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contains attriutes and values together which are required here ?>>
 	<?php
 		$section_tag = betterdocs()->template_helper->is_valid_tag( $faq_section_title_tag );
 		echo wp_kses_post( '<' . $section_tag . ' class="' . esc_attr( $faq_heading_class ) . ' betterdocs-faq-section-title">' . esc_html( $faq_heading ) . '</' . $section_tag . '>' );

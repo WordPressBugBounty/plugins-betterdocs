@@ -1,6 +1,10 @@
 <div class="betterdocs-entry-footer">
 	<?php
-		/**
+		
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 		 * Tags
 		 */
 		$view_object->get( 'templates/parts/tags' );

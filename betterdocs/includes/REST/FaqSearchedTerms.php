@@ -14,7 +14,7 @@ class FaqSearchedTerms extends BaseAPI {
     public function register() {
         $this->get( 'faq-terms-by-keyword-search', [$this, 'search_logic'], [
             'password' => [
-                'description' => __( 'The password for password-protected FAQs.' ),
+                'description' => __( 'The password for password-protected FAQs.', 'betterdocs' ),
                 'type'        => 'string',
             ],
         ] );

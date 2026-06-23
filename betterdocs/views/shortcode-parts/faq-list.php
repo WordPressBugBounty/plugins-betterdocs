@@ -1,5 +1,10 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 $faqs = betterdocs()->query->get_faq_by_term( $term->term_id );
 
 if ( $faqs->have_posts() ) {
@@ -33,7 +38,7 @@ if ( $faqs->have_posts() ) {
 		}
 	endwhile;
 	wp_reset_postdata();
-	wp_reset_query();
+	wp_reset_postdata();
 	echo $faq_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo '</ul>';
 } else {

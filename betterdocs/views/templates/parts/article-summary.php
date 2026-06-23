@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 /**
  * Template part for displaying Article Summary
  *
@@ -32,7 +33,7 @@ if ( ! $is_editor_mode ) {
 	$post_content = get_post_field( 'post_content', $post_id );
 
 	// Return early if no content exists
-	if ( empty( $post_content ) || trim( strip_tags( $post_content ) ) === '' ) {
+	if ( empty( $post_content ) || trim( wp_strip_all_tags( $post_content ) ) === '' ) {
 		return;
 	}
 }
@@ -103,7 +104,7 @@ $loading_style = isset( $loading_style ) && is_string( $loading_style ) ? $loadi
 	<?php if ( $show_title ) : ?>
 		<div class="betterdocs-summary-header" id="betterdocs-summary-toggle">
 			<span class="betterdocs-summary-title" <?php echo ! empty( $title_style ) ? 'style="' . esc_attr( $title_style ) . '"' : ''; ?>>
-				<img src="<?php echo betterdocs()->assets->icon( 'ai-summary-icon.svg' ); ?>" alt="<?php echo esc_html__( 'AI Doc Summarizer', 'betterdocs' ); ?>" />
+				<img src="<?php echo esc_url( betterdocs()->assets->icon( 'ai-summary-icon.svg' ) ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer', 'betterdocs' ); ?>" />
 				<?php echo esc_html( $title_text ); ?>
 				<span class="betterdocs-summary-arrow" <?php echo ! empty( $icon_style ) ? 'style="' . esc_attr( $icon_style ) . '"' : ''; ?>>
 					<?php echo $arrow_right; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG icons cannot be escaped ?>
@@ -115,7 +116,7 @@ $loading_style = isset( $loading_style ) && is_string( $loading_style ) ? $loadi
 
 	<div class="betterdocs-summary-content" id="betterdocs-summary-content" style="display: <?php echo $is_editor_mode ? 'block' : 'none'; ?>;">
 		<div class="betterdocs-summary-loading" id="betterdocs-summary-loading" style="display: none;" <?php echo ! empty( $loading_style ) ? 'data-style="' . esc_attr( $loading_style ) . '"' : ''; ?>>
-			<img src="<?php echo betterdocs()->assets->icon( 'thinking-spinner.gif' ); ?>" alt="<?php echo esc_html__( 'AI Doc Summarizer Thinking', 'betterdocs' ); ?>" />
+			<img src="<?php echo esc_url( betterdocs()->assets->icon( 'thinking-spinner.gif' ) ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer Thinking', 'betterdocs' ); ?>" />
 			<span class="betterdocs-thinking-text">
 				<?php echo esc_html__( 'Thinking', 'betterdocs' ); ?><span class="betterdocs-thinking-dots"></span>
 			</span>

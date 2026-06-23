@@ -1,5 +1,10 @@
 <?php
-    $from_date = isset( $args['views']['from_date'] ) ? date( 'M j, Y', strtotime( $args['views']['from_date'] ) ) : ''; //phpcs:ignore
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+// phpcs:disable PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- HTML email assets must be remote.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$from_date = isset( $args['views']['from_date'] ) ? date( 'M j, Y', strtotime( $args['views']['from_date'] ) ) : ''; //phpcs:ignore
     $to_date   = isset( $args['views']['to_date'] ) ? date( 'M j, Y', strtotime( $args['views']['to_date'] ) ) : ''; //phpcs:ignore
 ?>
 <tr style="background: #26d67d">

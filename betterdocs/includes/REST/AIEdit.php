@@ -48,7 +48,7 @@ class AIEdit extends BaseAPI {
     }
 
     public function permission_check() {
-        $post_id = isset( $_REQUEST[ 'post_id' ] ) ? intval( $_REQUEST[ 'post_id' ] ) : 0;
+        $post_id = isset( $_REQUEST[ 'post_id' ] ) ? intval( $_REQUEST[ 'post_id' ] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- REST permission_check; read-only id, request auth handled by the route's permission_callback.
 
         if ( $post_id <= 0 ) {
             return current_user_can( 'edit_posts' );

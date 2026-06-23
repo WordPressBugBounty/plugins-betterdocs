@@ -1,7 +1,10 @@
 <?php namespace WPDeveloper\BetterDocs\Dependencies\SuperClosure;
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 use Closure;
 use WPDeveloper\BetterDocs\Dependencies\SuperClosure\Exception\ClosureUnserializationException;
+
+if ( ! defined( 'ABSPATH' ) ) { exit; } // Prevent direct file access.
 
 /**
  * This class acts as a wrapper for a closure, and allows it to be serialized.

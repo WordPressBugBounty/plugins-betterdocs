@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Traits;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 trait CategoryBox {
 	public function header_sequence( $_layout_sequence, $layout, $widget_type, $_defined_vars ) {

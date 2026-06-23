@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\FrontEnd;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Views;

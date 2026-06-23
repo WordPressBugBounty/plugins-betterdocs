@@ -1,7 +1,11 @@
 <div class="betterdocs-search-result-wrap">
 	<ul class="docs-search-result">
 		<?php
-		if ( $search_results->have_posts() ) {
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+if ( $search_results->have_posts() ) {
 			$input_not_found = '';
 			while ( $search_results->have_posts() ) :
 				$search_results->the_post();
@@ -38,6 +42,7 @@
 				
 				// Handle WPML permalinks
 				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML public integration filter.
 					$post_language = apply_filters( 'wpml_element_language_code', null, array( 'element_id' => $post_id, 'element_type' => 'post_docs' ) );
 					
 					if ( $post_language ) {

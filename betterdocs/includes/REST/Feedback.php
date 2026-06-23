@@ -1,6 +1,10 @@
 <?php
-
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live reaction analytics writes; cache would defeat the purpose.
 namespace WPDeveloper\BetterDocs\REST;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 use WP_REST_Request;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
@@ -101,22 +105,24 @@ class Feedback extends BaseAPI {
 	public function analytics_by_post_id( $post_id ) {
 		global $wpdb;
 
-		$where = "WHERE post_id='" . esc_sql( $post_id ) . "'";
 		return $wpdb->get_results(
-			"SELECT
-                sum(impressions) as totalViews,
-                sum(unique_visit) as totalUniqueViews,
-                sum(happy + sad + normal) as totalReactions,
-                sum(happy) as totalHappy,
-                sum(normal) as totalNormal,
-                sum(sad) as totalSad
-            FROM {$wpdb->prefix}betterdocs_analytics
-            $where"
+			$wpdb->prepare(
+				"SELECT
+					sum(impressions) as totalViews,
+					sum(unique_visit) as totalUniqueViews,
+					sum(happy + sad + normal) as totalReactions,
+					sum(happy) as totalHappy,
+					sum(normal) as totalNormal,
+					sum(sad) as totalSad
+				FROM {$wpdb->prefix}betterdocs_analytics
+				WHERE post_id = %d",
+				(int) $post_id
+			)
 		);
 	}
 
 	public function get_word_count( $object, $field_name, $request ) {
-		return str_word_count( trim( strip_tags( get_post_field( 'post_content', $object['id'] ) ) ) );
+		return str_word_count( trim( wp_strip_all_tags( get_post_field( 'post_content', $object['id'] ) ) ) );
 	}
 
 	public function get_total_views( $object, $field_name, $request ) {
@@ -149,45 +155,43 @@ class Feedback extends BaseAPI {
 
 	public function save( WP_REST_Request $request ) {
 		global $wpdb;
-		$docs_id  = isset( $request['id'] ) ? esc_sql( intval( $request['id'] ) ) : null;
-		$feelings = isset( $request['feelings'] ) ? esc_sql( $request['feelings'] ) : 'happy';
+		$docs_id           = isset( $request['id'] ) ? (int) $request['id'] : null;
+		$valid_feelings    = [ 'happy', 'normal', 'sad' ];
+		$requested_feeling = isset( $request['feelings'] ) ? (string) $request['feelings'] : 'happy';
+		$feelings          = in_array( $requested_feeling, $valid_feelings, true ) ? $requested_feeling : 'happy';
+		$analytics_table   = $wpdb->prefix . 'betterdocs_analytics';
 		if ( $docs_id !== null && get_post( $docs_id ) && get_option( 'betterdocs_db_version' ) == true ) {
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $analytics_table = $wpdb->prefix + literal; per-request reaction lookup, no cache layer applies.
 			$post_id = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT *
-                    FROM {$wpdb->prefix}betterdocs_analytics
-                    WHERE created_at = %s AND post_id = %d",
-					date( 'Y-m-d' ),
+					"SELECT * FROM {$analytics_table} WHERE created_at = %s AND post_id = %d",
+					gmdate( 'Y-m-d' ),
 					$docs_id
 				)
 			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 			if ( ! empty( $post_id ) ) {
-				$feelings_increment = $post_id[0]->{$feelings} + 1;
-                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$insert = $wpdb->query(
+				$feelings_increment = (int) $post_id[0]->{$feelings} + 1;
+				// $feelings is validated above against $valid_feelings allowlist — safe to interpolate as column identifier.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $analytics_table = $wpdb->prefix + literal; per-request reaction counter, no cache layer applies.
+				$insert             = $wpdb->query(
 					$wpdb->prepare(
-						"UPDATE {$wpdb->prefix}betterdocs_analytics
-                    SET " . $feelings . ' = ' . $feelings_increment . '
-                    WHERE created_at = %s AND post_id = %d',
-						[
-							date( 'Y-m-d' ),
-							$docs_id
-						]
+						"UPDATE {$analytics_table} SET {$feelings} = %d WHERE created_at = %s AND post_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						$feelings_increment,
+						gmdate( 'Y-m-d' ),
+						$docs_id
 					)
 				);
 			} else {
-                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				// $feelings is validated above against $valid_feelings allowlist — safe to interpolate as column identifier.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,PluginCheck.Security.DirectDB.UnescapedDBParameter -- $analytics_table = $wpdb->prefix + literal; per-request reaction counter, no cache layer applies.
 				$insert = $wpdb->query(
 					$wpdb->prepare(
-						"INSERT INTO {$wpdb->prefix}betterdocs_analytics
-                        ( post_id, " . $request['feelings'] . ', created_at )
-                        VALUES ( %d, %d, %s )',
-						[
-							$docs_id,
-							1,
-							date( 'Y-m-d' )
-						]
+						"INSERT INTO {$analytics_table} ( post_id, {$feelings}, created_at ) VALUES ( %d, %d, %s )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						$docs_id,
+						1,
+						gmdate( 'Y-m-d' )
 					)
 				);
 			}

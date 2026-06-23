@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 namespace WPDeveloper\BetterDocs\Dependencies\PhpParser\Builder;
 

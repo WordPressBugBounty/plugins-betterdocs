@@ -1,7 +1,19 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Modules;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+
+
+// Doc/category-listing primitives (meta_query/tax_query, post__not_in/exclude)
+// are intrinsic to BetterDocs' KB / category / FAQ filters and intentional.
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
 use WPDeveloper\BetterDocs\Utils\CSSParser;
 
 final class StyleHandler {
@@ -173,6 +185,7 @@ final class StyleHandler {
         $deps = apply_filters( 'betterdocs_generated_css_frontend_deps', array(  ) );
 
         // generatepress elements
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core 'active_plugins' filter, applied to detect GeneratePress Premium presence on multisite.
         if ( in_array( 'gp-premium/gp-premium.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             $gp_elements = get_posts( array( 'post_type' => 'gp_elements' ) );
             if ( is_array( $gp_elements ) && ! empty( $gp_elements ) ) {
@@ -323,14 +336,14 @@ final class StyleHandler {
             }
             if ( ! empty( $css = CSSParser::build_css( $block_styles ) ) ) {
                 if ( ! file_exists( $this->style_dir ) ) {
-                    mkdir( $this->style_dir );
+                    wp_mkdir_p( $this->style_dir );
                 }
                 file_put_contents( $this->style_dir . $this->prefix . '-edit-site-' . abs( $post->ID ) . '.min.css', $css );
             }
         } // Write CSS for Page/Posts
         elseif ( ! empty( $css = CSSParser::build_css( $block_styles ) ) ) {
             if ( ! file_exists( $this->style_dir ) ) {
-                mkdir( $this->style_dir );
+                wp_mkdir_p( $this->style_dir );
             }
             file_put_contents( $this->style_dir . $this->prefix . '-' . abs( $post->ID ) . '.min.css', $css );
         }
@@ -346,7 +359,7 @@ final class StyleHandler {
             if ( ! empty( $css = CSSParser::build_css( $block_styles ) ) ) {
                 $upload_dir = $this->style_dir . 'reusable-blocks/';
                 if ( ! file_exists( $upload_dir ) ) {
-                    mkdir( $upload_dir, 0777, true );
+                    wp_mkdir_p( $upload_dir );
                 }
                 file_put_contents( $upload_dir . '/' . 'betterdocs-reusable-' . abs( $id ) . '.min.css', $css );
             }
@@ -385,14 +398,14 @@ final class StyleHandler {
 
             if ( ! empty( $css = CSSParser::build_css( self::$_block_styles ) ) ) {
                 if ( ! file_exists( $upload_dir ) ) {
-                    mkdir( $upload_dir );
+                    wp_mkdir_p( $upload_dir );
                 }
 
                 file_put_contents( $editSiteCssPath, $css );
             }
         } elseif ( ! empty( $css = CSSParser::build_css( $block_styles ) ) ) {
             if ( ! file_exists( $this->style_dir ) ) {
-                mkdir( $this->style_dir );
+                wp_mkdir_p( $this->style_dir );
             }
 
             file_put_contents( $editSiteCssPath, $css );
@@ -406,6 +419,7 @@ final class StyleHandler {
         global $wpdb;
         $sql = $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts WHERE post_name = %s", $post_name );
 
-        return $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off lookup of FSE template posts by post_name during CSS generation; no caching layer applies.
+        return $wpdb->get_results( $sql, ARRAY_A );
     }
 }

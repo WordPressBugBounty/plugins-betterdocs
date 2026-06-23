@@ -1,4 +1,9 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+// phpcs:disable PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- HTML email assets must be remote.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 $image_url = '';
 if ( ! $is_pro ) :
 	$image_url = 'https://betterdocs.co/wp-content/uploads/2022/11/Analytics.gif';

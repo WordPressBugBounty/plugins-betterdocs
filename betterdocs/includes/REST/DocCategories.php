@@ -1,5 +1,9 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- core docs taxonomy REST endpoints; meta filtering required.
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- endpoint exposes user-driven exclusion.
+// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table identifiers (WP-provided) and dynamic %s placeholders are intentional.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- the uncategorized-docs scan needs raw SQL because WP_Query has no NOT-IN-via-subquery primitive.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- list is rebuilt per-request from live post/term state; cache would mask uncategorized status changes.
 namespace WPDeveloper\BetterDocs\REST;
 
 use stdClass;
@@ -15,7 +19,7 @@ class DocCategories extends BaseAPI {
     public function register() {
         $this->get( 'doc-categories', array( $this, 'get_response' ), array(
             'password' => array(
-                'description' => __( 'The password for password-protected docs.' ),
+                'description' => __( 'The password for password-protected docs.', 'betterdocs' ),
                 'type' => 'string'
             )
         ) );
@@ -191,7 +195,7 @@ class DocCategories extends BaseAPI {
             $response[ $term->term_id ] = array();
 
             if ( ! $posts->have_posts() ) {
-                wp_reset_query();
+                wp_reset_postdata();
             }
             while ( $posts->have_posts() ):
                 $posts->the_post();
@@ -210,7 +214,7 @@ class DocCategories extends BaseAPI {
             endwhile;
 
             wp_reset_postdata();
-            wp_reset_query();
+            wp_reset_query(); // phpcs:ignore WordPress.WP.DiscouragedFunctions.wp_reset_query_wp_reset_query -- explicit global WP_Query reset after a custom loop; wp_reset_postdata() above only restores post data.
 
             // WP_Query's `orderby=post__in` is stripped by some plugins/filters
             // (notably WPML on REST requests), so apply the saved order in PHP
@@ -225,14 +229,18 @@ class DocCategories extends BaseAPI {
         /**
          * Uncategories Docs
          */
-        // Build secure query for uncategorized docs with proper post status filtering
+        // Build secure query for uncategorized docs with proper post status filtering.
+        // $wpdb->posts / $wpdb->term_relationships / $wpdb->term_taxonomy are WP-provided
+        // table identifiers (safe to interpolate). Dynamic %s placeholder count is built
+        // from a fixed-shape $post_status array.
         $post_status_placeholders = implode( ',', array_fill( 0, count( $post_status ), '%s' ) );
-        $_post__not_in_query      = $wpdb->prepare(
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- WP table identifiers; placeholders dynamically generated to match $post_status size.
+        $_post__not_in_query = $wpdb->prepare(
             "SELECT ID as post_id from $wpdb->posts WHERE post_type = %s AND post_status IN ($post_status_placeholders) AND post_status != 'trash' AND post_status != 'auto-draft' AND ID NOT IN ( SELECT object_id as post_id FROM $wpdb->term_relationships WHERE term_taxonomy_id IN ( SELECT term_taxonomy_id FROM $wpdb->term_taxonomy WHERE taxonomy = %s ) )",
             array_merge( array( 'docs' ), $post_status, array( 'doc_category' ) )
         );
 
-        $_post__not_in = $wpdb->get_col( $_post__not_in_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $_post__not_in = $wpdb->get_col( $_post__not_in_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query is prepared above.
 
         if ( ! empty( $_post__not_in ) ) {
             $uncategorized_docs       = array();
@@ -250,7 +258,7 @@ class DocCategories extends BaseAPI {
             $_uncategorized_docs_query = new \WP_Query( $uncategorized_query_args );
 
             if ( ! $_uncategorized_docs_query->have_posts() ) {
-                wp_reset_query();
+                wp_reset_postdata();
             }
             while ( $_uncategorized_docs_query->have_posts() ):
                 $_uncategorized_docs_query->the_post();
@@ -269,7 +277,7 @@ class DocCategories extends BaseAPI {
             endwhile;
 
             wp_reset_postdata();
-            wp_reset_query();
+            wp_reset_postdata();
 
             $response[ 'uncategorized' ] = $uncategorized_docs;
         }

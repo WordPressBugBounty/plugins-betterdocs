@@ -1,5 +1,10 @@
 <?php
-	$current_category = get_queried_object();
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$current_category = get_queried_object();
 
 if ( $current_category != null && $layout == 'layout-1' ) :
 
@@ -8,10 +13,10 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 				<div class="betterdocs-content-inner-area">
 							<div class="betterdocs-entry-title">
 							<?php
-								$title_tag = betterdocs()->template_helper->is_valid_tag( isset( $title_tag ) ? $title_tag : 'h2' );
+								$title_tag = tag_escape( betterdocs()->template_helper->is_valid_tag( isset( $title_tag ) ? $title_tag : 'h2' ) );
 								echo wp_sprintf(
 									'<%1$s class="betterdocs-entry-heading">%2$s</%1$s>',
-									$title_tag,
+									$title_tag, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									esc_html( $current_category->name )
 								);
 								echo wp_sprintf( '<p>%s</p>', wp_kses_post( $current_category->description ) );
@@ -24,6 +29,8 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 			</div>
 		<?php
 	elseif ( $current_category != null && $layout == 'layout-2' ) :
+		// Public action name predates the prefix convention; renaming would break third-party integrations.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		do_action( 'archive_handbook_list' );
 	elseif ( $current_category != null && ( $layout == 'layout-3' || $layout == 'layout-4' ) ) :
 		$post_query = new WP_Query( $query_args );
@@ -33,7 +40,7 @@ if ( $current_category != null && $layout == 'layout-1' ) :
 		$css_class = $layout == 'layout-3' ? 'doc-category-layout-7' : 'doc-category-layout-4';
 		$template = $layout == 'layout-3' ? 'template-parts/archive-doc-list' : 'template-parts/archive-doc-list-2';
 
-		echo '<div class="' . esc_attr( $blockId ) . ' ' . $css_class . '">';
+		echo '<div class="' . esc_attr( $blockId ) . ' ' . esc_attr( $css_class ) . '">';
 		betterdocs()->views->get(
 			$template,
 			[

@@ -1,5 +1,10 @@
 <?php
-	/** @var \WPDeveloper\BetterDocs\Shortcodes\ToC $widget */
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/** @var \WPDeveloper\BetterDocs\Shortcodes\ToC $widget */
 if ( $post !== null ) {
 	// Check if post is password protected and user hasn't provided correct password
 	if ( post_password_required( $post->ID ) ) {

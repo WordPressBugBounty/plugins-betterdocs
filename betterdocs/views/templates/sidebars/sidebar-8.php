@@ -1,5 +1,10 @@
 <?php
-	if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 		if ( ! betterdocs()->settings->get( 'enable_sidebar_cat_list' ) && isset( $layout_type ) && $layout_type == 'template' ) {
 			return;
 		}

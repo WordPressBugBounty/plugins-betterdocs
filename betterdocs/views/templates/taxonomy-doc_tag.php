@@ -1,6 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-	/**
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+/**
 	 * Template archive docs
 	 *
 	 * @link       https://wpdeveloper.com
@@ -63,6 +68,7 @@
 								'term_id'        => isset( $current_category->term_id ) ? $current_category->term_id : '',
 								'term_slug'      => isset( $current_category->slug ) ? $current_category->slug : '',
 								'posts_per_page' => -1,
+								// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- tag-archive listing requires tax filtering by design.
 								'tax_query'      => apply_filters( 'betterdocs_tag_tax_query', $_tax_query, $current_category )
 							]
 						);

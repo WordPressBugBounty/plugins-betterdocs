@@ -507,7 +507,7 @@ class ArticleSummary extends Widget_Base {
 			<# if ( showTitle ) { #>
 				<div class="betterdocs-summary-header" id="betterdocs-summary-toggle">
 					<h3 class="betterdocs-summary-title">
-						<img src="<?php echo betterdocs()->assets->icon( 'ai-summary-icon.svg' ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer', 'betterdocs' ); ?>" />
+						<img src="<?php echo esc_url( betterdocs()->assets->icon( 'ai-summary-icon.svg' ) ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer', 'betterdocs' ); ?>" />
 						{{{ titleText }}}
 						<span class="betterdocs-summary-arrow">
 							<svg class="angle-icon angle-right" width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -523,7 +523,7 @@ class ArticleSummary extends Widget_Base {
 
 			<div class="betterdocs-summary-content" id="betterdocs-summary-content" style="display: block;">
 				<div class="betterdocs-summary-loading" id="betterdocs-summary-loading" style="display: none;">
-					<img src="<?php echo betterdocs()->assets->icon( 'thinking-icon.svg' ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer Thinking', 'betterdocs' ); ?>" />
+					<img src="<?php echo esc_url( betterdocs()->assets->icon( 'thinking-icon.svg' ) ); ?>" alt="<?php echo esc_attr__( 'AI Doc Summarizer Thinking', 'betterdocs' ); ?>" />
 					<?php echo esc_html__( 'Thinking...', 'betterdocs' ); ?>
 				</div>
 				<div class="betterdocs-summary-text" id="betterdocs-summary-text">

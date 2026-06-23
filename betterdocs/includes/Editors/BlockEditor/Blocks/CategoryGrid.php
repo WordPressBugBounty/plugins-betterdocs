@@ -1,5 +1,6 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query,WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core block query; meta/tax filtering required.
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- block exposes user-driven exclusion controls.
 namespace WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks;
 
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Block;
@@ -34,10 +35,9 @@ class CategoryGrid extends Block {
 
 	public function register_scripts() {
 		//when thrive editor mode is active, do not enqueue this script, this causes an issue with thrive edit mode
-		$check_for_thrive = isset( $_GET['action'] ) ? $_GET['action'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-
-		//when thrive editor mode is active, do not enqueue this script, this causes an issue with thrive edit mode
-		if ( $check_for_thrive == 'architect' ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only editor detection.
+		$check_for_thrive = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		if ( $check_for_thrive === 'architect' ) {
 			return;
 		}
 

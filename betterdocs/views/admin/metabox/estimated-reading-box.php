@@ -1,5 +1,10 @@
 <?php
-	$post_id          = get_the_ID();
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+	
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$post_id          = get_the_ID();
 	$est_reading_text = ! empty( get_post_meta( $post_id, '_betterdocs_est_reading_text', true ) ) ? get_post_meta( $post_id, '_betterdocs_est_reading_text', true ) : '';
 ?>
 <div class="est-reading-box-wrapper">

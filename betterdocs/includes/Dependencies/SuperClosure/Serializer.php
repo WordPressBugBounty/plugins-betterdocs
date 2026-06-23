@@ -1,4 +1,5 @@
 <?php namespace WPDeveloper\BetterDocs\Dependencies\SuperClosure;
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 use WPDeveloper\BetterDocs\Dependencies\SuperClosure\Analyzer\AstAnalyzer as DefaultAnalyzer;
 use WPDeveloper\BetterDocs\Dependencies\SuperClosure\Analyzer\ClosureAnalyzer;

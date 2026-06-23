@@ -29,7 +29,7 @@ class ReadingTime extends Shortcode {
 
 	public function view_params() {
 		$single_doc_content        = $this->attributes['the_content'];
-		$content_without_html_tags = strip_tags( $single_doc_content );
+		$content_without_html_tags = wp_strip_all_tags( $single_doc_content );
 		preg_match_all( '/<[^>]*>|[\p{L}\p{M}]+/u', $content_without_html_tags, $matches );
 		$reading_total_words = ! empty( $matches[0] ) ? count( $matches[0] ) : count( [] );
 

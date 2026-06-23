@@ -1,6 +1,11 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-    // Get the author's ID
+    
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// Get the author's ID
     $author_id = get_post_field( 'post_author', get_the_ID() );
 
     // Get the author's avatar with a specified size
@@ -10,11 +15,11 @@
 
 ?>
 
-<a class="betterdocs-author-date" href="<?php echo $authors_url; ?>">
+<a class="betterdocs-author-date" href="<?php echo esc_url( $authors_url ); ?>">
     <div class="betterdocs-author">
         <?php
-            echo '<div class="author-avatar">' . $author_avatar . '</div>';
-            echo '<span>' . get_the_author_meta( 'display_name', $author_id ) . '</span>';
+            echo '<div class="author-avatar">' . wp_kses_post( $author_avatar ) . '</div>';
+            echo '<span>' . esc_html( get_the_author_meta( 'display_name', $author_id ) ) . '</span>';
         ?>
     </div>
     <?php betterdocs()->views->get( 'template-parts/update-date' );?>

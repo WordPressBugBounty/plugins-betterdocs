@@ -88,7 +88,7 @@ class NoticePointers {
 							type: 'POST',
 							data: {
 								action: 'betterdocs_dismiss_black_friday_pointer',
-								nonce: '<?php echo wp_create_nonce( 'betterdocs_dismiss_pointer' ); ?>',
+								nonce: '<?php echo esc_js( wp_create_nonce( 'betterdocs_dismiss_pointer' ) ); ?>',
 								introduction_key: '<?php echo esc_attr( self::DISMISS_ACTION_KEY ); ?>'
 							}
 						});

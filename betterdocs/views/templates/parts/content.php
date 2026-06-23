@@ -1,5 +1,12 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// 'the_content' is a WP-core filter; using its documented name is required.
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 $content = apply_filters( 'the_content', get_the_content() );
 
 $_htags = $_enable_toc = null;

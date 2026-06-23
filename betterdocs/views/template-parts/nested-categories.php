@@ -1,5 +1,10 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 use WPDeveloper\BetterDocs\Utils\Helper;
 
 if ( ! $nested_subcategory ) {
@@ -11,11 +16,14 @@ $_terms_args = [
 	'hide_empty' => true
 ];
 
+// User-controlled exclusion list for nested category rendering — exclude is required UX.
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 if ( isset( $terms_exclude ) ) {
 	$_terms_args['exclude'] = $terms_exclude;
 } elseif ( isset( $exclude ) ) {
 	$_terms_args['exclude'] = $exclude;
 }
+// phpcs:enable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude
 
 $nested_terms_query = isset( $nested_terms_query ) ? array_merge( $_terms_args, $nested_terms_query ) : $_terms_args;
 

@@ -1,4 +1,9 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+// phpcs:disable PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- HTML email assets must be remote.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 if ( empty( $args ) ) {
 	return;
 }
@@ -100,7 +105,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $views );
-									echo $view_arrow;
+									echo wp_kses_post( $view_arrow );
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $view_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_views ); ?>%
@@ -119,7 +124,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $total_search );
-									echo $search_arrow;
+									echo wp_kses_post( $search_arrow );
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $search_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_total_search ); ?>%
@@ -141,7 +146,7 @@ if ( $percentage_total_docs == '0.00' ) {
 							<h2 style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $reactions );
-									echo $reactions_arrow;
+									echo wp_kses_post( $reactions_arrow );
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $reactions_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_reactions ); ?>%
@@ -162,7 +167,7 @@ if ( $percentage_total_docs == '0.00' ) {
 								style="font-size: 22px; line-height: 1em; font-weight: 700; color: #1d1d1f; margin: 0;">
 								<?php
 									echo esc_html( $total_docs );
-									echo $docs_arrow;
+									echo wp_kses_post( $docs_arrow );
 								?>
 								<span style="font-size: 14px; line-height: 1.1em; font-weight: 600; color: <?php echo esc_attr( $docs_color ); ?>; margin-left: 5px;">
 									<?php echo esc_html( $percentage_total_docs ); ?>%

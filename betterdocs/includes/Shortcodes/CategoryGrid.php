@@ -1,6 +1,11 @@
 <?php
-
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- shortcode exposes user-driven exclusion attribute.
 namespace WPDeveloper\BetterDocs\Shortcodes;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Core\Shortcode;

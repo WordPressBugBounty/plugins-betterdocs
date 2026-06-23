@@ -1,4 +1,9 @@
-<?php $reading_text    = betterdocs()->settings->get( 'estimated_reading_time_text' );
+<?php 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+$reading_text    = betterdocs()->settings->get( 'estimated_reading_time_text' );
 $singular_reading_text = betterdocs()->settings->get( 'singular_estimated_reading_time_text' );
 $reading_title         = betterdocs()->settings->get( 'estimated_reading_time_title' );
 $article_summary 	   = betterdocs()->settings->get( 'enable_article_summary', false );

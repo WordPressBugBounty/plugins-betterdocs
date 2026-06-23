@@ -1,6 +1,14 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+// Glossary-by-term and glossary admin filters require tax_query and meta_key.
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
 use WP_Query;
 use WP_Error;
@@ -116,9 +124,9 @@ class Glossaries extends Base {
 		// Run this every time in admin to ensure status is properly set
 		// Get all glossaries terms
 		$all_terms = get_terms( array(
-			'taxonomy' => 'glossaries',
-			'hide_empty' => false,
-			'suppress_filters' => true // Bypass language filtering
+			'taxonomy'         => 'glossaries',
+			'hide_empty'       => false,
+			'suppress_filters' => true, // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- intentional WPML/Polylang language bypass.
 		) );
 
 		if ( ! empty( $all_terms ) && ! is_wp_error( $all_terms ) ) {
@@ -181,11 +189,12 @@ class Glossaries extends Base {
 	private function get_max_taxonomy_order( $tax_slug ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live max-order needed when assigning new terms; cache would be stale.
 		$max_term_order = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT MAX( CAST( tm.meta_value AS UNSIGNED ) )
 				FROM $wpdb->terms t
-				JOIN $wpdb->term_taxonomy tt ON t.term_id = tt.term_id AND tt.taxonomy = '%s'
+				JOIN $wpdb->term_taxonomy tt ON t.term_id = tt.term_id AND tt.taxonomy = %s
 				JOIN $wpdb->termmeta tm ON tm.term_id = t.term_id WHERE tm.meta_key = 'order'",
 				$tax_slug
 			)
@@ -753,6 +762,7 @@ class Glossaries extends Base {
 
 			if ( $taxonomy_objects && ! is_wp_error( $taxonomy_objects ) ) :
 				foreach ( $taxonomy_objects as $term ) :
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- core glossary-by-term query; tax filtering is required functionality.
 					$args = [
 						'post_type'     => 'betterdocs_faq',
 						'post_status'   => 'publish',
@@ -860,7 +870,7 @@ class Glossaries extends Base {
 			// Get all glossaries terms without language filtering
 			$all_args = $args;
 			unset( $all_args['lang'] );
-			$all_args['suppress_filters'] = true; // Bypass all filters including language ones
+			$all_args['suppress_filters'] = true; // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts,WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- admin glossary management requires bypassing all language filters.
 
 			$all_terms = get_terms( $all_args );
 
@@ -907,6 +917,7 @@ class Glossaries extends Base {
 	public function glossaries_orderby_meta( $args, $request ) {
 		if ( $args['taxonomy'] === 'glossaries' ) {
 			$args['orderby']  = 'meta_value_num';
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by status meta is required UX.
 			$args['meta_key'] = 'status';
 		}
 		return $args;

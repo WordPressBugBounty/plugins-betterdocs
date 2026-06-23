@@ -1,6 +1,12 @@
 <?php
-
+// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query,WordPress.DB.SlowDBQuery.slow_db_query_tax_query,WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- core docs query builder; meta/tax filtering required for docs/category/KB filtering.
+// phpcs:disable WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- excludes are user-driven (settings UI) and part of the query builder's public contract.
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WP_Query;
 use WPDeveloper\BetterDocs\Utils\Base;
@@ -209,7 +215,8 @@ class Query extends Base {
             $_docs_order = explode( ',', $_docs_order );
             $new_ids     = array();
 
-            $results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+            // $query is prepared upstream; results are cached via $this->database->get_cache above (line 210).
+            $results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
             if ( is_array( $results ) && ! empty( $results ) ) {
                 $object_ids = array_filter(
@@ -977,7 +984,8 @@ class Query extends Base {
 
         if ( ! empty( $faq_order ) ) {
             $new_ids = array();
-            $results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+            // $query is prepared upstream; results are cached via $this->database->get_cache above (line 980).
+            $results = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
             if ( ! is_null( $results ) && ! empty( $results ) && is_array( $results ) ) {
                 $object_ids = array_filter(
@@ -1102,12 +1110,15 @@ class Query extends Base {
             return false;
         }
 
-        $args = array( 'include' => $term->term_id );
+        $args = array(
+            'taxonomy' => $term->taxonomy,
+            'include'  => $term->term_id,
+        );
         if ( $nested_subcategory ) {
             $args[ 'child_of' ] = $term->term_id;
             unset( $args[ 'include' ] );
         }
-        $_child_terms = get_terms( $term->taxonomy, $args );
+        $_child_terms = get_terms( $args );
 
         if ( ! is_array( $_child_terms ) ) {
             return false;
@@ -1197,7 +1208,7 @@ class Query extends Base {
      * @return bool True if there are new posts, false otherwise.
      */
     public function check_new_posts( $terms, $term_slug ) {
-        $date_7_days_ago = date( 'Y-m-d H:i:s', strtotime( '-7 days' ) );
+        $date_7_days_ago = gmdate( 'Y-m-d H:i:s', strtotime( '-7 days' ) );
 
         $args = $this->tax_query_args(
             $terms,
@@ -1231,6 +1242,7 @@ class Query extends Base {
 
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live search-keyword analytics; cache would defeat the purpose.
         // Use BINARY comparison to avoid collation mismatch errors
         // This works across all character sets (latin1, utf8, utf8mb4, etc.)
         $search = $wpdb->get_results(
@@ -1248,7 +1260,7 @@ class Query extends Base {
                     "SELECT *
                     FROM {$wpdb->prefix}betterdocs_search_log
                     WHERE created_at = %s AND keyword_id = %d",
-                    date( 'Y-m-d' ),
+                    gmdate( 'Y-m-d' ),
                     $search[ 0 ]->id
                 )
             );
@@ -1261,12 +1273,13 @@ class Query extends Base {
                     $tbl_field = 'count';
                     $count     = $search_log[ 0 ]->count + 1;
                 }
-                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+                // $tbl_field is validated immediately above to be either 'count' or
+                // 'not_found_count' — safe to interpolate as a column identifier.
+                // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- $tbl_field is an allowlisted column name ('count'|'not_found_count'); safe to interpolate.
                 $insert = $wpdb->query(
                     $wpdb->prepare(
-                        "UPDATE {$wpdb->prefix}betterdocs_search_log
-                        SET " . $tbl_field . ' = ' . $count . '
-                        WHERE created_at = %s AND keyword_id = %d',
+                        "UPDATE {$wpdb->prefix}betterdocs_search_log SET {$tbl_field} = %d WHERE created_at = %s AND keyword_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                        $count,
                         $search_log[ 0 ]->created_at,
                         $search_log[ 0 ]->keyword_id
                     )
@@ -1288,7 +1301,7 @@ class Query extends Base {
                             $search[ 0 ]->id,
                             $count,
                             $not_found_count,
-                            date( 'Y-m-d' )
+                            gmdate( 'Y-m-d' )
                         )
                     )
                 );
@@ -1322,12 +1335,13 @@ class Query extends Base {
                             $wpdb->insert_id,
                             $count,
                             $not_found_count,
-                            date( 'Y-m-d' )
+                            gmdate( 'Y-m-d' )
                         )
                     )
                 );
             }
         }
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
         return $insert;
     }
 

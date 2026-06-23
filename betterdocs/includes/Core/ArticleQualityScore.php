@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
@@ -348,11 +352,12 @@ class ArticleQualityScore extends Base {
 	 */
 	public function ajax_analyze_article_quality() {
 		// Verify nonce
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_quality_score_nonce' ) ) {
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'betterdocs_quality_score_nonce' ) ) {
 			wp_send_json_error( [ 'message' => __( 'Invalid nonce', 'betterdocs' ) ] );
 		}
 
-		$post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+		$post_id = isset( $_POST['post_id'] ) ? intval( wp_unslash( $_POST['post_id'] ) ) : 0;
 
 		if ( empty( $post_id ) ) {
 			wp_send_json_error( [ 'message' => __( 'Invalid post ID', 'betterdocs' ) ] );
@@ -370,8 +375,8 @@ class ArticleQualityScore extends Base {
 		}
 
 		// Check if current content is provided (from editor, may be unsaved)
-		$current_content = isset( $_POST['current_content'] ) ? wp_kses_post( $_POST['current_content'] ) : '';
-		$current_title = isset( $_POST['current_title'] ) ? sanitize_text_field( $_POST['current_title'] ) : '';
+		$current_content = isset( $_POST['current_content'] ) ? wp_kses_post( wp_unslash( $_POST['current_content'] ) ) : '';
+		$current_title = isset( $_POST['current_title'] ) ? sanitize_text_field( wp_unslash( $_POST['current_title'] ) ) : '';
 		
 		// Use current content if provided, otherwise use saved post content
 		if ( ! empty( $current_content ) ) {
@@ -420,12 +425,14 @@ class ArticleQualityScore extends Base {
  */
 public function ajax_save_quality_analysis() {
 	// Verify nonce
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_quality_score_nonce' ) ) {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'betterdocs_quality_score_nonce' ) ) {
 		wp_send_json_error( __( 'Security check failed', 'betterdocs' ) );
 	}
 
-	$post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
-	$analysis_data = isset( $_POST['analysis_data'] ) ? $_POST['analysis_data'] : '';
+	$post_id = isset( $_POST['post_id'] ) ? intval( wp_unslash( $_POST['post_id'] ) ) : 0;
+	// JSON payload validated/decoded below.
+	$analysis_data = isset( $_POST['analysis_data'] ) ? wp_unslash( $_POST['analysis_data'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- raw JSON parsed via json_decode below.
 
 	if ( ! $post_id || ! $analysis_data ) {
 		wp_send_json_error( __( 'Invalid data provided', 'betterdocs' ) );
@@ -437,7 +444,7 @@ public function ajax_save_quality_analysis() {
 	}
 
 	// Decode the analysis data
-	$decoded_data = json_decode( stripslashes( $analysis_data ), true );
+	$decoded_data = json_decode( $analysis_data, true );
 	if ( ! $decoded_data ) {
 		wp_send_json_error( __( 'Invalid analysis data format', 'betterdocs' ) );
 	}
@@ -466,11 +473,12 @@ public function ajax_save_quality_analysis() {
  */
 public function ajax_check_cached_analysis() {
 	// Verify nonce
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_quality_score_nonce' ) ) {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'betterdocs_quality_score_nonce' ) ) {
 		wp_send_json_error( __( 'Security check failed', 'betterdocs' ) );
 	}
 
-	$post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
+	$post_id = isset( $_POST['post_id'] ) ? intval( wp_unslash( $_POST['post_id'] ) ) : 0;
 
 	if ( ! $post_id ) {
 		wp_send_json_error( __( 'Invalid post ID', 'betterdocs' ) );

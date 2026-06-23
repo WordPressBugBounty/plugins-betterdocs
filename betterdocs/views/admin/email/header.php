@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- HTML email body cannot use wp_enqueue_style().
+// phpcs:disable PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- Email clients require absolute URLs for fonts/images.
+?><!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">

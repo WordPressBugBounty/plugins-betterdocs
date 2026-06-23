@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WP_Error;
 use WP_User;
@@ -426,7 +430,8 @@ class Settings extends Base {
         }
 
         if ( isset( $_POST[ 'mode' ] ) ) {
-            if ( $this->save( 'dark_mode', rest_sanitize_boolean( $_POST[ 'mode' ] ) ) ) { // phpcs:ignore
+            $mode = sanitize_text_field( wp_unslash( $_POST[ 'mode' ] ) );
+            if ( $this->save( 'dark_mode', rest_sanitize_boolean( $mode ) ) ) {
                 wp_send_json_success();
             }
         }
@@ -1098,6 +1103,7 @@ class Settings extends Base {
                                                                     'priority' => 2,
                                                                     'is_pro' => true
                                                                 ) ),
+                                                                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- legacy public filter name for category-exclude settings field, retained for back-compat.
                                                                 'child_category_exclude' => apply_filters( 'child_category_exclude', array(
                                                                     'name' => 'child_category_exclude',
                                                                     'type' => 'toggle',
@@ -1251,6 +1257,7 @@ class Settings extends Base {
                                                 )
                                             )
                                         ),
+                                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- legacy public filter name for single-doc setting section, retained for back-compat.
                                         'layout_single_doc' => apply_filters( 'single_doc_setting_section', array(
                                             'id' => 'layout_single_doc',
                                             'name' => 'layout_single_doc',

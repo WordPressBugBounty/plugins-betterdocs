@@ -7,6 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// This class integrates with WPML's documented hook API (wpml_post_language_details,
+// wpml_element_trid, wpml_get_element_translations, etc.). Those hook names are owned
+// by WPML and must be used verbatim, so the plugin-prefix rule does not apply here.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
 /**
  * Helpers for round-tripping WPML language data through BetterDocs
  * export / import. WPML stores per-post language data in `icl_translations`,
@@ -191,6 +196,7 @@ class WPMLSupport {
 			'post_type'        => $post_type,
 			'post_status'      => 'any',
 			'posts_per_page'   => 1,
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- intentional: bypass WPML's own query filters to resolve the untranslated source post and avoid recursion in the WPML support layer.
 			'suppress_filters' => true,
 		] );
 		return ! empty( $posts ) ? $posts[0] : null;

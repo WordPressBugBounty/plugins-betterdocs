@@ -1,4 +1,5 @@
 <?php namespace WPDeveloper\BetterDocs\Dependencies\SuperClosure\Analyzer;
+// phpcs:ignoreFile -- Bundled third-party (Mozart) dependency; exempt from plugin coding standards.
 
 use WPDeveloper\BetterDocs\Dependencies\SuperClosure\Exception\ClosureAnalysisException;
 

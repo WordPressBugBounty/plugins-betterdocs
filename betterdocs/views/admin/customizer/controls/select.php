@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 	// If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;

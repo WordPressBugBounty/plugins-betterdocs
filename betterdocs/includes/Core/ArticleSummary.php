@@ -1,6 +1,10 @@
 <?php
-
 namespace WPDeveloper\BetterDocs\Core;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Core\Settings;
@@ -52,29 +56,47 @@ class ArticleSummary extends Base {
 		}
 
 		// Verify the nonce
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'betterdocs_article_summary_nonce' ) ) { //phpcs:ignore
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'betterdocs_article_summary_nonce' ) ) {
 			wp_send_json_error( 'Invalid nonce' );
 			wp_die();
 		}
 
-		$post_id      = intval( $_POST['post_id'] ); //phpcs:ignore
-		$post_title   = sanitize_text_field( $_POST['post_title'] ); //phpcs:ignore
-		$post_content = wp_kses_post( $_POST['post_content'] ); //phpcs:ignore
+		$post_id = isset( $_POST['post_id'] ) ? intval( wp_unslash( $_POST['post_id'] ) ) : 0; //phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
 
-		// Validate that this is a docs post type
-		if ( $post_id > 0 ) {
-			$post_type = get_post_type( $post_id );
-			if ( $post_type !== 'docs' ) {
-				wp_send_json_error( 'Doc Summarizer is only available for documentation posts.' );
-				wp_die();
-			}
-
-			// Check if post is password protected and user hasn't provided correct password
-			if ( post_password_required( $post_id ) ) {
-				wp_send_json_error( 'This document is password protected. Please enter the correct password to access the summary.' );
-				wp_die();
-			}
+		// A valid documentation post is required. The summary is always derived from
+		// the canonical post record below, never from anything in the request body.
+		if ( $post_id <= 0 ) {
+			wp_send_json_error( 'Invalid document.' );
+			wp_die();
 		}
+
+		$post = get_post( $post_id );
+
+		// Validate that this is a docs post type.
+		if ( ! $post || $post->post_type !== 'docs' ) {
+			wp_send_json_error( 'Doc Summarizer is only available for documentation posts.' );
+			wp_die();
+		}
+
+		// Only summarize content the requester is actually allowed to view, so an
+		// unauthenticated caller can't trigger summaries of drafts/private docs.
+		if ( 'publish' !== $post->post_status && ! current_user_can( 'read_post', $post_id ) ) {
+			wp_send_json_error( 'Doc Summarizer is only available for published documentation posts.' );
+			wp_die();
+		}
+
+		// Check if post is password protected and user hasn't provided correct password.
+		if ( post_password_required( $post_id ) ) {
+			wp_send_json_error( 'This document is password protected. Please enter the correct password to access the summary.' );
+			wp_die();
+		}
+
+		// SECURITY (fbs-82814): never trust client-supplied title/content. Load the
+		// canonical values server-side so prompt-injection payloads in the request
+		// body cannot reach the AI model or influence the cache key.
+		$post_title   = $post->post_title;
+		$post_content = wp_strip_all_tags( $post->post_content );
 
 		if ( empty( $post_content ) ) {
 			wp_send_json_error( 'No content provided for summary generation.' );
@@ -89,8 +111,10 @@ class ArticleSummary extends Base {
 
 			// Return existing summary if content hasn't changed
 			if ( ! empty( $existing_summary ) && $content_hash === $stored_hash ) {
-				// Clean existing summary in case it has old formatting
-				$cleaned_existing = $this->clean_summary_content( $existing_summary );
+				// Clean existing summary in case it has old formatting, and run it
+				// through wp_kses_post() so any previously-stored poisoned markup is
+				// neutralized before it is returned to the browser. (fbs-82814)
+				$cleaned_existing = wp_kses_post( $this->clean_summary_content( $existing_summary ) );
 				wp_send_json_success( $cleaned_existing );
 				wp_die();
 			}
@@ -104,8 +128,11 @@ class ArticleSummary extends Base {
 			wp_die();
 		}
 
-		// Clean up the summary content
-		$cleaned_summary = $this->clean_summary_content( $summary );
+		// Clean up the summary content and sanitize the AI output with wp_kses_post()
+		// before it is stored or returned. This strips dangerous attributes/tags
+		// (onerror, <script>, etc.) even if a prompt injection ever succeeds, while
+		// preserving safe formatting like <p>/<strong>/<ul>. (fbs-82814)
+		$cleaned_summary = wp_kses_post( $this->clean_summary_content( $summary ) );
 
 		// Store summary in post meta if post ID is provided
 		if ( $post_id > 0 && ! empty( $cleaned_summary ) ) {
