@@ -29,13 +29,45 @@ class TemplateLoader extends Base {
 		$this->is_fse_theme = $this->is_fse_theme();
 
 		if ( $this->is_fse_theme ) {
-			// @todo: for FSE theme
+			// Block themes have no PHP template-hierarchy hook for the glossaries
+			// (encyclopedia) taxonomy, so single glossary entries fall through to the
+			// theme's default block template and render the generic docs/archive
+			// output instead of the BetterDocs glossary template (fbs-79870). Force
+			// the glossary template via template_include, which runs after
+			// locate_block_template() so it wins over the block-template fallback.
+			add_filter( 'template_include', [ $this, 'fse_glossaries_template' ], 99 );
 		}
 
 		if ( ! $this->is_fse_theme ) {
 			add_filter( 'archive_template', [ $this, 'archive_template' ] );
 			add_filter( 'single_template', [ $this, 'single_template' ] );
 		}
+	}
+
+	/**
+	 * Load the BetterDocs glossary template for single glossary (encyclopedia)
+	 * taxonomy pages under block (FSE) themes. Mirrors the glossaries branch of
+	 * archive_template() used for classic themes. Runs late on template_include
+	 * so it overrides the block-template fallback that would otherwise render the
+	 * generic docs archive. (fbs-79870)
+	 *
+	 * @param string $template The template path resolved so far.
+	 * @return string
+	 */
+	public function fse_glossaries_template( $template ) {
+		if ( ! is_tax( 'glossaries' ) ) {
+			return $template;
+		}
+
+		$_default_template = 'templates/single/layout-1';
+		$layout            = 'templates/single/layout-7';
+		$eligible_template = $this->views->path( $layout, $_default_template );
+
+		if ( file_exists( $eligible_template ) ) {
+			$template = $eligible_template;
+		}
+
+		return apply_filters( 'betterdocs_archives_template', $template, $layout, $_default_template, $this->views );
 	}
 
 	/**

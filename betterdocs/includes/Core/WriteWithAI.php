@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     use WPDeveloper\BetterDocs\Utils\Helper;
     use WPDeveloper\BetterDocs\Utils\AIHelper;
+    use WPDeveloper\BetterDocs\Utils\AIUsage;
 
     class WriteWithAI extends Base {
 
@@ -285,6 +286,90 @@ PROMPT;
         );
     }
 
+    /**
+     * Generic chat completion using the Write-with-AI model/token/key settings.
+     *
+     * Shared by lightweight, plain-text generators (glossary definitions, FAQ answers)
+     * that need the same dynamic model as Write with AI / AI Edit but a caller-supplied
+     * system prompt instead of the doc-authoring HTML prompt. Returns the same structured
+     * array shape as {@see self::generate_openai_response_ai_edit()}.
+     *
+     * @param string $user_prompt   The user message.
+     * @param string $system_prompt Optional system message (omitted when empty).
+     * @return array { success:bool, content?:string, error?:string, model:string, *_tokens?:int }
+     */
+    public function generate_text( $user_prompt, $system_prompt = '' ) {
+        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
+        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
+        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
+
+        $messages = array();
+        if ( $system_prompt !== '' ) {
+            $messages[] = array(
+                'role'    => 'system',
+                'content' => $system_prompt
+            );
+        }
+        $messages[] = array(
+            'role'    => 'user',
+            'content' => $user_prompt
+        );
+
+        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
+
+        $payload = AIHelper::build_openai_payload( $model, $messages, $max_tokens, null, 'write_with_ai' );
+
+        $request_options = array(
+            'headers' => array(
+                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer ' . $api_key
+            ),
+            'body'    => wp_json_encode( $payload ),
+            'timeout' => 300
+        );
+
+        // GPT-5.5 reasoning can run well past the default limits; give PHP and
+        // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
+        if ( function_exists( 'set_time_limit' ) ) {
+            set_time_limit( 300 );
+        }
+
+        $response = wp_remote_post( $api_endpoint, $request_options );
+
+        if ( is_wp_error( $response ) ) {
+            return array(
+                'success' => false,
+                'error'   => $response->get_error_message(),
+                'model'   => $model
+            );
+        }
+
+        $body = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body, true );
+
+        if ( ! empty( $data[ 'error' ] ) ) {
+            return array(
+                'success' => false,
+                'error'   => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
+                'model'   => $model,
+                'raw'     => $data
+            );
+        }
+
+        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
+        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
+
+        return array(
+            'success'           => true,
+            'content'           => $content,
+            'model'             => $model,
+            'prompt_tokens'     => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
+            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
+            'total_tokens'      => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
+            'finish_reason'     => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
+        );
+    }
+
     public function generate_openai_content_callback() {
         // Verify the nonce
         $ai_nonce = isset( $_POST['ai_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['ai_nonce'] ) ) : '';
@@ -304,6 +389,12 @@ PROMPT;
         $ai_instance = new WriteWithAI( $this->settings );
 
         $generated_content = $ai_instance->generate_openai_response( $prompt, $keywords );
+
+        // Count a successful generation (skip obvious upstream errors).
+        if ( is_string( $generated_content ) && $generated_content !== '' && strpos( $generated_content, 'Error:' ) !== 0 ) {
+            $post_id = isset( $_POST[ 'post_id' ] ) ? intval( $_POST[ 'post_id' ] ) : 0; //phpcs:ignore
+            AIUsage::record( 'write_with_ai', $post_id );
+        }
 
         // Send the generated content as the AJAX response
         wp_send_json_success( $generated_content );
@@ -369,6 +460,7 @@ PROMPT;
 							// numOfSections: numOfSections,
 							// numOfParagraphs: numOfParagraphs,
 							keywords: keywords,
+							post_id: (document.getElementById('post_ID') ? document.getElementById('post_ID').value : 0),
 							ai_nonce: nonce, // Pass the nonce value
 						},
 						success: function(response) {

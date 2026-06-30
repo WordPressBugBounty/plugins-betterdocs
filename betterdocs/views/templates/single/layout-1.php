@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-	get_header();
+	betterdocs()->template_helper->header();
 
 	$mods        = betterdocs()->customizer->defaults->generate_defaults();
 	$view_object = betterdocs()->views;
@@ -63,4 +63,4 @@ if ( ! defined( 'WPINC' ) ) {
 	/**
 	 * Footer
 	 */
-get_footer();
+betterdocs()->template_helper->footer();

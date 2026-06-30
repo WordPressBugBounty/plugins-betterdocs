@@ -669,4 +669,58 @@ class TemplateTags extends Base {
 		$_shortcode_attributes = apply_filters( $tagname, $atts, $shortcode, $layout, $args );
 		return betterdocs()->template_helper->get_html_attributes( $_shortcode_attributes );
 	}
+
+	/**
+	 * Output the page header for BetterDocs full-page templates.
+	 *
+	 * Block (FSE) themes ship no `header.php`, so a bare `get_header()` falls through
+	 * `locate_template()` to WordPress's deprecated theme-compat header (just the site
+	 * title) instead of the active theme's real header. For block themes we therefore
+	 * emit the canonical document head — so `wp_head()` still runs — and render the
+	 * theme's `header` template part via `block_header_area()`, mirroring the block
+	 * template canvas. Classic themes keep using `get_header()` unchanged. (fbs-79870)
+	 *
+	 * @return void
+	 */
+	public function header() {
+		if ( ! betterdocs()->helper->current_theme_is_fse_theme() || ! function_exists( 'block_header_area' ) ) {
+			get_header();
+			return;
+		}
+		?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+	<meta charset="<?php bloginfo( 'charset' ); ?>" />
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+<div class="wp-site-blocks">
+		<?php
+		block_header_area();
+	}
+
+	/**
+	 * Output the page footer for BetterDocs full-page templates.
+	 *
+	 * Mirrors {@see TemplateTags::header()}: under block (FSE) themes render the active
+	 * theme's `footer` template part via `block_footer_area()`, close the document
+	 * wrapper, and fire `wp_footer()`. Classic themes keep using `get_footer()`. (fbs-79870)
+	 *
+	 * @return void
+	 */
+	public function footer() {
+		if ( ! betterdocs()->helper->current_theme_is_fse_theme() || ! function_exists( 'block_footer_area' ) ) {
+			get_footer();
+			return;
+		}
+		block_footer_area();
+		?>
+</div><!-- .wp-site-blocks -->
+<?php wp_footer(); ?>
+</body>
+</html>
+		<?php
+	}
 }

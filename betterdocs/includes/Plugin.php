@@ -126,7 +126,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.5.5';
+    public $version = '4.5.6';
 
     /**
      * WriteWithAI Class
@@ -268,6 +268,10 @@ final class Plugin {
         $this->container->get( Admin::class );
         $this->container->get( Roles::class );
         $this->container->get( ReportEmail::class );
+        // Usage-analytics collector. Registered here (runs on every request, incl.
+        // WP-Cron) rather than in Admin so its `betterdocs_insights_data` filter
+        // callback is present whenever the tracking payload is built.
+        $this->container->get( \WPDeveloper\BetterDocs\Insights\Collector::class );
         /**
          * Initialize Shortcode
          * Make sure you have listed out all shortcode in shortcode factory.

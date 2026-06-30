@@ -13,7 +13,7 @@ use WPDeveloper\BetterDocs\Utils\Base;
 use PriyoMukul\WPNotice\Utils\CacheBank;
 use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Utils\Enqueue;
-use WPDeveloper\BetterDocs\Utils\Insights;
+use WPDeveloper\BetterDocs\Insights\Insights;
 use PriyoMukul\WPNotice\Utils\NoticeRemover;
 use WPDeveloper\BetterDocs\Core\PluginInstaller;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
@@ -91,13 +91,22 @@ class Admin extends Base {
 		$this->faq_builder = $this->container->get( FAQBuilder::class );
 		$this->glossaries  = $this->container->get( Glossaries::class );
 
+		/**
+		 * Register usage tracking (including the daily `put_do_weekly_action` cron
+		 * handler) on every request — WP-Cron runs with is_admin() === false, so
+		 * this MUST sit above the admin guard or the cron send never fires. The
+		 * admin-only UI hooks inside Insights::init() (deactivation form, footer
+		 * scripts, plugin_action_links) are context-specific and simply never run
+		 * outside wp-admin.
+		 */
+		$this->plugin_insights();
+
 		if ( ! is_admin() ) {
 			return;
 		}
 
 		$this->installer = new PluginInstaller();
 
-		$this->plugin_insights();
 		add_action( 'admin_notices', array( $this, 'compatibility_notices' ) );
 		// add_action( 'admin_init', [$this, 'notices'], 9 );
 		add_filter( 'admin_init', array( $this, 'save_admin_page' ), 99 );

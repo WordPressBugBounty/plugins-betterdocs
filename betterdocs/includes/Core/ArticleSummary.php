@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
+use WPDeveloper\BetterDocs\Utils\AIUsage;
 
 class ArticleSummary extends Base {
 
@@ -127,6 +128,9 @@ class ArticleSummary extends Base {
 			wp_send_json_error( $summary->get_error_message() );
 			wp_die();
 		}
+
+		// Count only fresh generations (cache hits returned earlier).
+		AIUsage::record( 'article_summary', $post_id );
 
 		// Clean up the summary content and sanitize the AI output with wp_kses_post()
 		// before it is stored or returned. This strips dangerous attributes/tags

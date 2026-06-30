@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
+use WPDeveloper\BetterDocs\Utils\AIUsage;
 use WPDeveloper\BetterDocs\Core\Settings;
 
 class ArticleQualityScore extends Base {
@@ -412,6 +413,9 @@ class ArticleQualityScore extends Base {
 		if ( ! $saved ) {
 			wp_send_json_error( [ 'message' => __( 'Failed to save analysis result', 'betterdocs' ) ] );
 		}
+
+		// Count a successful fresh analysis.
+		AIUsage::record( 'quality_score', $post_id );
 
 		// Return success with the analysis data
 		wp_send_json_success( [

@@ -4,6 +4,7 @@ namespace WPDeveloper\BetterDocs\REST;
 
 use WP_REST_Request;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
+use WPDeveloper\BetterDocs\Utils\AIUsage;
 
 class AIEdit extends BaseAPI {
 
@@ -141,6 +142,8 @@ class AIEdit extends BaseAPI {
                 502
             );
         }
+
+        AIUsage::record( 'ai_edit', (int) $request->get_param( 'post_id' ), $action );
 
         return $this->success(
             array(
