@@ -477,7 +477,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_background_color',
-					'priority' => 636
+					'priority' => 638
 				]
 			)
 		);
@@ -502,7 +502,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_background_color',
-					'priority' => 637
+					'priority' => 639
 				]
 			)
 		);
@@ -527,7 +527,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_color',
-					'priority' => 638
+					'priority' => 640
 				]
 			)
 		);
@@ -553,8 +553,8 @@ class FaqBuilder extends Section {
 					'type'        => 'betterdocs-range-value',
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_content_font_size',
-					'label'       => __( 'FAQ Content Font Size', 'betterdocs' ),
-					'priority'    => 639,
+					'label'       => __( 'FAQ List Content Font Size', 'betterdocs' ),
+					'priority'    => 641,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -588,7 +588,7 @@ class FaqBuilder extends Section {
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_font_size',
 					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
-					'priority'    => 640,
+					'priority'    => 636,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -619,7 +619,7 @@ class FaqBuilder extends Section {
 					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
 					'section'      => 'betterdocs_faq_section',
 					'settings'     => 'betterdocs_faq_list_padding',
-					'priority'     => 641,
+					'priority'     => 637,
 					'input_fields' => [
 						'input1' => __( 'top', 'betterdocs' ),
 						'input2' => __( 'right', 'betterdocs' ),
@@ -631,6 +631,563 @@ class FaqBuilder extends Section {
 						'input2' => 20,
 						'input3' => 20,
 						'input4' => 20
+					]
+				]
+			)
+		);
+	}
+
+	/**
+	 * ----------------------------------------------------------------------
+	 * Product FAQ for WooCommerce controls.
+	 *
+	 * Styles the FAQ rendered on single WooCommerce product pages
+	 * (`.betterdocs-woo-product-faq`). Only the Group Title + FAQ List
+	 * controls are offered — the product FAQ has no section title, layout
+	 * picker or active-group-title state, so those controls are intentionally
+	 * omitted. Registered only when WooCommerce is active.
+	 * ----------------------------------------------------------------------
+	 */
+	public function section_woo_seperator() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_section_woo_seperator',
+			[
+				'default'           => $this->defaults['betterdocs_faq_section_woo_seperator'],
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SeparatorControl(
+				$this->customizer,
+				'betterdocs_faq_section_woo_seperator',
+				[
+					'label'    => __( 'Product FAQ for WooCommerce', 'betterdocs' ),
+					'settings' => 'betterdocs_faq_section_woo_seperator',
+					'section'  => 'betterdocs_faq_section',
+					'priority' => 675
+				]
+			)
+		);
+	}
+
+	public function faq_group_title_tag_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_title_tag_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_group_title_tag_woo'],
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_faq_group_title_tag_woo',
+				[
+					'label'    => __( 'Group Title Tag', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_group_title_tag_woo',
+					'type'     => 'select',
+					'choices'  => [
+						'h1' => 'h1',
+						'h2' => 'h2',
+						'h3' => 'h3',
+						'h4' => 'h4',
+						'h5' => 'h5',
+						'h6' => 'h6'
+					],
+					'priority' => 680
+				]
+			)
+		);
+	}
+
+	public function faq_category_title_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_title_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_title_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_category_title_color_woo',
+				[
+					'label'    => __( 'Group Title Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'priority' => 681,
+					'settings' => 'betterdocs_faq_category_title_color_woo'
+				]
+			)
+		);
+	}
+
+	public function faq_category_name_font_size_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_name_font_size_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_category_name_font_size_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_category_name_font_size_woo',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_category_name_font_size_woo',
+					'label'       => __( 'Group Title Font Size', 'betterdocs' ),
+					'priority'    => 682,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_category_name_padding_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_category_name_padding_woo',
+			[
+				'default'    => $this->defaults['betterdocs_faq_category_name_padding_woo'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_category_name_padding_woo',
+				[
+					'label'        => __( 'Group Title Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_category_name_padding_woo',
+					'priority'     => 683,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 20,
+						'input2' => 0,
+						'input3' => 20,
+						'input4' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_color_woo',
+				[
+					'label'    => __( 'FAQ List Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_color_woo',
+					'priority' => 684
+				]
+			)
+		);
+	}
+
+	public function faq_list_background_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_background_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_background_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_background_color_woo',
+				[
+					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_background_color_woo',
+					'priority' => 687
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_background_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_background_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_background_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_background_color_woo',
+				[
+					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_content_background_color_woo',
+					'priority' => 688
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_color_woo',
+				[
+					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_list_content_color_woo',
+					'priority' => 689
+				]
+			)
+		);
+	}
+
+	public function faq_list_content_font_size_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_content_font_size_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_content_font_size_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_list_content_font_size_woo',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_list_content_font_size_woo',
+					'label'       => __( 'FAQ List Content Font Size', 'betterdocs' ),
+					'priority'    => 690,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_font_size_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_font_size_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_list_font_size_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_list_font_size_woo',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_list_font_size_woo',
+					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
+					'priority'    => 685,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 50,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_list_padding_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_list_padding_woo',
+			[
+				'default'    => $this->defaults['betterdocs_faq_list_padding_woo'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_list_padding_woo',
+				[
+					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_list_padding_woo',
+					'priority'     => 686,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 20,
+						'input2' => 20,
+						'input3' => 20,
+						'input4' => 20
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_group_border_width_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_border_width_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_group_border_width_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_faq_group_border_width_woo',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_faq_section',
+					'settings'    => 'betterdocs_faq_group_border_width_woo',
+					'label'       => __( 'FAQ Group Border Width', 'betterdocs' ),
+					'priority'    => 676,
+					'input_attrs' => [
+						'class'  => '',
+						'min'    => 0,
+						'max'    => 20,
+						'step'   => 1,
+						'suffix' => 'px'
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_group_border_color_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_border_color_woo',
+			[
+				'default'           => $this->defaults['betterdocs_faq_group_border_color_woo'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_faq_group_border_color_woo',
+				[
+					'label'    => __( 'FAQ Group Border Color', 'betterdocs' ),
+					'section'  => 'betterdocs_faq_section',
+					'settings' => 'betterdocs_faq_group_border_color_woo',
+					'priority' => 677
+				]
+			)
+		);
+	}
+
+	public function faq_group_padding_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_padding_woo',
+			[
+				'default'    => $this->defaults['betterdocs_faq_group_padding_woo'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_group_padding_woo',
+				[
+					'label'        => __( 'FAQ Group Padding (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_group_padding_woo',
+					'priority'     => 678,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 0,
+						'input2' => 0,
+						'input3' => 0,
+						'input4' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function faq_group_margin_woo() {
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
+		$this->customizer->add_setting(
+			'betterdocs_faq_group_margin_woo',
+			[
+				'default'    => $this->defaults['betterdocs_faq_group_margin_woo'],
+				'transport'  => 'postMessage',
+				'capability' => 'edit_theme_options'
+			]
+		);
+
+		$this->customizer->add_control(
+			new MultiDimensionControl(
+				$this->customizer,
+				'betterdocs_faq_group_margin_woo',
+				[
+					'label'        => __( 'FAQ Group Margin (PX)', 'betterdocs' ),
+					'section'      => 'betterdocs_faq_section',
+					'settings'     => 'betterdocs_faq_group_margin_woo',
+					'priority'     => 679,
+					'input_fields' => [
+						'input1' => __( 'top', 'betterdocs' ),
+						'input2' => __( 'right', 'betterdocs' ),
+						'input3' => __( 'bottom', 'betterdocs' ),
+						'input4' => __( 'left', 'betterdocs' )
+					],
+					'defaults'     => [
+						'input1' => 0,
+						'input2' => 0,
+						'input3' => 20,
+						'input4' => 0
 					]
 				]
 			)
@@ -776,7 +1333,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_background_color_layout_2',
-					'priority' => 646
+					'priority' => 648
 				]
 			)
 		);
@@ -801,7 +1358,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_background_color_layout_2',
-					'priority' => 647
+					'priority' => 649
 				]
 			)
 		);
@@ -826,7 +1383,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_color_layout_2',
-					'priority' => 648
+					'priority' => 650
 				]
 			)
 		);
@@ -851,8 +1408,8 @@ class FaqBuilder extends Section {
 					'type'        => 'betterdocs-range-value',
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_content_font_size_layout_2',
-					'label'       => __( 'FAQ Content Font Size', 'betterdocs' ),
-					'priority'    => 649,
+					'label'       => __( 'FAQ List Content Font Size', 'betterdocs' ),
+					'priority'    => 651,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -886,7 +1443,7 @@ class FaqBuilder extends Section {
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_font_size_layout_2',
 					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
-					'priority'    => 650,
+					'priority'    => 646,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -918,7 +1475,7 @@ class FaqBuilder extends Section {
 					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
 					'section'      => 'betterdocs_faq_section',
 					'settings'     => 'betterdocs_faq_list_padding_layout_2',
-					'priority'     => 651,
+					'priority'     => 647,
 					'input_fields' => [
 						'input1' => __( 'top', 'betterdocs' ),
 						'input2' => __( 'right', 'betterdocs' ),
@@ -1075,7 +1632,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_background_color_layout_3',
-					'priority' => 656
+					'priority' => 658
 				]
 			)
 		);
@@ -1100,7 +1657,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_background_color_layout_3',
-					'priority' => 657
+					'priority' => 659
 				]
 			)
 		);
@@ -1125,7 +1682,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_color_layout_3',
-					'priority' => 658
+					'priority' => 660
 				]
 			)
 		);
@@ -1151,8 +1708,8 @@ class FaqBuilder extends Section {
 					'type'        => 'betterdocs-range-value',
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_content_font_size_layout_3',
-					'label'       => __( 'FAQ Content Font Size', 'betterdocs' ),
-					'priority'    => 659,
+					'label'       => __( 'FAQ List Content Font Size', 'betterdocs' ),
+					'priority'    => 661,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -1186,7 +1743,7 @@ class FaqBuilder extends Section {
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_font_size_layout_3',
 					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
-					'priority'    => 660,
+					'priority'    => 656,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -1217,7 +1774,7 @@ class FaqBuilder extends Section {
 					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
 					'section'      => 'betterdocs_faq_section',
 					'settings'     => 'betterdocs_faq_list_padding_layout_3',
-					'priority'     => 661,
+					'priority'     => 657,
 					'input_fields' => [
 						'input1' => __( 'top', 'betterdocs' ),
 						'input2' => __( 'right', 'betterdocs' ),
@@ -1424,7 +1981,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_background_color_layout_4',
-					'priority' => 666
+					'priority' => 668
 				]
 			)
 		);
@@ -1449,7 +2006,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Background Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_background_color_layout_4',
-					'priority' => 667
+					'priority' => 669
 				]
 			)
 		);
@@ -1474,7 +2031,7 @@ class FaqBuilder extends Section {
 					'label'    => __( 'FAQ List Content Color', 'betterdocs' ),
 					'section'  => 'betterdocs_faq_section',
 					'settings' => 'betterdocs_faq_list_content_color_layout_4',
-					'priority' => 668
+					'priority' => 670
 				]
 			)
 		);
@@ -1500,8 +2057,8 @@ class FaqBuilder extends Section {
 					'type'        => 'betterdocs-range-value',
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_content_font_size_layout_4',
-					'label'       => __( 'FAQ Content Font Size', 'betterdocs' ),
-					'priority'    => 669,
+					'label'       => __( 'FAQ List Content Font Size', 'betterdocs' ),
+					'priority'    => 671,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -1535,7 +2092,7 @@ class FaqBuilder extends Section {
 					'section'     => 'betterdocs_faq_section',
 					'settings'    => 'betterdocs_faq_list_font_size_layout_4',
 					'label'       => __( 'FAQ List Font Size', 'betterdocs' ),
-					'priority'    => 670,
+					'priority'    => 666,
 					'input_attrs' => [
 						'class'  => '',
 						'min'    => 0,
@@ -1566,7 +2123,7 @@ class FaqBuilder extends Section {
 					'label'        => __( 'FAQ List Padding (PX)', 'betterdocs' ),
 					'section'      => 'betterdocs_faq_section',
 					'settings'     => 'betterdocs_faq_list_padding_layout_3',
-					'priority'     => 671,
+					'priority'     => 667,
 					'input_fields' => [
 						'input1' => __( 'top', 'betterdocs' ),
 						'input2' => __( 'right', 'betterdocs' ),

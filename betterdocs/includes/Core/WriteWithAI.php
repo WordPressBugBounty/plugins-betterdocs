@@ -784,16 +784,7 @@ PROMPT;
 
 				const prompt = `Write documentation for '${promtTitle}'. Cover these topics in depth: ${keywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
 
-				const aiIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-						<g clip-path="url(#clip0_2460_1729)">
-							<path d="M10.3956 18.8608L6.10991 19.2322L6.48134 14.9465L15.3956 6.08936C15.5287 5.95329 15.6876 5.84518 15.863 5.77137C16.0384 5.69756 16.2268 5.65954 16.4171 5.65954C16.6074 5.65954 16.7957 5.69756 16.9711 5.77137C17.1466 5.84518 17.3054 5.95329 17.4385 6.08936L19.2528 7.91793C19.3865 8.05083 19.4926 8.20886 19.565 8.38293C19.6375 8.55701 19.6747 8.74368 19.6747 8.93221C19.6747 9.12075 19.6375 9.30742 19.565 9.48149C19.4926 9.65557 19.3865 9.8136 19.2528 9.9465L10.3956 18.8608ZM1.7042 5.67507C1.20277 5.58793 1.20277 4.86793 1.7042 4.78079C2.59203 4.62626 3.41374 4.21085 4.06456 3.58751C4.71538 2.96417 5.16583 2.16113 5.35848 1.28079L5.38848 1.14221C5.49705 0.647929 6.20277 0.643643 6.31705 1.13936L6.35277 1.29936C6.55248 2.17579 7.0067 2.97367 7.65837 3.59281C8.31005 4.21195 9.13013 4.62475 10.0156 4.77936C10.5199 4.86507 10.5199 5.58936 10.0156 5.67793C9.13005 5.83218 8.3098 6.24465 7.65787 6.86354C7.00594 7.48243 6.5514 8.28014 6.35134 9.1565L6.3142 9.31793C6.20134 9.81221 5.49563 9.80936 5.38705 9.31364L5.35848 9.17507C5.16564 8.29433 4.71476 7.49102 4.06339 6.86764C3.41202 6.24426 2.58969 5.82908 1.70134 5.67507H1.7042Z" stroke="white" stroke-width="1.42857" stroke-linecap="round" stroke-linejoin="round"/>
-						</g>
-						<defs>
-							<clipPath id="clip0_2460_1729">
-							<rect width="20" height="20" fill="white" transform="translate(0.5)"/>
-							</clipPath>
-						</defs>
-						</svg>`;
+				const aiIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-1.5 -1.5 23 23" fill="none"><path d="m9.895 18.861-4.286.371.371-4.286 8.915-8.857a1.429 1.429 0 0 1 2.043 0l1.814 1.829a1.431 1.431 0 0 1 0 2.029l-8.857 8.914ZM1.204 5.674c-.501-.088-.501-.807 0-.894a4.537 4.537 0 0 0 3.654-3.5l.03-.139c.109-.494.814-.499.929-.003l.036.16a4.561 4.561 0 0 0 3.663 3.48c.504.086.504.81 0 .899a4.561 4.561 0 0 0-3.664 3.479l-.037.161c-.112.494-.818.491-.926-.004l-.029-.139a4.537 4.537 0 0 0-3.658-3.5h.003Z" stroke="#fff" stroke-width="1.429" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 
 
@@ -802,23 +793,14 @@ PROMPT;
 							<div class="betterdocs-ai-autowrite-form-content">
 								<div class="betterdocs-ai-autowrite-top-part">
 									<div class="autowrite-heading">
-										<span class="autowrite-icon">
-											<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-											<g clip-path="url(#clip0_2453_20882)">
-												<path d="M15.8322 30.1765L8.97508 30.7708L9.56936 23.9136L23.8322 9.74219C24.0451 9.52448 24.2993 9.3515 24.58 9.23341C24.8606 9.11531 25.162 9.05447 25.4665 9.05447C25.771 9.05447 26.0724 9.11531 26.3531 9.23341C26.6337 9.3515 26.8879 9.52448 27.1008 9.74219L30.0037 12.6679C30.2176 12.8805 30.3874 13.1334 30.5033 13.4119C30.6192 13.6904 30.6788 13.9891 30.6788 14.2908C30.6788 14.5924 30.6192 14.8911 30.5033 15.1696C30.3874 15.4481 30.2176 15.701 30.0037 15.9136L15.8322 30.1765ZM1.92593 9.07933C1.12365 8.9399 1.12365 7.7879 1.92593 7.64848C3.34647 7.40124 4.6612 6.73658 5.70251 5.73923C6.74382 4.74188 7.46455 3.45703 7.77279 2.04848L7.82079 1.82676C7.99451 1.03591 9.12365 1.02905 9.30651 1.82219L9.36365 2.07819C9.68319 3.48048 10.4099 4.75709 11.4526 5.74772C12.4953 6.73834 13.8074 7.39881 15.2242 7.64619C16.0311 7.78333 16.0311 8.94219 15.2242 9.0839C13.8073 9.33071 12.4949 9.99066 11.4518 10.9809C10.4087 11.9711 9.68146 13.2474 9.36136 14.6496L9.30193 14.9079C9.12136 15.6988 7.99222 15.6942 7.81851 14.901L7.77279 14.6793C7.46424 13.2702 6.74284 11.9849 5.70064 10.9874C4.65845 9.99003 3.34273 9.32574 1.92136 9.07933H1.92593Z" stroke="#E31B54" stroke-width="2.28571" stroke-linecap="round" stroke-linejoin="round"/>
-											</g>
-											<defs>
-												<clipPath id="clip0_2453_20882">
-												<rect width="32" height="32" fill="white"/>
-												</clipPath>
-											</defs>
-											</svg>
+										<span class="autowrite-icon" style="--bd-icon-tint: rgb(127, 86, 217); --bd-icon-tint-rgb: 127, 86, 217; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; flex-shrink:0; border-radius:9px; color:rgb(127, 86, 217); background:rgba(127, 86, 217, 0.2);">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="-1.5 -1.5 23 23"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.429" d="m9.895 18.861-4.286.371.371-4.286 8.915-8.857a1.43 1.43 0 0 1 2.043 0l1.814 1.829a1.43 1.43 0 0 1 0 2.029zM1.204 5.674c-.501-.088-.501-.807 0-.894a4.54 4.54 0 0 0 3.654-3.5l.03-.139c.109-.494.814-.499.929-.003l.036.16a4.56 4.56 0 0 0 3.663 3.48c.504.086.504.81 0 .899a4.56 4.56 0 0 0-3.664 3.479l-.037.161c-.112.494-.818.491-.926-.004l-.029-.139a4.54 4.54 0 0 0-3.658-3.5h.003Z"></path></svg>
 										</span>
-										<h1><?php echo esc_html__( 'Write Documentation with BetterDocs AI', 'betterdocs' ); ?></h1>
+										<h1 style="margin:0; font-family:'IBM Plex Sans',sans-serif; font-size:18px; font-weight:600; line-height:1.3; color:#101828;"><?php echo esc_html__( 'Write Documentation with BetterDocs AI', 'betterdocs' ); ?></h1>
 
 									</div>
 									<div class="autowrite-subheadding">
-										<p><?php echo esc_html__( 'Generate documentation effortlessly with BetterDocs AI. Simply input your doc title, keywords, prompt and let the system automatically generate comprehensive documentation tailored to your needs.', 'betterdocs' ); ?></p>
+										<p style="margin:8px 0 0; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:400; line-height:1.4; color:#667085;"><?php echo esc_html__( 'Generate documentation effortlessly with BetterDocs AI. Simply input your doc title, keywords, prompt and let the system automatically generate comprehensive documentation tailored to your needs.', 'betterdocs' ); ?></p>
 									</div>
 
 									<?php if ( empty( $this->get_api_key() ) ): ?>
@@ -879,7 +861,7 @@ PROMPT;
 								</form>
 							</div>
 
-							<div class="bd-close-button" onclick="closeWriteWithAIForm('afterClosedClicked')">✕</div>
+							<div class="bd-close-button" onclick="closeWriteWithAIForm('afterClosedClicked')"><svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.69687 14L0.296875 12.6L5.89687 7L0.296875 1.4L1.69687 0L7.29688 5.6L12.8969 0L14.2969 1.4L8.69688 7L14.2969 12.6L12.8969 14L7.29688 8.4L1.69687 14Z" fill="currentColor"/></svg></div>
 						</div>
 
 						<div id="betterdocs-ai-autowrite-form-container-overlay" class="hidden"></div>
@@ -971,31 +953,36 @@ PROMPT;
 			.autowrite-icon {
 				display: flex;
 				align-items: center;
-				width: 55px;
-				height: 55px;
-				background: #FFE4E8;
+				width: 32px;
+				height: 32px;
+				flex-shrink: 0;
+				/* Mint chip + green sparkle — matches the FAQ/Glossary modal
+				   header icons (rgba(#00B884, 0.12)). */
+				background: rgba(0, 184, 132, 0.12);
 				justify-content: center;
-				border-radius: 50px;
+				border-radius: 9px;
 			}
 
 			.autowrite-icon svg {
-				width: 28px;
-				height: 28px;
+				width: 17px;
+				height: 17px;
 			}
 
 			.autowrite-heading {
 				display: flex;
 				gap: 10px;
 				align-items: center;
+				/* Keep the title clear of the in-header close button. */
+				padding-right: 64px;
 			}
 
 			.autowrite-heading h1 {
-				color: #1D2939;
+				color: #101828;
 				font-family: 'IBM Plex Sans', sans-serif;
-				font-size: 24px;
+				font-size: 18px;
 				font-style: normal;
-				font-weight: 500;
-				line-height: normal;
+				font-weight: 600;
+				line-height: 1.3;
 				margin: 0;
 			}
 
@@ -1007,7 +994,8 @@ PROMPT;
 
 			.autowrite-subheadding p {
 				font-family: 'IBM Plex Sans', sans-serif;
-				font-size: 14px;
+				font-size: 13px;
+				color: #667085;
 			}
 
 			.prompt-field .input-description {
@@ -1054,7 +1042,7 @@ PROMPT;
 				width: 650px;
 				margin: 0 auto;
 				background-color: #fff;
-				border-radius: 5px;
+				border-radius: 20px;
 				font-family: 'IBM Plex Sans', sans-serif;
 				/* max-height: 600px; */
 				max-height: 750px;
@@ -1063,9 +1051,8 @@ PROMPT;
 
 			.betterdocs-ai-autowrite-form-content {
 				background-color: #fff;
-				padding: 20px 0px;
-				border-radius: 5px;
-				padding-bottom: 0;
+				padding: 0;
+				border-radius: 20px;
 				overflow: auto;
 				/* max-height: 700px; */
 				height: 100%;
@@ -1073,10 +1060,11 @@ PROMPT;
 			}
 
 			.betterdocs-ai-autowrite-top-part {
-				/* padding-bottom: 20px; */
-				border-bottom: 1px solid #ddd;
-				/* margin-bottom: 20px; */
-				padding: 0 40px;
+				/* Soft-gray header bar — matches the FAQ/Glossary/Edit-with-AI modals. */
+				background: #f9fafb;
+				border-bottom: 1px solid #f2f4f7;
+				border-radius: 20px 20px 0 0;
+				padding: 24px 40px 20px;
 			}
 
 			#betterdocs-ai-form {
@@ -1126,10 +1114,11 @@ PROMPT;
 			}
 
 			#betterdocs-ai-form label {
-				font-weight: 600;
+				font-size: 14px;
+				font-weight: 500;
+				color: #667085;
 				margin-bottom: 5px;
 				display: block;
-				font-size: 14px;
 				line-height: 20px;
 			}
 
@@ -1138,57 +1127,74 @@ PROMPT;
 			#betterdocs-ai-language {
 				width: 150px !important;
 				height: 40px;
+				border: 1px solid #f2f4f7;
+				background: #f2f4f7;
+				color: #101828;
+				font-size: 14px;
+				border-radius: 5px;
+				padding: 5px 12px;
+				outline: none;
+				box-shadow: none;
 			}
 
 			#betterdocs-ai-form input[type="text"],
 			#betterdocs-ai-form textarea {
 				width: 100%;
-				padding: 8px;
 				box-sizing: border-box;
-				border: 1px solid #D0D5DD;
-				border-radius: 4px;
-				color: #667085;
+				border: 1px solid #f2f4f7;
+				background: #fff;
+				border-radius: 5px;
+				color: #101828;
+				font-size: 14px;
 				font-weight: 400;
+				outline: none;
+				box-shadow: none;
+			}
+
+			#betterdocs-ai-form input[type="text"] {
+				height: 40px;
+				padding: 5px 15px;
+			}
+
+			#betterdocs-ai-form textarea {
+				padding: 10px 15px;
+				min-height: 100px;
 			}
 
 			/* Override autofill text color */
 			#betterdocs-ai-form input:-webkit-autofill {
-				-webkit-text-fill-color: #667085 !important;
+				-webkit-text-fill-color: #101828 !important;
 			}
 
-			#betterdocs-ai-form input::placeholder {
-				color: #acb2bf;
-			}
-
-			#betterdocs-ai-form textarea {
+			#betterdocs-ai-form input::placeholder,
+			#betterdocs-ai-form textarea::placeholder {
 				color: #667085;
 			}
 
 			#betterdocs-ai-form input:focus,
 			#betterdocs-ai-form textarea:focus {
-				box-shadow: none;
-			}
-
-			#betterdocs-ai-form textarea:focus {
-				color: inherit;
-				box-shadow: none;
-
+				border-color: #00b884;
+				box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
+				outline: none;
 			}
 
 
+			/* Footer bar — soft gray surface; Cancel pinned left, Generate right. */
 			.generate-button-container {
 				position: sticky;
 				bottom: 0px;
 				width: 100%;
+				box-sizing: border-box;
 				margin-left: 0;
 				z-index: 999999 !important;
-				padding: 20px 0;
+				padding: 16px 22px;
 				display: flex;
-				justify-content: end;
-				border-top: 1px solid #ddd;
-				background: white;
-				border-bottom-right-radius: 5px;
-				border-bottom-left-radius: 5px;
+				align-items: center;
+				justify-content: flex-end;
+				border-top: 1px solid #f2f4f7;
+				background: #f9fafb;
+				border-bottom-right-radius: 20px;
+				border-bottom-left-radius: 20px;
 			}
 
 			.generate-button-container button {
@@ -1197,7 +1203,31 @@ PROMPT;
 				align-items: center;
 				justify-content: center;
 				opacity: 1 !important;
-				margin-right: 40px;
+			}
+
+			/* Cancel — white pill with neutral border. Stays clickable even when
+			   the form is disabled (missing API key). */
+			.generate-button-container .bd-ai-cancel-btn {
+				pointer-events: auto;
+				display: inline-flex;
+				min-height: 36px;
+				padding: 7px 16px;
+				justify-content: center;
+				align-items: center;
+				background-color: #ffffff;
+				color: #344054;
+				border: 1px solid #d0d5dd;
+				border-radius: 9px;
+				font-size: 16px;
+				cursor: pointer;
+				text-decoration: none;
+				transition: all 0.3s ease 0s;
+				box-sizing: border-box;
+			}
+
+			.generate-button-container .bd-ai-cancel-btn:hover {
+				background-color: #f2f4f7;
+				color: #101828;
 			}
 
 			.input-description {
@@ -1322,38 +1352,63 @@ PROMPT;
 			.generate-btn,
 			.prompt-btn,
 			.keep-btn {
+				display: inline-flex;
+				min-height: 0;
+				padding: 9px 20px;
+				gap: 8px;
+				justify-content: center;
+				align-items: center;
 				background-color: #00b884;
 				color: #fff;
-				border: none;
-				padding: 10px 15px;
-				text-align: center;
-				text-decoration: none;
-				display: inline-block;
-				font-size: 16px;
+				border: 1px solid transparent;
+				border-radius: 10px;
+				font-size: 13px;
+				font-weight: 600;
 				cursor: pointer;
-				border-radius: 4px;
+				text-decoration: none;
+				box-shadow: none;
+				transition: background 0.15s, transform 0.05s;
+				box-sizing: border-box;
+			}
+
+			.generate-btn:hover,
+			.prompt-btn:hover,
+			.keep-btn:hover {
+				background-color: #00956b;
 			}
 
 			.generate-btn[disabled] {
 				cursor: unset;
 			}
 
+			/* Close — 44px gray rounded square INSIDE the modal, top-right of
+			   the header, aligned with the header icon. */
 			.bd-close-button {
 				cursor: pointer;
-				font-size: 18px;
-				font-weight: bold;
-				float: right;
 				position: absolute;
-				top: -16px;
-				border-radius: 50%;
-				background: #ffffff;
-				width: 40px;
-				height: 40px;
+				top: 24px;
+				right: 24px;
+				z-index: 2;
+				width: 32px;
+				height: 32px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				color: #281617;
-				right: -42px;
+				border-radius: 9px;
+				background: #f2f4f7;
+				box-shadow: none;
+				color: #667085;
+				transition: all 0.2s ease-in-out;
+			}
+
+			.bd-close-button svg {
+				width: 16px;
+				height: 16px;
+			}
+
+			.bd-close-button:hover {
+				background: #eaecf0;
+				color: #101828;
 			}
 
 			div#betterdocs-ai-error-message,

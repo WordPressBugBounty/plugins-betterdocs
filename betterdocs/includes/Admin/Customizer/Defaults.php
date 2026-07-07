@@ -652,6 +652,47 @@ class Defaults extends Base {
 			'betterdocs_faq_list_content_color'            => '#7B7B7B',
 			'betterdocs_faq_list_content_color_layout_2'   => '#7B7B7B',
 			'betterdocs_faq_section_seperator'             => '',
+			// Product FAQ for WooCommerce — mirrors the Docs Page FAQ controls,
+			// minus section-title/layout/enable controls (see FaqBuilder woo_*).
+			'betterdocs_faq_section_woo_seperator'         => '',
+			'betterdocs_faq_group_title_tag_woo'           => 'h3',
+			'betterdocs_faq_category_title_color_woo'      => '#15063F',
+			'betterdocs_faq_category_name_font_size_woo'   => '25',
+			'betterdocs_faq_category_name_padding_woo'     => [
+				'input1' => 20,
+				'input2' => 0,
+				'input3' => 20,
+				'input4' => 0
+			],
+			'betterdocs_faq_list_color_woo'                => '#2f3b48',
+			'betterdocs_faq_list_background_color_woo'     => '#f0f1f5',
+			'betterdocs_faq_list_content_background_color_woo' => '#fbfcff',
+			'betterdocs_faq_list_content_color_woo'        => '#7B7B7B',
+			'betterdocs_faq_list_content_font_size_woo'    => '15',
+			'betterdocs_faq_list_font_size_woo'            => '17',
+			'betterdocs_faq_list_padding_woo'              => [
+				'input1' => 20,
+				'input2' => 20,
+				'input3' => 20,
+				'input4' => 20
+			],
+			// FAQ Group wrapper (.betterdocs-faq-group) — border defaults to 0
+			// width so the static card border only shows once configured; padding
+			// and margin default to 0 per design.
+			'betterdocs_faq_group_border_width_woo'        => '0',
+			'betterdocs_faq_group_border_color_woo'        => '#dfe7f5',
+			'betterdocs_faq_group_padding_woo'             => [
+				'input1' => 0,
+				'input2' => 0,
+				'input3' => 0,
+				'input4' => 0
+			],
+			'betterdocs_faq_group_margin_woo'              => [
+				'input1' => 0,
+				'input2' => 0,
+				'input3' => 20,
+				'input4' => 0
+			],
 			'betterdocs_single_doc_attachment_heading'     => '',
 			'betterdocs_doc_single_attachment_content_bg_color' => '#fff',
 			'betterdocs_doc_single_attachment_content_padding' => '',

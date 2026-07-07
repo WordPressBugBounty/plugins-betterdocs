@@ -9663,6 +9663,178 @@ $css->add_rule(
 );
 
 /**
+ * Product FAQ for WooCommerce Customizer CSS
+ *
+ * Targets the product-page FAQ wrapper (`.betterdocs-woo-product-faq`), which
+ * reuses the shared faq parts, so a single control set styles the Group Title
+ * + FAQ List for whichever layout (1–3) the product FAQ uses.
+ *
+ * Note on specificity: the static front-end faq.css is enqueued during product
+ * render and printed in the footer — i.e. AFTER this inline <style> — and its
+ * layout-scoped rules reach (0,7,1). To win regardless of source order each
+ * selector includes the product layout class (`.betterdocs-faq-layout-{1,2,3}`)
+ * so it out-specifies the static rule rather than relying on cascade order.
+ */
+$woo_faq_selector = function ( $suffix ) {
+	$prefixes = [
+		'.betterdocs-faq-wrapper.betterdocs-woo-product-faq.betterdocs-faq-layout-1',
+		'.betterdocs-faq-wrapper.betterdocs-woo-product-faq.betterdocs-faq-layout-2',
+		'.betterdocs-faq-wrapper.betterdocs-woo-product-faq.betterdocs-faq-layout-3'
+	];
+
+	return implode(
+		', ',
+		array_map(
+			function ( $prefix ) use ( $suffix ) {
+				return $prefix . ' ' . $suffix;
+			},
+			$prefixes
+		)
+	);
+};
+
+// Group Title.
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag' ),
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_category_title_color_woo'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag' ),
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_category_name_font_size_woo'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-title .betterdocs-faq-title-tag' ),
+	$css->properties(
+		[
+			'padding' => 'betterdocs_faq_category_name_padding_woo'
+		],
+		'px'
+	)
+);
+
+// FAQ List — question row.
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name' ),
+	$css->properties(
+		[
+			'color' => 'betterdocs_faq_list_color_woo'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post .betterdocs-faq-post-name' ),
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_list_font_size_woo'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post' ),
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_faq_list_background_color_woo'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-post' ),
+	$css->properties(
+		[
+			'padding' => 'betterdocs_faq_list_padding_woo'
+		],
+		'px'
+	)
+);
+
+// FAQ List — answer content.
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-main-content' ),
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_faq_list_content_background_color_woo',
+			'color'            => 'betterdocs_faq_list_content_color_woo'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group .betterdocs-faq-main-content' ),
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_faq_list_content_font_size_woo'
+		],
+		'px'
+	)
+);
+
+// FAQ Group wrapper (the accordion item). border-style is emitted as a literal
+// so the border renders on every product layout once a width is set (the static
+// border is layout-3 only); width/padding/margin default to 0.
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group' ),
+	$css->properties(
+		[
+			'border-width' => 'betterdocs_faq_group_border_width_woo'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group' ),
+	$css->properties(
+		[
+			'border-style' => 'solid'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group' ),
+	$css->properties(
+		[
+			'border-color' => 'betterdocs_faq_group_border_color_woo'
+		]
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group' ),
+	$css->properties(
+		[
+			'padding' => 'betterdocs_faq_group_padding_woo'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	$woo_faq_selector( '.betterdocs-faq-inner-wrapper .betterdocs-faq-list > li .betterdocs-faq-group' ),
+	$css->properties(
+		[
+			'margin' => 'betterdocs_faq_group_margin_woo'
+		],
+		'px'
+	)
+);
+
+/**
  * FAQ Layout 2 Customizer CSS
  */
 

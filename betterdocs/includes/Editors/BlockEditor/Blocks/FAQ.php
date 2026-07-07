@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Block;
+use WPDeveloper\BetterDocs\FrontEnd\WooProductFAQ as WooFAQRenderer;
 
 class FAQ extends Block {
 	protected $editor_scripts = [
@@ -57,15 +58,43 @@ class FAQ extends Block {
 			'faqPerPage'              => 9,
 
 			'showButtonIcon'          => true,
-			'buttonColor'             => '#528ffe'
+			'buttonColor'             => '#528ffe',
+			'faqTaxonomy'             => 'betterdocs_faq_category'
 		];
 	}
 
 	public function render( $attributes, $content ) {
+		if ( ( $this->attributes['faqTaxonomy'] ?? '' ) === 'product_assignments' ) {
+			$this->render_product_assignments();
+			return;
+		}
 
 		add_filter( 'betterdocs_header_layout_sequence', [ $this, 'header_sequence' ], 10, 4 );
 		$this->views( 'layouts/faq' );
 		remove_filter( 'betterdocs_header_layout_sequence', [ $this, 'header_sequence' ], 10 );
+	}
+
+	private function render_product_assignments() {
+		if ( ! class_exists( 'WooCommerce' ) || ! is_product() ) {
+			return;
+		}
+
+		// In FSE templates, top-level blocks render outside the loop, so
+		// get_the_ID() can be 0 — fall back to the queried product.
+		$product_id = get_the_ID();
+		if ( ! $product_id ) {
+			$product_id = get_queried_object_id();
+		}
+		if ( ! $product_id ) {
+			return;
+		}
+
+		/** @var WooFAQRenderer $renderer */
+		$renderer = betterdocs()->container->get( WooFAQRenderer::class );
+
+		// This block is the explicit placement; don't also inject into the tab/summary.
+		$renderer->suppress_auto_placement();
+		$renderer->render_for_product( $product_id, $this->attributes['faqLayout'] ?? null );
 	}
 
 	public function get_groups_ids( $json ) {
@@ -85,8 +114,9 @@ class FAQ extends Block {
 		$attributes['faqLayout'] = sanitize_file_name( $attributes['faqLayout'] );
 		$exclude    = $this->get_groups_ids( $attributes['excludeFaqGroup'] );
 		$include    = $this->get_groups_ids( $attributes['includeFaqGroup'] );
+		$taxonomy   = sanitize_key( $attributes['faqTaxonomy'] ?? 'betterdocs_faq_category' );
 
-		$terms_query = betterdocs()->query->faq_terms_query_args( $include, $exclude );
+		$terms_query = betterdocs()->query->faq_terms_query_args( $include, $exclude, [], $taxonomy );
 
 		return wp_parse_args(
 			[
@@ -115,7 +145,10 @@ class FAQ extends Block {
 					'faq_per_page'                => $attributes['faqPerPage'],
 					'show_button_icon'            => $attributes['showButtonIcon'],
 					'button_icon_position'        => $attributes['faqLayout'] == 'layout-1' || $attributes['faqLayout'] == 'layout-3' || $attributes['faqLayout'] == 'layout-4' ? 'after' : 'before',
-					'button_color'                => $attributes['buttonColor']
+					'button_color'                => $attributes['buttonColor'],
+					'faq_taxonomy'                => $taxonomy,
+					// Per-block order; empty falls back to the global FAQ order.
+					'order'                       => isset( $attributes['faqOrder'] ) ? $attributes['faqOrder'] : ''
 				]
 
 			]

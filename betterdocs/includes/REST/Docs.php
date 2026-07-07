@@ -106,16 +106,25 @@ class Docs extends BaseAPI {
 		public function get_docs_faq_counts() {
 		// Initialize the return array
 		$counts = [
-			'created_docs'    => 0,
-			'published_docs'  => 0,
-			'created_faq'     => 0,
-			'published_faq'   => 0
+			'created_docs'          => 0,
+			'published_docs'        => 0,
+			'created_faq'           => 0,
+			'published_faq'         => 0,
+			'created_product_faq'   => 0,
+			'published_product_faq' => 0
 		];
 
-		// Get all docs (any status)
+		// QA-004: this endpoint is public (Docs::permission_check() returns true),
+		// so the draft-inclusive "created" totals must not leak unpublished-content
+		// volume to anonymous / low-privilege callers. Only users who can edit
+		// others' posts see the any-status counts; everyone else gets published
+		// counts (created_* == published_*).
+		$created_status = current_user_can( 'edit_others_posts' ) ? 'any' : 'publish';
+
+		// Get all docs (created = any status for privileged users, else published)
 		$all_docs_query = new WP_Query([
 			'post_type'      => 'docs',
-			'post_status'    => 'any',
+			'post_status'    => $created_status,
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
@@ -132,25 +141,80 @@ class Docs extends BaseAPI {
 		]);
 		$counts['published_docs'] = $published_docs_query->post_count;
 
-		// Get all FAQs (any status)
+		// Product FAQ groups share the betterdocs_faq post type but live in the
+		// betterdocs_product_faq_category taxonomy. Split the counts so the
+		// General FAQ Builder stats exclude Product FAQs (no leakage) and the
+		// WooCommerce tab can show its own Product FAQ totals.
+		$product_terms = get_terms([
+			'taxonomy'   => 'betterdocs_product_faq_category',
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		]);
+		$product_terms = ( ! is_wp_error( $product_terms ) && ! empty( $product_terms ) ) ? $product_terms : [];
+
+		$exclude_product_tax_query = ! empty( $product_terms ) ? [
+			[
+				'taxonomy' => 'betterdocs_product_faq_category',
+				'field'    => 'term_id',
+				'terms'    => $product_terms,
+				'operator' => 'NOT IN',
+			],
+		] : [];
+
+		$include_product_tax_query = ! empty( $product_terms ) ? [
+			[
+				'taxonomy' => 'betterdocs_product_faq_category',
+				'field'    => 'term_id',
+				'terms'    => $product_terms,
+				'operator' => 'IN',
+			],
+		] : [];
+
+		// General FAQs (created = any status for privileged users), excluding Product FAQs.
 		$all_faq_query = new WP_Query([
 			'post_type'      => 'betterdocs_faq',
-			'post_status'    => 'any',
+			'post_status'    => $created_status,
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
+			'tax_query'      => $exclude_product_tax_query,
 		]);
 		$counts['created_faq'] = $all_faq_query->post_count;
 
-		// Get published FAQs only
+		// Published General FAQs, excluding Product FAQs.
 		$published_faq_query = new WP_Query([
 			'post_type'      => 'betterdocs_faq',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
+			'tax_query'      => $exclude_product_tax_query,
 		]);
 		$counts['published_faq'] = $published_faq_query->post_count;
+
+		if ( ! empty( $product_terms ) ) {
+			// Product FAQs (created = any status for privileged users).
+			$all_product_faq_query = new WP_Query([
+				'post_type'      => 'betterdocs_faq',
+				'post_status'    => $created_status,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'tax_query'      => $include_product_tax_query,
+			]);
+			$counts['created_product_faq'] = $all_product_faq_query->post_count;
+
+			// Published Product FAQs.
+			$published_product_faq_query = new WP_Query([
+				'post_type'      => 'betterdocs_faq',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'tax_query'      => $include_product_tax_query,
+			]);
+			$counts['published_product_faq'] = $published_product_faq_query->post_count;
+		}
 
 		return $counts;
 	}

@@ -622,7 +622,7 @@ class CSVExporter {
 				$post->menu_order,
 				$post->post_mime_type,
 				$post->comment_count,
-				$this->get_term_ids( $post->ID, $post->post_type === 'betterdocs_faq' ? 'betterdocs_faq_category' : 'doc_category' ),
+				$this->get_term_ids( $post->ID, $post->post_type === 'betterdocs_faq' ? [ 'betterdocs_faq_category', 'betterdocs_product_faq_category' ] : 'doc_category' ),
 				$this->get_term_ids( $post->ID, 'doc_tag' ),
 				$this->get_term_ids( $post->ID, 'knowledge_base' ),
 				$attachment_url ? $attachment_url : '',
@@ -636,11 +636,13 @@ class CSVExporter {
 	}
 
 	public function get_term_ids( $post_id, $taxonomy ) {
-		$terms = get_the_terms( $post_id, $taxonomy );
+		// Accept one or more taxonomies. FAQ posts can live in either the general
+		// (betterdocs_faq_category) or the Product FAQ (betterdocs_product_faq_category)
+		// taxonomy, so both are queried for the FAQ group column.
+		$term_ids = wp_get_object_terms( $post_id, (array) $taxonomy, [ 'fields' => 'ids' ] );
 
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			$term_ids = wp_list_pluck( $terms, 'term_id' );
-			return implode( ', ', $term_ids );
+		if ( $term_ids && ! is_wp_error( $term_ids ) ) {
+			return implode( ', ', array_map( 'intval', $term_ids ) );
 		}
 
 		return '';

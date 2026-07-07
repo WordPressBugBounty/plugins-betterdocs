@@ -25,6 +25,44 @@ class FAQBuilder extends Base {
 	public $category   = 'betterdocs_faq_category';
 
 	/**
+	 * Product FAQ groups taxonomy. Shares the betterdocs_faq post type with the
+	 * General FAQ groups but is a separate taxonomy so the two never mix in the
+	 * admin or on the front end. Used by the WooCommerce Product FAQ tab.
+	 *
+	 * @var string
+	 */
+	public $product_category = 'betterdocs_product_faq_category';
+
+	/**
+	 * Term meta on a Product FAQ group holding the product_cat term IDs the
+	 * group is assigned to. Products in those categories inherit the group.
+	 */
+	const GROUP_PRODUCT_CATS_META = '_betterdocs_faq_group_product_cats';
+
+	/**
+	 * Term meta on a Product FAQ group holding the individual product IDs the
+	 * group is assigned to directly.
+	 */
+	const GROUP_PRODUCTS_META = '_betterdocs_faq_group_products';
+
+	/**
+	 * Term meta flagging a Product FAQ group as shown on every product (no
+	 * per-product/per-category targeting). Set on the store-aware sample groups
+	 * so they render storefront-wide immediately; cleared the moment the owner
+	 * saves explicit category/product assignments.
+	 */
+	const GROUP_ALL_PRODUCTS_META = '_betterdocs_faq_group_all_products';
+
+	/**
+	 * Per-request cache of draft FAQ counts keyed by taxonomy → [ term_id => count ].
+	 * Lets the betterdocs_draft_count REST field resolve every term from a single
+	 * grouped query instead of one WP_Query per term (N+1).
+	 *
+	 * @var array<string, array<int, int>>
+	 */
+	protected $draft_count_cache = [];
+
+	/**
 	 *
 	 * Initialize the class and start calling our hooks and filters
 	 *
@@ -36,8 +74,85 @@ class FAQBuilder extends Base {
 		add_action( 'init', [ $this, 'register_post' ] );
 		// fires after a new betterdocs_faq_category is created
 		add_action( 'created_betterdocs_faq_category', [ $this, 'action_created_betterdocs_faq_category' ], 10, 2 );
+		add_action( 'created_betterdocs_product_faq_category', [ $this, 'action_created_betterdocs_faq_category' ], 10, 2 );
 		add_action( 'rest_api_init', [ $this, 'register_api_endpoint' ] );
+		add_action( 'rest_api_init', [ $this, 'register_category_count_fields' ] );
 		add_action( 'rest_betterdocs_faq_category_query', [ $this, 'faq_category_orderby_meta' ], 10, 2 );
+		add_action( 'rest_betterdocs_product_faq_category_query', [ $this, 'faq_category_orderby_meta' ], 10, 2 );
+
+		// Classic FAQ Group list (edit-tags.php?taxonomy=betterdocs_faq_category):
+		// enable drag-and-drop ordering + persist it, mirroring the classic Doc
+		// Categories screen.
+		add_action( 'admin_enqueue_scripts', [ $this, 'classic_category_scripts' ] );
+		add_action( 'wp_ajax_update_faq_cat_order', [ $this, 'ajax_update_category_order' ] );
+		add_action( 'admin_head', [ $this, 'order_admin_terms' ] );
+	}
+
+	/**
+	 * Expose a per-group draft FAQ count on the betterdocs_faq_category REST
+	 * response so the FAQ Builder can show "N questions • M draft". The term
+	 * `count` only tracks published FAQs (via _update_post_term_count), so the
+	 * draft count is computed here.
+	 *
+	 * @since 4.4.0
+	 */
+	public function register_category_count_fields() {
+		foreach ( [ $this->category, $this->product_category ] as $taxonomy ) {
+			register_rest_field(
+				$taxonomy,
+				'betterdocs_draft_count',
+				[
+					'get_callback' => function ( $term ) {
+						$counts = $this->get_draft_counts_by_term( $term['taxonomy'] );
+						return isset( $counts[ (int) $term['id'] ] ) ? (int) $counts[ (int) $term['id'] ] : 0;
+					},
+					'schema'       => [
+						'type'    => 'integer',
+						'context' => [ 'view', 'edit' ],
+					],
+				]
+			);
+		}
+	}
+
+	/**
+	 * Draft FAQ counts for every term in a taxonomy, keyed by term_id.
+	 *
+	 * Computed once per request with a single grouped query and memoized, so the
+	 * betterdocs_draft_count REST field no longer fires a WP_Query per term when
+	 * a category list is assembled (avoids the N+1 on large group counts).
+	 *
+	 * @param string $taxonomy
+	 * @return array<int, int>
+	 */
+	protected function get_draft_counts_by_term( $taxonomy ) {
+		if ( isset( $this->draft_count_cache[ $taxonomy ] ) ) {
+			return $this->draft_count_cache[ $taxonomy ];
+		}
+
+		global $wpdb;
+
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT tt.term_id, COUNT( p.ID ) AS draft_count
+				 FROM {$wpdb->posts} p
+				 INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+				 INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+				 WHERE p.post_type = %s
+				   AND p.post_status = 'draft'
+				   AND tt.taxonomy = %s
+				 GROUP BY tt.term_id",
+				$this->post_type,
+				$taxonomy
+			)
+		); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+
+		$counts = [];
+		foreach ( (array) $rows as $row ) {
+			$counts[ (int) $row->term_id ] = (int) $row->draft_count;
+		}
+
+		return $this->draft_count_cache[ $taxonomy ] = $counts;
 	}
 
 	public function output() {
@@ -93,6 +208,60 @@ class FAQBuilder extends Base {
 		register_term_meta( $this->category, 'faq_group_icon', [ 'show_in_rest' => true ]);
 
 		/**
+		 * Register the Product FAQ groups taxonomy (WooCommerce tab). It mirrors
+		 * the General FAQ category taxonomy and shares the betterdocs_faq post
+		 * type, but is kept separate so Product FAQ groups never appear in the
+		 * General FAQ Builder tab.
+		 */
+		$product_category_labels = [
+			'name'              => __( 'Product FAQ Categories', 'betterdocs' ),
+			'singular_name'     => __( 'Product FAQ Category', 'betterdocs' ),
+			'all_items'         => __( 'Product FAQ Categories', 'betterdocs' ),
+			'parent_item'       => __( 'Parent Product FAQ Category', 'betterdocs' ),
+			'parent_item_colon' => __( 'Parent Product FAQ Category:', 'betterdocs' ),
+			'edit_item'         => __( 'Edit Product FAQ Category', 'betterdocs' ),
+			'update_item'       => __( 'Update Product FAQ Category', 'betterdocs' ),
+			'add_new_item'      => __( 'Add New Product FAQ Category', 'betterdocs' ),
+			'new_item_name'     => __( 'New Product FAQ Category Name', 'betterdocs' ),
+			'menu_name'         => __( 'Product FAQ Categories', 'betterdocs' )
+		];
+
+		$product_category_args               = $category_args;
+		$product_category_args['labels']     = $product_category_labels;
+		$product_category_args['show_admin_column'] = false;
+
+		register_taxonomy( $this->product_category, [ $this->post_type ], $product_category_args );
+		register_term_meta( $this->product_category, 'order', [ 'show_in_rest' => true ] );
+		register_term_meta( $this->product_category, 'status', [ 'show_in_rest' => true ] );
+		register_term_meta( $this->product_category, '_betterdocs_faq_order', [ 'show_in_rest' => true ] );
+		register_term_meta( $this->product_category, 'faq_group_icon', [ 'show_in_rest' => true ] );
+
+		// Product FAQ group assignments: which WooCommerce product categories and
+		// which individual products this group is shown on. Stored on the group
+		// term so the assignment lives in the Create/Update FAQ Group screen.
+		$assignment_meta_args = [
+			'single'       => true,
+			'type'         => 'array',
+			'show_in_rest' => [
+				'schema' => [
+					'type'  => 'array',
+					'items' => [ 'type' => 'integer' ],
+				],
+			],
+		];
+		register_term_meta( $this->product_category, self::GROUP_PRODUCT_CATS_META, $assignment_meta_args );
+		register_term_meta( $this->product_category, self::GROUP_PRODUCTS_META, $assignment_meta_args );
+		register_term_meta(
+			$this->product_category,
+			self::GROUP_ALL_PRODUCTS_META,
+			[
+				'single'       => true,
+				'type'         => 'boolean',
+				'show_in_rest' => true,
+			]
+		);
+
+		/**
 		 * Register post type
 		 */
 		$labels = [
@@ -141,7 +310,9 @@ class FAQBuilder extends Base {
 	 * @param string $tax_slug The taxonomy's slug.
 	 */
 	public function action_created_betterdocs_faq_category( $term_id ) {
-		$order = $this->get_max_taxonomy_order( 'betterdocs_faq_category' );
+		$term     = get_term( $term_id );
+		$taxonomy = ( $term && ! is_wp_error( $term ) ) ? $term->taxonomy : $this->category;
+		$order    = $this->get_max_taxonomy_order( $taxonomy );
 		update_term_meta( $term_id, 'order', $order++ );
 		update_term_meta( $term_id, 'status', 1 );
 	}
@@ -197,6 +368,13 @@ class FAQBuilder extends Base {
 	 * @param array $args       Array of term query args.
 	 */
 	public function set_tax_order( $pieces, $taxonomies, $args ) {
+		// Only force the manual drag-drop `order` meta when the FAQ Builder
+		// header dropdown is on "default". For name/count/id sort modes, let
+		// get_terms() keep its own orderby so the front end matches the builder.
+		if ( betterdocs()->query->get_faq_order_key() !== 'default' ) {
+			return $pieces;
+		}
+
 		foreach ( $taxonomies as $taxonomy ) {
 			global $wpdb;
 
@@ -233,6 +411,136 @@ class FAQBuilder extends Base {
 	 */
 	protected function does_substring_exist( $string, $substring ) {
 		return strstr( $string, $substring ) !== false;
+	}
+
+	/**
+	 * Load the shared drag-and-drop sorter on the classic FAQ Group list
+	 * (edit-tags.php?taxonomy=betterdocs_faq_category). Reuses the generic,
+	 * config-driven admin/js/category-edit.js — the same script the classic Doc
+	 * Categories screen uses — pointed at the FAQ category ordering AJAX action.
+	 *
+	 * jquery + jquery-ui-sortable are declared explicitly so `.sortable()` is
+	 * always defined (the bare script reported jQuery/Sortable as undefined here
+	 * because no sorter was enqueued on this screen at all).
+	 *
+	 * @param string $hook Current admin page hook.
+	 */
+	public function classic_category_scripts( $hook ) {
+		if ( 'edit-tags.php' !== $hook ) {
+			return;
+		}
+
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || $screen->taxonomy !== $this->category ) {
+			return;
+		}
+
+		betterdocs()->assets->enqueue(
+			'betterdocs-category-edit',
+			'admin/js/category-edit.js',
+			[ 'jquery', 'jquery-ui-sortable' ]
+		);
+
+		betterdocs()->assets->localize(
+			'betterdocs-category-edit',
+			'betterdocsCategorySorting',
+			[
+				'action'      => 'update_faq_cat_order',
+				'selector'    => '.taxonomy-' . $this->category,
+				'ajaxurl'     => admin_url( 'admin-ajax.php' ),
+				'nonce'       => wp_create_nonce( 'faq_cat_order_nonce' ),
+				// Paged only sets the ordering base offset (the AJAX write itself
+				// is nonce-protected), so read it directly from the WP term-list
+				// pagination link so cross-page ordering stays correct.
+				'paged'       => isset( $_GET['paged'] ) ? absint( wp_unslash( $_GET['paged'] ) ) : 0, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'per_page_id' => "edit_{$this->category}_per_page",
+			]
+		);
+	}
+
+	/**
+	 * Persist FAQ Group order from the classic drag-and-drop sorter. Writes the
+	 * `order` term meta that the React FAQ Builder and the front end already read,
+	 * so all three stay in sync. Mirrors PostType::update_category_order.
+	 */
+	public function ajax_update_category_order() {
+		if ( ! check_ajax_referer( 'faq_cat_order_nonce', 'nonce', false ) ) {
+			wp_send_json_error( __( 'Nonce Failed', 'betterdocs' ) );
+		}
+
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			wp_send_json_error( __( 'You don\'t have permission to manage FAQ groups.', 'betterdocs' ) );
+		}
+
+		$base_index = isset( $_POST['base_index'] ) ? intval( $_POST['base_index'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		if ( isset( $_POST['data'] ) && is_array( $_POST['data'] ) ) {
+			$ordering = array_filter(
+				array_map(
+					function ( $item ) {
+						if ( is_array( $item ) && isset( $item['term_id'], $item['order'] ) ) {
+							return [
+								'term_id' => intval( $item['term_id'] ),
+								'order'   => intval( $item['order'] ),
+							];
+						}
+						return null;
+					},
+					wp_unslash( $_POST['data'] ) // phpcs:ignore
+				)
+			);
+		} else {
+			$ordering = [];
+		}
+
+		foreach ( $ordering as $order_data ) {
+			update_term_meta( $order_data['term_id'], 'order', $order_data['order'] + $base_index );
+		}
+
+		wp_send_json_success( __( 'Successfully updated.', 'betterdocs' ) );
+	}
+
+	/**
+	 * Order the classic FAQ Group list by the manual `order` term meta so the
+	 * drag-and-drop order persists across reloads. Seeds the meta for any terms
+	 * missing it first (e.g. groups created before ordering existed). Mirrors
+	 * PostType::order_terms for the Doc Categories screen.
+	 */
+	public function order_admin_terms() {
+		global $current_screen;
+
+		if (
+			! isset( $_GET['orderby'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$current_screen &&
+			! empty( $current_screen->base ) &&
+			$current_screen->base === 'edit-tags' &&
+			$current_screen->taxonomy === $this->category
+		) {
+			$this->default_term_order( $this->category );
+			add_filter( 'terms_clauses', [ $this, 'admin_order_terms_clauses' ], 10, 3 );
+		}
+	}
+
+	/**
+	 * terms_clauses filter (classic FAQ Group admin list only): force ORDER BY
+	 * the `order` term meta. Unlike set_tax_order this is not gated on the
+	 * builder's saved order key — the classic screen is always manual ordering.
+	 */
+	public function admin_order_terms_clauses( $pieces, $taxonomies, $args ) {
+		if ( ! in_array( $this->category, (array) $taxonomies, true ) ) {
+			return $pieces;
+		}
+
+		global $wpdb;
+		$join_statement = " LEFT JOIN $wpdb->termmeta AS bd_faq_order ON t.term_id = bd_faq_order.term_id AND bd_faq_order.meta_key = 'order'";
+
+		if ( ! $this->does_substring_exist( $pieces['join'], $join_statement ) ) {
+			$pieces['join'] .= $join_statement;
+		}
+
+		$pieces['orderby'] = 'ORDER BY CAST( bd_faq_order.meta_value AS UNSIGNED )';
+
+		return $pieces;
 	}
 
 	public function register_api_endpoint() {
@@ -370,6 +678,18 @@ class FAQBuilder extends Base {
 
 		register_rest_route(
 			$this->namespace,
+			'/faq/order',
+			[
+				'methods'             => [ 'POST' ],
+				'callback'            => [ $this, 'update_faq_order_preference' ],
+				'permission_callback' => function () {
+					return current_user_can( 'edit_others_posts' );
+				}
+			]
+		);
+
+		register_rest_route(
+			$this->namespace,
 			'/faq/uncategorised',
 			[
 				'methods'             => [ 'GET' ],
@@ -394,6 +714,11 @@ class FAQBuilder extends Base {
 						'type'              => 'string',
 						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field'
+					],
+					'taxonomy' => [
+						'type'              => 'string',
+						'required'          => false,
+						'sanitize_callback' => 'sanitize_text_field'
 					]
 				]
 			]
@@ -416,25 +741,60 @@ class FAQBuilder extends Base {
 		return true;
 	}
 
+	/**
+	 * Resolve the taxonomy from a request, whitelisted to the General and
+	 * Product FAQ category taxonomies. Defaults to the General taxonomy so
+	 * existing callers (which never send a taxonomy) keep their behavior.
+	 *
+	 * @param \WP_REST_Request $params
+	 * @return string
+	 */
+	private function resolve_taxonomy( $params ) {
+		$taxonomy = $params->get_param( 'taxonomy' );
+		return in_array( $taxonomy, [ $this->category, $this->product_category ], true )
+			? $taxonomy
+			: $this->category;
+	}
+
 	public function create_faq_category( $params ) {
-		$title       = $params->get_param( 'title' );
+		// The WP term `name` column is varchar(200); cap the length so an
+		// over-long title can't trigger a DB insert error (the React form caps
+		// this too, this is the server-side guard).
+		$title       = mb_substr( (string) $params->get_param( 'title' ), 0, 200 );
 		$description = $params->get_param( 'description' );
 		$description = ( $description !== 'undefined' ) ? $description : '';
 		$slug        = $params->get_param( 'slug' );
 		$group_icon_url = $params->get_param('group_icon_url');
-		return $this->insert_betterdocs_faq_category( $title, $description, $group_icon_url, $slug );
+		$taxonomy    = $this->resolve_taxonomy( $params );
+		$result      = $this->insert_betterdocs_faq_category(
+			$title,
+			$description,
+			$group_icon_url,
+			$slug,
+			$taxonomy,
+			(array) $params->get_param( 'product_cats' ),
+			(array) $params->get_param( 'products' )
+		);
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return rest_ensure_response( array( 'success' => true, 'term_id' => (int) $result ) );
 	}
 
 	public function update_faq_category( $params ) {
 		$term_id     = $params->get_param( 'term_id' );
-		$title       = $params->get_param( 'title' );
+		// Cap at the varchar(200) term-name limit (server-side guard).
+		$title       = mb_substr( (string) $params->get_param( 'title' ), 0, 200 );
 		$description = $params->get_param( 'description' );
 		$group_icon_url = $params->get_param('group_icon_url');
 		$description = ( $description !== 'undefined' ) ? $description : '';
 		$slug        = $params->get_param( 'slug' );
+		$taxonomy    = $this->resolve_taxonomy( $params );
 		$update      = wp_update_term(
 			$term_id,
-			'betterdocs_faq_category',
+			$taxonomy,
 			[
 				'name'        => $title,
 				'slug'        => $slug,
@@ -449,6 +809,12 @@ class FAQBuilder extends Base {
 			if( $term_id != 0 ) {
 				$previous_icon_url = get_term_meta($term_id, 'faq_group_icon', true);
 				update_term_meta($term_id, 'faq_group_icon', $group_icon_url, $previous_icon_url);
+				$this->save_group_assignments(
+					$term_id,
+					$taxonomy,
+					(array) $params->get_param( 'product_cats' ),
+					(array) $params->get_param( 'products' )
+				);
 			}
 			return true;
 		}
@@ -457,12 +823,13 @@ class FAQBuilder extends Base {
     public function delete_faq_category( $params ) {
         $term_id = $params->get_param( 'term_id' );
         $delete_all_docs = $params->get_param('with_all_post');
+        $taxonomy = $this->resolve_taxonomy( $params );
 
         if ( $delete_all_docs ) {
-            Helper::delete_specific_faq_posts_by_faq_category( $term_id );
+            Helper::delete_specific_faq_posts_by_faq_category( $term_id, $taxonomy );
         }
 
-        $delete  = wp_delete_term( $term_id, 'betterdocs_faq_category' );
+        $delete  = wp_delete_term( $term_id, $taxonomy );
 
 		if ( is_wp_error( $delete ) ) {
 			return $delete;
@@ -471,10 +838,10 @@ class FAQBuilder extends Base {
 		}
 	}
 
-	public function insert_betterdocs_faq_category( $title, $description, $icon_url, $slug = '' ) {
+	public function insert_betterdocs_faq_category( $title, $description, $icon_url, $slug = '', $taxonomy = 'betterdocs_faq_category', $product_cats = [], $products = [] ) {
 		$insert_term = wp_insert_term(
 			$title,
-			'betterdocs_faq_category',
+			$taxonomy,
 			[
 				'slug'        => $slug,
 				'description' => $description
@@ -487,8 +854,62 @@ class FAQBuilder extends Base {
 			$term_id = isset( $insert_term['term_id'] ) ?  $insert_term['term_id']  : 0;
 			if( $term_id != 0 ) {
 				update_term_meta($term_id, 'faq_group_icon', $icon_url);
+				$this->save_group_assignments( $term_id, $taxonomy, $product_cats, $products );
 			}
-			return true;
+			// Return the new term id so the admin can jump to its pagination
+			// page and highlight it (mirrors the new-FAQ reveal flow).
+			return (int) $term_id;
+		}
+	}
+
+	/**
+	 * Persist a Product FAQ group's product-category and product assignments.
+	 * No-op for any taxonomy other than the Product FAQ groups taxonomy.
+	 *
+	 * @param int    $term_id
+	 * @param string $taxonomy
+	 * @param array  $product_cats Incoming product_cat term IDs.
+	 * @param array  $products     Incoming product post IDs.
+	 */
+	private function save_group_assignments( $term_id, $taxonomy, $product_cats, $products ) {
+		if ( $taxonomy !== $this->product_category ) {
+			return;
+		}
+
+		$cat_ids = [];
+		foreach ( (array) $product_cats as $cid ) {
+			$cid = (int) $cid;
+			if ( $cid > 0 && term_exists( $cid, 'product_cat' ) ) {
+				$cat_ids[] = $cid;
+			}
+		}
+		$cat_ids = array_values( array_unique( $cat_ids ) );
+
+		$product_ids = [];
+		foreach ( (array) $products as $pid ) {
+			$pid = (int) $pid;
+			if ( $pid > 0 && 'product' === get_post_type( $pid ) ) {
+				$product_ids[] = $pid;
+			}
+		}
+		$product_ids = array_values( array_unique( $product_ids ) );
+
+		if ( empty( $cat_ids ) ) {
+			delete_term_meta( $term_id, self::GROUP_PRODUCT_CATS_META );
+		} else {
+			update_term_meta( $term_id, self::GROUP_PRODUCT_CATS_META, $cat_ids );
+		}
+
+		if ( empty( $product_ids ) ) {
+			delete_term_meta( $term_id, self::GROUP_PRODUCTS_META );
+		} else {
+			update_term_meta( $term_id, self::GROUP_PRODUCTS_META, $product_ids );
+		}
+
+		// Choosing explicit targets re-scopes a previously "all products" group
+		// (e.g. a store-aware sample group), so drop the match-all flag.
+		if ( ! empty( $cat_ids ) || ! empty( $product_ids ) ) {
+			delete_term_meta( $term_id, self::GROUP_ALL_PRODUCTS_META );
 		}
 	}
 
@@ -504,7 +925,7 @@ class FAQBuilder extends Base {
 		return true;
 	}
 
-	public function insert_betterdocs_faq( $post_title, $post_content, $term_id ) {
+	public function insert_betterdocs_faq( $post_title, $post_content, $term_id, $taxonomy = 'betterdocs_faq_category' ) {
 		$post = wp_insert_post(
 			[
 				'post_type'    => 'betterdocs_faq',
@@ -515,28 +936,27 @@ class FAQBuilder extends Base {
 		);
 
 		if ( $term_id ) {
-			$set_terms = wp_set_object_terms( $post, $term_id, 'betterdocs_faq_category' );
+			$set_terms = wp_set_object_terms( $post, $term_id, $taxonomy );
 			if ( is_wp_error( $set_terms ) ) {
 				return $set_terms;
-			} else {
-				return $this->update_faq_order_on_insert( $term_id, $post );
 			}
-		} else {
-			return $post;
+			$this->update_faq_order_on_insert( $term_id, $post );
 		}
+
+		// Always return the new post ID so the admin can reveal/highlight the
+		// created FAQ (the grouped path previously returned the term-meta result).
+		return $post;
 	}
 
 	public function update_faq_order_on_insert( $term_id, $post ) {
-		$term_meta = get_term_meta( $term_id, '_betterdocs_faq_order' );
-		if ( ! empty( $term_meta ) ) {
-			$term_meta_arr = explode( ',', $term_meta[0] );
-			if ( ! in_array( $post, $term_meta_arr ) ) {
-				array_unshift( $term_meta_arr, $post );
-				$docs_ordering_data = filter_var_array( wp_unslash( $term_meta_arr ), FILTER_SANITIZE_NUMBER_INT );
-				return update_term_meta( $term_id, '_betterdocs_faq_order', implode( ',', $docs_ordering_data ) );
-			}
-		} else {
-			return update_term_meta( $term_id, '_betterdocs_faq_order', $post );
+		// QA-008: read the single stored value and strip blanks so the very first
+		// insert (no existing meta) doesn't explode(',', null) into a corrupt [''].
+		$existing      = (string) get_term_meta( $term_id, '_betterdocs_faq_order', true );
+		$term_meta_arr = array_filter( array_map( 'trim', explode( ',', $existing ) ), 'strlen' );
+		if ( ! in_array( (string) $post, $term_meta_arr, true ) ) {
+			array_unshift( $term_meta_arr, $post );
+			$docs_ordering_data = filter_var_array( wp_unslash( $term_meta_arr ), FILTER_SANITIZE_NUMBER_INT );
+			return update_term_meta( $term_id, '_betterdocs_faq_order', implode( ',', $docs_ordering_data ) );
 		}
 	}
 
@@ -550,19 +970,46 @@ class FAQBuilder extends Base {
 		return update_term_meta( $term_id, '_betterdocs_faq_order', $posts );
 	}
 
+	/**
+	 * Persist the FAQ Builder header order dropdown so the front end can mirror
+	 * it. Stored as a single global preference in the `betterdocs_faq_order`
+	 * option and read back by Query::get_faq_order_key().
+	 */
+	public function update_faq_order_preference( $params ) {
+		$order   = $params->get_param( 'order' );
+		$allowed = array( 'default', 'most_recent', 'least_recent', 'a_to_z', 'z_to_a', 'most_questions' );
+
+		if ( ! in_array( $order, $allowed, true ) ) {
+			$order = 'default';
+		}
+
+		update_option( 'betterdocs_faq_order', $order );
+
+		return rest_ensure_response( array( 'success' => true, 'order' => $order ) );
+	}
+
 	public function create_betterdocs_faq( $params ) {
 		$post_title   = $params->get_param( 'post_title' );
 		$post_content = $params->get_param( 'post_content' );
 		$term_id      = $params->get_param( 'term_id' );
-		return $this->insert_betterdocs_faq( $post_title, $post_content, $term_id );
+		$taxonomy     = $this->resolve_taxonomy( $params );
+		return $this->insert_betterdocs_faq( $post_title, $post_content, $term_id, $taxonomy );
 	}
 
 	public function update_betterdocs_faq( $params ) {
-		$post_id      = $params->get_param( 'post_id' );
+		$post_id = (int) $params->get_param( 'post_id' );
+
+		// QA-001: never let an arbitrary post ID be retyped/overwritten through
+		// this endpoint. Only operate on posts that are already BetterDocs FAQs.
+		if ( ! $post_id || get_post_type( $post_id ) !== $this->post_type ) {
+			return new WP_Error( 'betterdocs_invalid_faq', __( 'Invalid FAQ ID.', 'betterdocs' ), [ 'status' => 404 ] );
+		}
+
 		$post_title   = $params->get_param( 'post_title' );
 		$post_content = $params->get_param( 'post_content' );
 		$status       = $params->get_param( 'status' );
-		$term_id      = $params->get_param( 'term_id' );
+		$term_id      = (int) $params->get_param( 'term_id' );
+		$taxonomy     = $this->resolve_taxonomy( $params );
 		if ( $status ) {
 			$data = [
 				'post_type' => 'betterdocs_faq',
@@ -573,18 +1020,28 @@ class FAQBuilder extends Base {
 			$data = [
 				'post_type'    => 'betterdocs_faq',
 				'ID'           => $post_id,
-				'post_title'   => $post_title,
-				'post_content' => $post_content
+				// QA-009: sanitize server-side — the editor posts raw TinyMCE
+				// HTML. Title is plain text; content keeps post-safe HTML only
+				// (scripts / event handlers stripped) even for unfiltered_html users.
+				'post_title'   => sanitize_text_field( $post_title ),
+				'post_content' => wp_kses_post( $post_content ),
 			];
 
-			if ( $term_id ) {
+			// QA-007: only assign a term that actually exists in the resolved FAQ
+			// taxonomy — an invalid term_id would silently orphan the FAQ.
+			if ( $term_id && term_exists( $term_id, $taxonomy ) ) {
 				$data['tax_input'] = [
-					'betterdocs_faq_category' => $term_id
+					$taxonomy => [ $term_id ],
 				];
 
-				$term_meta     = get_term_meta( $term_id, '_betterdocs_faq_order' );
-				$term_meta_arr = explode( ',', $term_meta[0] );
-				if ( ! in_array( $post_id, $term_meta_arr ) ) {
+				// QA-008: build the order list defensively. On the first update the
+				// term has no _betterdocs_faq_order meta; the old code did
+				// explode(',', null) → [''] which corrupted the order with a blank
+				// entry (plus a PHP 8.1 "null to explode" deprecation). Read the
+				// single value and drop blanks instead.
+				$existing      = (string) get_term_meta( $term_id, '_betterdocs_faq_order', true );
+				$term_meta_arr = array_filter( array_map( 'trim', explode( ',', $existing ) ), 'strlen' );
+				if ( ! in_array( (string) $post_id, $term_meta_arr, true ) ) {
 					array_unshift( $term_meta_arr, $post_id );
 					$docs_ordering_data = filter_var_array( wp_unslash( $term_meta_arr ), FILTER_SANITIZE_NUMBER_INT );
 					update_term_meta( $term_id, '_betterdocs_faq_order', implode( ',', $docs_ordering_data ) );
@@ -596,7 +1053,13 @@ class FAQBuilder extends Base {
 	}
 
 	public function delete_betterdocs_faq( $params ) {
-		$post_id = $params->get_param( 'post_id' );
+		$post_id = (int) $params->get_param( 'post_id' );
+
+		// QA-001: refuse to delete anything that isn't a BetterDocs FAQ.
+		if ( ! $post_id || get_post_type( $post_id ) !== $this->post_type ) {
+			return new WP_Error( 'betterdocs_invalid_faq', __( 'Invalid FAQ ID.', 'betterdocs' ), [ 'status' => 404 ] );
+		}
+
 		return wp_delete_post( $post_id );
 	}
 
@@ -676,39 +1139,80 @@ class FAQBuilder extends Base {
 			},
 			get_terms(
 				[
-					'taxonomy'   => 'betterdocs_faq_category',
+					'taxonomy'   => $this->category,
 					'hide_empty' => false
 				]
 			)
 		);
 
+		$tax_query = [
+			'relation' => 'AND',
+			[
+				'taxonomy' => $this->category,
+				'field'    => 'term_id',
+				'terms'    => $available_terms,
+				'operator' => 'NOT IN'
+			]
+		];
+
+		// Keep Product FAQ posts out of the General "Uncategorized" group: they
+		// have no General category, so without this they would leak into the
+		// General FAQ Builder tab.
+		$product_terms = array_map(
+			function ( $term ) {
+				return $term->term_id;
+			},
+			get_terms(
+				[
+					'taxonomy'   => $this->product_category,
+					'hide_empty' => false
+				]
+			)
+		);
+
+		if ( ! empty( $product_terms ) ) {
+			$tax_query[] = [
+				'taxonomy' => $this->product_category,
+				'field'    => 'term_id',
+				'terms'    => $product_terms,
+				'operator' => 'NOT IN'
+			];
+		}
+
 		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional NOT-IN scan to find FAQs without any category assignment.
-		return get_posts(
+		$posts = get_posts(
 			[
 				'post_type'      => 'betterdocs_faq',
 				'post_status'    => current_user_can( 'edit_others_posts' ) ? [ 'publish', 'draft' ] : 'publish',
 				'posts_per_page' => -1,
-				'tax_query'      => [
-					'relation' => 'AND',
-					[
-						'taxonomy' => 'betterdocs_faq_category',
-						'field'    => 'term_id',
-						'terms'    => $available_terms,
-						'operator' => 'NOT IN'
-					]
-				]
+				'tax_query'      => $tax_query
 			]
 		);
+
+		// get_posts() returns raw WP_Post objects without a `meta` property. The
+		// FAQ Builder reads `faq.meta.faq_open_by_default` to seed the "Keep It
+		// Open By default" switcher, so attach it here to mirror the scalar shape
+		// the wp/v2 endpoint returns for categorized FAQs ('' when unset, '1'
+		// when enabled). Without this the value is undefined and the switcher
+		// defaults to ON for every uncategorized FAQ.
+		foreach ( $posts as $post ) {
+			$post->meta = [
+				'faq_open_by_default' => get_post_meta( $post->ID, 'faq_open_by_default', true ),
+			];
+		}
+
+		return $posts;
 	}
 
 	public function category_search( $request ) {
 
-		$title = $request['title'];
+		$title    = $request['title'];
+		$taxonomy = $this->resolve_taxonomy( $request );
 
 		// Perform the taxonomy search
 		$taxonomy_args = [
 			'name__like' => $title,
-			'taxonomy'   => 'betterdocs_faq_category',
+			'taxonomy'   => $taxonomy,
 			'hide_empty' => false
 		];
 
@@ -735,11 +1239,55 @@ class FAQBuilder extends Base {
 	}
 
 	public function faq_category_orderby_meta( $args, $request ) {
-		if ( $args['taxonomy'] === 'betterdocs_faq_category' ) {
-			$args['orderby']  = 'meta_value_num';
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by user-assigned 'order' meta is required UX.
-			$args['meta_key'] = 'order';
+		if ( ! in_array( $args['taxonomy'], [ $this->category, $this->product_category ], true ) ) {
+			return $args;
 		}
+
+		// Order (and therefore paginate) the whole group list server-side to
+		// match the FAQ Builder header dropdown, so page boundaries are cut on
+		// the same sort the rows are shown in — otherwise page 1 could end on
+		// "W" and page 2 start on "B". The admin passes the order key explicitly
+		// (independent of when the preference option finishes saving); fall back
+		// to the saved preference, then to the manual drag-drop order.
+		$order_key = $request->get_param( 'betterdocs_faq_order' );
+		if ( empty( $order_key ) ) {
+			$order_key = get_option( 'betterdocs_faq_order', 'default' );
+		}
+
+		switch ( $order_key ) {
+			case 'most_recent':
+				$args['orderby'] = 'term_id';
+				$args['order']   = 'DESC';
+				unset( $args['meta_key'] );
+				break;
+			case 'least_recent':
+				$args['orderby'] = 'term_id';
+				$args['order']   = 'ASC';
+				unset( $args['meta_key'] );
+				break;
+			case 'a_to_z':
+				$args['orderby'] = 'name';
+				$args['order']   = 'ASC';
+				unset( $args['meta_key'] );
+				break;
+			case 'z_to_a':
+				$args['orderby'] = 'name';
+				$args['order']   = 'DESC';
+				unset( $args['meta_key'] );
+				break;
+			case 'most_questions':
+				$args['orderby'] = 'count';
+				$args['order']   = 'DESC';
+				unset( $args['meta_key'] );
+				break;
+			case 'default':
+			default:
+				$args['orderby']  = 'meta_value_num';
+				$args['meta_key'] = 'order';
+				$args['order']    = 'ASC';
+				break;
+		}
+
 		return $args;
 	}
 }

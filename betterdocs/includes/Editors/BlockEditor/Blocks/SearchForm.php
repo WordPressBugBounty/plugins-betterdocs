@@ -38,7 +38,7 @@ class SearchForm extends Block {
 			'searchSubHeading'              => '',
 			'searchHeadingTag'              => 'h2',
 			'searchSubHeadingTag'           => 'h3',
-			'searchButtonLayout2'           => false, //for search modal
+			'searchButtonLayout2'           => true, //for search modal — search button enabled by default
 			'categorySearchLayout2'         => false, //for search modal
 			'popularSearchLayout2'          => false, //for search modal,
 			'initialFAQNumber'              => 5, //for search modal,

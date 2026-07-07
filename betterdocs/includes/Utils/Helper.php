@@ -52,6 +52,39 @@ class Helper extends Base {
 		return is_plugin_active( $plugin_basename );
 	}
 
+	/**
+	 * Whether an SEO plugin already emits FAQPage schema on the current page.
+	 *
+	 * True only when Yoast or Rank Math is active AND its FAQ block is present
+	 * in the post's content, so BetterDocs can skip its own FAQPage JSON-LD and
+	 * avoid duplicate structured data. Defaults to the queried object when no
+	 * post is given.
+	 *
+	 * @param int|\WP_Post|null $post
+	 * @return bool
+	 */
+	public static function seo_plugin_outputs_faq_schema( $post = null ) {
+		if ( null === $post ) {
+			$post = get_queried_object();
+		}
+
+		$post = get_post( $post );
+		if ( ! $post instanceof \WP_Post ) {
+			return false;
+		}
+
+		if ( self::is_plugin_active( 'wordpress-seo/wp-seo.php' ) && has_block( 'yoast/faq-block', $post ) ) {
+			return true;
+		}
+
+		if ( self::is_plugin_active( 'seo-by-rank-math/rank-math.php' ) && has_block( 'rank-math/faq-block', $post ) ) {
+			return true;
+		}
+
+		// Extension seam for Pro / other SEO integrations.
+		return (bool) apply_filters( 'betterdocs_seo_plugin_outputs_faq_schema', false, $post );
+	}
+
 	public static function get_tax( $tax = '' ) {
 		global $wp_query;
 
@@ -651,6 +684,285 @@ class Helper extends Base {
 		return $languages;
 	}
 
+	/**
+	 * Rich list of active site languages for the React admin language bar.
+	 *
+	 * @return array<int,array{code:string,label:string,native:string,flag:string}>
+	 *               Empty when no supported multilingual plugin is active.
+	 */
+	public static function get_admin_languages() {
+		$languages = [];
+
+		// WPML
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && $sitepress->is_setup_complete() ) {
+				$active = $sitepress->get_active_languages();
+				if ( is_array( $active ) ) {
+					foreach ( $active as $code => $lang ) {
+						$languages[] = [
+							'code'   => $code,
+							'label'  => isset( $lang['english_name'] ) ? $lang['english_name'] : $code,
+							'native' => isset( $lang['native_name'] ) ? $lang['native_name'] : ( isset( $lang['display_name'] ) ? $lang['display_name'] : $code ),
+							'flag'   => isset( $lang['country_flag_url'] ) ? $lang['country_flag_url'] : '',
+						];
+					}
+				}
+			}
+		}
+		// Polylang
+		elseif ( function_exists( 'pll_languages_list' ) ) {
+			$list = pll_languages_list( [ 'fields' => '' ] ); // full PLL_Language objects
+			if ( is_array( $list ) ) {
+				foreach ( $list as $lang ) {
+					if ( ! is_object( $lang ) ) {
+						continue;
+					}
+					$languages[] = [
+						'code'   => isset( $lang->slug ) ? $lang->slug : '',
+						'label'  => isset( $lang->name ) ? $lang->name : ( isset( $lang->slug ) ? $lang->slug : '' ),
+						'native' => isset( $lang->name ) ? $lang->name : '',
+						'flag'   => isset( $lang->flag_url ) ? $lang->flag_url : '',
+					];
+				}
+			}
+		}
+
+		return $languages;
+	}
+
+	/**
+	 * Read a term's language code via the active multilingual plugin.
+	 *
+	 * @param \WP_Term $term
+	 * @return string Language code, or '' when unavailable.
+	 */
+	public static function get_term_language( $term ) {
+		if ( ! is_object( $term ) || empty( $term->term_id ) ) {
+			return '';
+		}
+
+		// Polylang — takes the term_id.
+		if ( function_exists( 'pll_get_term_language' ) ) {
+			$lang = pll_get_term_language( $term->term_id, 'slug' );
+			return $lang ? $lang : '';
+		}
+
+		// WPML — element_id is the term_taxonomy_id (NOT the term_id); WPML
+		// normalizes the element_type to `tax_<taxonomy>` internally.
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && ! empty( $term->term_taxonomy_id ) ) {
+			$lang = apply_filters( 'wpml_element_language_code', null, [
+				'element_id'   => $term->term_taxonomy_id,
+				'element_type' => isset( $term->taxonomy ) ? $term->taxonomy : 'doc_category',
+			] );
+			return $lang ? $lang : '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * Stamp a term's language via the active multilingual plugin. Standalone
+	 * assignment only — it sets/re-stamps the term's own language and does not
+	 * link it into an existing translation group.
+	 *
+	 * @param \WP_Term $term
+	 * @param string   $lang_code
+	 */
+	public static function set_term_language( $term, $lang_code ) {
+		$lang_code = sanitize_text_field( (string) $lang_code );
+		if ( $lang_code === '' || ! is_object( $term ) || empty( $term->term_id ) ) {
+			return;
+		}
+
+		// Polylang
+		if ( function_exists( 'pll_set_term_language' ) ) {
+			pll_set_term_language( $term->term_id, $lang_code );
+			return;
+		}
+
+		// WPML — element_id is the term_taxonomy_id; element_type is tax_<taxonomy>;
+		// trid=null sets it as a standalone original in the chosen language.
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && ! empty( $term->term_taxonomy_id ) ) {
+			$taxonomy = isset( $term->taxonomy ) ? $term->taxonomy : 'doc_category';
+			do_action( 'wpml_set_element_language_details', [
+				'element_id'           => $term->term_taxonomy_id,
+				'element_type'         => 'tax_' . $taxonomy,
+				'trid'                 => null,
+				'language_code'        => $lang_code,
+				'source_language_code' => null,
+			] );
+		}
+	}
+
+	/**
+	 * The site's default language code, or '' when no multilingual plugin is active.
+	 */
+	public static function get_default_language() {
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress ) {
+				return (string) $sitepress->get_default_language();
+			}
+		}
+		if ( function_exists( 'pll_default_language' ) ) {
+			return (string) pll_default_language( 'slug' );
+		}
+		return '';
+	}
+
+	/**
+	 * All terms in a term's translation group, keyed by language code.
+	 *
+	 * @param \WP_Term $term
+	 * @return array<string,array{term_id:int,name:string}>
+	 */
+	public static function get_term_translations( $term ) {
+		if ( ! is_object( $term ) || empty( $term->term_id ) ) {
+			return [];
+		}
+		$taxonomy = isset( $term->taxonomy ) ? $term->taxonomy : 'doc_category';
+		$out      = [];
+
+		// Polylang
+		if ( function_exists( 'pll_get_term_translations' ) ) {
+			$group = pll_get_term_translations( $term->term_id ); // [lang => term_id]
+			if ( is_array( $group ) ) {
+				foreach ( $group as $lang => $tid ) {
+					$t = get_term( (int) $tid, $taxonomy );
+					if ( $t && ! is_wp_error( $t ) ) {
+						$out[ $lang ] = [ 'term_id' => (int) $tid, 'name' => $t->name ];
+					}
+				}
+			}
+			return $out;
+		}
+
+		// WPML
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && ! empty( $term->term_taxonomy_id ) ) {
+			$el_type = 'tax_' . $taxonomy;
+			$trid    = apply_filters( 'wpml_element_trid', null, $term->term_taxonomy_id, $el_type );
+			if ( ! $trid ) {
+				return $out;
+			}
+			$translations = apply_filters( 'wpml_get_element_translations', null, $trid, $el_type );
+			if ( is_array( $translations ) ) {
+				foreach ( $translations as $lang => $tr ) {
+					$tid = isset( $tr->term_id ) ? (int) $tr->term_id : 0;
+					if ( ! $tid ) {
+						continue;
+					}
+					$t = get_term( $tid, $taxonomy );
+					$out[ $lang ] = [
+						'term_id' => $tid,
+						'name'    => ( $t && ! is_wp_error( $t ) ) ? $t->name : ( isset( $tr->name ) ? $tr->name : '' ),
+					];
+				}
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Candidate source terms for the "This is a translation of" dropdown — terms in
+	 * $source_lang (default language) that aren't yet translated into $target_lang.
+	 *
+	 * @return array<int,array{term_id:int,name:string}>
+	 */
+	public static function get_translation_candidates( $taxonomy, $target_lang, $source_lang ) {
+		$candidates = [];
+		$target_lang = sanitize_text_field( (string) $target_lang );
+		$source_lang = sanitize_text_field( (string) $source_lang );
+		if ( $taxonomy === '' || $source_lang === '' ) {
+			return $candidates;
+		}
+
+		// WPML
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && method_exists( $sitepress, 'get_elements_without_translations' ) ) {
+				$ttids = $sitepress->get_elements_without_translations( 'tax_' . $taxonomy, $target_lang, $source_lang );
+				foreach ( (array) $ttids as $ttid ) {
+					$t = get_term_by( 'term_taxonomy_id', (int) $ttid, $taxonomy );
+					if ( $t && ! is_wp_error( $t ) ) {
+						$candidates[] = [ 'term_id' => (int) $t->term_id, 'name' => $t->name ];
+					}
+				}
+			}
+			return $candidates;
+		}
+
+		// Polylang — source-lang terms whose group lacks the target language.
+		if ( function_exists( 'pll_get_term_translations' ) && function_exists( 'pll_get_term_language' ) ) {
+			$terms = get_terms( [ 'taxonomy' => $taxonomy, 'hide_empty' => false, 'lang' => $source_lang ] );
+			foreach ( (array) $terms as $t ) {
+				if ( is_wp_error( $t ) ) {
+					continue;
+				}
+				$group = pll_get_term_translations( $t->term_id );
+				if ( ! isset( $group[ $target_lang ] ) ) {
+					$candidates[] = [ 'term_id' => (int) $t->term_id, 'name' => $t->name ];
+				}
+			}
+		}
+
+		return $candidates;
+	}
+
+	/**
+	 * Set a term's language and (optionally) link it into the translation group of
+	 * $translation_of_term_id. Empty $translation_of_term_id = standalone.
+	 *
+	 * @param \WP_Term $term
+	 * @param string   $lang_code
+	 * @param int      $translation_of_term_id
+	 */
+	public static function link_term_translation( $term, $lang_code, $translation_of_term_id = 0 ) {
+		$lang_code = sanitize_text_field( (string) $lang_code );
+		if ( $lang_code === '' || ! is_object( $term ) || empty( $term->term_id ) ) {
+			return;
+		}
+		$taxonomy               = isset( $term->taxonomy ) ? $term->taxonomy : 'doc_category';
+		$translation_of_term_id = (int) $translation_of_term_id;
+
+		// Polylang
+		if ( function_exists( 'pll_set_term_language' ) ) {
+			pll_set_term_language( $term->term_id, $lang_code );
+			if ( $translation_of_term_id && function_exists( 'pll_save_term_translations' ) ) {
+				$group = function_exists( 'pll_get_term_translations' )
+					? (array) pll_get_term_translations( $translation_of_term_id )
+					: [];
+				$group[ $lang_code ] = $term->term_id;
+				pll_save_term_translations( $group );
+			}
+			return;
+		}
+
+		// WPML
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) && ! empty( $term->term_taxonomy_id ) ) {
+			$el_type = 'tax_' . $taxonomy;
+			$trid    = null;
+			$src     = null;
+
+			if ( $translation_of_term_id ) {
+				$source = get_term( $translation_of_term_id, $taxonomy );
+				if ( $source && ! is_wp_error( $source ) ) {
+					$trid = apply_filters( 'wpml_element_trid', null, $source->term_taxonomy_id, $el_type );
+					$src  = self::get_term_language( $source );
+				}
+			}
+
+			do_action( 'wpml_set_element_language_details', [
+				'element_id'           => $term->term_taxonomy_id,
+				'element_type'         => $el_type,
+				'trid'                 => $trid,
+				'language_code'        => $lang_code,
+				'source_language_code' => $src,
+			] );
+		}
+	}
+
 	public static function get_current_letter_docs( $current_letter, $limit = 0 ) {
 		global $wpdb;
 
@@ -959,14 +1271,14 @@ class Helper extends Base {
         return isset( $terms[0] ) ? $terms[0] : [];
     }
 
-    public static function delete_specific_faq_posts_by_faq_category( $term_id ) {
+    public static function delete_specific_faq_posts_by_faq_category( $term_id, $taxonomy = 'betterdocs_faq_category' ) {
         // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- targeted bulk delete by FAQ category; tax filter is required.
         $args = [
             'post_type'      => 'betterdocs_faq',
             'posts_per_page' => -1,
             'tax_query'      => [
                 [
-                    'taxonomy' => 'betterdocs_faq_category',
+                    'taxonomy' => $taxonomy,
                     'field'    => 'id',
                     'terms'    => $term_id,
                     'operator' => 'IN'

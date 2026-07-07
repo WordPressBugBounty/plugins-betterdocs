@@ -4,7 +4,7 @@
  * Plugin Name:       BetterDocs
  * Plugin URI:        https://betterdocs.co/
  * Description:       Create stunning Knowledge base & FAQs for your WordPress website and reduce support pressure with the help of BetterDocs. Get access to amazing templates and create fully customizable KB with AI Write.
- * Version:           4.5.6
+ * Version:           4.6.0
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            WPDeveloper
@@ -24,6 +24,22 @@ define( 'BETTERDOCS_PLUGIN_FILE', __FILE__ );
 
 require_once __DIR__ . '/includes/v2x-compatibility.php';
 require_once __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Declare WooCommerce HPOS (custom order tables) compatibility. BetterDocs
+ * never touches order storage, so this is a pure compatibility flag. Must run
+ * on before_woocommerce_init — the Plugin bootstraps on `init`, which is too
+ * late for WooCommerce to read the declaration.
+ */
+add_action( 'before_woocommerce_init', function () {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+            'custom_order_tables',
+            BETTERDOCS_PLUGIN_FILE,
+            true
+        );
+    }
+} );
 
 /**
  * Initiate the BetterDocs Plugin

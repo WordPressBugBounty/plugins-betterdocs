@@ -82,6 +82,66 @@ class PostType extends Base {
 		add_filter( 'rest_docs_collection_params', [ $this, 'add_rest_orderby_params' ], 10, 1 );
 		add_filter( 'rest_doc_category_collection_params', [ $this, 'add_rest_orderby_params_on_doc_category' ], 10, 1 );
 		add_filter( 'rest_doc_category_query', [ $this, 'modify_doc_category_rest_query' ], 10, 2 );
+
+		// NOTE: the `doc_category_order` REST field (read + write) is registered in
+		// REST/CategoryField.php. It used to be registered here too, but the
+		// CategoryField registration (loaded later) won and re-registered it with a
+		// string-typed thumbnail schema — which broke order writes. Keeping a single
+		// canonical registration there avoids that conflict.
+
+		// Make the category icon attachment id writable over REST so the React
+		// Doc Categories slide-over can save it (the classic $_POST save path never
+		// fires on a REST term write). The read-only `thumbnail` field still exposes
+		// the resolved URL for display.
+		register_term_meta(
+			'doc_category',
+			'doc_category_image-id',
+			[
+				'show_in_rest'      => true,
+				'single'            => true,
+				'type'              => 'string',
+				// The field only ever holds an attachment ID; coerce any REST
+				// input to a non-negative integer so an arbitrary string can't
+				// be persisted verbatim.
+				'sanitize_callback' => 'absint',
+				'auth_callback'     => function () {
+					return current_user_can( 'edit_docs' );
+				},
+			]
+		);
+
+		// Expose (and allow setting) a term's language for WPML/Polylang so the React
+		// admin can show a language filter bar + a language selector. Applies to both
+		// the doc_category and doc_tag taxonomies.
+		foreach ( [ $this->category, $this->tag ] as $bd_lang_taxonomy ) {
+			register_rest_field(
+				$bd_lang_taxonomy,
+				'lang',
+				[
+					'get_callback'    => function ( $item ) use ( $bd_lang_taxonomy ) {
+						if ( ! Helper::is_multilingual_active() ) {
+							return null;
+						}
+						$term = get_term( $item['id'], $bd_lang_taxonomy );
+						return ( $term && ! is_wp_error( $term ) ) ? Helper::get_term_language( $term ) : '';
+					},
+					'update_callback' => function ( $value, $term ) {
+						if ( ! current_user_can( 'edit_docs' ) || ! Helper::is_multilingual_active() ) {
+							return;
+						}
+						Helper::set_term_language( $term, sanitize_text_field( (string) $value ) );
+					},
+					'schema'          => [
+						'type'    => [ 'string', 'null' ],
+						'context' => [ 'view', 'edit' ],
+					],
+				]
+			);
+		}
+
+		// All-languages bypass for the doc_tag REST list (mirrors doc_category).
+		add_filter( 'rest_doc_tag_query', [ $this, 'modify_doc_tag_rest_query' ], 10, 2 );
+
 		add_action( 'before_delete_post', [ $this, 'delete_analytics_rows_on_post_delete' ], 10, 1 );
 		add_filter('rest_prepare_doc_category', [$this, 'modify_term_response'], 10, 3); //modify rest api doc category term count when nested_subcategory is enabled
 		if( $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { // reigster hierarchy based slug rewrite rule, for doc category
@@ -138,6 +198,35 @@ class PostType extends Base {
 			$args['orderby']  = 'meta_value_num';
 			$args['order']    = $request->get_param( 'order' ) ?: 'ASC';
 		}
+
+		return $this->maybe_all_languages_args( $args, $request );
+	}
+
+	/**
+	 * Modify doc_tag REST query — only the all-languages bypass is needed (tags
+	 * are name-ordered, no custom order meta).
+	 */
+	public function modify_doc_tag_rest_query( $args, $request ) {
+		return $this->maybe_all_languages_args( $args, $request );
+	}
+
+	/**
+	 * When the React admin requests bd_all_languages=1, return terms across every
+	 * language (the React app filters/group by language client-side). Bypasses the
+	 * per-language term filter both WPML and Polylang add.
+	 */
+	private function maybe_all_languages_args( $args, $request ) {
+		if ( $request->get_param( 'bd_all_languages' ) && Helper::is_multilingual_active() ) {
+			// Polylang: empty lang drops the language WHERE clause → all languages.
+			if ( function_exists( 'pll_current_language' ) ) {
+				$args['lang'] = '';
+			}
+			// WPML: this arg makes WPML's get_terms_args + terms_clauses filters skip
+			// language scoping (WPML\TaxonomyTermTranslation\Hooks::shouldSkip), so the
+			// query returns terms in every language. Request-scoped — no restore needed.
+			$args['wpml_skip_filters'] = true;
+		}
+
 		return $args;
 	}
 
@@ -301,7 +390,7 @@ class PostType extends Base {
 		if ( $needs_cat_migration || $needs_docs_migration ) {
 			$migration_url = add_query_arg(
 				[ 'run_betterdocs_migration' => '1', 'nonce' => wp_create_nonce( 'betterdocs_migration' ) ],
-				admin_url( 'edit-tags.php?taxonomy=doc_category&post_type=docs' )
+				admin_url( 'admin.php?page=betterdocs-doc-categories' )
 			);
 
 			echo '<div class="notice notice-warning is-dismissible">';
@@ -1391,7 +1480,11 @@ class PostType extends Base {
 
 	public function highlight_admin_menu( $parent_file ) {
 		global $current_screen;
-		if ( $current_screen->id === 'edit-docs' || $current_screen->id === 'admin_page_betterdocs-admin' || in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category' ] ) ) {
+		// Keep the BetterDocs top-level menu open/highlighted on the classic
+		// taxonomy screens it owns — including the classic FAQ Group list
+		// (edit-tags.php?taxonomy=betterdocs_faq_category), which otherwise
+		// collapses the menu when switching from the React FAQ Builder.
+		if ( $current_screen->id === 'edit-docs' || $current_screen->id === 'admin_page_betterdocs-admin' || in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category', 'edit-betterdocs_faq_category' ] ) ) {
 			$parent_file = 'betterdocs-dashboard';
 		} elseif ( in_array( $current_screen->id, [ 'edit-doc_tag', 'edit-doc_category' ] ) ) {
 			$parent_file = 'edit.php?post_type=docs';
@@ -1414,11 +1507,17 @@ class PostType extends Base {
 				$submenu_file = 'post-new.php?post_type=docs';
 			}
 			if ( $current_screen->id === 'edit-doc_category' ) {
-				$submenu_file = 'edit-tags.php?taxonomy=doc_category&post_type=docs';
+				$submenu_file = 'betterdocs-doc-categories';
 			}
 			if ( $current_screen->id === 'edit-doc_tag' ) {
-				$submenu_file = 'edit-tags.php?taxonomy=doc_tag&post_type=docs';
+				$submenu_file = 'betterdocs-doc-tags';
 			}
+		}
+
+		// Classic FAQ Group list — highlight the FAQ Builder submenu so the
+		// active item matches the React builder it was switched from.
+		if ( $current_screen->id === 'edit-betterdocs_faq_category' ) {
+			$submenu_file = 'betterdocs-faq';
 		}
 
 		if ( 'betterdocs_page_betterdocs-settings' == $current_screen->id ) {

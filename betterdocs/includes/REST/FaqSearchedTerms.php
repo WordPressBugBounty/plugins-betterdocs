@@ -17,6 +17,10 @@ class FaqSearchedTerms extends BaseAPI {
                 'description' => __( 'The password for password-protected FAQs.', 'betterdocs' ),
                 'type'        => 'string',
             ],
+            'taxonomy' => [
+                'description' => __( 'The FAQ taxonomy to search within.', 'betterdocs' ),
+                'type'        => 'string',
+            ],
         ] );
         $this->post( 'faq-accordion-toggle', [$this, 'toggle_enable_disable'] );
     }
@@ -29,12 +33,30 @@ class FaqSearchedTerms extends BaseAPI {
             return rest_ensure_response( $error );
         }
 
+        // Scope the search to the requested FAQ taxonomy (General vs. WooCommerce
+        // Product FAQ Groups). Whitelisted so an arbitrary taxonomy can't be queried.
+        $allowed_taxonomies = [ 'betterdocs_faq_category', 'betterdocs_product_faq_category' ];
+        $taxonomy           = $request->get_param( 'taxonomy' );
+        if ( ! in_array( $taxonomy, $allowed_taxonomies, true ) ) {
+            $taxonomy = 'betterdocs_faq_category';
+        }
+
         $term_ids = [];
+        // Map of category term_id => [ matched FAQ ids ] so the UI can show
+        // only the FAQs that matched the keyword (not the whole group).
+        $term_faq_map = [];
 
         // Determine allowed post statuses based on user permissions
         $post_status = ['publish'];
         if( current_user_can( 'read_private_docs' ) ) {
             $post_status[] = 'private';
+        }
+        // The FAQ Builder is an editor-facing tool, so draft FAQs must be
+        // searchable too. QA-006: gate drafts on `edit_others_posts` (Editor+)
+        // rather than `edit_posts` (Author) — the query has no author scope, so
+        // an Author-level user would otherwise see every author's draft FAQs.
+        if( current_user_can( 'edit_others_posts' ) ) {
+            $post_status[] = 'draft';
         }
 
         $args = [
@@ -63,11 +85,12 @@ class FaqSearchedTerms extends BaseAPI {
                     }
                 }
 
-                $categories = get_the_terms( get_the_ID(), 'betterdocs_faq_category' );
+                $categories = get_the_terms( get_the_ID(), $taxonomy );
 
                 if ( $categories ) {
                     foreach ( $categories as $category ) {
-                        $term_ids[] = $category->term_id;
+                        $term_ids[]                           = $category->term_id;
+                        $term_faq_map[ $category->term_id ][] = (int) get_the_ID();
                     }
                 }
             }
@@ -76,7 +99,7 @@ class FaqSearchedTerms extends BaseAPI {
 
         $terms = get_terms(
             [
-                'taxonomy'   => 'betterdocs_faq_category',
+                'taxonomy'   => $taxonomy,
                 'hide_empty' => false,
                 'search'     => $keyword
             ]
@@ -96,7 +119,7 @@ class FaqSearchedTerms extends BaseAPI {
 
         $terms_payload = get_terms(
             [
-                'taxonomy'   => 'betterdocs_faq_category',
+                'taxonomy'   => $taxonomy,
                 'hide_empty' => false,
                 'include'    => $term_ids
             ]
@@ -106,6 +129,11 @@ class FaqSearchedTerms extends BaseAPI {
             $meta                          = get_term_meta( $term->term_id );
             $meta['_betterdocs_faq_order'] = empty( get_term_meta( $term->term_id, '_betterdocs_faq_order', true ) ) ? [] : [get_term_meta( $term->term_id, '_betterdocs_faq_order', true )];
             $term->meta                    = $meta;
+            // FAQs in this group that matched the keyword. Empty when the group
+            // was matched only by its name (then the UI shows the whole group).
+            $term->matched_faqs            = isset( $term_faq_map[ $term->term_id ] )
+                ? array_values( array_unique( $term_faq_map[ $term->term_id ] ) )
+                : [];
             array_push( $terms_with_meta, $term );
         }
 
@@ -114,8 +142,21 @@ class FaqSearchedTerms extends BaseAPI {
 
     public function toggle_enable_disable( $request ) {
         $body_params = json_decode( $request->get_body() );
-        $faq_id      = isset( $body_params->faq_id ) ? $body_params->faq_id : 0;
-        $toggle      = $body_params->toggle;
+
+        // QA-005: reject invalid / empty JSON instead of dereferencing null
+        // (a PHP 8+ fatal: "Attempt to read property on null").
+        if ( ! is_object( $body_params ) ) {
+            return new WP_Error(
+                'rest_invalid_json',
+                __( 'Invalid request body.', 'betterdocs' ),
+                array( 'status' => 400 )
+            );
+        }
+
+        $faq_id = isset( $body_params->faq_id ) ? absint( $body_params->faq_id ) : 0;
+        // QA-005: normalize to a stored boolean ('1'/'0') — never write the raw
+        // request value straight to post meta.
+        $toggle = ( isset( $body_params->toggle ) && $body_params->toggle ) ? '1' : '0';
 
         if ( $faq_id != 0 ) {
             // Security check: Verify user can edit this FAQ post

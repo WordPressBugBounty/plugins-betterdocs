@@ -131,7 +131,11 @@ class Customizer extends Base {
 	 * @return void
 	 */
 	public function dynamic_css() {
-		if ( ! betterdocs()->helper->is_templates() ) {
+		// Also emit on single WooCommerce product pages so the "Product FAQ for
+		// WooCommerce" customizer controls (.betterdocs-woo-product-faq rules)
+		// apply there — is_templates() only covers docs/KB templates.
+		$is_woo_product = function_exists( 'is_product' ) && is_product();
+		if ( ! betterdocs()->helper->is_templates() && ! $is_woo_product ) {
 			return false;
 		}
 		/**

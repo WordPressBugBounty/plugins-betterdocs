@@ -914,12 +914,55 @@ class Query extends Base {
         return $final_args;
     }
 
-    public function faq_terms_query_args( $includes = '', $excludes = '', $args = array() ) {
+    /**
+     * The front-end FAQ ordering preference, set via the FAQ Builder header
+     * dropdown (the `.betterdocs-dropdown-select` control, saved to the
+     * `betterdocs_faq_order` option). The front end mirrors the builder so it
+     * shows FAQ groups (and the FAQs inside them) in the same order the admin
+     * sees while building.
+     *
+     * @return string One of: default, most_recent, least_recent, a_to_z, z_to_a, most_questions.
+     */
+    public function get_faq_order_key() {
+        $key     = get_option( 'betterdocs_faq_order', 'default' );
+        $allowed = array( 'default', 'most_recent', 'least_recent', 'a_to_z', 'z_to_a', 'most_questions' );
+
+        if ( ! in_array( $key, $allowed, true ) ) {
+            $key = 'default';
+        }
+
+        return apply_filters( 'betterdocs_faq_order_key', $key );
+    }
+
+    /**
+     * Translate the FAQ order preference into `get_terms()` order clauses for
+     * the FAQ group list. Mirrors the admin builder's ORDER_MAP so the front
+     * end matches what's configured there.
+     *
+     * @return array orderby/order (+ meta_key for the manual `default` order).
+     */
+    public function faq_terms_order_clause() {
+        switch ( $this->get_faq_order_key() ) {
+            case 'most_recent':
+                return array( 'orderby' => 'term_id', 'order' => 'DESC' );
+            case 'least_recent':
+                return array( 'orderby' => 'term_id', 'order' => 'ASC' );
+            case 'a_to_z':
+                return array( 'orderby' => 'name', 'order' => 'ASC' );
+            case 'z_to_a':
+                return array( 'orderby' => 'name', 'order' => 'DESC' );
+            case 'most_questions':
+                return array( 'orderby' => 'count', 'order' => 'DESC' );
+            case 'default':
+            default:
+                // Manual drag-drop order stored in the `order` term meta.
+                return array( 'meta_key' => 'order', 'orderby' => 'meta_value_num', 'order' => 'ASC' );
+        }
+    }
+
+    public function faq_terms_query_args( $includes = '', $excludes = '', $args = array(), $taxonomy = 'betterdocs_faq_category' ) {
         $_args = array(
-            'taxonomy' => 'betterdocs_faq_category',
-            'meta_key' => 'order',
-            'orderby' => 'meta_value_num',
-            'order' => 'ASC',
+            'taxonomy' => $taxonomy,
             'include' => $includes,
             'exclude' => $excludes,
             'meta_query' => array(
@@ -930,6 +973,8 @@ class Query extends Base {
                 )
             )
         );
+
+        $_args = array_merge( $_args, $this->faq_terms_order_clause() );
 
         if ( 'all' == $_args[ 'include' ] ) {
             unset( $_args[ 'include' ] );
@@ -947,7 +992,7 @@ class Query extends Base {
         return wp_parse_args( $args, $_args );
     }
 
-    public function get_faq_by_term( $term_id ) {
+    public function get_faq_by_term( $term_id, $taxonomy = 'betterdocs_faq_category' ) {
         global $wpdb;
 
         $args = array(
@@ -955,7 +1000,7 @@ class Query extends Base {
             'post_status' => 'publish',
             'tax_query' => array(
                 array(
-                    'taxonomy' => 'betterdocs_faq_category',
+                    'taxonomy' => $taxonomy,
                     'field' => 'term_id',
                     'terms' => $term_id,
                     'operator' => 'AND'
@@ -964,8 +1009,33 @@ class Query extends Base {
             'posts_per_page' => -1
         );
 
-        $args[ 'orderby' ]  = 'post__in';
-        $args[ 'post__in' ] = $this->get_faq_orders( $term_id );
+        // Order the FAQs inside the group to mirror the FAQ Builder header
+        // dropdown. `default`/`most_questions` keep the manual drag-drop order
+        // (the others sort live, just like the admin builder does).
+        switch ( $this->get_faq_order_key() ) {
+            case 'most_recent':
+                $args[ 'orderby' ] = 'ID';
+                $args[ 'order' ]   = 'DESC';
+                break;
+            case 'least_recent':
+                $args[ 'orderby' ] = 'ID';
+                $args[ 'order' ]   = 'ASC';
+                break;
+            case 'a_to_z':
+                $args[ 'orderby' ] = 'title';
+                $args[ 'order' ]   = 'ASC';
+                break;
+            case 'z_to_a':
+                $args[ 'orderby' ] = 'title';
+                $args[ 'order' ]   = 'DESC';
+                break;
+            case 'default':
+            case 'most_questions':
+            default:
+                $args[ 'orderby' ]  = 'post__in';
+                $args[ 'post__in' ] = $this->get_faq_orders( $term_id );
+                break;
+        }
 
         return new WP_Query( $args );
     }
@@ -1013,10 +1083,10 @@ class Query extends Base {
         return $faq_order;
     }
 
-    public function get_faq_terms( $terms = array() ) {
+    public function get_faq_terms( $terms = array(), $taxonomy = 'betterdocs_faq_category' ) {
         $_terms = get_terms(
             array(
-                'taxonomy' => 'betterdocs_faq_category',
+                'taxonomy' => $taxonomy,
                 'hide_empty' => true,
                 'orderby' => 'name',
                 'order' => 'ASC',

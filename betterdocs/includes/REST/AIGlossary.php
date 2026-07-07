@@ -85,7 +85,7 @@ class AIGlossary extends BaseAPI {
         }
 
         $prompt = $this->build_prompt( $term, $previous, $instruction );
-        $system = __( 'You are a helpful assistant that writes concise, accurate glossary definitions.', 'betterdocs' );
+        $system = __( 'You are a helpful assistant that writes concise, accurate glossary definitions in plain text. Do not use any Markdown or special formatting — no asterisks, bold, italics, headings, bullet points, backticks or code fences.', 'betterdocs' );
 
         $result = $write_ai->generate_text( $prompt, $system );
 
@@ -128,13 +128,13 @@ class AIGlossary extends BaseAPI {
                     sprintf( 'You are revising a glossary definition for the term "%s".', $term ),
                     'Previous definition: ' . $previous_description,
                     'Revise it based on this instruction: ' . $instruction,
-                    'Return only the revised definition, 1-2 sentences, plain text, no heading or label.'
+                    'Return only the revised definition, 1-2 sentences, plain text, no Markdown, no asterisks, no heading or label.'
                 )
             );
         }
 
         return sprintf(
-            'Write a concise, plain-text glossary definition (1-2 sentences) for the term: %s. Return only the definition — no heading, no label, no quotes.',
+            'Write a concise, plain-text glossary definition (1-2 sentences) for the term: %s. Return only the definition — no Markdown, no asterisks, no heading, no label, no quotes.',
             $term
         );
     }
@@ -146,7 +146,23 @@ class AIGlossary extends BaseAPI {
         $text = trim( $text );
         $text = preg_replace( '/^\s*(glossary term|definition)\s*:\s*/i', '', $text );
         $text = preg_replace( '/^\s*[-–—]\s*/u', '', $text );
+        $text = $this->strip_markdown( $text );
         $text = preg_replace( '/^["“”\']+|["“”\']+$/u', '', $text );
+
+        return trim( $text );
+    }
+
+    /**
+     * Safety net: strip common Markdown the model may still emit despite the
+     * plain-text instruction, so definitions never render literal asterisks.
+     */
+    protected function strip_markdown( $text ) {
+        $text = preg_replace( '/```.*?```/s', '', $text );          // fenced code blocks
+        $text = preg_replace( '/\*\*(.+?)\*\*/s', '$1', $text );    // **bold**
+        $text = preg_replace( '/__(.+?)__/s', '$1', $text );        // __bold__
+        $text = preg_replace( '/`([^`]*)`/', '$1', $text );         // `inline code`
+        $text = preg_replace( '/^\s{0,3}#{1,6}\s+/m', '', $text );  // # headings
+        $text = preg_replace( '/^\s{0,3}[-*+]\s+/m', '', $text );   // -, *, + bullet markers
 
         return trim( $text );
     }

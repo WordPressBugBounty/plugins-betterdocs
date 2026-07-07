@@ -1,11 +1,11 @@
 <?php
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- view template receives variables via extract(); prefixing is impractical.
 
-
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-$faqs = betterdocs()->query->get_faq_by_term( $term->term_id );
+$faq_taxonomy = isset( $term->taxonomy ) ? $term->taxonomy : 'betterdocs_faq_category';
+$faqs         = betterdocs()->query->get_faq_by_term( $term->term_id, $faq_taxonomy );
 
 if ( $faqs->have_posts() ) {
 	echo '<ul class="betterdocs-faq-list">';

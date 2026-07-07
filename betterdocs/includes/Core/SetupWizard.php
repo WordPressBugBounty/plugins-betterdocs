@@ -25,6 +25,26 @@ class SetupWizard extends Base {
 
 		betterdocs()->assets->enqueue( 'betterdocs-quick-setup', 'admin/js/quick-setup.js' );
 		betterdocs()->assets->localize( 'betterdocs-quick-setup', 'betterdocsQuickSetup', GlobalFields::normalize( $this->quickbuilder_setup() ) );
+		betterdocs()->assets->localize(
+			'betterdocs-quick-setup',
+			'betterdocsSampleDocs',
+			[
+				'enabled'   => (bool) $this->settings->get( 'enable_ai_sample_docs', true ),
+				'rest_url'  => esc_url_raw( rest_url() ),
+				'rest_base' => esc_url_raw( get_rest_url( null, '/betterdocs/v1/sample-docs' ) ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+			]
+		);
+		betterdocs()->assets->localize(
+			'betterdocs-quick-setup',
+			'betterdocsCustomizeLayouts',
+			[
+				'rest_url'  => esc_url_raw( rest_url() ),
+				'rest_base' => esc_url_raw( get_rest_url( null, '/betterdocs/v1/customize' ) ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'groups'    => $this->customize_layout_groups(),
+			]
+		);
 		betterdocs()->assets->enqueue( 'betterdocs-sweetalert', 'vendor/js/sweetalert.min.js', [] );
 		betterdocs()->assets->enqueue( 'betterdocs-icons', 'admin/btd-icon/style.css' );
 		betterdocs()->assets->enqueue( 'betterdocs-setup-wizard-qb-css', 'admin/css/quick-setup.css' );
@@ -45,6 +65,90 @@ class SetupWizard extends Base {
 				'redirecturl'   => admin_url( '/admin.php?page=betterdocs-settings' )
 			]
 		);
+	}
+
+	/**
+	 * Layout-picker groups for the interactive "Customize" step. Each group's
+	 * `current` reflects the saved theme_mod; only the free layouts are offered.
+	 *
+	 * @return array
+	 */
+	private function customize_layout_groups() {
+		$build = function ( $key, $default, $dir, $title, $hint, $cols, array $options ) {
+			$out = [];
+			foreach ( $options as $value => $label ) {
+				$out[] = [
+					'value' => $value,
+					'label' => $label,
+					'image' => betterdocs()->assets->icon( "customizer/{$dir}/{$value}.png", true ),
+				];
+			}
+			return [
+				'title'   => $title,
+				'hint'    => $hint,
+				'cols'    => $cols,
+				'key'     => $key,
+				'current' => get_theme_mod( $key, $default ),
+				'options' => $out,
+			];
+		};
+
+		return [
+			'docs'     => $build(
+				'betterdocs_docs_layout_select',
+				'layout-7',
+				'docs-page',
+				__( 'Docs Page', 'betterdocs' ),
+				__( 'The main knowledge-base landing page.', 'betterdocs' ),
+				4,
+				[
+					'layout-7' => __( 'Sleek', 'betterdocs' ),
+					'layout-1' => __( 'Grid', 'betterdocs' ),
+					'layout-8' => __( 'Slate', 'betterdocs' ),
+					'layout-5' => __( 'Classic', 'betterdocs' ),
+				]
+			),
+			'category' => $build(
+				'betterdocs_archive_layout_select',
+				'layout-7',
+				'archive',
+				__( 'Category Page', 'betterdocs' ),
+				__( "Where a single category's articles live.", 'betterdocs' ),
+				4,
+				[
+					'layout-7' => __( 'Sleek', 'betterdocs' ),
+					'layout-1' => __( 'Classic', 'betterdocs' ),
+					'layout-8' => __( 'Slate', 'betterdocs' ),
+					'layout-4' => __( 'Abstract', 'betterdocs' ),
+				]
+			),
+			'single'   => $build(
+				'betterdocs_single_layout_select',
+				'layout-8',
+				'single',
+				__( 'Single Doc', 'betterdocs' ),
+				__( 'An individual article layout.', 'betterdocs' ),
+				4,
+				[
+					'layout-8'  => __( 'Essence', 'betterdocs' ),
+					'layout-9'  => __( 'Rustic', 'betterdocs' ),
+					'layout-10' => __( 'Slate', 'betterdocs' ),
+					'layout-1'  => __( 'Classic', 'betterdocs' ),
+				]
+			),
+			'search'   => $build(
+				'betterdocs_search_layout_select',
+				'layout-2',
+				'search',
+				__( 'Search', 'betterdocs' ),
+				__( 'How visitors search your docs.', 'betterdocs' ),
+				4,
+				[
+					'layout-2' => __( 'Modal', 'betterdocs' ),
+					'layout-1' => __( 'Classic', 'betterdocs' ),
+				]
+			),
+		];
 	}
 
 	public function normalize_options( $options ) {
@@ -94,17 +198,17 @@ class SetupWizard extends Base {
 				'sidebar'         => false,
 				'title'           => false,
 				'tab_number'      => true,
-				'clickable'       => false,
+				'clickable'       => true,
 				'completionTrack' => true,
 				'content_heading' => [],
 				'step'            => [
 					'show'    => true,
 					'buttons' => [
-						'skip'                  => __( 'Skip This Step', 'betterdocs' ),
+						'skip'                  => __( 'Skip for now', 'betterdocs' ),
 						'prev'                  => [
-							'name'       => __( 'Previous', 'betterdocs' ),
+							'name'       => __( 'Back', 'betterdocs' ),
 							'type'       => 'customize',
-							'customName' => __( 'Previous', 'betterdocs' ),
+							'customName' => __( 'Back', 'betterdocs' ),
 							'condition'  => 'getting-started',
 						],
 						'start'                 => [
@@ -124,16 +228,21 @@ class SetupWizard extends Base {
 						'next'                  => [
 							'name'       => 'Next',
 							'type'       => 'customize',
-							'customName' => __( 'Next', 'betterdocs' ),
+							'customName' => __( 'Save & Continue', 'betterdocs' ),
 							'condition'  => 'getting-started',
-						],
-						'quick-builder-publish' => [
-							'name'   => 'quick-builder-publish',
-							'type'   => 'action',
-							'action' => 'btd_quick_build_launch'
 						]
 					],
-					'rules'   => Rules::is( 'config.active', 'getting-started', true )
+					// Hide the footer step bar on the first step (its CTA is in
+					// content via showSteps) and on the last step (Finalize's
+					// Finish CTA is in content too, so a lone Back button looked
+					// off). Back-navigation there is still available via the tabs.
+					'rules'   => Rules::logicalRule(
+						[
+							Rules::is( 'config.active', 'getting-started', true ),
+							Rules::is( 'config.active', 'finalize', true ),
+						],
+						'and'
+					)
 				]
 			],
 			'submit'        => [
@@ -156,7 +265,7 @@ class SetupWizard extends Base {
 									'title'       => __( 'Quick Launch', 'betterdocs' ),
 									'direction'   => 'column',
 									'description' => __( 'Start your Knowledge Base configuration process with an easy-to-follow setup wizard.', 'betterdocs' ),
-									'icon'        => '<img src="' . betterdocs()->assets->icon( 'icons/rocket.svg', true ) . '"/>',
+									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>',
 									'priority'    => 1
 								],
 								'betterdocs-quick-setup-start' => [
@@ -170,7 +279,7 @@ class SetupWizard extends Base {
 											'type'     => 'collapse',
 											'priority' => 2,
 											'label'    => __( 'By clicking this button, you are allowing this app to collect your information.', 'betterdocs' ),
-											'collapse_title' => __( 'What We Collect?', 'betterdocs' ),
+											'collapse_title' => __( 'What do we collect?', 'betterdocs' ),
 											'collapse_message' => __( 'We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, we promise.', 'betterdocs' )
 										]
 									]
@@ -193,7 +302,7 @@ class SetupWizard extends Base {
 									'title'       => __( 'Page Setup Magic', 'betterdocs' ),
 									'direction'   => 'row',
 									'description' => __( 'Configure the structure and layout of your documentation pages to match your preferences for an organized Knowledge Base.', 'betterdocs' ),
-									'icon'        => '<img src="' . betterdocs()->assets->icon( 'icons/content-setting.svg', true ) . '"/>',
+									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 8a1 1 0 0 1-1-1V2a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8z"></path><path d="M20 8v12a2 2 0 0 1-2 2h-4.182"></path><path d="m3.305 19.53.923-.382"></path><path d="M4 10.592V4a2 2 0 0 1 2-2h8"></path><path d="m4.228 16.852-.924-.383"></path><path d="m5.852 15.228-.383-.923"></path><path d="m5.852 20.772-.383.924"></path><path d="m8.148 15.228.383-.923"></path><path d="m8.53 21.696-.382-.924"></path><path d="m9.773 16.852.922-.383"></path><path d="m9.773 19.148.922.383"></path><circle cx="7" cy="18" r="3"></circle></svg>',
 									'priority'    => 1
 								],
 								'betterdocs-quick-setup-fields' => [
@@ -334,15 +443,12 @@ class SetupWizard extends Base {
 									'title'       => __( 'Content Crafting', 'betterdocs' ),
 									'direction'   => 'row',
 									'description' => __( 'Craft categories & articles for your Knowledge Base to efficiently organize and manage your repository with respective categories.', 'betterdocs' ),
-									'icon'        => '<img src="' . betterdocs()->assets->icon( 'icons/create-content.svg', true ) . '"/>',
+									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a1 1 0 0 1 1-1h9l5 5v3"></path><path d="M4 4v15a1 1 0 0 0 1 1h6"></path><path d="M14 3v5h5"></path><path d="M18.5 13.5a2.1 2.1 0 0 1 3 3L16 22l-4 1 1-4z"></path></svg>',
 									'priority'    => 1
 								],
-								'create_content_video'  => [
-									'name'     => 'create_content_video',
-									'type'     => 'image',
-									'media'    => [
-										'url' => betterdocs()->assets->icon( 'setup-wizard/DocCreate.gif', true )
-									],
+								'create_content_generator' => [
+									'name'     => 'create_content_generator',
+									'type'     => 'sample_docs_generator',
 									'priority' => 2
 								]
 							]
@@ -361,16 +467,13 @@ class SetupWizard extends Base {
 									'type'        => 'header',
 									'title'       => __( 'Style Your Documentation', 'betterdocs' ),
 									'direction'   => 'row',
-									'description' => __( 'Personalize the appearance of your documentation page, articles, and archive pages using the power of this Customizer.', 'betterdocs' ),
-									'icon'        => '<img src="' . betterdocs()->assets->icon( 'icons/customize.svg', true ) . '"/>',
+									'description' => __( 'Pick a layout for your docs page, categories, single articles, and search — applied when you finish setup. Fine-tune the details anytime in the Customizer.', 'betterdocs' ),
+									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"></rect><path d="M3 9h18M9 9v11"></path></svg>',
 									'priority'    => 1
 								],
-								'customize_video'  => [
-									'name'     => 'customize_video',
-									'type'     => 'image',
-									'media'    => [
-										'url' => betterdocs()->assets->icon( 'setup-wizard/Customizer.gif', true )
-									],
+								'customize_layouts' => [
+									'name'     => 'customize_layouts',
+									'type'     => 'layout_customizer',
 									'priority' => 2
 								]
 							]
@@ -387,18 +490,15 @@ class SetupWizard extends Base {
 								'finalize_header' => [
 									'name'        => 'finalize_header',
 									'type'        => 'header',
-									'title'       => __( 'Congratulations!', 'betterdocs' ),
+									'title'       => __( 'One last step', 'betterdocs' ),
 									'direction'   => 'row',
-									'description' => __( 'Your documentation page is now ready for use. Enrich it with more articles to ensure proper categorization and valuable resources.', 'betterdocs' ),
-									'icon'        => '<img src="' . betterdocs()->assets->icon( 'icons/thumbs-up.svg', true ) . '"/>',
+									'description' => __( 'Review your setup below. When you\'re ready, finish to save your settings and apply BetterDocs across your site — you can change anything later in Settings.', 'betterdocs' ),
+									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"></path><path d="m3 7 2 2 4-4"></path><path d="M13 6h8"></path><path d="M13 12h8"></path><path d="M13 18h8"></path></svg>',
 									'priority'    => 1
 								],
-								'finalize_video'  => [
-									'name'     => 'finalize_video',
-									'type'     => 'image',
-									'media'    => [
-										'url' => betterdocs()->assets->icon( 'setup-wizard/ThankYou.gif', true )
-									],
+								'finalize_finish' => [
+									'name'     => 'finalize_finish',
+									'type'     => 'finish_panel',
 									'priority' => 2
 								]
 							]

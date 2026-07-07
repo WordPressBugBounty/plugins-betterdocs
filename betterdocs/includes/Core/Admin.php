@@ -481,6 +481,8 @@ class Admin extends Base {
 					'betterdocs_page_betterdocs-analytics',
 					'betterdocs_page_betterdocs-glossaries',
 					'betterdocs_page_betterdocs-ai-chatbot',
+					'betterdocs_page_betterdocs-doc-categories',
+					'betterdocs_page_betterdocs-doc-tags',
 					'edit-doc_category',
 					'edit-doc_tag',
 				),
@@ -490,29 +492,83 @@ class Admin extends Base {
 		}
 	}
 
+	/**
+	 * Resolve the admin dark-mode preference.
+	 *
+	 * The mode switcher stores the choice in a client cookie (no DB write, shared
+	 * across every admin screen). Fall back to the legacy
+	 * `betterdocs_settings['dark_mode']` value for installs that set it before this
+	 * change and haven't toggled since.
+	 *
+	 * @return bool
+	 */
+	public function is_dark_mode() {
+		if ( isset( $_COOKIE['betterdocs_admin_dark_mode'] ) ) {
+			return '1' === $_COOKIE['betterdocs_admin_dark_mode']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		$saved = get_option( 'betterdocs_settings', array() );
+		return ! empty( $saved['dark_mode'] );
+	}
+
+	/**
+	 * Whether the knowledge base is genuinely empty (no doc categories and no
+	 * non-trash docs). Localized to the admin so the All Docs panel can render a
+	 * skeleton shaped like the "No Category Found" empty card on first paint —
+	 * instead of a category/docs skeleton it would immediately replace — without
+	 * waiting for the REST fetch to reveal the count.
+	 *
+	 * @return bool
+	 */
+	public function kb_is_empty() {
+		$cats = wp_count_terms( array( 'taxonomy' => 'doc_category', 'hide_empty' => false ) );
+		$cats = is_wp_error( $cats ) ? 0 : (int) $cats;
+		if ( $cats > 0 ) {
+			return false;
+		}
+
+		$counts = (array) wp_count_posts( 'docs' );
+		$total  = 0;
+		foreach ( array( 'publish', 'future', 'draft', 'pending', 'private' ) as $status ) {
+			$total += isset( $counts[ $status ] ) ? (int) $counts[ $status ] : 0;
+		}
+
+		return 0 === $total;
+	}
+
 	public function body_classes( $classes ) {
-		$saved_settings     = get_option( 'betterdocs_settings', false );
-		$dark_mode          = isset( $saved_settings['dark_mode'] ) ? $saved_settings['dark_mode'] : false;
-		$dark_mode          = ! empty( $dark_mode ) ? boolval( $dark_mode ) : false;
+		$dark_mode          = $this->is_dark_mode();
 		$current_screen_id  = get_current_screen() != null ? str_replace( 'betterdocs_page_', '', str_replace( 'toplevel_page_', '', str_replace( 'admin_page_', '', get_current_screen()->id ) ) ) : '';
-		$registered_screens = array(
+		/**
+		 * Filter the list of (prefix-stripped) screen ids that receive the
+		 * `betterdocs-admin` body class (and dark-mode class). Pro/add-ons can
+		 * register their own React admin pages, e.g. the Knowledge Base page.
+		 *
+		 * @param string[] $registered_screens Screen ids with the page prefix removed.
+		 */
+		$registered_screens = apply_filters( 'betterdocs_admin_screen_slugs', array(
 			'betterdocs-settings',
 			'betterdocs-admin',
 			'betterdocs-dashboard',
 			'betterdocs-analytics',
 			'betterdocs-glossaries',
 			'betterdocs-faq',
+			'betterdocs-doc-categories',
+			'betterdocs-doc-tags',
 			'edit-doc_category',
 			'edit-doc_tag',
 			'edit-knowledge_base',
 			'betterdocs-ai-chatbot',
-		);
+		) );
 
 		if ( in_array( $current_screen_id, $registered_screens ) ) {
 			$classes .= ' betterdocs-admin ';
 		}
 
-		if ( true === $dark_mode && in_array( $current_screen_id, $registered_screens ) ) {
+		// Dark mode also applies on the Quick Setup wizard, whose self-scoped chrome
+		// keys off `.betterdocs_page_betterdocs-setup.betterdocs-dark-mode`.
+		$dark_screens = array_merge( $registered_screens, array( 'betterdocs-setup' ) );
+		if ( $dark_mode && in_array( $current_screen_id, $dark_screens, true ) ) {
 			$classes .= ' betterdocs-dark-mode ';
 		}
 
@@ -649,7 +705,46 @@ class Admin extends Base {
 	 * @since 1.0.0
 	 */
 	public function scripts( $hook ) {
-		if ( ( 'edit.php' === $hook ) && get_post_type() == 'docs' ) {
+		// Classic-UI screens that should offer a "Switch to BetterDocs UI"
+		// button: All Docs, FAQ list, FAQ groups, Product FAQ groups,
+		// Doc Categories, Doc Tags. Maps each to the React admin page to
+		// return to; $switch_args carries extra query args (e.g. the FAQ
+		// Builder tab) appended to the React page URL.
+		$switch_page = '';
+		$switch_args = array();
+		if ( 'edit.php' === $hook && 'docs' === get_post_type() ) {
+			$switch_page = 'betterdocs-admin';
+		} elseif ( 'edit.php' === $hook && 'betterdocs_faq' === get_post_type() ) {
+			$switch_page = 'betterdocs-faq';
+		} elseif ( 'edit-tags.php' === $hook ) {
+			$screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			$taxonomy = $screen && ! empty( $screen->taxonomy )
+				? $screen->taxonomy
+				: ( isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 'betterdocs_faq_category' === $taxonomy ) {
+				$switch_page = 'betterdocs-faq';
+			} elseif ( 'betterdocs_product_faq_category' === $taxonomy ) {
+				// Product FAQ groups live on the FAQ Builder's WooCommerce tab.
+				$switch_page = 'betterdocs-faq';
+				$switch_args = array( 'faq_tab' => 'woocommerce' );
+			} elseif ( 'doc_category' === $taxonomy ) {
+				$switch_page = 'betterdocs-doc-categories';
+			} elseif ( 'doc_tag' === $taxonomy ) {
+				$switch_page = 'betterdocs-doc-tags';
+			}
+		}
+
+		/**
+		 * Allow Pro/add-ons to map their own classic-UI taxonomy screens to a
+		 * React admin page for the "Switch to BetterDocs UI" button — e.g. the
+		 * Knowledge Base taxonomy, which only exists when Pro is active.
+		 *
+		 * @param string $switch_page React page slug, or '' for no switcher.
+		 * @param string $hook        Current admin page hook.
+		 */
+		$switch_page = apply_filters( 'betterdocs_classic_switch_page', $switch_page, $hook );
+
+		if ( $switch_page ) {
 			$this->assets->enqueue(
 				'betterdocs-switcher',
 				'admin/js/switcher.js',
@@ -663,6 +758,11 @@ class Admin extends Base {
 				'betterdocsSwitcher',
 				array(
 					'menu_title'             => __( 'Switch to BetterDocs UI', 'betterdocs' ),
+					'page'                   => $switch_page,
+					'url'                    => add_query_arg(
+						array_merge( array( 'page' => $switch_page ), $switch_args ),
+						admin_url( 'admin.php' )
+					),
 					'site_address'           => get_bloginfo( 'url' ),
 					'betterdocs_pro_plugin'  => betterdocs()->is_pro_active(),
 					'betterdocs_pro_version' => betterdocs()->pro_version(),
@@ -682,8 +782,7 @@ class Admin extends Base {
 		$this->assets->register( 'betterdocs-admin', 'admin/js/dashboard.js' );
 
 		$saved_settings = get_option( 'betterdocs_settings', false );
-		$dark_mode      = $saved_settings['dark_mode'] ?? false;
-		$dark_mode      = ! empty( $dark_mode ) && boolval( $dark_mode );
+		$dark_mode      = $this->is_dark_mode();
 		$this->assets->localize(
 			'betterdocs-admin',
 			'betterdocs_admin',
@@ -695,6 +794,7 @@ class Admin extends Base {
                 'per_page_id'                    => 'edit_doc_category_per_page',
                 'menu_title'                     => __( 'Switch to BetterDocs UI', 'betterdocs' ),
                 'dark_mode'                      => $dark_mode,
+                'kb_is_empty'                    => $this->kb_is_empty(),
                 'text'                           => __( 'Copied!', 'betterdocs' ),
                 'test_report'                    => __( 'Test Report!', 'betterdocs' ),
                 'sending'                        => __( 'Sending...', 'betterdocs' ),
@@ -702,10 +802,15 @@ class Admin extends Base {
                 'rest_url'                       => esc_url_raw( rest_url() ),
                 'free_version'                   => betterdocs()->version,
                 'generate_data_url'              => get_rest_url( null, '/betterdocs/v1/create-sample-docs' ),
+                'ai_sample_docs'                 => array(
+                    'enabled'   => (bool) betterdocs()->settings->get( 'enable_ai_sample_docs', true ),
+                    'rest_base' => esc_url_raw( get_rest_url( null, '/betterdocs/v1/sample-docs' ) ),
+                ),
                 'nonce'                          => wp_create_nonce( 'wp_rest' ),
                 'sync_nonce'                     => wp_create_nonce( 'ai_chatbot_embed' ),
                 'count_all_docs'                 => array_sum( (array) wp_count_posts( 'docs' ) ),
                 'count_all_faq'                  => array_sum( (array) wp_count_posts( 'betterdocs_faq' ) ),
+                'faq_order'                      => get_option( 'betterdocs_faq_order', 'default' ),
                 'count_new_docs'                 => $this->get_not_synced_docs_count(),
                 'admin_url'                      => admin_url(),
                 'ia_preview'                     => betterdocs()->settings->get( 'ia_enable_preview', false ),
@@ -717,9 +822,11 @@ class Admin extends Base {
                 'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
                 'disabled_embed_model_option'    => get_option( 'disabled_embed_model_option' ),
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
+                'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
                 'current_admin_language'         => Helper::get_current_admin_language(),
                 'is_multilingual'                => Helper::is_multilingual_active(),
+                'languages'                      => Helper::get_admin_languages(),
 			)
 		);
 
@@ -736,6 +843,14 @@ class Admin extends Base {
 		// FAQ Builder Related Localization
 		betterdocs()->assets->enqueue( 'betterdocs-admin-faq', 'admin/css/faq.css' );
 		betterdocs()->assets->enqueue( 'betterdocs-admin-faq', 'admin/js/faq.js' );
+
+		// Load the classic editor (TinyMCE + QuickTags) so the FAQ rich-text editor can mount via wp.editor.initialize().
+		if ( function_exists( 'wp_enqueue_editor' ) ) {
+			wp_enqueue_editor();
+		}
+		if ( function_exists( 'wp_enqueue_media' ) ) {
+			wp_enqueue_media();
+		}
 
 		// removing emoji support
 		remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -966,13 +1081,17 @@ class Admin extends Base {
 			),
 			'categories' => $this->normalize_menu(
 				__( 'Categories', 'betterdocs' ),
-				'edit-tags.php?taxonomy=doc_category&post_type=docs',
-				'manage_doc_terms'
+				'betterdocs-doc-categories',
+				'manage_doc_terms',
+				array( $this, 'output' ),
+				$parent_slug
 			),
 			'tags'       => $this->normalize_menu(
 				__( 'Tags', 'betterdocs' ),
-				'edit-tags.php?taxonomy=doc_tag&post_type=docs',
-				'manage_doc_terms'
+				'betterdocs-doc-tags',
+				'manage_doc_terms',
+				array( $this, 'output' ),
+				$parent_slug
 			),
 			'settings'   => $this->normalize_menu(
 				__( 'Settings', 'betterdocs' ),
@@ -1042,8 +1161,8 @@ class Admin extends Base {
 			'betterdocs'               => 'betterdocs',
 			'betterdocs_page_all_docs' => 'betterdocs-all-docs',
 			'betterdocs_page_add_new'  => 'betterdocs-add-new',
-			'edit-tags.php?taxonomy=doc_category&post_type=docs' => 'betterdocs-categories',
-			'edit-tags.php?taxonomy=doc_tag&post_type=docs' => 'betterdocs-tags',
+			'betterdocs-doc-categories'                           => 'betterdocs-categories',
+			'betterdocs-doc-tags'                                 => 'betterdocs-tags',
 			'betterdocs-settings'      => 'betterdocs-settings',
 			'betterdocs-analytics'     => 'betterdocs-analytics',
 			'betterdocs-faq'           => 'betterdocs-faq',

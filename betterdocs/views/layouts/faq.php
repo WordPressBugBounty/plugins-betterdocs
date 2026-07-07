@@ -4,7 +4,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-$faq_terms = get_terms( betterdocs()->query->faq_terms_query_args() );
+$_faq_taxonomy = isset( $shortcode_attr['faq_taxonomy'] ) ? sanitize_key( $shortcode_attr['faq_taxonomy'] ) : 'betterdocs_faq_category';
+$faq_terms     = get_terms( betterdocs()->query->faq_terms_query_args( '', '', [], $_faq_taxonomy ) );
 
 if ( $enable && $have_posts && ! empty( $faq_terms ) ) {
 	// Only use settings value if faq_schema is not already set in shortcode attributes

@@ -35,7 +35,7 @@
         font-size: 11px;
         font-weight: 600;
         letter-spacing: 2px;
-        line-height: 1;
+        line-height: 1.3;
         text-transform: uppercase;
         color: #555;
         background-color: #fff;

@@ -203,6 +203,7 @@ class Settings extends Base {
     public function get_default() {
         $_default = array(
             'multiple_kb' => '',
+            'enable_ai_sample_docs' => true,
             'enable_export_faq' => true,
             'builtin_doc_page' => true,
             'breadcrumb_doc_title' => __( 'Docs', 'betterdocs' ),

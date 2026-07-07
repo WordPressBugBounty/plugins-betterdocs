@@ -79,11 +79,11 @@ class AIFaq extends BaseAPI {
         }
 
         $prompt = sprintf(
-            'Generate an FAQ answer for the question related to %s. The question: %s',
+            'Write a clear, concise answer in plain text for the following FAQ question related to %s. The question: %s',
             $keywords,
             $question
         );
-        $system = __( 'You are a helpful assistant that writes clear, concise FAQ answers.', 'betterdocs' );
+        $system = __( 'You are a helpful assistant that writes clear, concise FAQ answers in plain text. Do not use any Markdown or special formatting — no asterisks, bold, italics, headings, bullet points, backticks or code fences. Reply with a direct answer written in plain sentences.', 'betterdocs' );
 
         $result = $write_ai->generate_text( $prompt, $system );
 
@@ -120,6 +120,23 @@ class AIFaq extends BaseAPI {
         $text = trim( $text );
         $text = preg_replace( '/^\s*answer\s*:\s*/i', '', $text );
         $text = preg_replace( '/^\s*\?/', '', $text );
+        $text = $this->strip_markdown( $text );
+
+        return trim( $text );
+    }
+
+    /**
+     * Safety net: strip the common Markdown the model may still emit despite the
+     * plain-text instruction, so FAQ answers never render literal asterisks.
+     */
+    protected function strip_markdown( $text ) {
+        $text = preg_replace( '/```.*?```/s', '', $text );          // fenced code blocks
+        $text = preg_replace( '/\*\*(.+?)\*\*/s', '$1', $text );    // **bold**
+        $text = preg_replace( '/__(.+?)__/s', '$1', $text );        // __bold__
+        $text = preg_replace( '/`([^`]*)`/', '$1', $text );         // `inline code`
+        $text = preg_replace( '/^\s{0,3}#{1,6}\s+/m', '', $text );  // # headings
+        $text = preg_replace( '/^\s{0,3}>\s?/m', '', $text );       // > blockquotes
+        $text = preg_replace( '/^\s{0,3}[-*+]\s+/m', '', $text );   // -, *, + bullet markers
 
         return trim( $text );
     }

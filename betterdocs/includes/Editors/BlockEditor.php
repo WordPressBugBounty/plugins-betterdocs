@@ -109,6 +109,7 @@ class BlockEditor extends BaseEditor {
 			'betterDocsBlocksHelper',
 			array_merge([
 				'is_pro_active'         => betterdocs()->is_pro_active(),
+				'is_woocommerce_active' => class_exists( 'WooCommerce' ),
 				'resturl'               => get_rest_url(),
 				'editorType'            => $editor,
 				'betterdocs_glossaries' => Helper::get_glossaries(),

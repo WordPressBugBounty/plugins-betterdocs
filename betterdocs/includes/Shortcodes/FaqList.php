@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use WPDeveloper\BetterDocs\Core\Shortcode;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class FaqList extends Shortcode {
 	protected $layout    = 'modern';
@@ -57,9 +58,21 @@ class FaqList extends Shortcode {
 			'show_button_icon'            => true,
 			'button_icon_position'        => 'after',
 			'button_color'                => '#528ffe',
-			'is_gutenberg'                => false
+			'is_gutenberg'                => false,
+			'faq_taxonomy'                => 'betterdocs_faq_category',
+			// Per-placement order override. Empty = use the global FAQ Builder
+			// order (`betterdocs_faq_order` option). One of: default,
+			// most_recent, least_recent, a_to_z, z_to_a, most_questions.
+			'order'                       => ''
 		];
 	}
+
+	/**
+	 * Allowed per-placement order keys, mirroring the FAQ Builder header dropdown.
+	 *
+	 * @var string[]
+	 */
+	protected $allowed_order_keys = [ 'default', 'most_recent', 'least_recent', 'a_to_z', 'z_to_a', 'most_questions' ];
 
 	public function icons( $faq_toggle ) {
 		$faq_markup  = '<svg class="betterdocs-faq-iconminus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"' .($faq_toggle ? " style='display:inline;'" : ""). 'stroke-width="2"><g fill="none" stroke="' . esc_attr( $this->attributes['button_color'] ) . '" stroke-linecap="round" stroke-miterlimit="10" stroke-linejoin="round"><path d="M17 12H7"></path><circle cx="12" cy="12" r="11"></circle></g></svg>';
@@ -80,13 +93,30 @@ class FaqList extends Shortcode {
 			add_action( $this->icon_hook, [ $this, 'icons' ] );
 		}
 
+		// When this placement sets a valid `order`, scope it to this render only
+		// (via the existing `betterdocs_faq_order_key` filter) so it overrides
+		// the global FAQ Builder order without affecting other placements.
+		$order_override = is_string( $this->attributes['order'] ) ? trim( $this->attributes['order'] ) : '';
+		$order_filter   = null;
+		if ( $order_override && in_array( $order_override, $this->allowed_order_keys, true ) ) {
+			$order_filter = function () use ( $order_override ) {
+				return $order_override;
+			};
+			add_filter( 'betterdocs_faq_order_key', $order_filter, 20 );
+		}
+
 		$this->views( 'shortcodes/faq' );
+
+		if ( $order_filter ) {
+			remove_filter( 'betterdocs_faq_order_key', $order_filter, 20 );
+		}
 
 		remove_action( $this->icon_hook, [ $this, 'icons' ] );
 	}
 
 	public function view_params() {
-		$terms_query = $this->query->faq_terms_query_args( $this->attributes['groups'], $this->attributes['group_exclude'] );
+		$taxonomy    = sanitize_key( $this->attributes['faq_taxonomy'] );
+		$terms_query = $this->query->faq_terms_query_args( $this->attributes['groups'], $this->attributes['group_exclude'], [], $taxonomy );
 
 		$wrapper_attr = [
 			'class' => [
@@ -103,7 +133,7 @@ class FaqList extends Shortcode {
 				'widget'           => $this,
 				'layout'           => 'list',
 				'terms_query_args' => $terms_query,
-				'faq_schema'       => $this->attributes['faq_schema']
+				'faq_schema'       => $this->attributes['faq_schema'] && ! Helper::seo_plugin_outputs_faq_schema()
 			]
 		);
 	}

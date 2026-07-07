@@ -73,7 +73,11 @@ class FrontEnd extends Base {
         $author_id         = get_query_var( 'author' ) != null ? get_query_var( 'author' ) : 0;
         $author_docs_count = count_user_posts( $author_id, 'docs' );
 
-        if ( $post_type == 'docs' && $author_docs_count > 0 ) {
+        // Only override on an actual author archive — otherwise this also fires on
+        // the main docs archive (where $author_id falls back to 0) whenever any doc
+        // has post_author 0, hijacking the docs/MKB archive (and its FSE template)
+        // with the author template.
+        if ( is_author() && $post_type == 'docs' && $author_docs_count > 0 ) {
             wp_enqueue_style('betterdocs-breadcrumb');
             $template_path = BETTERDOCS_ABSPATH . 'views/templates/authors/author.php';
         }

@@ -31,6 +31,7 @@ use WPDeveloper\BetterDocs\Editors\Editor;
 use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
 use WPDeveloper\BetterDocs\FrontEnd\SearchExtender;
 use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
+use WPDeveloper\BetterDocs\FrontEnd\WooProductFAQ;
 use WPDeveloper\BetterDocs\Modules\StyleHandler as ModulesStyleHandler;
 use WPDeveloper\BetterDocs\Utils\Database;
 use WPDeveloper\BetterDocs\Utils\Enqueue;
@@ -126,7 +127,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.5.6';
+    public $version = '4.6.0';
 
     /**
      * WriteWithAI Class
@@ -280,6 +281,12 @@ final class Plugin {
 
         $this->container->get( FrontEnd::class );
         $this->container->get( SearchExtender::class );
+
+        /**
+         * Single-product FAQ rendering (WooCommerce). The class itself bails when
+         * WooCommerce is inactive or the feature is disabled.
+         */
+        $this->container->get( WooProductFAQ::class );
 
         do_action( 'betterdocs_init' );
 
@@ -443,7 +450,15 @@ final class Plugin {
     }
 
     public function is_betterdocs_screen( $hook, $admin_check = true ): bool {
-        $screens = array(
+        /**
+         * Filter the list of admin screen hook suffixes treated as BetterDocs
+         * screens (controls whether the React admin bundle + styles load).
+         * Pro/add-ons can register their own React pages here, e.g. the
+         * Knowledge Base admin page.
+         *
+         * @param string[] $screens Full hook suffixes (e.g. betterdocs_page_betterdocs-foo).
+         */
+        $screens = apply_filters( 'betterdocs_admin_screens', array(
             'toplevel_page_betterdocs-dashboard',
             'toplevel_page_betterdocs-admin',
             'admin_page_betterdocs-admin',
@@ -452,8 +467,10 @@ final class Plugin {
             'betterdocs_page_betterdocs-settings',
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',
-            'betterdocs_page_betterdocs-ai-chatbot'
-        );
+            'betterdocs_page_betterdocs-ai-chatbot',
+            'betterdocs_page_betterdocs-doc-categories',
+            'betterdocs_page_betterdocs-doc-tags',
+        ) );
 
         if ( $admin_check ) {
             if ( in_array( $hook, $screens ) ) {
@@ -476,6 +493,8 @@ final class Plugin {
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
+            'betterdocs_page_betterdocs-doc-categories',
+            'betterdocs_page_betterdocs-doc-tags',
             'edit-docs'
         );
 
