@@ -342,14 +342,14 @@ class Helper extends Base {
 		// admin UI language.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only UI language hint, sanitized; not a state-changing form submission.
 		if ( isset( $_POST['lang'] ) && ! empty( $_POST['lang'] ) ) {
-			return sanitize_text_field( wp_unslash( $_POST['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see note above.
+			return self::sanitize_language_code( wp_unslash( $_POST['lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- see note above.
 		}
 
 		// Limit GET handling to admin/REST contexts so a frontend ?lang= switch
 		// doesn't hijack admin meta-key resolution.
 		if ( isset( $_GET['lang'] ) && ! empty( $_GET['lang'] )
 			&& ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) ) {
-			return sanitize_text_field( wp_unslash( $_GET['lang'] ) );
+			return self::sanitize_language_code( wp_unslash( $_GET['lang'] ) );
 		}
 
 		// WPML Support - Admin language detection
@@ -418,7 +418,27 @@ class Helper extends Base {
 			$current_language = trp_get_current_language();
 		}
 
-		return $current_language;
+		return self::sanitize_language_code( $current_language );
+	}
+
+	/**
+	 * Normalize a language code to the character set real language codes use
+	 * (`en`, `en_US`, `zh-Hans`). Values reach this from `?lang=`, `$_POST['lang']`
+	 * and the WPML admin cookie, and `sanitize_text_field()` leaves quotes intact —
+	 * so anything used to build a meta key or SQL fragment must be narrowed here.
+	 * Defense in depth: callers that reach SQL must still bind their values.
+	 *
+	 * @param string|null $language Raw language code.
+	 * @return string|null Normalized code, or null when nothing usable remains.
+	 */
+	private static function sanitize_language_code( $language ) {
+		if ( ! is_string( $language ) || '' === $language ) {
+			return null;
+		}
+
+		$language = preg_replace( '/[^A-Za-z0-9_-]/', '', $language );
+
+		return '' !== $language ? $language : null;
 	}
 
 	/**

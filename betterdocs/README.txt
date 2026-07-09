@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.6.0
+Stable tag: 4.6.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -220,6 +220,11 @@ Yes, it will work with any standard WordPress theme.
 
 
 == Changelog ==
+
+= 4.6.1 - 09/07/2026 =
+
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.6.0 - 07/07/2026 =
 

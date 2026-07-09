@@ -815,9 +815,18 @@ class PostType extends Base {
 				if ( Helper::is_multilingual_active() && $current_language ) {
 					$lang_meta_key = $base_meta_key . '_' . $current_language;
 
+					// $current_language is attacker-controlled (?lang=) and
+					// sanitize_text_field() does not strip quotes, so the meta keys
+					// must be bound, never interpolated (CVE-2026-15104).
 					// Use COALESCE to fall back from language-specific to base meta key
-					$join_statement = " LEFT JOIN $wpdb->termmeta AS term_meta_lang ON t.term_id = term_meta_lang.term_id AND term_meta_lang.meta_key = '$lang_meta_key'";
-					$join_statement .= " LEFT JOIN $wpdb->termmeta AS term_meta_base ON t.term_id = term_meta_base.term_id AND term_meta_base.meta_key = '$base_meta_key'";
+					$join_statement = $wpdb->prepare(
+						" LEFT JOIN $wpdb->termmeta AS term_meta_lang ON t.term_id = term_meta_lang.term_id AND term_meta_lang.meta_key = %s",
+						$lang_meta_key
+					);
+					$join_statement .= $wpdb->prepare(
+						" LEFT JOIN $wpdb->termmeta AS term_meta_base ON t.term_id = term_meta_base.term_id AND term_meta_base.meta_key = %s",
+						$base_meta_key
+					);
 
 					if ( ! $this->does_substring_exist( $pieces['join'], 'term_meta_lang' ) ) {
 						$pieces['join'] .= $join_statement;

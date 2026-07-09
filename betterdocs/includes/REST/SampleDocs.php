@@ -255,12 +255,13 @@ class SampleDocs extends BaseAPI {
 	 * @return array|\WP_Error Parsed { categories, meta } on success.
 	 */
 	protected function call_proxy( array $payload ) {
-		$url    = $this->proxy_url();
-		$secret = $this->proxy_secret();
-		$body   = wp_json_encode( $payload );
+		$url     = $this->proxy_url();
+		$secret  = $this->proxy_secret();
+		$body    = wp_json_encode( $payload );
+		$timeout = $this->request_timeout();
 
 		$args = [
-			'timeout' => 30,
+			'timeout' => $timeout,
 			'headers' => [
 				'Content-Type'             => 'application/json',
 				'Accept'                   => 'application/json',
@@ -275,12 +276,25 @@ class SampleDocs extends BaseAPI {
 		$response = null;
 		while ( $attempts < 2 ) {
 			$attempts++;
+
+			// Give this attempt a fresh execution budget: without it a hung upstream
+			// trips PHP's max_execution_time mid-cURL and the route dies with a raw
+			// 500 critical error instead of the typed JSON the modal understands.
+			$reset = function_exists( 'set_time_limit' ) && @set_time_limit( $timeout + 15 );
+
 			$response = wp_remote_post( $url, $args );
 
 			// Retry ONLY on a genuine transport failure (no HTTP response). A 5xx may
 			// mean the proxy already called OpenAI and spent tokens, so re-POSTing
 			// would risk double-billing — treat any received status as final.
 			if ( ! is_wp_error( $response ) ) {
+				break;
+			}
+
+			// If the time limit could not be reset (disabled by the host), a second
+			// full-length attempt could still fatal mid-cURL — surface the transport
+			// error instead of risking the retry.
+			if ( ! $reset ) {
 				break;
 			}
 		}
@@ -305,6 +319,25 @@ class SampleDocs extends BaseAPI {
 		$parsed['categories'] = $this->sanitize_categories( $parsed['categories'], true );
 
 		return $parsed;
+	}
+
+	/**
+	 * HTTP timeout (seconds) for the proxy call, kept safely below PHP's
+	 * max_execution_time so a hung upstream returns a clean WP_Error (typed
+	 * JSON + static fallback in the wizard) instead of fataling mid-cURL.
+	 *
+	 * @return int
+	 */
+	protected function request_timeout() {
+		$timeout  = 20;
+		$max_exec = (int) ini_get( 'max_execution_time' );
+
+		if ( $max_exec > 0 ) {
+			$timeout = min( $timeout, max( 5, $max_exec - 10 ) );
+		}
+
+		/** Filter the HTTP timeout (seconds) for hosted AI proxy requests. */
+		return (int) apply_filters( 'betterdocs_ai_proxy_timeout', $timeout );
 	}
 
 	protected function proxy_url() {
