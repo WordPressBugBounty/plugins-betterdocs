@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.6.1
+Stable tag: 4.6.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -210,16 +210,50 @@ Visit [WPDeveloper](https://wpdeveloper.com) to learn more about how to do bette
 
 == Frequently Asked Questions ==
 
-= Does it work with any WordPress theme? =
+= What is BetterDocs used for? =
+BetterDocs helps you create and manage a WordPress knowledge base, documentation site, FAQ section, wiki, or help center so visitors can find answers faster and your team can reduce repetitive support tickets.
 
-Yes, it will work with any standard WordPress theme.
+= Does BetterDocs work with any WordPress theme? =
+Yes. BetterDocs works with standard WordPress themes. You can use it to create documentation pages and knowledge base layouts while keeping your existing site design.
 
+= Can BetterDocs help reduce support tickets? =
+Yes. By organizing documentation, FAQs, and help articles in a searchable knowledge base, BetterDocs helps customers find answers on their own before contacting support.
+
+= Does BetterDocs include live search for documentation? =
+Yes. BetterDocs includes an advanced search experience so visitors can quickly find relevant documentation articles, FAQs, and knowledge base content.
+
+= Can I create documentation with Elementor or Gutenberg? =
+Yes. BetterDocs supports designing documentation with ready templates and works with popular WordPress editing workflows, including Elementor and the Gutenberg block editor.
+
+= Does BetterDocs support AI features? =
+BetterDocs includes AI-focused documentation features such as writing assistance, document summarization, quality analysis, and an AI chatbot experience depending on the feature setup and plan you use.
+
+= Can I create an internal knowledge base with BetterDocs? =
+Yes. BetterDocs can be used for internal documentation and private knowledge bases, including role-based access control for teams that need internal docs, SOPs, or company resources.
+
+= Does BetterDocs support multiple knowledge bases? =
+BetterDocs is designed to help organize documentation into categories and knowledge bases. Multiple knowledge base workflows are useful when you need separate docs for different products, teams, or audiences.
+
+= Can I track how my documentation performs? =
+Yes. BetterDocs provides analytics-focused features to help you understand documentation performance, visitor behavior, popular docs, and opportunities to improve your help center content.
+
+= Is BetterDocs useful for multilingual documentation? =
+Yes. BetterDocs supports multilingual documentation workflows and integrates with multilingual tools such as WPML, helping you create knowledge base content for users in different languages.
 
 == Screenshots ==
 
 
 
 == Changelog ==
+
+= 4.6.2 - 16/07/2026 =
+
+- Improvement: AI Sample Docs — deeper knowledge base generation grounded in your real site content, with AI-designed outlines expanded into full articles (inserted as drafts for review)
+- Improvement: AI Sample FAQs — AI now designs the FAQ groups, questions & answers from your site content, including store-wide and per-category Product FAQs for WooCommerce
+- Improvement: Product FAQ groups can now target all products or specific products
+- Improvement: Quick Setup wizard now hands off to the Site Editor on block (FSE) themes
+- Improvement: FAQ Builder — clearer published/draft group counts and a dedicated Uncategorized bucket for Product FAQs
+- Few minor bug fixes and improvements
 
 = 4.6.1 - 09/07/2026 =
 

@@ -112,6 +112,65 @@ class StoreFaqContent {
 		return $categories;
 	}
 
+	/**
+	 * The single "store-wide" FAQ group — the questions every shopper asks on any
+	 * product page, regardless of what the product is (payments, shipping, returns,
+	 * orders). One group rather than the four themed ones from definition(): it is
+	 * flagged "show on all products", so it appears once on every product page, and a
+	 * dozen questions in one accordion is a lot. A curated set of six spanning all four
+	 * themes reads best.
+	 *
+	 * @return array { name, slug, icon, description, questions:[ id => title ] }
+	 */
+	public function consolidated_definition() {
+		return [
+			'name'        => __( 'Shipping, Returns & Payments', 'betterdocs' ),
+			'slug'        => 'store-info',
+			'icon'        => 'truck',
+			'description' => __( 'Common questions about payments, delivery, returns and orders — shown on every product.', 'betterdocs' ),
+			'questions'   => [
+				'payment_methods'   => __( 'What payment methods do you accept?', 'betterdocs' ),
+				'shipping_coverage' => __( 'Where do you ship and how long does delivery take?', 'betterdocs' ),
+				'shipping_cost'     => __( 'How much does shipping cost?', 'betterdocs' ),
+				'order_tracking'    => __( 'How can I track my order?', 'betterdocs' ),
+				'return_policy'     => __( 'What is your return & refund policy?', 'betterdocs' ),
+				'modify_cancel'     => __( 'Can I change or cancel my order after checkout?', 'betterdocs' ),
+			],
+		];
+	}
+
+	/**
+	 * Build the single store-wide group (proxy-shaped) with real, settings-grounded
+	 * answers — the deterministic Layer 1 of the WooCommerce product FAQ. Reuses the
+	 * same per-question answer builders generate() uses.
+	 *
+	 * @param array $profile The SiteProfiler profile (uses ['woocommerce'] + ['site']).
+	 * @return array { name, slug, description, articles:[{ title, content_html, excerpt }] }
+	 */
+	public function generate_consolidated( array $profile ) {
+		$woo   = isset( $profile['woocommerce'] ) && is_array( $profile['woocommerce'] ) ? $profile['woocommerce'] : [];
+		$site  = isset( $profile['site'] ) && is_array( $profile['site'] ) ? $profile['site'] : [];
+		$group = $this->consolidated_definition();
+
+		$articles = [];
+		foreach ( $group['questions'] as $id => $title ) {
+			$html       = $this->answer_html( $id, $woo, $site );
+			$articles[] = [
+				'title'        => $title,
+				'content_html' => $html,
+				'excerpt'      => $this->excerpt( $html ),
+			];
+		}
+
+		return [
+			'name'        => $group['name'],
+			'slug'        => $group['slug'],
+			'icon'        => $group['icon'],
+			'description' => $group['description'],
+			'articles'    => $articles,
+		];
+	}
+
 	/* --------------------------------------------------------------------- */
 	/* Answer builders                                                        */
 	/* --------------------------------------------------------------------- */

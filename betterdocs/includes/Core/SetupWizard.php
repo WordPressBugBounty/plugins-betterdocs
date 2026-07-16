@@ -35,6 +35,12 @@ class SetupWizard extends Base {
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 			]
 		);
+		// The layout picker writes Customizer theme_mods, which a block (FSE) theme never
+		// reads — so on FSE we don't offer the picker at all (and don't spend the work
+		// building its groups). The Customize step shows the same "design it in the Site
+		// Editor" card the Settings > Design tab already shows there instead.
+		$is_fse = (bool) betterdocs()->helper->current_theme_is_fse_theme();
+
 		betterdocs()->assets->localize(
 			'betterdocs-quick-setup',
 			'betterdocsCustomizeLayouts',
@@ -42,7 +48,26 @@ class SetupWizard extends Base {
 				'rest_url'  => esc_url_raw( rest_url() ),
 				'rest_base' => esc_url_raw( get_rest_url( null, '/betterdocs/v1/customize' ) ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
-				'groups'    => $this->customize_layout_groups(),
+				'is_fse'    => $is_fse,
+				'groups'    => $is_fse ? [] : $this->customize_layout_groups(),
+				'fse'       => [
+					'eyebrow'     => __( 'Full Site Editing', 'betterdocs' ),
+					'title'       => __( 'Design with the Gutenberg Site Editor', 'betterdocs' ),
+					'description' => __( 'BetterDocs ships editable templates and ready-made patterns for your documentation. Open the Site Editor to design them block by block — colors, typography and layout included.', 'betterdocs' ),
+					'features'    => [
+						__( 'Docs archive & category templates', 'betterdocs' ),
+						__( 'Single doc layout', 'betterdocs' ),
+						__( 'Ready-made BetterDocs patterns', 'betterdocs' ),
+					],
+					'button'      => __( 'Design with Gutenberg', 'betterdocs' ),
+					'note'        => __( 'Opens in a new tab, so you can finish setup here.', 'betterdocs' ),
+					// Opens the Site Editor's template list filtered to BetterDocs, rather than
+					// dropping the user straight into one template (what Settings::gutenberg_link()
+					// does) — from the wizard they've not chosen a template to edit yet.
+					// Built by concatenation on purpose: add_query_arg() would re-encode the %2F.
+					'url'         => admin_url( 'site-editor.php?p=%2Ftemplate&activeView=BetterDocs' ),
+					'image'       => betterdocs()->assets->icon( 'customizer/gutenberg-preview.png', true ),
+				],
 			]
 		);
 		betterdocs()->assets->enqueue( 'betterdocs-sweetalert', 'vendor/js/sweetalert.min.js', [] );
@@ -458,16 +483,28 @@ class SetupWizard extends Base {
 						'betterdocs_quick_setup_tab_customize',
 						[
 							'id'       => 'customize',
-							'label'    => __( 'Customize', 'betterdocs' ),
+							// A block theme has no Customizer layouts to pick, so the step isn't
+							// "Customize" there — it hands off to the Site Editor. (The tab id stays
+							// `customize`: it keys the step's navigation and styling.)
+							'label'    => betterdocs()->helper->current_theme_is_fse_theme()
+								? __( 'Design', 'betterdocs' )
+								: __( 'Customize', 'betterdocs' ),
 							'classes'  => 'customize',
 							'priority' => 50,
 							'fields'   => [
 								'customize_header' => [
 									'name'        => 'customize_header',
 									'type'        => 'header',
-									'title'       => __( 'Style Your Documentation', 'betterdocs' ),
+									'title'       => betterdocs()->helper->current_theme_is_fse_theme()
+										? __( 'Design Your Documentation', 'betterdocs' )
+										: __( 'Style Your Documentation', 'betterdocs' ),
 									'direction'   => 'row',
-									'description' => __( 'Pick a layout for your docs page, categories, single articles, and search — applied when you finish setup. Fine-tune the details anytime in the Customizer.', 'betterdocs' ),
+									// On a block theme the layout picker is replaced by the Site Editor
+									// hand-off, so the copy leads with what the user CAN do rather than
+									// naming a Customizer they will never open.
+									'description' => betterdocs()->helper->current_theme_is_fse_theme()
+										? __( 'Your theme supports Full Site Editing. Design your docs archive, single doc pages and patterns right in the Gutenberg Site Editor.', 'betterdocs' )
+										: __( 'Pick a layout for your docs page, categories, single articles, and search — applied when you finish setup. Fine-tune the details anytime in the Customizer.', 'betterdocs' ),
 									'icon'        => '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"></rect><path d="M3 9h18M9 9v11"></path></svg>',
 									'priority'    => 1
 								],

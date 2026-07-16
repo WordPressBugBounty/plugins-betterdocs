@@ -28,21 +28,52 @@ class SiteProfiler {
 	const CACHE_TTL = HOUR_IN_SECONDS;
 
 	/**
+	 * Transient key for the cached content digest (per-locale). Kept separate from the
+	 * base profile so the lightweight detect() path never carries the heavier excerpts.
+	 * @var string
+	 */
+	const CONTENT_CACHE_KEY = 'betterdocs_site_content';
+
+	/**
 	 * Build the full site profile.
 	 *
-	 * @param bool $fresh Skip the cache and recompute.
+	 * @param bool $fresh        Skip the cache and recompute.
+	 * @param bool $with_content Also attach the richer `content` digest (real page/post/
+	 *                           product excerpts). Only the AI KB "outline" call needs it;
+	 *                           detect() leaves it off to stay light.
 	 * @return array
 	 */
-	public function build( $fresh = false ) {
+	public function build( $fresh = false, $with_content = false ) {
 		$cache_key = self::CACHE_KEY . '_' . get_locale();
 
+		$profile = null;
 		if ( ! $fresh ) {
 			$cached = get_transient( $cache_key );
 			if ( is_array( $cached ) ) {
-				return $cached;
+				$profile = $cached;
 			}
 		}
 
+		if ( null === $profile ) {
+			$profile = $this->build_base();
+			set_transient( $cache_key, $profile, self::CACHE_TTL );
+		}
+
+		if ( $with_content ) {
+			// Computed + cached separately so it never bloats the base profile transient.
+			$profile['content'] = $this->content_digest( $fresh );
+		}
+
+		return $profile;
+	}
+
+	/**
+	 * Compute the base (content-free) profile. Split out of build() so the heavier
+	 * content digest can be attached on demand without polluting the base cache.
+	 *
+	 * @return array
+	 */
+	private function build_base() {
 		$site = [
 			'title'   => sanitize_text_field( get_bloginfo( 'name' ) ),
 			'tagline' => sanitize_text_field( get_bloginfo( 'description' ) ),
@@ -72,11 +103,227 @@ class SiteProfiler {
 		 *
 		 * @param array $profile
 		 */
-		$profile = apply_filters( 'betterdocs_site_profile', $profile );
+		return apply_filters( 'betterdocs_site_profile', $profile );
+	}
 
-		set_transient( $cache_key, $profile, self::CACHE_TTL );
+	/**
+	 * Real, privacy-safe, size-bounded content excerpts that let the AI understand what
+	 * the site actually does (not just page/nav titles). Only published, public content
+	 * — already on the public web — is excerpted: no drafts, private, user or order data.
+	 *
+	 * Cached separately from the base profile and gated by filters so it can be trimmed
+	 * or disabled per site.
+	 *
+	 * @param bool $fresh Skip the content cache and recompute.
+	 * @return array
+	 */
+	public function content_digest( $fresh = false ) {
+		/**
+		 * Allow a site to opt out of sending real content excerpts to the AI proxy.
+		 *
+		 * @param bool $enabled
+		 */
+		if ( ! apply_filters( 'betterdocs_site_profile_include_content', true ) ) {
+			return [];
+		}
 
-		return $profile;
+		$cache_key = self::CONTENT_CACHE_KEY . '_' . get_locale();
+		if ( ! $fresh ) {
+			$cached = get_transient( $cache_key );
+			if ( is_array( $cached ) ) {
+				return $cached;
+			}
+		}
+
+		$content = [
+			'summary' => $this->home_about_summary(),
+			'pages'   => $this->page_excerpts(),
+			'posts'   => $this->post_excerpts(),
+		];
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			$content['products'] = $this->product_excerpts();
+		}
+
+		$content = array_filter(
+			$content,
+			function ( $value ) {
+				return ! ( is_array( $value ) && empty( $value ) ) && '' !== $value;
+			}
+		);
+
+		/**
+		 * Filter the computed content digest before it is cached/returned.
+		 *
+		 * @param array        $content
+		 * @param SiteProfiler $profiler
+		 */
+		$content = apply_filters( 'betterdocs_site_profile_content', $content, $this );
+
+		set_transient( $cache_key, $content, self::CACHE_TTL );
+
+		return $content;
+	}
+
+	/**
+	 * Short plain-text summary drawn from the front page and an About-style page — the
+	 * best single signal of "what is this site about".
+	 *
+	 * @return string
+	 */
+	private function home_about_summary() {
+		$parts = [];
+
+		$front_id = (int) get_option( 'page_on_front' );
+		if ( 'page' === get_option( 'show_on_front' ) && $front_id > 0 ) {
+			$ex = $this->excerpt_of( get_post_field( 'post_content', $front_id ), 300 );
+			if ( '' !== $ex ) {
+				$parts[] = $ex;
+			}
+		}
+
+		foreach ( [ 'about', 'about-us', 'company', 'who-we-are' ] as $slug ) {
+			$page = get_page_by_path( $slug );
+			if ( $page instanceof \WP_Post && 'publish' === $page->post_status ) {
+				$ex = $this->excerpt_of( $page->post_content, 300 );
+				if ( '' !== $ex ) {
+					$parts[] = $ex;
+					break;
+				}
+			}
+		}
+
+		return $this->excerpt_of( implode( ' ', $parts ), 600 );
+	}
+
+	/**
+	 * Title + short excerpt for the first few published pages (About, Pricing, Features…).
+	 *
+	 * @return array
+	 */
+	private function page_excerpts() {
+		// Exclude WooCommerce's utility pages (Shop/Cart/Checkout/My account) and the
+		// privacy page: they carry no subject anyone documents or FAQs about, but on a
+		// store they have the lowest menu_order and so used to consume the whole (small)
+		// budget — starving the real content pages (About, Pricing, Financing, Delivery…).
+		$exclude = array_filter(
+			[
+				(int) get_option( 'woocommerce_shop_page_id' ),
+				(int) get_option( 'woocommerce_cart_page_id' ),
+				(int) get_option( 'woocommerce_checkout_page_id' ),
+				(int) get_option( 'woocommerce_myaccount_page_id' ),
+				(int) get_option( 'wp_page_for_privacy_policy' ),
+			]
+		);
+
+		$pages = get_posts(
+			[
+				'post_type'      => 'page',
+				'posts_per_page' => 15,
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'post_status'    => 'publish',
+				'post__not_in'   => $exclude,
+			]
+		);
+
+		$out = [];
+		foreach ( $pages as $page ) {
+			$title = sanitize_text_field( get_the_title( $page ) );
+			if ( '' === $title ) {
+				continue;
+			}
+			$out[] = [
+				'title'   => $title,
+				'excerpt' => $this->excerpt_of( $page->post_content, 150 ),
+			];
+		}
+
+		return array_values( $out );
+	}
+
+	/**
+	 * Title + short excerpt for recent published blog posts — signals real topics.
+	 *
+	 * @return array
+	 */
+	private function post_excerpts() {
+		$posts = get_posts(
+			[
+				'post_type'      => 'post',
+				'posts_per_page' => 8,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'post_status'    => 'publish',
+			]
+		);
+
+		$out = [];
+		foreach ( $posts as $post ) {
+			$title = sanitize_text_field( get_the_title( $post ) );
+			if ( '' === $title ) {
+				continue;
+			}
+			$raw = '' !== trim( (string) $post->post_excerpt ) ? $post->post_excerpt : $post->post_content;
+			$out[] = [
+				'title'   => $title,
+				'excerpt' => $this->excerpt_of( $raw, 120 ),
+			];
+		}
+
+		return array_values( $out );
+	}
+
+	/**
+	 * Title + short description for a few recent WooCommerce products.
+	 *
+	 * @return array
+	 */
+	private function product_excerpts() {
+		$products = get_posts(
+			[
+				'post_type'      => 'product',
+				'posts_per_page' => 8,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'post_status'    => 'publish',
+			]
+		);
+
+		$out = [];
+		foreach ( $products as $product ) {
+			$title = sanitize_text_field( get_the_title( $product ) );
+			if ( '' === $title ) {
+				continue;
+			}
+			$raw = '' !== trim( (string) $product->post_excerpt ) ? $product->post_excerpt : $product->post_content;
+			$out[] = [
+				'title'   => $title,
+				'excerpt' => $this->excerpt_of( $raw, 120 ),
+			];
+		}
+
+		return array_values( $out );
+	}
+
+	/**
+	 * Turn raw post content into a clean, bounded, single-line plain-text excerpt.
+	 * Strips shortcodes + tags (handles page-builder markup) and collapses whitespace.
+	 *
+	 * @param string $raw
+	 * @param int    $chars
+	 * @return string
+	 */
+	private function excerpt_of( $raw, $chars ) {
+		$text = wp_strip_all_tags( strip_shortcodes( (string) $raw ) );
+		$text = trim( preg_replace( '/\s+/', ' ', $text ) );
+		if ( '' === $text ) {
+			return '';
+		}
+		if ( mb_strlen( $text ) > $chars ) {
+			$text = rtrim( mb_substr( $text, 0, $chars ) ) . '…';
+		}
+		return sanitize_text_field( $text );
 	}
 
 	/**
@@ -614,6 +861,7 @@ class SiteProfiler {
 	 */
 	public function flush() {
 		delete_transient( self::CACHE_KEY . '_' . get_locale() );
+		delete_transient( self::CONTENT_CACHE_KEY . '_' . get_locale() );
 	}
 
 	/**

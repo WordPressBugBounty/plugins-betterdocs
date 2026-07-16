@@ -1296,6 +1296,12 @@ class Helper extends Base {
         $args = [
             'post_type'      => 'betterdocs_faq',
             'posts_per_page' => -1,
+            // EVERY status, explicitly. WP_Query defaults to 'publish', so "delete this
+            // group and its FAQs" was deleting only the published ones — the drafts (and
+            // pending/scheduled/private/trashed FAQs) survived, and the wp_delete_term()
+            // that follows then stripped their category, leaving them orphaned under
+            // "Uncategorized". Note 'any' is NOT enough here: it excludes trash.
+            'post_status'    => [ 'publish', 'draft', 'pending', 'future', 'private', 'trash' ],
             'tax_query'      => [
                 [
                     'taxonomy' => $taxonomy,

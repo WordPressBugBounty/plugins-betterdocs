@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WP_Error;
 use WP_Query;
+use WP_REST_Request;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Helper;
 
@@ -32,6 +33,22 @@ class FAQBuilder extends Base {
 	 * @var string
 	 */
 	public $product_category = 'betterdocs_product_faq_category';
+
+	/**
+	 * Post meta recording which FAQ Builder tab an FAQ belongs to: 'product' or
+	 * 'general'.
+	 *
+	 * A General and a Product FAQ are the same post type, distinguished only by which
+	 * taxonomy their group lives in — so an FAQ with NO group had no scope at all, and
+	 * an ungrouped Product FAQ (its group deleted, or created without one) was
+	 * indistinguishable from a General one. That's why it used to surface under the
+	 * General tab's "Uncategorized". Recording the scope on the post lets each tab own
+	 * its own Uncategorized bucket.
+	 */
+	const SCOPE_META = '_betterdocs_faq_scope';
+
+	/** Option flag for the one-time backfill of SCOPE_META on pre-existing FAQs. */
+	const SCOPE_BACKFILL_OPTION = 'betterdocs_faq_scope_backfilled';
 
 	/**
 	 * Term meta on a Product FAQ group holding the product_cat term IDs the
@@ -77,6 +94,14 @@ class FAQBuilder extends Base {
 		add_action( 'created_betterdocs_product_faq_category', [ $this, 'action_created_betterdocs_faq_category' ], 10, 2 );
 		add_action( 'rest_api_init', [ $this, 'register_api_endpoint' ] );
 		add_action( 'rest_api_init', [ $this, 'register_category_count_fields' ] );
+
+		// Keep each FAQ's scope ('general' | 'product') in sync however its group is
+		// assigned — the Builder, the sample-FAQ generator, an import, or the classic
+		// post editor all end up here — so an FAQ that later loses its group is still
+		// known to belong to its own tab's "Uncategorized" bucket.
+		add_action( 'set_object_terms', [ $this, 'sync_faq_scope_meta' ], 10, 4 );
+		// One-time backfill for FAQs that predate the scope meta.
+		add_action( 'admin_init', [ $this, 'maybe_backfill_faq_scope' ] );
 		add_action( 'rest_betterdocs_faq_category_query', [ $this, 'faq_category_orderby_meta' ], 10, 2 );
 		add_action( 'rest_betterdocs_product_faq_category_query', [ $this, 'faq_category_orderby_meta' ], 10, 2 );
 
@@ -773,7 +798,8 @@ class FAQBuilder extends Base {
 			$slug,
 			$taxonomy,
 			(array) $params->get_param( 'product_cats' ),
-			(array) $params->get_param( 'products' )
+			(array) $params->get_param( 'products' ),
+			$this->all_products_param( $params )
 		);
 
 		if ( is_wp_error( $result ) ) {
@@ -813,7 +839,8 @@ class FAQBuilder extends Base {
 					$term_id,
 					$taxonomy,
 					(array) $params->get_param( 'product_cats' ),
-					(array) $params->get_param( 'products' )
+					(array) $params->get_param( 'products' ),
+					$this->all_products_param( $params )
 				);
 			}
 			return true;
@@ -838,7 +865,7 @@ class FAQBuilder extends Base {
 		}
 	}
 
-	public function insert_betterdocs_faq_category( $title, $description, $icon_url, $slug = '', $taxonomy = 'betterdocs_faq_category', $product_cats = [], $products = [] ) {
+	public function insert_betterdocs_faq_category( $title, $description, $icon_url, $slug = '', $taxonomy = 'betterdocs_faq_category', $product_cats = [], $products = [], $all_products = false ) {
 		$insert_term = wp_insert_term(
 			$title,
 			$taxonomy,
@@ -854,7 +881,7 @@ class FAQBuilder extends Base {
 			$term_id = isset( $insert_term['term_id'] ) ?  $insert_term['term_id']  : 0;
 			if( $term_id != 0 ) {
 				update_term_meta($term_id, 'faq_group_icon', $icon_url);
-				$this->save_group_assignments( $term_id, $taxonomy, $product_cats, $products );
+				$this->save_group_assignments( $term_id, $taxonomy, $product_cats, $products, $all_products );
 			}
 			// Return the new term id so the admin can jump to its pagination
 			// page and highlight it (mirrors the new-FAQ reveal flow).
@@ -863,16 +890,32 @@ class FAQBuilder extends Base {
 	}
 
 	/**
-	 * Persist a Product FAQ group's product-category and product assignments.
+	 * Persist a Product FAQ group's targeting. Three mutually-exclusive scopes:
+	 *  - all products      → GROUP_ALL_PRODUCTS_META, shown on every product page;
+	 *  - specific cats/products → GROUP_PRODUCT_CATS_META / GROUP_PRODUCTS_META;
+	 *  - none → the group is hidden on the storefront.
+	 *
 	 * No-op for any taxonomy other than the Product FAQ groups taxonomy.
 	 *
 	 * @param int    $term_id
 	 * @param string $taxonomy
 	 * @param array  $product_cats Incoming product_cat term IDs.
 	 * @param array  $products     Incoming product post IDs.
+	 * @param bool   $all_products When true, show on ALL products and clear the cat/product
+	 *                             targets (the scopes are mutually exclusive).
 	 */
-	private function save_group_assignments( $term_id, $taxonomy, $product_cats, $products ) {
+	private function save_group_assignments( $term_id, $taxonomy, $product_cats, $products, $all_products = false ) {
 		if ( $taxonomy !== $this->product_category ) {
+			return;
+		}
+
+		// "Show on all products" wins and clears the specific targets, so a store-wide
+		// group (e.g. the generated "Shipping, Returns & Payments") can be switched to
+		// specific categories/products and back, from the same modal.
+		if ( $all_products ) {
+			update_term_meta( $term_id, self::GROUP_ALL_PRODUCTS_META, true );
+			delete_term_meta( $term_id, self::GROUP_PRODUCT_CATS_META );
+			delete_term_meta( $term_id, self::GROUP_PRODUCTS_META );
 			return;
 		}
 
@@ -906,11 +949,17 @@ class FAQBuilder extends Base {
 			update_term_meta( $term_id, self::GROUP_PRODUCTS_META, $product_ids );
 		}
 
-		// Choosing explicit targets re-scopes a previously "all products" group
-		// (e.g. a store-aware sample group), so drop the match-all flag.
-		if ( ! empty( $cat_ids ) || ! empty( $product_ids ) ) {
-			delete_term_meta( $term_id, self::GROUP_ALL_PRODUCTS_META );
-		}
+		// Explicitly not "all products" → drop the match-all flag.
+		delete_term_meta( $term_id, self::GROUP_ALL_PRODUCTS_META );
+	}
+
+	/**
+	 * Read + normalize the `all_products` REST param (accepts '1'/'0'/true/false).
+	 *
+	 * @return bool
+	 */
+	private function all_products_param( $params ) {
+		return filter_var( $params->get_param( 'all_products' ), FILTER_VALIDATE_BOOLEAN );
 	}
 
 	public function update_faq_category_order( $params ) {
@@ -934,6 +983,18 @@ class FAQBuilder extends Base {
 				'post_status'  => 'publish'
 			]
 		);
+
+		// Stamp the scope from the tab this FAQ was created in. Doing it here (and not
+		// only in sync_faq_scope_meta) is what makes an FAQ created WITHOUT a group land
+		// in the right tab's "Uncategorized" — with no terms assigned, set_object_terms
+		// never fires.
+		if ( $post && ! is_wp_error( $post ) ) {
+			update_post_meta(
+				$post,
+				self::SCOPE_META,
+				$taxonomy === $this->product_category ? 'product' : 'general'
+			);
+		}
 
 		if ( $term_id ) {
 			$set_terms = wp_set_object_terms( $post, $term_id, $taxonomy );
@@ -1132,60 +1193,143 @@ class FAQBuilder extends Base {
 		return $faq;
 	}
 
-	public function get_uncategorised_faq() {
-		$available_terms = array_map(
-			function ( $term ) {
-				return $term->term_id;
-			},
-			get_terms(
-				[
-					'taxonomy'   => $this->category,
-					'hide_empty' => false
-				]
-			)
+	/**
+	 * Record an FAQ's scope whenever its group is (re)assigned, so the scope survives
+	 * the group being deleted. Fires for every path that assigns terms.
+	 *
+	 * @param int    $object_id Post ID.
+	 * @param array  $terms     Terms assigned (unused).
+	 * @param array  $tt_ids    Term-taxonomy IDs.
+	 * @param string $taxonomy  Taxonomy the terms belong to.
+	 */
+	public function sync_faq_scope_meta( $object_id, $terms, $tt_ids, $taxonomy ) {
+		if ( get_post_type( $object_id ) !== $this->post_type ) {
+			return;
+		}
+
+		if ( $taxonomy === $this->product_category && ! empty( $tt_ids ) ) {
+			update_post_meta( $object_id, self::SCOPE_META, 'product' );
+			return;
+		}
+
+		// Assigning a General group makes it a General FAQ — but only claim it if it
+		// isn't already a Product FAQ that merely also carries a General term.
+		if ( $taxonomy === $this->category && ! empty( $tt_ids ) ) {
+			if ( get_post_meta( $object_id, self::SCOPE_META, true ) !== 'product' ) {
+				update_post_meta( $object_id, self::SCOPE_META, 'general' );
+			}
+		}
+	}
+
+	/**
+	 * One-time backfill: stamp the scope onto FAQs created before SCOPE_META existed.
+	 * An FAQ holding a Product group is 'product'; everything else is 'general'.
+	 * Ungrouped legacy FAQs have no way to be identified as product ones, so they stay
+	 * in the General tab, which is exactly where they are today.
+	 */
+	public function maybe_backfill_faq_scope() {
+		if ( get_option( self::SCOPE_BACKFILL_OPTION ) ) {
+			return;
+		}
+
+		$product_faqs = get_posts(
+			[
+				'post_type'      => $this->post_type,
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one-time backfill.
+				'tax_query'      => [
+					[
+						'taxonomy' => $this->product_category,
+						'operator' => 'EXISTS',
+					],
+				],
+			]
 		);
 
+		foreach ( $product_faqs as $faq_id ) {
+			update_post_meta( $faq_id, self::SCOPE_META, 'product' );
+		}
+
+		update_option( self::SCOPE_BACKFILL_OPTION, 1 );
+	}
+
+	/**
+	 * FAQs with no group, for the tab that asked. Each tab owns its own bucket:
+	 * the Product tab lists ungrouped FAQs scoped to 'product', the General tab lists
+	 * everything else that is ungrouped (so an ungrouped Product FAQ no longer leaks
+	 * into General).
+	 */
+	public function get_uncategorised_faq( $request = null ) {
+		$taxonomy   = $request instanceof WP_REST_Request ? $this->resolve_taxonomy( $request ) : $this->category;
+		$is_product = ( $taxonomy === $this->product_category );
+
+		$term_ids = function ( $tax ) {
+			$terms = get_terms( [ 'taxonomy' => $tax, 'hide_empty' => false ] );
+			return is_wp_error( $terms ) ? [] : array_map(
+				function ( $term ) {
+					return $term->term_id;
+				},
+				$terms
+			);
+		};
+
+		// "Ungrouped" always means: no group in THIS tab's taxonomy.
 		$tax_query = [
 			'relation' => 'AND',
 			[
-				'taxonomy' => $this->category,
+				'taxonomy' => $taxonomy,
 				'field'    => 'term_id',
-				'terms'    => $available_terms,
+				'terms'    => $term_ids( $taxonomy ),
 				'operator' => 'NOT IN'
 			]
 		];
 
-		// Keep Product FAQ posts out of the General "Uncategorized" group: they
-		// have no General category, so without this they would leak into the
-		// General FAQ Builder tab.
-		$product_terms = array_map(
-			function ( $term ) {
-				return $term->term_id;
-			},
-			get_terms(
-				[
-					'taxonomy'   => $this->product_category,
-					'hide_empty' => false
-				]
-			)
-		);
+		$meta_query = [];
 
-		if ( ! empty( $product_terms ) ) {
-			$tax_query[] = [
-				'taxonomy' => $this->product_category,
-				'field'    => 'term_id',
-				'terms'    => $product_terms,
-				'operator' => 'NOT IN'
+		if ( $is_product ) {
+			// Product tab: only FAQs that belong to the Product side.
+			$meta_query[] = [
+				'key'   => self::SCOPE_META,
+				'value' => 'product',
 			];
+		} else {
+			// General tab: exclude anything scoped to Product…
+			$meta_query[] = [
+				'relation' => 'OR',
+				[
+					'key'     => self::SCOPE_META,
+					'compare' => 'NOT EXISTS',
+				],
+				[
+					'key'     => self::SCOPE_META,
+					'value'   => 'product',
+					'compare' => '!=',
+				],
+			];
+
+			// …and, as before, anything still holding a Product group (belt and braces
+			// for FAQs whose scope meta never got written).
+			$product_terms = $term_ids( $this->product_category );
+			if ( ! empty( $product_terms ) ) {
+				$tax_query[] = [
+					'taxonomy' => $this->product_category,
+					'field'    => 'term_id',
+					'terms'    => $product_terms,
+					'operator' => 'NOT IN'
+				];
+			}
 		}
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- intentional NOT-IN scan to find FAQs without any category assignment.
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- intentional NOT-IN scan to find FAQs without any group.
 		$posts = get_posts(
 			[
 				'post_type'      => 'betterdocs_faq',
 				'post_status'    => current_user_can( 'edit_others_posts' ) ? [ 'publish', 'draft' ] : 'publish',
 				'posts_per_page' => -1,
-				'tax_query'      => $tax_query
+				'tax_query'      => $tax_query,
+				'meta_query'     => $meta_query,
 			]
 		);
 
