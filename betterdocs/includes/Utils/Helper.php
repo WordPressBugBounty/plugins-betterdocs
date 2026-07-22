@@ -302,6 +302,56 @@ class Helper extends Base {
 	}
 
 	/**
+	 * Configured/active languages from whichever multilingual plugin is present.
+	 *
+	 * Returns a list of { value, label } pairs (language code + display name).
+	 * Used to populate the optional language selector in the Write-with-AI modal;
+	 * returns an empty array when no multilingual plugin is active so the
+	 * selector stays hidden. Mirrors the Pro cross-domain language options.
+	 *
+	 * @return array<int,array{value:string,label:string}>
+	 */
+	public static function get_active_languages() {
+		$options = array();
+
+		// WPML
+		if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+			global $sitepress;
+			if ( $sitepress && method_exists( $sitepress, 'get_active_languages' ) ) {
+				$active_languages = $sitepress->get_active_languages();
+				if ( is_array( $active_languages ) ) {
+					foreach ( $active_languages as $code => $lang ) {
+						$options[] = array(
+							'value' => (string) $code,
+							'label' => isset( $lang['native_name'] ) ? $lang['native_name'] : (string) $code,
+						);
+					}
+				}
+			}
+		} elseif ( function_exists( 'pll_languages_list' ) ) {
+			// Polylang
+			$languages = pll_languages_list( array( 'fields' => array() ) );
+			if ( is_array( $languages ) ) {
+				foreach ( $languages as $lang ) {
+					if ( is_object( $lang ) && isset( $lang->slug ) ) {
+						$options[] = array(
+							'value' => (string) $lang->slug,
+							'label' => isset( $lang->name ) ? $lang->name : (string) $lang->slug,
+						);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Filter the language options exposed to the Write-with-AI modal.
+		 *
+		 * @param array $options List of { value, label } language pairs.
+		 */
+		return apply_filters( 'betterdocs_active_languages', $options );
+	}
+
+	/**
 	 * Check if we should apply language filtering
 	 * Only apply on frontend or when specifically requested
 	 *

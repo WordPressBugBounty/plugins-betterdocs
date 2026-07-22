@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.6.2
+Stable tag: 4.7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -246,6 +246,13 @@ Yes. BetterDocs supports multilingual documentation workflows and integrates wit
 
 == Changelog ==
 
+= 4.7.0 - 22/07/2026 =
+
+- New: AI category, tag & glossary suggestions in the editor and in the Write with AI flow
+- Improvement: Redesigned "Write with AI" and "Edit with BetterDocs AI" modals — cleaner AI Studio surfaces aligned to the design system, with reusable instruction Guides
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
+
 = 4.6.2 - 16/07/2026 =
 
 - Improvement: AI Sample Docs — deeper knowledge base generation grounded in your real site content, with AI-designed outlines expanded into full articles (inserted as drafts for review)
@@ -266,7 +273,7 @@ Yes. BetterDocs supports multilingual documentation workflows and integrates wit
 - New: Product FAQ for WooCommerce — dedicated FAQ groups that display on single product pages
 - New: Rich text (HTML) editor support in the FAQ Builder
 - Improvement: Revamped admin with new React-based Knowledge Base, Doc Categories, Doc Tags, FAQ Builder and Glossaries screens
-- Fixed: Code Snippet block now correctly removes cleared code on the frontend 
+- Fixed: Code Snippet block now correctly removes cleared code on the frontend
 - Few minor bug fixes and improvements
 
 = 4.5.6 - 30/06/2026 =

@@ -6,7 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 printf(
-				__( '<strong>BetterDocs Free 2.5</strong> requires <strong>BetterDocs Pro 2.5</strong> plugin to be installed. Please <strong><em>update</em></strong> the BetterDocs Pro plugin for a smooth experience.', 'betterdocs' ), //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping Not Needed Here Because, This Is A Static String With Html Tags, Which Are Required
+				/* translators: %s: installed BetterDocs Pro version */
+				__( 'You are using <strong>BetterDocs Pro %s</strong>. BetterDocs Analytics requires <strong>BetterDocs Pro 4.0.0</strong> or newer — please <strong><em>update</em></strong> BetterDocs Pro for a smooth experience.', 'betterdocs' ), //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static string with required HTML tags; version arg is escaped.
 				esc_html( $version )
 			);
 			?>

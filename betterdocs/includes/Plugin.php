@@ -11,6 +11,8 @@ use WPDeveloper\BetterDocs\Admin\Customizer\Customizer;
 use WPDeveloper\BetterDocs\Admin\HelpScoutMigration;
 use WPDeveloper\BetterDocs\Admin\ReportEmail;
 use WPDeveloper\BetterDocs\Core\Admin;
+use WPDeveloper\BetterDocs\Core\AnalyticsTracker;
+use WPDeveloper\BetterDocs\Core\AnalyticsRetention;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Core\Install;
 use WPDeveloper\BetterDocs\Core\KBMigration;
@@ -25,6 +27,7 @@ use WPDeveloper\BetterDocs\Core\WriteWithAI;
 use WPDeveloper\BetterDocs\Core\ArticleSummary;
 use WPDeveloper\BetterDocs\Core\ArticleQualityScore;
 use WPDeveloper\BetterDocs\Core\UnifiedMetabox;
+use WPDeveloper\BetterDocs\Core\DocsAISuite;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
@@ -127,7 +130,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.6.2';
+    public $version = '4.7.0';
 
     /**
      * WriteWithAI Class
@@ -146,7 +149,7 @@ final class Plugin {
      * Plugin DB Version
      * @var string
      */
-    public $db_version = '1.0.1';
+    public $db_version = '1.0.2';
 
     public function __construct() {
         $this->define_constants();
@@ -255,6 +258,10 @@ final class Plugin {
         $this->database    = $this->container->get( Database::class );
         $this->settings    = $this->container->get( Settings::class );
         $this->analytics   = $this->container->get( Analytics::class );
+        // Free analytics collectors: the frontend view/scroll tracker and the
+        // daily retention purge. Each self-registers its hooks on construct.
+        $this->container->get( AnalyticsTracker::class );
+        $this->container->get( AnalyticsRetention::class );
 
         $this->template_helper = $this->container->get( TemplateTags::class );
         $this->customizer      = $this->container->get( Customizer::class );
@@ -265,6 +272,10 @@ final class Plugin {
         // Initialize unified metabox before individual features
         $this->container->get( UnifiedMetabox::class );
         $this->article_quality_score = $this->container->get( ArticleQualityScore::class );
+
+        // Editor "Suggest Categories / Tags / Glossaries" AI actions on the docs
+        // post type (gated by enable_docs_ai_suite + an OpenAI key inside the class).
+        $this->container->get( DocsAISuite::class );
 
         $this->container->get( Admin::class );
         $this->container->get( Roles::class );

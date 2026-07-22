@@ -290,7 +290,16 @@ class Settings extends BaseAPI {
 	}
 
 	public function get_settings(): array {
-		return betterdocs()->settings->get_all( true );
+		$settings = betterdocs()->settings->get_all( true );
+		// Secrets must never reach the browser. The analytics settings tab reads this
+		// endpoint (get_all( true ) is otherwise unmasked), so mask them here;
+		// save_settings() restores the real value when the unchanged mask is sent back.
+		foreach ( array( 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id', 'ai_autowrite_api_key', 'ai_chatbot_api_key' ) as $secret ) {
+			if ( ! empty( $settings[ $secret ] ) ) {
+				$settings[ $secret ] = \WPDeveloper\BetterDocs\Utils\Helper::mask_api_key( $settings[ $secret ] );
+			}
+		}
+		return $settings;
 	}
 
 	public function save_settings( WP_REST_Request $request ) {

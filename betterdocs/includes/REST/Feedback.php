@@ -11,6 +11,41 @@ use WPDeveloper\BetterDocs\Core\BaseAPI;
 
 class Feedback extends BaseAPI {
 	/**
+	 * The reaction/feedback beacon is public (logged-out visitors react), so it is
+	 * gated by a wp_rest nonce the frontend sends via the X-WP-Nonce header —
+	 * mirroring the analytics view beacon ({@see REST\AnalyticsTracker}). Without
+	 * this it inherited BaseAPI::permission_check() (return true) and could be
+	 * scripted anonymously to forge reaction counts and flood the Pro feedback
+	 * table (one row per call via the betterdocs_feedback_recorded action). A light
+	 * salted-IP throttle bounds abuse even if a nonce is harvested from a page.
+	 */
+	public function permission_check( $request = null ) {
+		if ( ! $request instanceof WP_REST_Request ) {
+			return false;
+		}
+
+		$nonce = $request->get_header( 'x_wp_nonce' );
+		if ( empty( $nonce ) ) {
+			$nonce = $request->get_param( '_wpnonce' );
+		}
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			return false;
+		}
+
+		// Defense-in-depth: cap reactions per client (salted IP hash, raw IP never
+		// stored) so a harvested nonce can't be scripted into a table flood.
+		$ip   = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$key  = 'bd_feedback_rl_' . substr( wp_hash( $ip ), 0, 20 );
+		$hits = (int) get_transient( $key );
+		if ( $hits >= 120 ) {
+			return new \WP_Error( 'bd_feedback_throttled', __( 'Too many reactions — please try again in a moment.', 'betterdocs' ), [ 'status' => 429 ] );
+		}
+		set_transient( $key, $hits + 1, 10 * MINUTE_IN_SECONDS );
+
+		return true;
+	}
+
+	/**
 	 * @return mixed
 	 */
 	public function register() {
@@ -197,6 +232,15 @@ class Feedback extends BaseAPI {
 			}
 
 			if ( $insert == true ) {
+				/**
+				 * Fires after a reaction is recorded into the daily aggregate.
+				 * Pro hooks this to write a per-item row into the feedback inbox
+				 * table (betterdocs_analytics_feedback).
+				 *
+				 * @param int    $docs_id  Doc post id.
+				 * @param string $feelings happy|sad|normal.
+				 */
+				do_action( 'betterdocs_feedback_recorded', (int) $docs_id, $feelings );
 				return true;
 			}
 		}

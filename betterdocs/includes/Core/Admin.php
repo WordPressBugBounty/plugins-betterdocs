@@ -108,6 +108,16 @@ class Admin extends Base {
 		$this->installer = new PluginInstaller();
 
 		add_action( 'admin_notices', array( $this, 'compatibility_notices' ) );
+		// The WPNotice CacheBank wipes all admin_notices at priority 10 on BetterDocs
+		// screens, so the hook above never renders inside the BetterDocs panels.
+		// Re-add the compatibility notice after that wipe (in_admin_header, priority
+		// 999) so it shows on the panels like the review / license notices.
+		add_action( 'in_admin_header', function () {
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $screen && betterdocs()->is_betterdocs_screen( $screen->id ) ) {
+				add_action( 'admin_notices', array( $this, 'compatibility_notices' ) );
+			}
+		}, 999 );
 		// add_action( 'admin_init', [$this, 'notices'], 9 );
 		add_filter( 'admin_init', array( $this, 'save_admin_page' ), 99 );
 
@@ -250,7 +260,9 @@ class Admin extends Base {
 			$plugins     = Helper::get_plugins();
 			$plugin_data = $plugins['betterdocs-pro/betterdocs-pro.php'];
 
-			if ( isset( $plugin_data['Version'] ) && version_compare( $plugin_data['Version'], '2.5.0', '>=' ) ) {
+			// Require the paired Pro release: the Analytics UI is version-coupled to
+			// Pro's advanced modules, so an older Pro renders a broken/partial panel.
+			if ( isset( $plugin_data['Version'] ) && version_compare( $plugin_data['Version'], '4.0.0', '>=' ) ) {
 				return;
 			}
 

@@ -10,6 +10,7 @@ use WP_Error;
 use WP_User;
 use WPDeveloper\BetterDocs\Admin\Builder\GlobalFields;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
+use WPDeveloper\BetterDocs\REST\AIEdit;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
@@ -95,7 +96,7 @@ class Settings extends Base {
         $settings = GlobalFields::normalize( $this->settings_args() );
 
         // Mask sensitive API keys before they reach the browser. Non-admins still get them stripped entirely below.
-        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key' );
+        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key', 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id' );
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! empty( $settings[ 'values' ][ $api_key_field ] ) ) {
                 $settings[ 'values' ][ $api_key_field ] = Helper::mask_api_key( $settings[ 'values' ][ $api_key_field ] );
@@ -280,9 +281,18 @@ class Settings extends Base {
             'enable_write_with_ai' => true,
             'enable_faq_write_with_ai' => true,
             'enable_glossaries_write_with_ai' => true,
+            'enable_docs_ai_suite' => true,
             'write_with_ai_model' => 'gpt-4o-mini',
             'ai_autowrite_api_key' => '',
             'ai_autowrite_max_token' => 2500,
+            'write_with_ai_instructions' => array(
+                array(
+                    'id'      => 'default',
+                    'title'   => __( 'Default/Core', 'betterdocs' ),
+                    'content' => WriteWithAI::default_instruction_content()
+                )
+            ),
+            'ai_edit_actions' => AIEdit::default_actions(),
             'enable_article_summary' => false,
             'article_summary_model' => 'gpt-4o-mini',
             'article_summary_max_token' => 1500,
@@ -592,17 +602,25 @@ class Settings extends Base {
 
         $_old_settings = $this->database->get( $this->base_key, $this->get_default() );
 
-        // The frontend only ever sees masked API keys. If a submitted value matches the mask of
-        // the stored value, the user did not change it — restore the original so the mask string
-        // is never persisted.
-        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key' );
+        // The frontend only ever sees masked API keys. A submitted value that still looks like a
+        // mask (contains a run of asterisks — no real key does) means "unchanged": restore the
+        // stored original so a mask string is never persisted. Guarding on the mask SHAPE rather
+        // than strict equality with mask(stored) closes the corruption loop QA hit: once a mask
+        // slips into storage, mask(mask) === mask, so an equality-only guard would faithfully
+        // preserve the corrupted value forever (round-2 follow-up #1). When the stored value is
+        // itself mask-shaped it is unrecoverable — clear it so the UI and the GeoIP/GA4 status
+        // surfaces honestly report a missing key instead of failing downstream with 401s.
+        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key', 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id' );
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! isset( $settings[ $api_key_field ] ) ) {
                 continue;
             }
-            $stored = isset( $_old_settings[ $api_key_field ] ) ? $_old_settings[ $api_key_field ] : '';
-            if ( '' !== $stored && trim( (string) $settings[ $api_key_field ] ) === Helper::mask_api_key( $stored ) ) {
-                $settings[ $api_key_field ] = $stored;
+            $incoming       = trim( (string) $settings[ $api_key_field ] );
+            $stored         = isset( $_old_settings[ $api_key_field ] ) ? (string) $_old_settings[ $api_key_field ] : '';
+            $stored_is_mask = '' !== $stored && preg_match( '/\*{4,}/', $stored );
+
+            if ( '' !== $incoming && preg_match( '/\*{4,}/', $incoming ) ) {
+                $settings[ $api_key_field ] = $stored_is_mask ? '' : $stored;
             }
         }
 
@@ -2299,6 +2317,37 @@ class Settings extends Base {
                                                 'label' => __( 'Write with AI', 'betterdocs' ),
                                                 'priority' => 5,
                                                 'fields' => array(
+                                                  'write-with-ai-subtabs' => array(
+                                                    'id' => 'write-with-ai-subtabs',
+                                                    'name' => 'write_with_ai_subtabs',
+                                                    'label' => __( 'Write with AI', 'betterdocs' ),
+                                                    'classes' => 'tab-nested-layout',
+                                                    'type' => 'tab',
+                                                    'active' => 'wwa-configuration',
+                                                    'completionTrack' => true,
+                                                    'sidebar' => false,
+                                                    'save' => false,
+                                                    'title' => false,
+                                                    'config' => array(
+                                                        'active' => 'wwa-configuration',
+                                                        'sidebar' => false,
+                                                        'title' => false
+                                                    ),
+                                                    'submit' => array(
+                                                        'show' => false
+                                                    ),
+                                                    'step' => array(
+                                                        'show' => false
+                                                    ),
+                                                    'priority' => 5,
+                                                    'fields' => array(
+                                                      'wwa-configuration' => array(
+                                                        'id' => 'wwa-configuration',
+                                                        'name' => 'wwa-configuration',
+                                                        'type' => 'section',
+                                                        'label' => __( 'Configuration', 'betterdocs' ),
+                                                        'priority' => 1,
+                                                        'fields' => array(
                                                     'enable_write_with_ai' => array(
                                                         'name' => 'enable_write_with_ai',
                                                         'type' => 'toggle',
@@ -2323,6 +2372,15 @@ class Settings extends Base {
                                                         'priority' => 6,
                                                         'label' => __( 'Write Glossaries with AI', 'betterdocs' ),
                                                         'label_subtitle' => __( 'Generate AI based Glossary definitions from the Glossaries admin page', 'betterdocs' ),
+                                                        'enable_disable_text_active' => true,
+                                                        'default' => true
+                                                    ),
+                                                    'enable_docs_ai_suite' => array(
+                                                        'name' => 'enable_docs_ai_suite',
+                                                        'type' => 'toggle',
+                                                        'priority' => 7,
+                                                        'label' => __( 'Enhance Docs with AI', 'betterdocs' ),
+                                                        'label_subtitle' => __( 'Add BetterDocs AI actions for suggesting categories, tags and excerpts inside the native Docs editor panels.', 'betterdocs' ),
                                                         'enable_disable_text_active' => true,
                                                         'default' => true
                                                     ),
@@ -2358,6 +2416,50 @@ class Settings extends Base {
                                                         'min_token_map' => AIHelper::get_min_tokens_map( 'write_with_ai' ),
                                                         'classes' => 'wprf-type-text'
                                                     )
+                                                        )
+                                                      ),
+                                                      'wwa-personalize' => array(
+                                                        'id' => 'wwa-personalize',
+                                                        'name' => 'wwa-personalize',
+                                                        'type' => 'section',
+                                                        'label' => __( 'Write AI Personalize', 'betterdocs' ),
+                                                        'priority' => 5,
+                                                        'fields' => array(
+                                                            'write_with_ai_instructions' => array(
+                                                                'name' => 'write_with_ai_instructions',
+                                                                'type' => 'wwa_instructions',
+                                                                'label' => __( 'Instructions', 'betterdocs' ),
+                                                                'label_subtitle' => __( 'Add reusable instruction sets to steer how BetterDocs AI writes. The "Default/Core" set is always applied; extra sets can be picked in the Write with AI popup.', 'betterdocs' ),
+                                                                'priority' => 1,
+                                                                'default' => array(
+                                                                    array(
+                                                                        'id'      => 'default',
+                                                                        'title'   => __( 'Default/Core', 'betterdocs' ),
+                                                                        'content' => WriteWithAI::default_instruction_content()
+                                                                    )
+                                                                )
+                                                            )
+                                                        )
+                                                      ),
+                                                      'edit-ai-personalize' => array(
+                                                        'id' => 'edit-ai-personalize',
+                                                        'name' => 'edit-ai-personalize',
+                                                        'type' => 'section',
+                                                        'label' => __( 'Edit AI Personalize', 'betterdocs' ),
+                                                        'priority' => 7,
+                                                        'fields' => array(
+                                                            'ai_edit_actions' => array(
+                                                                'name' => 'ai_edit_actions',
+                                                                'type' => 'ai_edit_actions',
+                                                                'label' => __( 'Actions', 'betterdocs' ),
+                                                                'label_subtitle' => __( 'Choose which Edit with AI actions appear in the editor. Toggle actions on or off, edit each action\'s instruction, or add your own custom actions. All predefined actions are enabled by default.', 'betterdocs' ),
+                                                                'priority' => 1,
+                                                                'default' => AIEdit::default_actions()
+                                                            )
+                                                        )
+                                                      )
+                                                    )
+                                                  )
                                                 )
                                             ),
                                             'article-summary' => array(

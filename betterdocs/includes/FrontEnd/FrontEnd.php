@@ -323,6 +323,7 @@ class FrontEnd extends Base {
 			'betterdocsReactionsConfig',
 			[
 				'post_id'  => get_the_ID(),
+				'nonce'    => wp_create_nonce( 'wp_rest' ),
 				'FEEDBACK' => [
 					'DISPLAY' => true,
 					'TEXT'    => esc_html__( 'How did you feel?', 'betterdocs' ),

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     use WPDeveloper\BetterDocs\Utils\Helper;
     use WPDeveloper\BetterDocs\Utils\AIHelper;
     use WPDeveloper\BetterDocs\Utils\AIUsage;
+    use WPDeveloper\BetterDocs\REST\AIEdit;
 
     class WriteWithAI extends Base {
 
@@ -33,9 +34,9 @@ if ( ! defined( 'ABSPATH' ) ) {
         }
 
         if ( ! empty( $this->isEnabledWriteWithAI() ) && 'docs' == $post_type ) {
-            add_action( 'admin_footer', array( $this, 'ai_autowrite_button' ) );
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_ai_edit_assets' ) );
         }
+        // Legacy AJAX handler kept for back-compat; the redesigned modal uses the REST route.
         add_action( 'wp_ajax_generate_openai_content', array( $this, 'generate_openai_content_callback' ) );
     }
 
@@ -49,7 +50,49 @@ if ( ! defined( 'ABSPATH' ) ) {
             return;
         }
 
-        if ( empty( $this->get_api_key() ) ) {
+        $api_key = $this->get_api_key();
+        $has_key = ! empty( $api_key );
+
+        // Write with AI — loads even without a key so the modal can show its
+        // "add an API key" banner (matches the legacy inline form behavior).
+        betterdocs()->assets->enqueue( 'betterdocs-write-with-ai', 'blocks/write-with-ai.js' );
+        betterdocs()->assets->enqueue( 'betterdocs-write-with-ai-style', 'blocks/write-with-ai-style.css' );
+
+        wp_localize_script(
+            'betterdocs-write-with-ai',
+            'betterdocsWriteWithAI',
+            array(
+                'rest_url'               => esc_url_raw( rest_url( 'betterdocs/v1/write-with-ai' ) ),
+                'rest_nonce'             => wp_create_nonce( 'wp_rest' ),
+                'post_id'                => get_the_ID(),
+                'has_key'                => $has_key,
+                // Term-suggestion (Docs AI Suite) wiring reused by the Write-with-AI
+                // preview step. Endpoint + gate mirror REST\DocsAISuite / Core\DocsAISuite.
+                'rest_suggest_url'             => esc_url_raw( rest_url( 'betterdocs/v1/ai-suggest-terms' ) ),
+                'suggest_terms_enabled'        => (bool) $this->settings->get( 'enable_docs_ai_suite', true ),
+                'model'                  => $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' ),
+                'max_token'              => (int) $this->settings->get( 'ai_autowrite_max_token', 2500 ),
+                'settings_url'           => esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ),
+                'woo_active'             => class_exists( 'WooCommerce' ),
+                'is_multilingual_active' => Helper::is_multilingual_active(),
+                'language_options'       => Helper::get_active_languages(),
+                'instructions'           => $this->get_instruction_choices(),
+                // From Git is a Pro feature. Pro is detected here; Git enabled/auth
+                // status is filled in by Pro via the filter below (default: off).
+                'is_pro_active'          => betterdocs()->is_pro_active(),
+                'git'                    => apply_filters(
+                    'betterdocs_write_with_ai_git',
+                    array(
+                        'enabled'      => false,
+                        'connected'    => false,
+                        'settings_url' => admin_url( 'admin.php?page=betterdocs-settings#git-sync' ),
+                    )
+                ),
+            )
+        );
+
+        // AI Edit — only meaningful with a key configured.
+        if ( ! $has_key ) {
             return;
         }
 
@@ -62,7 +105,9 @@ if ( ! defined( 'ABSPATH' ) ) {
             array(
                 'rest_url' => esc_url_raw( rest_url( 'betterdocs/v1/ai-edit' ) ),
                 'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-                'post_id' => get_the_ID()
+                'post_id' => get_the_ID(),
+                'instructions' => $this->get_instruction_choices(),
+                'actions' => AIEdit::get_localized_actions()
             )
         );
     }
@@ -122,8 +167,17 @@ if ( ! defined( 'ABSPATH' ) ) {
         return $api_key;
     }
 
-    public function get_system_prompt() {
-        $prompt = <<<'PROMPT'
+    /**
+     * The built-in "Default" instruction body.
+     *
+     * Single source of truth shared by {@see Settings::get_default()} (which seeds
+     * the editable "Default" instruction set) and {@see self::get_system_prompt()}
+     * (the fallback when no saved Default content exists).
+     *
+     * @return string
+     */
+    public static function default_instruction_content() {
+        return <<<'PROMPT'
 You are a Senior Technical Writer specializing in comprehensive, high-quality documentation. Your goal is to produce documentation that scores 100/100 on clarity, completeness, and structure.
 
 ## Output format
@@ -147,30 +201,291 @@ Do not emit `<style>`, `<script>`, `<iframe>`, `<form>`, or inline `style=""` / 
 
 If — and only if — the user's prompt explicitly asks for raw/custom HTML, embed code, or a non-standard structure, follow that request instead of these defaults.
 PROMPT;
+    }
+
+    /**
+     * The saved instruction sets, normalized to a list of { id, title, content }.
+     *
+     * Stored in the `write_with_ai_instructions` setting. Always returns at least
+     * the built-in "Default" set so callers never have to special-case an empty
+     * option (e.g. a site whose stored value predates this feature).
+     *
+     * @return array<int,array{id:string,title:string,content:string}>
+     */
+    public function get_instructions() {
+        $stored = $this->settings->get( 'write_with_ai_instructions', array() );
+
+        $instructions = array();
+        if ( is_array( $stored ) ) {
+            foreach ( $stored as $item ) {
+                if ( ! is_array( $item ) || empty( $item['id'] ) ) {
+                    continue;
+                }
+                $instructions[] = array(
+                    'id'      => sanitize_key( (string) $item['id'] ),
+                    'title'   => isset( $item['title'] ) ? (string) $item['title'] : '',
+                    'content' => isset( $item['content'] ) ? (string) $item['content'] : '',
+                );
+            }
+        }
+
+        // Guarantee a Default set is always present.
+        $has_default = false;
+        foreach ( $instructions as $item ) {
+            if ( 'default' === $item['id'] ) {
+                $has_default = true;
+                break;
+            }
+        }
+        if ( ! $has_default ) {
+            array_unshift(
+                $instructions,
+                array(
+                    'id'      => 'default',
+                    'title'   => __( 'Default/Core', 'betterdocs' ),
+                    'content' => self::default_instruction_content(),
+                )
+            );
+        }
+
+        return $instructions;
+    }
+
+    /**
+     * The selectable (non-default) instruction sets exposed to the editor UI.
+     *
+     * Only id + title are sent to the browser; the prompt body stays server-side
+     * and is resolved at request time by {@see self::get_instruction_messages()}.
+     *
+     * @return array<int,array{id:string,title:string}>
+     */
+    public function get_instruction_choices() {
+        $choices = array();
+        foreach ( $this->get_instructions() as $item ) {
+            if ( 'default' === $item['id'] ) {
+                continue;
+            }
+            if ( '' === trim( $item['content'] ) ) {
+                continue; // skip empty sets — they'd inject nothing.
+            }
+            $choices[] = array(
+                'id'    => $item['id'],
+                'title' => '' !== trim( $item['title'] ) ? $item['title'] : $item['id'],
+            );
+        }
+        return $choices;
+    }
+
+    /**
+     * Resolve selected instruction ids into extra `system` messages.
+     *
+     * The "Default" set is intentionally excluded — it is always sent as the base
+     * system prompt by {@see self::get_system_prompt()}. Unknown or empty ids are
+     * silently ignored. Output order follows the requested $ids order.
+     *
+     * @param array $ids
+     * @return array<int,array{role:string,content:string}>
+     */
+    public function get_instruction_messages( $ids ) {
+        if ( empty( $ids ) || ! is_array( $ids ) ) {
+            return array();
+        }
+
+        $by_id = array();
+        foreach ( $this->get_instructions() as $item ) {
+            $by_id[ $item['id'] ] = $item;
+        }
+
+        $messages = array();
+        $seen     = array();
+        foreach ( $ids as $id ) {
+            $id = sanitize_key( (string) $id );
+            if ( 'default' === $id || isset( $seen[ $id ] ) || ! isset( $by_id[ $id ] ) ) {
+                continue;
+            }
+            $content = trim( $by_id[ $id ]['content'] );
+            if ( '' === $content ) {
+                continue;
+            }
+            $seen[ $id ] = true;
+            $messages[]  = array(
+                'role'    => 'system',
+                'content' => $content,
+            );
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Coerce a list of extra messages into well-formed `system` chat messages.
+     *
+     * Accepts either pre-built [ 'role'=>'system', 'content'=>… ] entries (as
+     * returned by {@see self::get_instruction_messages()}) or bare strings, and
+     * drops anything empty. Keeps the OpenAI payload builders tolerant of either
+     * shape so callers can pass instruction ids or ready-made messages.
+     *
+     * @param array $extra_system
+     * @return array<int,array{role:string,content:string}>
+     */
+    protected function normalize_extra_system( $extra_system ) {
+        if ( empty( $extra_system ) || ! is_array( $extra_system ) ) {
+            return array();
+        }
+
+        $messages = array();
+        foreach ( $extra_system as $entry ) {
+            if ( is_string( $entry ) ) {
+                $content = trim( $entry );
+                $role    = 'system';
+            } elseif ( is_array( $entry ) && isset( $entry['content'] ) ) {
+                $content = trim( (string) $entry['content'] );
+                $role    = isset( $entry['role'] ) ? (string) $entry['role'] : 'system';
+            } else {
+                continue;
+            }
+
+            if ( '' === $content ) {
+                continue;
+            }
+
+            $messages[] = array(
+                'role'    => $role,
+                'content' => $content,
+            );
+        }
+
+        return $messages;
+    }
+
+    public function get_system_prompt() {
+        // Prefer the saved (editable) "Default" instruction set; fall back to the
+        // built-in body when it's missing or has been cleared.
+        $prompt = self::default_instruction_content();
+        foreach ( $this->get_instructions() as $item ) {
+            if ( 'default' === $item['id'] && '' !== trim( $item['content'] ) ) {
+                $prompt = $item['content'];
+                break;
+            }
+        }
 
         return apply_filters( 'betterdocs_write_with_ai_system_prompt', $prompt );
     }
 
-    public function generate_openai_response( $prompt, $keywords ) {
+    public function get_outline_system_prompt() {
+        $prompt = <<<'PROMPT'
+You are a Senior Technical Writer. Produce a documentation OUTLINE only — not the full article.
+
+Return ONLY a JSON array (no prose, no markdown, no code fences). Each element is an object:
+  { "level": "h2" | "h3", "text": "Section heading" }
+
+Rules:
+- 5 to 9 top-level "h2" sections that comprehensively cover the topic.
+- Add "h3" sub-sections only where they genuinely help; keep each one directly after its parent h2.
+- Headings are concise, descriptive, and free of numbering.
+- Do not include an h1/title and do not include any text outside the JSON array.
+PROMPT;
+
+        return apply_filters( 'betterdocs_write_with_ai_outline_system_prompt', $prompt );
+    }
+
+    /**
+     * Generate a documentation outline as a structured array of sections.
+     *
+     * @param string $user_prompt The composed prompt (title/keywords/instructions).
+     * @return array { success:bool, outline?:array<int,array{level:string,text:string}>, error?:string }
+     */
+    public function generate_outline_response( $user_prompt, $extra_system = array() ) {
+        $result = $this->generate_text( $user_prompt, $this->get_outline_system_prompt(), $extra_system );
+
+        if ( empty( $result['success'] ) ) {
+            return array(
+                'success' => false,
+                'error'   => isset( $result['error'] ) ? $result['error'] : 'OpenAI error',
+            );
+        }
+
+        $outline = $this->parse_outline( (string) $result['content'] );
+
+        if ( empty( $outline ) ) {
+            return array(
+                'success' => false,
+                'error'   => 'The AI returned an outline we could not read. Please try again.',
+            );
+        }
+
+        return array(
+            'success' => true,
+            'outline' => $outline,
+        );
+    }
+
+    /**
+     * Parse a model outline response (ideally a JSON array) into a clean list of
+     * { level, text } sections. Tolerates code fences and stray prose.
+     *
+     * @param string $content
+     * @return array<int,array{level:string,text:string}>
+     */
+    protected function parse_outline( $content ) {
+        $content = trim( $content );
+        $content = preg_replace( '/^```(?:json)?\s*/i', '', $content );
+        $content = preg_replace( '/```\s*$/', '', $content );
+
+        // Grab the first JSON array if the model wrapped it in prose.
+        if ( preg_match( '/\[[\s\S]*\]/', $content, $m ) ) {
+            $content = $m[0];
+        }
+
+        $decoded = json_decode( $content, true );
+        if ( ! is_array( $decoded ) ) {
+            return array();
+        }
+
+        $outline = array();
+        foreach ( $decoded as $item ) {
+            if ( ! is_array( $item ) || empty( $item['text'] ) ) {
+                continue;
+            }
+            $level = isset( $item['level'] ) && 'h3' === strtolower( (string) $item['level'] ) ? 'h3' : 'h2';
+            $text  = sanitize_text_field( (string) $item['text'] );
+            if ( '' === $text ) {
+                continue;
+            }
+            $outline[] = array( 'level' => $level, 'text' => $text );
+        }
+
+        return $outline;
+    }
+
+    public function generate_openai_response( $prompt, $keywords, $max_tokens = null, $extra_system = array() ) {
         try {
             $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-            $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
+            // Caller may raise the cap (e.g. a "large" doc) above the saved default.
+            $max_tokens = null !== $max_tokens ? (int) $max_tokens : $this->settings->get( 'ai_autowrite_max_token', 2500 );
             $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
             $api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
 
-            $request_body = AIHelper::build_openai_payload(
-                $model,
+            $messages = array_merge(
                 array(
                     array(
                         'role' => 'system',
                         'content' => $this->get_system_prompt()
-                    ),
+                    )
+                ),
+                $this->normalize_extra_system( $extra_system ),
+                array(
                     array(
                         'role' => 'user',
                         'content' => $prompt
                     )
-                ),
+                )
+            );
+
+            $request_body = AIHelper::build_openai_payload(
+                $model,
+                $messages,
                 $max_tokens,
                 null,
                 'write_with_ai'
@@ -211,25 +526,32 @@ PROMPT;
         }
     }
 
-    public function generate_openai_response_ai_edit( $prompt ) {
+    public function generate_openai_response_ai_edit( $prompt, $extra_system = array() ) {
         $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
         $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
         $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
 
         $api_endpoint = 'https://api.openai.com/v1/chat/completions';
 
-        $payload = AIHelper::build_openai_payload(
-            $model,
+        $messages = array_merge(
             array(
                 array(
                     'role' => 'system',
                     'content' => $this->get_system_prompt()
-                ),
+                )
+            ),
+            $this->normalize_extra_system( $extra_system ),
+            array(
                 array(
                     'role' => 'user',
                     'content' => $prompt
                 )
-            ),
+            )
+        );
+
+        $payload = AIHelper::build_openai_payload(
+            $model,
+            $messages,
             $max_tokens,
             null,
             'write_with_ai'
@@ -298,7 +620,7 @@ PROMPT;
      * @param string $system_prompt Optional system message (omitted when empty).
      * @return array { success:bool, content?:string, error?:string, model:string, *_tokens?:int }
      */
-    public function generate_text( $user_prompt, $system_prompt = '' ) {
+    public function generate_text( $user_prompt, $system_prompt = '', $extra_system = array() ) {
         $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
         $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
         $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
@@ -309,6 +631,9 @@ PROMPT;
                 'role'    => 'system',
                 'content' => $system_prompt
             );
+        }
+        foreach ( $this->normalize_extra_system( $extra_system ) as $extra ) {
+            $messages[] = $extra;
         }
         $messages[] = array(
             'role'    => 'user',
@@ -370,6 +695,91 @@ PROMPT;
         );
     }
 
+    /**
+     * Generate an OpenAI chat completion with a caller-supplied system + user
+     * prompt. Mirrors generate_openai_response_ai_edit() (same key/model/token
+     * floor/timeout handling and return shape) but does NOT force the
+     * documentation-writer system prompt, so callers such as the Docs AI Suite
+     * (taxonomy suggestions, excerpts) can supply task-appropriate instructions.
+     *
+     * @param string     $system_prompt System instruction for the model.
+     * @param string     $user_prompt   User message / content payload.
+     * @param float|null $temperature   Optional sampling temperature (ignored for gpt-5*).
+     * @return array{success:bool,content?:string,error?:string,model:string,...}
+     */
+    public function generate_openai_response_raw( $system_prompt, $user_prompt, $temperature = null ) {
+        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
+        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
+        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
+
+        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
+
+        $payload = AIHelper::build_openai_payload(
+            $model,
+            array(
+                array(
+                    'role' => 'system',
+                    'content' => $system_prompt
+                ),
+                array(
+                    'role' => 'user',
+                    'content' => $user_prompt
+                )
+            ),
+            $max_tokens,
+            $temperature,
+            'write_with_ai'
+        );
+
+        $request_options = array(
+            'headers' => array(
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $api_key
+            ),
+            'body' => wp_json_encode( $payload ),
+            'timeout' => 300
+        );
+
+        if ( function_exists( 'set_time_limit' ) ) {
+            set_time_limit( 300 );
+        }
+
+        $response = wp_remote_post( $api_endpoint, $request_options );
+
+        if ( is_wp_error( $response ) ) {
+            return array(
+                'success' => false,
+                'error' => $response->get_error_message(),
+                'model' => $model
+            );
+        }
+
+        $body = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body, true );
+
+        if ( ! empty( $data[ 'error' ] ) ) {
+            return array(
+                'success' => false,
+                'error' => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
+                'model' => $model,
+                'raw' => $data
+            );
+        }
+
+        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
+        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
+
+        return array(
+            'success' => true,
+            'content' => $content,
+            'model' => $model,
+            'prompt_tokens' => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
+            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
+            'total_tokens' => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
+            'finish_reason' => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
+        );
+    }
+
     public function generate_openai_content_callback() {
         // Verify the nonce
         $ai_nonce = isset( $_POST['ai_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['ai_nonce'] ) ) : '';
@@ -400,1100 +810,4 @@ PROMPT;
         wp_send_json_success( $generated_content );
         wp_die();
     }
-
-    public function ai_autowrite_button() {
-
-        ?>
-		<script>
-			var docsTitle;
-
-			function responseMessage(message) {
-				return `<div class="warning-message">
-					<span class="dashicons dashicons-warning"></span>
-					<div class="footer-message">
-						${message}
-					</div>
-				</div>`;
-			}
-
-			function generateArticle(e) {
-
-
-				const title = document.getElementById('betterdocs-ai-title').value;
-				const keywords = document.getElementById('betterdocs-ai-keyword').value;
-				// const sectionOptions = document.getElementById('bd-autowrtite-content-section');
-				// const numOfSections = sectionOptions.options[sectionOptions.selectedIndex].value;
-
-				// const paragraphOptions = document.getElementById('bd-autowrtite-content-paragraph');
-				// const numOfParagraphs = paragraphOptions.options[paragraphOptions.selectedIndex].value;
-
-				const contentTextArea = document.getElementById('betterdocs-ai-content');
-				const docGenerateBtnTxt = document.querySelector('.generate-btn span');
-
-				// Add nonce value to the data being sent
-				const nonce = document.querySelector('input[name="ai_nonce"]').value;
-				const isOverwrite = document.getElementById('betterdocs-ai-checkbox').checked;
-				const generateDocLabel = "<?php echo esc_html__( 'Generate Doc', 'betterdocs' ); ?>";
-				const reGenerateDocLabel = "<?php echo esc_html__( 'Regenerate Doc', 'betterdocs' ); ?>";
-
-
-				// contentTextArea.value = `Write an article about ${title} in English. The article is organized by the following exact ${numOfSections} headings. Write exact ${numOfParagraphs} number of paragraphs per heading.${keywords} Use Markdown for formatting. Add an introduction and a conclusion. Style: creative. Tone: cheerful.`;
-
-
-				// Check if the title is not empty
-				if (title.trim() !== '' && keywords.trim() !== '') {
-					e.preventDefault();
-
-					if (!jQuery('#betterdocs-ai-error-message').parent().hasClass('hidden')) {
-						jQuery('#betterdocs-ai-error-message').parent().addClass('hidden');
-					}
-
-					docGenerateBtnTxt.innerHTML = "<?php echo esc_html__( 'Generating...', 'betterdocs' ); ?>";
-					jQuery('.generate-btn').prop('disabled', true);
-
-					jQuery.post({
-						url: ajaxurl, // Make sure ajaxurl is defined in your script
-						type: 'POST',
-						data: {
-							action: 'generate_openai_content',
-							prompt: document.querySelector('#betterdocs-ai-content').value,
-							// numOfSections: numOfSections,
-							// numOfParagraphs: numOfParagraphs,
-							keywords: keywords,
-							post_id: (document.getElementById('post_ID') ? document.getElementById('post_ID').value : 0),
-							ai_nonce: nonce, // Pass the nonce value
-						},
-						success: function(response) {
-							// Update the content in the textarea
-
-							if (response.success && (typeof response.data === 'string')) {
-								docGenerateBtnTxt.innerHTML = "<?php echo esc_html__( 'Generated', 'betterdocs' ); ?>";
-								setTimeout(() => {
-									insertContentToEditor(title, response.data, isOverwrite, keywords);
-									docGenerateBtnTxt.innerHTML = reGenerateDocLabel;
-									jQuery('.generate-btn').removeAttr('disabled');
-								}, 2000);
-							} else {
-								// alert(response.data.message);
-								jQuery('#betterdocs-ai-error-message').parent().removeClass('hidden');
-								jQuery('#betterdocs-ai-error-message').html(responseMessage(response.data.message));
-								docGenerateBtnTxt.innerHTML = generateDocLabel;
-								jQuery('.generate-btn').removeAttr('disabled');
-
-							}
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.error(jqXHR, textStatus, errorThrown);
-
-							// Reset the UI so a slow/failed request never leaves a permanent "Generating...".
-							var timedOut = ( textStatus === 'timeout' ) || ( jqXHR && jqXHR.status === 504 ) || ( jqXHR && jqXHR.status === 0 );
-							var errMessage = timedOut
-								? "<?php echo esc_html__( 'The request timed out before a response came back. The AI may still have generated content on the server — try again, or pick a faster model / lower the token limit.', 'betterdocs' ); ?>"
-								: "<?php echo esc_html__( 'Something went wrong while generating. Please try again.', 'betterdocs' ); ?>";
-
-							jQuery('#betterdocs-ai-error-message').parent().removeClass('hidden');
-							jQuery('#betterdocs-ai-error-message').html(responseMessage(errMessage));
-							docGenerateBtnTxt.innerHTML = generateDocLabel;
-							jQuery('.generate-btn').removeAttr('disabled');
-						},
-					});
-
-				}
-			}
-
-			// Function to update the textarea
-			function updateTextarea() {
-				const title = document.getElementById('betterdocs-ai-title').value;
-				const keywords = document.getElementById('betterdocs-ai-keyword').value;
-				const sectionOptions = document.getElementById('bd-autowrtite-content-section');
-				let language = 'English';
-
-				if (language === '') {
-					language = 'English';
-				}
-
-				let keywordsText = keywords !== '' ? ` and incorporate the keywords: ${keywords}` : '';
-
-				const contentTextArea = document.getElementById('betterdocs-ai-content');
-
-				if (!jQuery('#betterdocs-ai-error-message').parent().hasClass('hidden')) {
-					jQuery('#betterdocs-ai-error-message').parent().addClass('hidden');
-				}
-
-				contentTextArea.value = `Write documentation for '${title}'. Cover these topics in depth: ${keywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
-			}
-
-			function convertMarkdownToHTML(markdownContent) {
-				// Simple Markdown to HTML conversion (you may need to enhance this based on your needs)
-				const htmlContent = markdownContent
-					.replace(/^# (.+)$/gm, '<h1>$1</h1>')
-					.replace(/^## (.+)$/gm, '<h2>$1</h2>')
-					.replace(/^### (.+)$/gm, '<h3>$1</h3>')
-					.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-					.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-				return htmlContent;
-			}
-
-			function replaceHeadingTitle(content, title, overviewTitle) {
-				let regex = new RegExp(title, 'g');
-				let updateContent = content.replace(regex, overviewTitle);
-				return updateContent;
-			}
-
-			function removeFirstHeading(htmlString) {
-				var newDiv = document.createElement('div');
-				newDiv.innerHTML = htmlString;
-				var firstHeading = newDiv.querySelector('h1');
-				if (firstHeading) {
-					firstHeading.parentNode.removeChild(firstHeading);
-				}
-				return newDiv.innerHTML;
-			}
-
-
-			function escapeHtml(str) {
-				return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-			}
-
-			function escapeRegex(str) {
-				return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-			}
-
-			function stripCodeFences(htmlString) {
-				if (!htmlString) {
-					return '';
-				}
-				return htmlString
-					.replace(/^\s*```(?:html|HTML)?\s*\n?/, '')
-					.replace(/\n?\s*```\s*$/, '');
-			}
-
-			function wrapwithHeighlight(inputString, keywords) {
-				if (!inputString) {
-					return '';
-				}
-
-				const container = document.createElement('div');
-				container.innerHTML = inputString;
-
-				// Wrap each heading's visible text with the highlight span (skip if already present)
-				container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(function (heading) {
-					if (heading.querySelector('.highlight')) {
-						return;
-					}
-					const text = heading.textContent;
-					if (!text || !text.trim()) {
-						return;
-					}
-					heading.innerHTML = '<span class="highlight">' + escapeHtml(text) + '</span>';
-				});
-
-				// Wrap keywords only inside text nodes — never inside attributes, code, or existing highlights
-				const keywordList = (keywords || '')
-					.split(',')
-					.map(function (k) { return k.trim(); })
-					.filter(Boolean);
-
-				if (keywordList.length) {
-					const pattern = new RegExp('\\b(' + keywordList.map(escapeRegex).join('|') + ')\\b', 'gi');
-					const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
-						acceptNode: function (node) {
-							let parent = node.parentNode;
-							while (parent && parent !== container) {
-								if (parent.nodeType === 1) {
-									const tag = parent.tagName.toLowerCase();
-									if (tag === 'code' || tag === 'pre') {
-										return NodeFilter.FILTER_REJECT;
-									}
-									if (parent.classList && parent.classList.contains('highlight')) {
-										return NodeFilter.FILTER_REJECT;
-									}
-								}
-								parent = parent.parentNode;
-							}
-							return NodeFilter.FILTER_ACCEPT;
-						}
-					});
-
-					const textNodes = [];
-					let current;
-					while ((current = walker.nextNode())) {
-						textNodes.push(current);
-					}
-
-					textNodes.forEach(function (textNode) {
-						pattern.lastIndex = 0;
-						if (!pattern.test(textNode.nodeValue)) {
-							return;
-						}
-						pattern.lastIndex = 0;
-						const fragmentHost = document.createElement('span');
-						fragmentHost.innerHTML = escapeHtml(textNode.nodeValue).replace(pattern, '<span class="highlight">$1</span>');
-						const parent = textNode.parentNode;
-						while (fragmentHost.firstChild) {
-							parent.insertBefore(fragmentHost.firstChild, textNode);
-						}
-						parent.removeChild(textNode);
-					});
-				}
-
-				return container.innerHTML;
-			}
-
-			function getBodyContent(htmlString) {
-				if (!htmlString) {
-					return '';
-				}
-				const cleaned = stripCodeFences(htmlString);
-				const match = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-				if (match) {
-					return match[1].replace(/<p>\s+/g, '<p>');
-				}
-				return cleaned;
-			}
-
-
-
-			function insertContentToEditor(title, htmlContent, isOverwrite, keywords) {
-
-				const {
-					dispatch,
-					select
-				} = wp.data;
-
-				htmlContent = getBodyContent(htmlContent);
-				htmlContent = removeFirstHeading(htmlContent);
-				htmlContent = wrapwithHeighlight(htmlContent, keywords);
-                const isPostContent = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_content( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
-
-				const blocks = wp.blocks.rawHandler({
-					HTML: htmlContent
-				});
-
-				dispatch('core/editor').editPost({
-					title: title,
-				});
-
-				const selectedBlockClientId = select('core/block-editor').getSelectedBlockClientId();
-
-				const allBlocks = select('core/block-editor').getBlocks();
-
-				if (isOverwrite || isPostContent === '') {
-
-					allBlocks.forEach((block) => {
-						dispatch('core/block-editor').removeBlock(block.clientId);
-					});
-					dispatch('core/block-editor').insertBlocks(blocks);
-
-				} else if (selectedBlockClientId) {
-					const selectedIndex = select('core/block-editor').getBlockIndex(selectedBlockClientId);
-					dispatch('core/block-editor').insertBlocks(blocks, selectedIndex + 1);
-				} else {
-					dispatch('core/block-editor').insertBlocks(blocks);
-				}
-
-				closeWriteWithAIForm('afterInsertContent');
-			}
-
-			function closeWriteWithAIForm(after) {
-				jQuery('.betterdocs-ai-autowrite-form-container').addClass('hidden');
-				jQuery('#betterdocs-ai-autowrite-form-container-overlay').addClass('hidden');
-				jQuery('.betterdocs-ai-button').addClass('regenerate-btn');
-			}
-
-
-			document.addEventListener('DOMContentLoaded', function() {
-
-				// Subscribe to changes in the editor state
-				let previousDocsTitle = '';
-
-				wp.data.subscribe(() => {
-					// Get the updated post title
-					// const docsTitle = wp.data.select('core/editor').getEditedPostAttribute('title');
-
-					const docsTitle = wp.data.select('core/editor').getEditedPostAttribute('title');
-
-					// Check if the title has changed
-					if (docsTitle !== previousDocsTitle) {
-						let currentKeywords = jQuery('#betterdocs-ai-keyword').val();
-						if (!currentKeywords) {
-							currentKeywords = '{Documentation Keywords}';
-						}
-						const currentPrompt = `Write documentation for '${docsTitle?docsTitle:'{Documentation title}'}'. Cover these topics in depth: ${currentKeywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
-						jQuery('#betterdocs-ai-content').val(currentPrompt);
-
-						jQuery('#betterdocs-ai-title').val(docsTitle);
-
-						previousDocsTitle = docsTitle;
-					}
-
-
-				});
-			});
-
-
-			// This example assumes that this code is executed when your script is loaded.
-			// You may want to place it within the appropriate context in your application.
-
-
-			function writeWithAIForm() {
-
-                let title = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_title( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
-				if (docsTitle) {
-					title = docsTitle;
-				}
-
-                const promtTitle = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_title( absint( wp_unslash( $_GET['post'] ) ) ) ) : '{Documentation Title}'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
-				const titlePlaceholder = "<?php echo esc_attr__( 'Enter a descriptive title for your documentation.', 'betterdocs' ); ?>";
-				const keywords = "<?php echo esc_attr( '{Documentation Keywords}' ); ?>";
-				const keywordsPlaceholder = "<?php echo esc_attr__( 'Add keywords to generate precise & relevant documentation (comma-separated).', 'betterdocs' ); ?>";
-				const language = "<?php echo esc_attr( 'English' ); ?>";
-				const titleLabel = "<?php echo esc_html__( 'Documentation Title:', 'betterdocs' ); ?>";
-				const keywordLabel = "<?php echo esc_html__( 'Keywords:', 'betterdocs' ); ?>";
-				const secLabel = "<?php echo esc_html__( '# of Sections:', 'betterdocs' ); ?>";
-				const paraLabel = "<?php echo esc_html__( '# of Paragraph Per Section: ', 'betterdocs' ); ?>";
-				const langLabel = "<?php echo esc_html__( 'Language:', 'betterdocs' ); ?>";
-				const promtLabel = "<?php echo esc_html__( 'Prompt:', 'betterdocs' ); ?>";
-				const promtBtnLabel = "<?php echo esc_html__( 'Generate Prompt', 'betterdocs' ); ?>";
-				let promtArticleLabel = "<?php echo esc_html__( 'Generate Doc', 'betterdocs' ); ?>";
-				const checkboxLabel = "<?php echo esc_html__( 'Overwrite your existing Doc:', 'betterdocs' ); ?>";
-				const nonce = "<?php echo esc_attr( wp_create_nonce( 'generate_openai_content_nonce' ) ); ?>";
-
-				<?php
-                    $is_valid      = $this->get_api_key();
-                            $disable_field = 'disabled-input-field';
-                            if ( $this->get_api_key() ) {
-                                $disable_field = '';
-                            }
-                        ?>
-
-				let hiddenClass = 'hidden';
-				let newDocPageAtt = 'data-new-doc-page="true"';
-                const isPostContent = `<?php echo isset( $_GET['post'] ) ? esc_html( get_the_content( absint( wp_unslash( $_GET['post'] ) ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only post id from URL. ?>`;
-
-				if (isPostContent !== '') {
-					hiddenClass = '';
-					newDocPageAtt = '';
-				}
-
-
-				// const prompt = `Make a knowledge base article with html heading tags about [${title}] in [${language}]. Here is some topic to describe the article: [${keywords}]. and wrap the content with p tag also add a span tag with a class named 'highlight' to all the heading and topic tags in the article.`;
-
-				// const prompt = `Create a details knowledge base article in [${language}] about [${title}] with html heading tags. Here is some topic to describe the article: [${keywords}]. And wrap the content with p tag also add a span tag with a class named 'highlight' to all the heading and topic tags in the article.`;
-
-				const prompt = `Write documentation for '${promtTitle}'. Cover these topics in depth: ${keywords}. Use headings, paragraphs, lists, links, code blocks, and tables wherever they help the reader. Follow the output-format rules in the system instructions.`;
-
-				const aiIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="-1.5 -1.5 23 23" fill="none"><path d="m9.895 18.861-4.286.371.371-4.286 8.915-8.857a1.429 1.429 0 0 1 2.043 0l1.814 1.829a1.431 1.431 0 0 1 0 2.029l-8.857 8.914ZM1.204 5.674c-.501-.088-.501-.807 0-.894a4.537 4.537 0 0 0 3.654-3.5l.03-.139c.109-.494.814-.499.929-.003l.036.16a4.561 4.561 0 0 0 3.663 3.48c.504.086.504.81 0 .899a4.561 4.561 0 0 0-3.664 3.479l-.037.161c-.112.494-.818.491-.926-.004l-.029-.139a4.537 4.537 0 0 0-3.658-3.5h.003Z" stroke="#fff" stroke-width="1.429" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-
-
-				return `
-						<div class="betterdocs-ai-autowrite-form-container hidden" ${newDocPageAtt}>
-							<div class="betterdocs-ai-autowrite-form-content">
-								<div class="betterdocs-ai-autowrite-top-part">
-									<div class="autowrite-heading">
-										<span class="autowrite-icon" style="--bd-icon-tint: rgb(127, 86, 217); --bd-icon-tint-rgb: 127, 86, 217; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; flex-shrink:0; border-radius:9px; color:rgb(127, 86, 217); background:rgba(127, 86, 217, 0.2);">
-											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="-1.5 -1.5 23 23"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.429" d="m9.895 18.861-4.286.371.371-4.286 8.915-8.857a1.43 1.43 0 0 1 2.043 0l1.814 1.829a1.43 1.43 0 0 1 0 2.029zM1.204 5.674c-.501-.088-.501-.807 0-.894a4.54 4.54 0 0 0 3.654-3.5l.03-.139c.109-.494.814-.499.929-.003l.036.16a4.56 4.56 0 0 0 3.663 3.48c.504.086.504.81 0 .899a4.56 4.56 0 0 0-3.664 3.479l-.037.161c-.112.494-.818.491-.926-.004l-.029-.139a4.54 4.54 0 0 0-3.658-3.5h.003Z"></path></svg>
-										</span>
-										<h1 style="margin:0; font-family:'IBM Plex Sans',sans-serif; font-size:18px; font-weight:600; line-height:1.3; color:#101828;"><?php echo esc_html__( 'Write Documentation with BetterDocs AI', 'betterdocs' ); ?></h1>
-
-									</div>
-									<div class="autowrite-subheadding">
-										<p style="margin:8px 0 0; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:400; line-height:1.4; color:#667085;"><?php echo esc_html__( 'Generate documentation effortlessly with BetterDocs AI. Simply input your doc title, keywords, prompt and let the system automatically generate comprehensive documentation tailored to your needs.', 'betterdocs' ); ?></p>
-									</div>
-
-									<?php if ( empty( $this->get_api_key() ) ): ?>
-										<div id="betterdocs-ai-message">
-											<div class="warning-message">
-													<span class="dashicons dashicons-warning"></span>
-													<div>
-														<?php echo wp_kses_post( 'Please Insert your <a target="_blank" href="' . esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ) . '">OpenAI API Key</a> to use this Write with AI feature.', 'betterdocs' ); ?>
-													</div>
-											</div>
-
-										</div>
-									<?php endif; ?>
-
-									<div class="form-group hidden">
-										<div id="betterdocs-ai-error-message"></div>
-									</div>
-
-								</div>
-								<form id="betterdocs-ai-form" class="<?php echo esc_attr( $disable_field ); ?>">
-									<div class="form-inner-content">
-										<div class="form-group">
-											<label for="betterdocs-ai-title">${titleLabel}</label>
-											<input type="text" placeholder="${titlePlaceholder}" id="betterdocs-ai-title" name="betterdocs-ai-title" required value="${title}">
-										</div>
-
-										<div class="form-group">
-											<label for="betterdocs-ai-keyword">${keywordLabel}</label>
-											<input type="text" placeholder="${keywordsPlaceholder}" id="betterdocs-ai-keyword" name="betterdocs-ai-keyword" required>
-										</div>
-
-										<div class="form-group prompt-field">
-											<label for="betterdocs-ai-content">${promtLabel}</label>
-											<textarea id="betterdocs-ai-content" name="betterdocs-ai-content" rows="6" required>${prompt}</textarea>
-											<p class="input-description"><?php echo esc_html__( 'Ensure you include a clear and detailed prompt to receive the desired output. Follow the guidelines provided for the best results.', 'betterdocs' ); ?></p>
-										</div>
-										<div class="betterdocs-ai-checkbox-field ${hiddenClass}">
-											<div class="form-group">
-												<div class="checkbox-field-label">
-												<label for="betterdocs-ai-checkbox">${checkboxLabel}</label>
-												<p class="input-description"><?php echo esc_html__( 'Overwrite the existing doc with the AI Generated Content. If Disabled, new AI Generated content will be added in the section you are currently editing.', 'betterdocs' ); ?></p>
-												</div>
-
-												<div class="checkbox-input-field">
-													<input type="checkbox" id="betterdocs-ai-checkbox" name="betterdocs-ai-checkbox" data-overwrite="false">
-													<label for="betterdocs-ai-checkbox" class="toggle-label"></label>
-												</div>
-											</div>
-										</div>
-
-										<input type="hidden" name="ai_nonce" value="${nonce}" />
-									</div>
-									<div class="generate-button-container">
-										<button type="submit" class="generate-btn" onclick="generateArticle(event)">
-										${aiIcon} <span>${promtArticleLabel}</span>
-										</button>
-									</div>
-								</form>
-							</div>
-
-							<div class="bd-close-button" onclick="closeWriteWithAIForm('afterClosedClicked')"><svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.69687 14L0.296875 12.6L5.89687 7L0.296875 1.4L1.69687 0L7.29688 5.6L12.8969 0L14.2969 1.4L8.69688 7L14.2969 12.6L12.8969 14L7.29688 8.4L1.69687 14Z" fill="currentColor"/></svg></div>
-						</div>
-
-						<div id="betterdocs-ai-autowrite-form-container-overlay" class="hidden"></div>
-					`;
-			}
-
-			jQuery(document).on('click', '.regenerate-btn', function() {
-				jQuery('.betterdocs-ai-autowrite-form-container').removeClass('hidden');
-				jQuery('#betterdocs-ai-autowrite-form-container-overlay').removeClass('hidden');
-			});
-
-			jQuery(document).ready(function($) {
-				// Check if we are in the Edit Post screen
-
-				if ($('.block-editor-page').length > 0) {
-
-					const bdAIButton = $(`<div class="betterdocs-ai-button-container">
-					<button class="betterdocs-ai-button">
-						<img src="<?php echo esc_url( BETTERDOCS_ABSURL . 'assets/admin/images/betterdocs-icon-white.png' ); ?>" alt="<?php echo esc_attr__( 'betterdocs icon', 'betterdocs' ); ?>" />
-						<span><?php echo esc_html__( 'Write with AI', 'betterdocs' ); ?></span>
-					</button>
-				</div>`);
-
-
-					const closeBtn = $('bd-close-button');
-
-					const formHtml = writeWithAIForm();
-					$(formHtml).addClass('hidden');
-
-					$(document).on('click', '.betterdocs-ai-button', function() {
-						$('.betterdocs-ai-autowrite-form-container').removeClass('hidden');
-						$('#betterdocs-ai-autowrite-form-container-overlay').removeClass('hidden');
-					});
-
-					// $(document).on('click', '.betterdocs-ai-button', function() {
-					if ($('.betterdocs-ai-autowrite-form-container').length < 1) {
-						$('body').append(formHtml);
-
-						// Add event listeners to input elements
-						document.getElementById('betterdocs-ai-title').addEventListener('input', updateTextarea);
-						document.getElementById('betterdocs-ai-keyword').addEventListener('input', updateTextarea);
-						// document.getElementById('bd-autowrtite-content-section').addEventListener('change', updateTextarea);
-						// document.getElementById('bd-autowrtite-content-paragraph').addEventListener('change', updateTextarea);
-						// document.getElementById('betterdocs-ai-language').addEventListener('input', updateTextarea);
-					}
-					// });
-					const btn = document.createElement('button');
-					wp.data.subscribe(function() {
-						setTimeout(() => {
-							if ($('.edit-post-header__settings').length > 0) {
-								$('.edit-post-header__settings').prepend(bdAIButton);
-							} else if ($('.editor-header__settings').length > 0) {
-								$('.editor-header__settings').prepend(bdAIButton);
-							}
-
-						}, 1);
-					});
-				}
-
-				$(document).on('click', '#betterdocs-ai-autowrite-form-container-overlay', function() {
-					closeWriteWithAIForm();
-				});
-			});
-		</script>
-
-		<style>
-			.hidden {
-				display: none !important;
-			}
-
-			.disabled-input-field input,
-			.disabled-input-field textarea,
-			.disabled-input-field button,
-			.disabled-input-field label {
-				pointer-events: none;
-				opacity: 0.6;
-			}
-
-			.disabled-input-field label {
-				opacity: 1;
-			}
-
-			.betterdocs-ai-button-container {
-				margin-left: 10px;
-				white-space: nowrap;
-				max-width: 145px;
-			}
-
-			.autowrite-icon {
-				display: flex;
-				align-items: center;
-				width: 32px;
-				height: 32px;
-				flex-shrink: 0;
-				/* Mint chip + green sparkle — matches the FAQ/Glossary modal
-				   header icons (rgba(#00B884, 0.12)). */
-				background: rgba(0, 184, 132, 0.12);
-				justify-content: center;
-				border-radius: 9px;
-			}
-
-			.autowrite-icon svg {
-				width: 17px;
-				height: 17px;
-			}
-
-			.autowrite-heading {
-				display: flex;
-				gap: 10px;
-				align-items: center;
-				/* Keep the title clear of the in-header close button. */
-				padding-right: 64px;
-			}
-
-			.autowrite-heading h1 {
-				color: #101828;
-				font-family: 'IBM Plex Sans', sans-serif;
-				font-size: 18px;
-				font-style: normal;
-				font-weight: 600;
-				line-height: 1.3;
-				margin: 0;
-			}
-
-			.autowrite-heading p,
-			form#betterdocs-ai-form p {
-				margin: 0;
-				margin-bottom: 24px;
-			}
-
-			.autowrite-subheadding p {
-				font-family: 'IBM Plex Sans', sans-serif;
-				font-size: 13px;
-				color: #667085;
-			}
-
-			.prompt-field .input-description {
-				margin: 0 !important;
-			}
-
-			.autowrite-heading p {
-				color: #475467;
-				font-family: 'IBM Plex Sans', sans-serif;
-				font-size: 16px;
-				font-style: normal;
-				font-weight: 400;
-			}
-
-			.betterdocs-ai-button {
-				background: #00B884;
-				border: 1px solid transparent;
-				color: #fff;
-				box-shadow: none;
-				font-size: 12px;
-				margin-right: 8px;
-				padding: 0px 15px;
-				cursor: pointer;
-				border-radius: 3px;
-				height: 38px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 10px;
-				width: 135px;
-			}
-
-			.betterdocs-ai-button img {
-				width: 20px;
-				height: 20px;
-			}
-
-			.betterdocs-ai-autowrite-form-container {
-				position: fixed;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				z-index: 100001;
-				width: 650px;
-				margin: 0 auto;
-				background-color: #fff;
-				border-radius: 20px;
-				font-family: 'IBM Plex Sans', sans-serif;
-				/* max-height: 600px; */
-				max-height: 750px;
-				max-width: 100%;
-			}
-
-			.betterdocs-ai-autowrite-form-content {
-				background-color: #fff;
-				padding: 0;
-				border-radius: 20px;
-				overflow: auto;
-				/* max-height: 700px; */
-				height: 100%;
-
-			}
-
-			.betterdocs-ai-autowrite-top-part {
-				/* Soft-gray header bar — matches the FAQ/Glossary/Edit-with-AI modals. */
-				background: #f9fafb;
-				border-bottom: 1px solid #f2f4f7;
-				border-radius: 20px 20px 0 0;
-				padding: 24px 40px 20px;
-			}
-
-			#betterdocs-ai-form {
-				display: flex;
-				flex-direction: column;
-				/* height: 100%; */
-				overflow: hidden;
-			}
-
-			.form-inner-content {
-				overflow: auto;
-				height: 100%;
-				max-height: 435px;
-				/* max-height: 330px; */
-				padding: 0 40px;
-			}
-
-			.form-inner-content>.form-group {
-				margin-top: 20px;
-			}
-
-
-			#betterdocs-ai-autowrite-form-container-overlay {
-				position: fixed;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				background-color: rgba(0, 0, 0, .7);
-				z-index: 100000;
-			}
-
-
-
-			#betterdocs-ai-form {
-				display: flex;
-				flex-direction: column;
-			}
-
-			#betterdocs-ai-form .form-group {
-				margin-bottom: 24px;
-			}
-
-			#betterdocs-ai-form .bd-aiform-flex {
-				display: flex;
-				justify-content: space-between;
-			}
-
-			#betterdocs-ai-form label {
-				font-size: 14px;
-				font-weight: 500;
-				color: #667085;
-				margin-bottom: 5px;
-				display: block;
-				line-height: 20px;
-			}
-
-			select#bd-autowrtite-content-section,
-			#bd-autowrtite-content-paragraph,
-			#betterdocs-ai-language {
-				width: 150px !important;
-				height: 40px;
-				border: 1px solid #f2f4f7;
-				background: #f2f4f7;
-				color: #101828;
-				font-size: 14px;
-				border-radius: 5px;
-				padding: 5px 12px;
-				outline: none;
-				box-shadow: none;
-			}
-
-			#betterdocs-ai-form input[type="text"],
-			#betterdocs-ai-form textarea {
-				width: 100%;
-				box-sizing: border-box;
-				border: 1px solid #f2f4f7;
-				background: #fff;
-				border-radius: 5px;
-				color: #101828;
-				font-size: 14px;
-				font-weight: 400;
-				outline: none;
-				box-shadow: none;
-			}
-
-			#betterdocs-ai-form input[type="text"] {
-				height: 40px;
-				padding: 5px 15px;
-			}
-
-			#betterdocs-ai-form textarea {
-				padding: 10px 15px;
-				min-height: 100px;
-			}
-
-			/* Override autofill text color */
-			#betterdocs-ai-form input:-webkit-autofill {
-				-webkit-text-fill-color: #101828 !important;
-			}
-
-			#betterdocs-ai-form input::placeholder,
-			#betterdocs-ai-form textarea::placeholder {
-				color: #667085;
-			}
-
-			#betterdocs-ai-form input:focus,
-			#betterdocs-ai-form textarea:focus {
-				border-color: #00b884;
-				box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
-				outline: none;
-			}
-
-
-			/* Footer bar — soft gray surface; Cancel pinned left, Generate right. */
-			.generate-button-container {
-				position: sticky;
-				bottom: 0px;
-				width: 100%;
-				box-sizing: border-box;
-				margin-left: 0;
-				z-index: 999999 !important;
-				padding: 16px 22px;
-				display: flex;
-				align-items: center;
-				justify-content: flex-end;
-				border-top: 1px solid #f2f4f7;
-				background: #f9fafb;
-				border-bottom-right-radius: 20px;
-				border-bottom-left-radius: 20px;
-			}
-
-			.generate-button-container button {
-				display: flex;
-				gap: 8px;
-				align-items: center;
-				justify-content: center;
-				opacity: 1 !important;
-			}
-
-			/* Cancel — white pill with neutral border. Stays clickable even when
-			   the form is disabled (missing API key). */
-			.generate-button-container .bd-ai-cancel-btn {
-				pointer-events: auto;
-				display: inline-flex;
-				min-height: 36px;
-				padding: 7px 16px;
-				justify-content: center;
-				align-items: center;
-				background-color: #ffffff;
-				color: #344054;
-				border: 1px solid #d0d5dd;
-				border-radius: 9px;
-				font-size: 16px;
-				cursor: pointer;
-				text-decoration: none;
-				transition: all 0.3s ease 0s;
-				box-sizing: border-box;
-			}
-
-			.generate-button-container .bd-ai-cancel-btn:hover {
-				background-color: #f2f4f7;
-				color: #101828;
-			}
-
-			.input-description {
-				font-size: 14px;
-				color: #667085;
-			}
-
-			.betterdocs-ai-checkbox-field .form-group {
-				display: flex;
-				align-items: start;
-				/* gap: 200px; */
-				justify-content: space-between;
-			}
-
-			.betterdocs-ai-checkbox-field input {
-				width: 20px;
-				height: 20px;
-			}
-
-			/* Add this CSS to your existing stylesheet or create a new one */
-
-			.betterdocs-ai-checkbox-field {
-				position: relative;
-				font-size: 16px;
-				/* Adjust font size as needed */
-			}
-
-			.betterdocs-ai-checkbox-field input[type=checkbox]:checked::before {
-				padding: 2px;
-			}
-
-			.betterdocs-ai-checkbox-field input[type=checkbox] {
-				border: 1px solid #00b884;
-			}
-
-			.betterdocs-ai-checkbox-field input[type=checkbox]:checked::before {
-				content: '\2713';
-				color: #00b884;
-			}
-
-			/* Change the default checkbox color */
-			.betterdocs-ai-checkbox-field input[type="checkbox"]:hover {
-				-webkit-appearance: none;
-				/* WebKit/Blink Browsers */
-				-moz-appearance: none;
-				/* Firefox */
-				appearance: none;
-				border: 1px solid #00b884;
-				/* Set the height of the checkbox */
-				/* Optional: Round the corners */
-				outline: none;
-				/* Remove the default outline */
-			}
-
-			/* Style the checked state */
-			.betterdocs-ai-checkbox-field input[type="checkbox"]:checked {
-				/* Set the background color when checked */
-				border: 1px solid #00b884;
-				/* Set the border color when checked */
-			}
-
-			.checkbox-field-label {
-				width: calc(100% - 150px);
-			}
-
-			.checkbox-field-label p {
-				margin: 0 !important;
-			}
-
-			.checkbox-input-field {
-				width: 300px;
-				text-align: right;
-			}
-
-			.checkbox-input-field {
-				position: relative;
-				display: inline-block;
-				width: 60px;
-				height: 34px;
-			}
-
-			.checkbox-input-field input {
-				display: none;
-			}
-
-			.toggle-label {
-				position: absolute;
-				cursor: pointer;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				background-color: #ccc;
-				border-radius: 34px;
-				transition: background-color 0.3s;
-				scale: .9;
-				width: 52px;
-				height: 26px;
-			}
-
-
-			.checkbox-input-field input:checked+.toggle-label {
-				background-color: #00b884;
-			}
-
-			.toggle-label:after {
-				content: "";
-				position: absolute;
-				height: 22px;
-				width: 22px;
-				left: 2px;
-				bottom: 2px;
-				background-color: white;
-				border-radius: 50%;
-				transition: transform 0.3s;
-			}
-
-			.checkbox-input-field input:checked+.toggle-label:after {
-				transform: translateX(26px);
-			}
-
-			.generate-btn,
-			.prompt-btn,
-			.keep-btn {
-				display: inline-flex;
-				min-height: 0;
-				padding: 9px 20px;
-				gap: 8px;
-				justify-content: center;
-				align-items: center;
-				background-color: #00b884;
-				color: #fff;
-				border: 1px solid transparent;
-				border-radius: 10px;
-				font-size: 13px;
-				font-weight: 600;
-				cursor: pointer;
-				text-decoration: none;
-				box-shadow: none;
-				transition: background 0.15s, transform 0.05s;
-				box-sizing: border-box;
-			}
-
-			.generate-btn:hover,
-			.prompt-btn:hover,
-			.keep-btn:hover {
-				background-color: #00956b;
-			}
-
-			.generate-btn[disabled] {
-				cursor: unset;
-			}
-
-			/* Close — 44px gray rounded square INSIDE the modal, top-right of
-			   the header, aligned with the header icon. */
-			.bd-close-button {
-				cursor: pointer;
-				position: absolute;
-				top: 24px;
-				right: 24px;
-				z-index: 2;
-				width: 32px;
-				height: 32px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border-radius: 9px;
-				background: #f2f4f7;
-				box-shadow: none;
-				color: #667085;
-				transition: all 0.2s ease-in-out;
-			}
-
-			.bd-close-button svg {
-				width: 16px;
-				height: 16px;
-			}
-
-			.bd-close-button:hover {
-				background: #eaecf0;
-				color: #101828;
-			}
-
-			div#betterdocs-ai-error-message,
-			#betterdocs-ai-message {
-				font-size: 14px;
-				font-family: 'IBM Plex Sans', sans-serif;
-				color: #667085;
-				margin-bottom: 20px;
-			}
-
-			div#betterdocs-ai-error-message a,
-			#betterdocs-ai-message a {
-				text-decoration: none;
-				font-weight: 600;
-			}
-
-			div#betterdocs-ai-error-message a:focus,
-			#betterdocs-ai-message a:focus {
-				outline: none;
-				box-shadow: none;
-				color: #2271b1;
-			}
-
-			#betterdocs-ai-message span {
-				color: #d63638;
-			}
-
-			.warning-message {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				background: #fbebed;
-				padding: 12px;
-				border-radius: 5px;
-				font-size: 14px;
-				line-height: 1.4em;
-				border-left: 4px solid #d63638;
-			}
-
-			.warning-message svg {
-				width: 20px;
-				height: 20px;
-			}
-
-			.warning-message span {
-				color: #d63638;
-			}
-
-			.warning-message .footer-message {
-				width: calc(100% - 20px);
-			}
-
-			@media only screen and (max-width: 991px) {
-				.betterdocs-ai-autowrite-form-container {
-					left: 0;
-					right: 0;
-					transform: translate(0%, -50%);
-				}
-
-				.betterdocs-ai-autowrite-form-content {
-					overflow-x: auto;
-				}
-			}
-
-			@media only screen and (max-width: 740px) {
-
-				/* .bd-close-button {
-					right: px;
-					top: 1px;
-					border-radius: 5px;
-					width: 12px;
-					height: 12px;
-					color: #ffffff;
-					background: #00b884;
-				} */
-				.bd-close-button {
-					right: 0px;
-					top: 0px;
-					width: 12px;
-					height: 12px;
-					font-size: 14px;
-				}
-
-			}
-		</style>
-		<?php
-            }
-        }
+}

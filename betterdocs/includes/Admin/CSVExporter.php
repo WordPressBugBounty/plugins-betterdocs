@@ -653,14 +653,31 @@ class CSVExporter {
 
 		$output = fopen( 'php://output', 'w' );
 
-		// Add CSV rows
+		// Add CSV rows. Neutralize spreadsheet formula injection: a cell that a
+		// lower-privileged author controls (e.g. a doc/FAQ title or term name) could
+		// start with =, +, -, @, or a tab/CR and execute when the admin opens the
+		// export in Excel/LibreOffice. Prefix such cells with a single quote.
 		foreach ( $data as $row ) {
-			fputcsv( $output, $row );
+			fputcsv( $output, array_map( [ $this, 'neutralize_csv_cell' ], (array) $row ) );
 		}
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- closing php://output stream; WP_Filesystem does not apply.
 		fclose( $output );
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Prefix a leading formula trigger (= + - @ tab CR) with a single quote so
+	 * spreadsheet apps treat the cell as text instead of executing it.
+	 */
+	private function neutralize_csv_cell( $cell ) {
+		$cell = (string) $cell;
+
+		if ( $cell !== '' && preg_match( '/^[=+\-@\t\r]/', $cell ) ) {
+			return "'" . $cell;
+		}
+
+		return $cell;
 	}
 }

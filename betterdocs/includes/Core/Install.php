@@ -169,7 +169,8 @@ class Install extends Base {
             created_at date DEFAULT '0000-00-00' NOT NULL,
             PRIMARY KEY (id),
             KEY keyword_id (keyword_id),
-            KEY created_at (created_at)
+            KEY created_at (created_at),
+            KEY keyword_created (keyword_id, created_at)
         ) {$charset_collate};";
 
 		$_analytics_table = $wpdb->prefix . 'betterdocs_analytics';
@@ -189,7 +190,8 @@ class Install extends Base {
             KEY happy (happy),
             KEY sad (sad),
             KEY normal (normal),
-            KEY created_at (created_at)
+            KEY created_at (created_at),
+            UNIQUE KEY post_created (post_id, created_at)
         ) {$charset_collate};";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
