@@ -1,11 +1,11 @@
 === BetterDocs –  AI Documentation, Knowledge Base, Docs, Wikis, FAQ with Chatbot ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, bashar94, jamilbd07
+Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.7.0
+Stable tag: 4.8.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,14 @@ Yes. BetterDocs supports multilingual documentation workflows and integrates wit
 
 
 == Changelog ==
+
+= 4.8.0 - 04/08/2026 =
+
+- New: Multiple AI platform support — choose OpenAI, Google Gemini, Anthropic Claude for Write with AI and the Docs AI Suite
+- Improvement: Documentation archive & sidebar performance — term-count caching plus an optional "Lazy Load Sidebar Docs & Subcategories" mode for large knowledge bases
+- Fixed: WPML-translated doc tag & category base slugs now resolve correctly in routing and term links
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.7.0 - 22/07/2026 =
 

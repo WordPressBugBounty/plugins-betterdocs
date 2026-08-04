@@ -2962,8 +2962,7 @@ class Sidebar extends BaseWidget {
                 'terms_exclude'            => $settings['exclude'],
                 'terms_offset'             => $settings['offset'],
                 'nested_subcategory'       => $settings['nested_subcategory'],
-                'multiple_knowledge_base'  => $default_multiple_kb,
-                'kb_slug'                  => $kb_slug,
+                'lazy_load'                => ! empty( $settings['lazy_load'] ),
                 'sidebar_list'             => true,
                 'disable_customizer_style' => true,
                 'posts_per_page'           => -1,
@@ -2971,6 +2970,16 @@ class Sidebar extends BaseWidget {
                 'sidebar_layout'           => $settings['betterdocs_sidebar_layout']
             ]
         ];
+
+        // Pass a KB scope only when one is explicitly selected on the widget. When none
+        // is set, omit kb_slug so the betterdocs_sidebar_template_shortcode_params filter
+        // (Pro/MKB) can inject the current knowledge_base context on KB templates — the
+        // same path the default sidebar uses. With no KB context nothing is injected and
+        // all categories render. (Passing kb_slug='' here would block that injection.)
+        if ( ! empty( $kb_slug ) ) {
+            $params['shortcode_attr']['kb_slug']                 = $kb_slug;
+            $params['shortcode_attr']['multiple_knowledge_base'] = (bool) $default_multiple_kb;
+        }
 
         if ( $settings['betterdocs_sidebar_layout'] == 'layout-1' ) {
             $params['shortcode_attr']['show_icon']  = $settings['show_icon'];

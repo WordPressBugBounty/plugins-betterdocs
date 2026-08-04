@@ -75,20 +75,60 @@ class Enqueue extends Base {
 		];
 	}
 
+	/**
+	 * Resolve the assets sub-folder for a file: webpack output lives under
+	 * assets/build/, committed static assets under assets/static/. Prefer the
+	 * build copy when present, otherwise fall back to static. This lets every
+	 * enqueue/register call use the same relative path regardless of which
+	 * folder the file ends up in.
+	 *
+	 * The final `assets/` fallback matters for the Free/Pro version skew this
+	 * class is shared across. Pro constructs this same Enqueue against its OWN
+	 * plugin path, so when Free 4.8.0 runs alongside a Pro that predates the
+	 * Node 24 restructure, Pro's files are still flat under assets/. Without
+	 * this branch every one of them resolved to a non-existent assets/static/
+	 * path and 404'd. Ordering is deliberate: a matched pair never reaches the
+	 * legacy branch, so this costs nothing in the normal case.
+	 *
+	 * Kept `protected` so a paired plugin can refine the search order.
+	 */
+	protected function asset_base( $filename ) {
+		foreach ( [ 'assets/build/', 'assets/static/', 'assets/' ] as $base ) {
+			if ( file_exists( path_join( $this->plugin_path, $base . $filename ) ) ) {
+				return $base;
+			}
+		}
+
+		// Nothing on disk — keep the historical default so a genuinely missing
+		// file produces the same (broken) URL it always did, not a new shape.
+		return 'assets/static/';
+	}
+
 	public function asset_url( $filename ) {
 		if ( filter_var( $filename, FILTER_VALIDATE_URL ) ) {
 			return $filename;
 		}
 
-		return esc_url( $this->plugin_url . 'assets/' . $filename );
+		return esc_url( $this->plugin_url . $this->asset_base( $filename ) . $filename );
+	}
+
+	/**
+	 * Explicit URL for a committed static asset under assets/static/.
+	 */
+	public function static_url( $filename ) {
+		if ( filter_var( $filename, FILTER_VALIDATE_URL ) ) {
+			return $filename;
+		}
+
+		return esc_url( $this->plugin_url . 'assets/static/' . $filename );
 	}
 
 	public function dist_path( $file ) {
-		return path_join( $this->plugin_path, 'assets/' . $file );
+		return path_join( $this->plugin_path, $this->asset_base( $file ) . $file );
 	}
 
 	public function icon( $name, $is_admin = false ) {
-		$_path = $is_admin ? 'assets/admin/images/' : 'assets/images/';
+		$_path = $is_admin ? 'assets/static/admin/images/' : 'assets/static/images/';
 		return esc_url( $this->plugin_url . $_path . $name . '?v=' . $this->version );
 	}
 }

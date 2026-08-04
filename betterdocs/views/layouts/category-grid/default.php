@@ -11,9 +11,13 @@ use WPDeveloper\BetterDocs\Utils\Helper;
 		'class'   => [ 'betterdocs-single-category-wrapper category-grid' ]
 	];
 
+	$is_active = false;
 	if ( is_single() && ( $term->term_id === $current_queried_object_id || ( (bool) $nested_subcategory && in_array( $term->term_id, $ancestors ) ) ) ) {
-		$attributes['class'][] = 'active';
+		$is_active = true;
 	} elseif ( Helper::get_tax() == 'doc_category' && $term->term_id === $current_queried_object_id || ( (bool) $nested_subcategory && Helper::get_tax() == 'doc_category' && Helper::get_the_top_most_parent( $current_queried_object_id ) == $term->term_id ) ) {
+		$is_active = true;
+	}
+	if ( $is_active ) {
 		$attributes['class'][] = 'active';
 	}
 
@@ -24,6 +28,8 @@ use WPDeveloper\BetterDocs\Utils\Helper;
 	$attributes = betterdocs()->template_helper->get_html_attributes( $attributes );
 	$posts_per_page = isset( $docs_query_args['posts_per_page'] ) ? $docs_query_args['posts_per_page'] : ( isset( $post_per_tab ) ? $post_per_tab : ( isset($post_per_page) ? $post_per_page : 0 ) ); // for category grid, mkb, tab
 	$current_term_posts_count = isset( $counts ) && ! is_array( $counts ) ? $counts : ( isset( $counts ) && is_array( $counts ) ? $counts['counts'] : 0 );
+
+	$is_lazy_body = ! empty( $lazy_load ) && ! $is_active;
 ?>
 
 <article
@@ -35,9 +41,19 @@ use WPDeveloper\BetterDocs\Utils\Helper;
 		}
 
 		if ( $show_list ) {
-			echo '<div class="betterdocs-body">';
-			$view_object->get( 'template-parts/category-list' );
-			echo '</div>';
+			if ( $is_lazy_body ) {
+				// Empty placeholder. JS injects the skeleton on click and swaps
+				// in real docs once the AJAX completes (with a 1s minimum
+				// display so the loading state is perceptible).
+				printf(
+					'<div class="betterdocs-body" data-bd-lazy="1" data-bd-term-id="%d" style="display:none;"></div>',
+					(int) $term->term_id
+				);
+			} else {
+				echo '<div class="betterdocs-body">';
+				$view_object->get( 'template-parts/category-list' );
+				echo '</div>';
+			}
 		}
 
 		if( $posts_per_page < $current_term_posts_count ) {

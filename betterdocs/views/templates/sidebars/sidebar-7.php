@@ -64,7 +64,8 @@ if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 				'list_icon_url'  => false,
 				'posts_per_page' => -1,
 				'title_tag'      => betterdocs()->template_helper->is_valid_tag( $title_tag ),
-				'layout_type'    => isset( $layout_type ) ? $layout_type : ''
+				'layout_type'    => isset( $layout_type ) ? $layout_type : '',
+				'lazy_load'      => ! empty( betterdocs()->settings->get( 'archive_lazy_load_descendants' ) ),
 			];
 
 			if ( isset( $layout_type ) && $layout_type == 'block' ) {

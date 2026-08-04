@@ -3,6 +3,7 @@
 namespace WPDeveloper\BetterDocs\Utils;
 
 use WPDeveloper\BetterDocs\Core\Settings;
+use WPDeveloper\BetterDocs\AI\ProviderFactory;
 
 class AIHelper {
 
@@ -18,12 +19,22 @@ class AIHelper {
     }
 
     /**
-     * Get OpenAI API key from settings
+     * Build a provider factory bound to the current settings.
+     *
+     * @return ProviderFactory
+     */
+    private function factory() {
+        return new ProviderFactory( $this->settings );
+    }
+
+    /**
+     * Get the API key for the active AI platform.
      *
      * @return string
      */
     public function get_api_key() {
-        return $this->settings->get( 'ai_autowrite_api_key', '' );
+        $factory = $this->factory();
+        return $factory->api_key_for( $factory->active_platform() );
     }
 
     /**
@@ -49,39 +60,13 @@ class AIHelper {
 
         if ( empty( $api_key ) ) {
             return array(
-                'valid' => false,
-                'message' => 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">OpenAI API Key</a> to use AI features.'
+                'valid'   => false,
+                'message' => 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">API Key</a> to use AI features.'
             );
         }
 
-        $ch = curl_init( 'https://api.openai.com/v1/models' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-        curl_setopt(  //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
-            $ch,
-            CURLOPT_HTTPHEADER,
-            array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $api_key
-            )
-        );
-
-        $response = curl_exec( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
-        $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_getinfo
-        curl_close( $ch ); //phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_close
-
-        if ( 200 == $httpCode ) {
-            return array(
-                'valid' => true,
-                'message' => 'Valid API Key'
-            );
-        } else {
-            $responseData = json_decode( $response, true );
-            $messageData  = $responseData[ 'error' ] ?? '';
-            return array(
-                'valid' => false,
-                'message' => $messageData[ 'message' ] ?? 'Invalid API Key'
-            );
-        }
+        $factory = $this->factory();
+        return $factory->validate( $factory->active_platform(), $api_key );
     }
 
     /**
@@ -89,7 +74,7 @@ class AIHelper {
      * single source of truth for:
      *  - server-side save validation (Core/Settings.php)
      *  - field UI props sent to the React notice (Core/Settings.php)
-     *  - runtime payload floor in build_openai_payload()
+     *  - runtime payload floor in the provider layer (AI\Providers\BaseProvider::floor_tokens)
      *
      * Override the whole map (or any cell) via the `betterdocs_ai_min_tokens`
      * filter. Returns 0 when no minimum applies (unknown context or model).
@@ -131,7 +116,7 @@ class AIHelper {
      * @param string $model OpenAI model identifier.
      * @return bool
      */
-    private static function is_gpt5_point_release( $model ) {
+    public static function is_gpt5_point_release( $model ) {
         return (bool) preg_match( '/^gpt-5\.\d/', (string) $model );
     }
 
@@ -151,140 +136,33 @@ class AIHelper {
     }
 
     /**
-     * Build an OpenAI Chat Completions request body, switching parameter shape
-     * for model families that reject the legacy max_tokens / custom temperature.
+     * Make a chat-completion request to the active AI platform.
      *
-     * GPT-5 family requires max_completion_tokens and rejects any non-default
-     * temperature, so we omit both. It is also a reasoning model: internal
-     * reasoning tokens are billed against max_completion_tokens before any
-     * visible output is produced, so we send a low reasoning_effort by default
-     * (see default_reasoning_effort()). Without that the model can spend the
-     * entire budget on reasoning and return empty content with
-     * finish_reason=length.
+     * Provider-agnostic: the platform, model, key, payload shape and parsing are
+     * resolved by ProviderFactory. The model is the global `ai_model`; callers
+     * may still override per request via $options['model'].
      *
-     * When `$context` is provided we also raise `$max_tokens` to the per-family
-     * minimum from get_min_tokens(), so the request never goes out below the
-     * policy floor regardless of what's stored in settings.
-     *
-     * @param string      $model       OpenAI model identifier (e.g. 'gpt-4o', 'gpt-5-mini').
-     * @param array       $messages    Chat messages array.
-     * @param int         $max_tokens  Token cap (will be raised to feature minimum if $context is set).
-     * @param float|null  $temperature Optional sampling temperature; ignored for gpt-5*.
-     * @param string|null $context     Feature key for runtime min-token enforcement. Pass null for back-compat.
-     * @return array Request body ready to JSON-encode.
-     */
-    public static function build_openai_payload( $model, $messages, $max_tokens, $temperature = null, $context = null ) {
-        if ( null !== $context ) {
-            $min = self::get_min_tokens( $context, $model );
-            if ( $min > 0 && (int) $max_tokens < $min ) {
-                $max_tokens = $min;
-            }
-        }
-
-        $payload = array(
-            'model'    => $model,
-            'messages' => $messages,
-        );
-
-        if ( 0 === strpos( $model, 'gpt-5' ) ) {
-            $payload['max_completion_tokens'] = $max_tokens;
-            $payload['reasoning_effort']      = apply_filters( 'betterdocs_openai_gpt5_reasoning_effort', self::default_reasoning_effort( $model ), $model, $max_tokens );
-            return $payload;
-        }
-
-        $payload['max_tokens'] = $max_tokens;
-        if ( null !== $temperature ) {
-            $payload['temperature'] = $temperature;
-        }
-        return $payload;
-    }
-
-    /**
-     * Default reasoning_effort for a gpt-5* model.
-     *
-     * The original GPT-5 generation (gpt-5, gpt-5-mini, gpt-5-nano) accepts
-     * 'minimal'. The gpt-5.x point releases (e.g. gpt-5.5) dropped 'minimal'
-     * from the API and only accept none|low|medium|high|xhigh; sending
-     * 'minimal' returns a 400 "Unsupported value: 'reasoning_effort'". For
-     * those we default to 'none' — no reasoning tokens, which is the fastest
-     * option and leaves the whole token budget for visible output (the closest
-     * equivalent to the gpt-5 'minimal' behaviour). Override per model via the
-     * betterdocs_openai_gpt5_reasoning_effort filter.
-     *
-     * @param string $model OpenAI model identifier.
-     * @return string reasoning_effort value.
-     */
-    private static function default_reasoning_effort( $model ) {
-        // Point releases like gpt-5.5 use the new vocabulary; plain gpt-5* keep 'minimal'.
-        if ( self::is_gpt5_point_release( $model ) ) {
-            return 'none';
-        }
-        return 'minimal';
-    }
-
-    /**
-     * Make a request to OpenAI API
-     *
-     * @param array $messages Array of messages for the chat completion
-     * @param array $options Optional parameters (model, max_tokens, temperature, etc.)
-     * @return string|\WP_Error API response content or error
+     * @param array $messages Array of messages for the chat completion.
+     * @param array $options  Optional parameters (model, max_tokens, temperature, timeout).
+     * @return string|\WP_Error API response content or error.
      */
     public function make_openai_request( $messages, $options = array() ) {
-        $api_key    = $this->get_api_key();
-        $max_tokens = $this->settings->get( 'article_summary_max_token', 1500 );
-        $model      = $this->settings->get( 'article_summary_model', 'gpt-4o-mini' );
-
-        if ( empty( $api_key ) ) {
-            return new \WP_Error( 'no_api_key', 'OpenAI API key is not configured.' );
-        }
-
-        // Default options
         $defaults = array(
-            'model' => $model,
-            'max_tokens' => $max_tokens,
+            'max_tokens'  => (int) $this->settings->get( 'article_summary_max_token', 1500 ),
             'temperature' => 0.7,
-            'timeout' => 50
+            'timeout'     => 50,
+            'context'     => 'article_summary',
         );
 
         $options = wp_parse_args( $options, $defaults );
 
-        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
+        $result = $this->factory()->make()->chat( $messages, $options );
 
-        $request_body = self::build_openai_payload(
-            $options[ 'model' ],
-            $messages,
-            $options[ 'max_tokens' ],
-            $options[ 'temperature' ],
-            'article_summary'
-        );
-
-        $request_options = array(
-            'headers' => array(
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key
-            ),
-            'body' => json_encode( $request_body ), //phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
-            'timeout' => $options[ 'timeout' ]
-        );
-
-        $response = wp_remote_post( $api_endpoint, $request_options );
-
-        if ( is_wp_error( $response ) ) {
-            return new \WP_Error( 'api_error', 'Failed to connect to OpenAI API: ' . $response->get_error_message() );
+        if ( is_wp_error( $result ) ) {
+            return $result;
         }
 
-        $body = wp_remote_retrieve_body( $response );
-        $data = json_decode( $body, true );
-
-        if ( ! empty( $data[ 'error' ] ) ) {
-            return new \WP_Error( 'openai_error', $data[ 'error' ][ 'message' ] );
-        }
-
-        if ( empty( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ) {
-            return new \WP_Error( 'no_content', 'No content received from OpenAI.' );
-        }
-
-        return $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ];
+        return $result['content'];
     }
 
     /**

@@ -6,6 +6,7 @@ use WP_REST_Request;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Core\SiteProfiler;
 use WPDeveloper\BetterDocs\Core\Settings;
+use WPDeveloper\BetterDocs\Utils\AIUsage;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 /**
@@ -255,6 +256,10 @@ class SampleDocs extends BaseAPI {
 
 		do_action( 'betterdocs_sample_docs_generated', $content_type, count( $categories ) );
 
+		// Usage telemetry: one successful generation, bucketed by content type
+		// (docs/faq/product_faq). No single post here, so post_id = 0.
+		AIUsage::record( 'sample_docs', 0, $content_type );
+
 		return $this->success(
 			[
 				'content_type' => $content_type,
@@ -364,6 +369,10 @@ class SampleDocs extends BaseAPI {
 		$outline = $this->sanitize_outline( $parsed['outline'] );
 
 		do_action( 'betterdocs_sample_docs_generated', 'docs', count( $outline['categories'] ) );
+
+		// Usage telemetry: the deep-KB outline is the once-per-generation success point
+		// for the docs flow (article() runs per-article and must NOT be counted).
+		AIUsage::record( 'sample_docs', 0, 'docs' );
 
 		return $this->success(
 			[

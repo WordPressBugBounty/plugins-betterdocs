@@ -51,6 +51,7 @@ if ( ( isset( $force ) && $force == null ) || ! isset( $force ) ) {
 				'layout_type'    => isset( $layout_type ) ? $layout_type : '',
 				'show_list_icon' => false,
 				'wrapper_class'  => 'sidebar-8',
+				'lazy_load'      => ! empty( betterdocs()->settings->get( 'archive_lazy_load_descendants' ) ),
 			];
 
 			if ( isset( $layout_type ) && $layout_type == 'template' ) {

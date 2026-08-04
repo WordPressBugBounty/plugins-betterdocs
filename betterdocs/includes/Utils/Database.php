@@ -103,4 +103,36 @@ class Database {
 	public function delete_transient( $transient ) {
 		return delete_transient( $transient );
 	}
+
+	/**
+	 * Versioned-key incrementor. Reading the current version lets callers build
+	 * cache keys like "{namespace}_v{N}_..."; bumping the version makes every
+	 * key in that namespace unreachable in one update.
+	 *
+	 * The canonical value lives in wp_options so invalidation persists across
+	 * requests even on sites with no external object cache (where wp_cache_*
+	 * is per-request in-memory only). wp_cache_* is still used as a
+	 * within-request memoization layer.
+	 */
+	public function get_cache_version( $namespace, $group = 'betterdocs' ) {
+		$cache_key  = $namespace . '_version';
+		$option_key = 'bd_cache_v_' . $namespace;
+		$v = wp_cache_get( $cache_key, $group );
+		if ( false === $v ) {
+			$v = (int) get_option( $option_key, 1 );
+			if ( $v < 1 ) {
+				$v = 1;
+			}
+			wp_cache_set( $cache_key, $v, $group, 0 );
+		}
+		return (int) $v;
+	}
+
+	public function bump_cache_version( $namespace, $group = 'betterdocs' ) {
+		$cache_key  = $namespace . '_version';
+		$option_key = 'bd_cache_v_' . $namespace;
+		$new = (int) get_option( $option_key, 1 ) + 1;
+		update_option( $option_key, $new, false );
+		wp_cache_set( $cache_key, $new, $group, 0 );
+	}
 }

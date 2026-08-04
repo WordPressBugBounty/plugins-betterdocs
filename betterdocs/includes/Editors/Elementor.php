@@ -408,6 +408,19 @@ class Elementor extends BaseEditor {
 					]
 				]
 			);
+
+			$wb->add_control(
+				'lazy_load',
+				[
+					'label'        => __( 'Lazy Load Docs & Subcategories', 'betterdocs' ),
+					'description'  => __( 'Render only the active category upfront; fetch the rest on click. Recommended for large knowledge bases when this widget is used as a sidebar.', 'betterdocs' ),
+					'type'         => Controls_Manager::SWITCHER,
+					'label_on'     => __( 'Yes', 'betterdocs' ),
+					'label_off'    => __( 'No', 'betterdocs' ),
+					'return_value' => 'true',
+					'default'      => ''
+				]
+			);
 		}
 
         if ( $wb->get_name() === 'betterdocs-category-box' ) {
@@ -455,6 +468,19 @@ class Elementor extends BaseEditor {
                     'label_off'    => __( 'No', 'betterdocs' ),
                     'return_value' => 'true',
                     'default'      => ( $this->settings->get( 'archive_nested_subcategory' ) == 1 ) ? 'true' : ''
+                ]
+            );
+
+            $wb->add_control(
+                'lazy_load',
+                [
+                    'label'        => __( 'Lazy Load Docs & Subcategories', 'betterdocs' ),
+                    'description'  => __( 'Render only the active category upfront; fetch the rest on click (or on scroll for the Memphis sidebar layout).', 'betterdocs' ),
+                    'type'         => Controls_Manager::SWITCHER,
+                    'label_on'     => __( 'Yes', 'betterdocs' ),
+                    'label_off'    => __( 'No', 'betterdocs' ),
+                    'return_value' => 'true',
+                    'default'      => ( $this->settings->get( 'archive_lazy_load_descendants' ) == 1 ) ? 'true' : ''
                 ]
             );
         }
@@ -596,14 +622,22 @@ class Elementor extends BaseEditor {
     }
 
     public function get_kb_terms( $prettify = false, $term_id = true ) {
-        $args = [
-            'taxonomy'   => 'knowledge_base',
-            'hide_empty' => true,
-            'parent'     => 0
-        ];
-
-        $terms_query_args = betterdocs()->query->terms_query( $args );
-        $terms = betterdocs()->query->get_terms( $terms_query_args );
+        // This list populates the widget "Knowledge Bases" selector — an admin-side
+        // config picker, not a front-end listing. It must show EVERY KB regardless of
+        // whether it currently has content or is access-restricted for the editing
+        // user's role. Previously it ran through terms_query()/get_terms(), so on a
+        // regular page the Pro access-control terms_clauses filter + hide_empty pruned
+        // the list to a subset, while the theme-builder context showed them all.
+        // hide_empty:false keeps empty KBs; suppress_filters:true signals AccessControl
+        // (get_terms_args) to skip its role-based terms_clauses filter, so the picker is
+        // consistent everywhere.
+        $terms = get_terms( [
+            'taxonomy'         => 'knowledge_base',
+            'hide_empty'       => false,
+            'parent'           => 0,
+            'orderby'          => 'name',
+            'suppress_filters' => true,
+        ] );
 
         if ( is_wp_error( $terms ) ) {
             return [];
@@ -613,7 +647,9 @@ class Elementor extends BaseEditor {
             $pretty_taxonomies = [];
 
             foreach ( $terms as $term ) {
-                $pretty_taxonomies[$term_id ? $term->term_id : $term->slug] = $term->name;
+                // Decode HTML entities (e.g. "&amp;" → "&") so the select2 control
+                // shows the real KB name instead of the escaped entity.
+                $pretty_taxonomies[$term_id ? $term->term_id : $term->slug] = wp_specialchars_decode( $term->name, ENT_QUOTES );
             }
 
             return $pretty_taxonomies;

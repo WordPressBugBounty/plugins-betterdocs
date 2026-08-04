@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\REST;
 use WP_REST_Request;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
+use WPDeveloper\BetterDocs\Utils\AIUsage;
 
 /**
  * REST endpoints powering the BetterDocs "Enhance Docs with AI" editor actions
@@ -72,7 +73,7 @@ class DocsAISuite extends BaseAPI {
 
     public function permission_check() {
         // Gate on edit_others_posts to match the sibling FAQ/Glossary AI endpoints
-        // (AIFaq/AIGlossary) and keep Author-role users from spending the OpenAI budget.
+        // (AIFaq/AIGlossary) and keep Author-role users from spending the AI budget.
         return current_user_can( 'edit_others_posts' );
     }
 
@@ -218,6 +219,11 @@ class DocsAISuite extends BaseAPI {
                 'is_new'  => $term ? false : true
             );
         }
+
+        // Usage telemetry: a successful AI suggestion run, bucketed by taxonomy
+        // (doc_category/doc_tag/glossaries). An empty result is still a use of the
+        // feature, so record on any successful upstream response.
+        AIUsage::record( 'ai_suggest_terms', $post_id, $taxonomy );
 
         return $this->success( array(
             'taxonomy'    => $taxonomy,

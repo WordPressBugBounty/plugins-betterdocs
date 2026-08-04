@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     use WPDeveloper\BetterDocs\Utils\Helper;
     use WPDeveloper\BetterDocs\Utils\AIHelper;
+    use WPDeveloper\BetterDocs\AI\ProviderFactory;
+    use WPDeveloper\BetterDocs\AI\ModelRegistry;
     use WPDeveloper\BetterDocs\Utils\AIUsage;
     use WPDeveloper\BetterDocs\REST\AIEdit;
 
@@ -50,8 +52,29 @@ if ( ! defined( 'ABSPATH' ) ) {
             return;
         }
 
-        $api_key = $this->get_api_key();
+        $factory = new ProviderFactory( $this->settings );
+        $api_key = $factory->api_key_for( $factory->active_platform() );
         $has_key = ! empty( $api_key );
+
+        // Resolve the *active* AI platform + model (multi-platform aware) so the
+        // modal reflects the current Settings → AI selection instead of the legacy
+        // OpenAI-only `write_with_ai_model` key.
+        $active_platform = $factory->active_platform();
+        $active_model    = $factory->active_model();
+        $platform_labels = ModelRegistry::platforms();
+        $model_labels    = ModelRegistry::models( $active_platform );
+
+        // Glossary suggestions are existing-terms-only, and the glossaries taxonomy is only
+        // registered for Pro (see Core\PostType::register_glossaries_taxonomy). So the "Suggest
+        // glossaries" control must require, on top of the two settings, that Pro is active AND at
+        // least one glossary term exists — otherwise the modal advertises an offer that can never
+        // return anything. Mirrors the Docs-AI-suite availability check in Core\DocsAISuite.
+        $glossary_count               = wp_count_terms( array( 'taxonomy' => 'glossaries', 'hide_empty' => false ) );
+        $has_glossary_terms           = ! is_wp_error( $glossary_count ) && (int) $glossary_count > 0;
+        $glossary_suggestions_enabled = (bool) $this->settings->get( 'enable_glossaries', false )
+            && (bool) $this->settings->get( 'show_glossary_suggestions', true )
+            && betterdocs()->is_pro_active()
+            && $has_glossary_terms;
 
         // Write with AI — loads even without a key so the modal can show its
         // "add an API key" banner (matches the legacy inline form behavior).
@@ -70,7 +93,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                 // preview step. Endpoint + gate mirror REST\DocsAISuite / Core\DocsAISuite.
                 'rest_suggest_url'             => esc_url_raw( rest_url( 'betterdocs/v1/ai-suggest-terms' ) ),
                 'suggest_terms_enabled'        => (bool) $this->settings->get( 'enable_docs_ai_suite', true ),
-                'model'                  => $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' ),
+                // Glossary suggestions follow the glossary feature AND real availability
+                // (Pro active + at least one glossary term); see the computation above.
+                'glossary_suggestions_enabled' => $glossary_suggestions_enabled,
+                'platform'               => $active_platform,
+                'platform_label'         => isset( $platform_labels[ $active_platform ] ) ? $platform_labels[ $active_platform ] : ucfirst( (string) $active_platform ),
+                'model'                  => $active_model,
+                'model_label'            => isset( $model_labels[ $active_model ] ) ? $model_labels[ $active_model ] : $active_model,
                 'max_token'              => (int) $this->settings->get( 'ai_autowrite_max_token', 2500 ),
                 'settings_url'           => esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ),
                 'woo_active'             => class_exists( 'WooCommerce' ),
@@ -119,52 +148,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     public function isValidAPIKey( $apiKey ) {
         if ( empty( $apiKey ) ) {
-            $api_response[ 'valid' ]   = false;
-            $api_response[ 'message' ] = 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">OpenAI API Key</a> to use this Write with AI feature.';
-
-            return $api_response;
+            return array(
+                'valid'   => false,
+                'message' => 'Please Insert your <a href="/admin.php?page=betterdocs-settings#betterdocs-ai">API Key</a> to use this Write with AI feature.'
+            );
         }
 
-        $api_response = array();
-
-        $response = wp_safe_remote_get(
-            'https://api.openai.com/v1/engines',
-            array(
-                'headers' => array(
-                    'Content-Type'  => 'application/json',
-                    'Authorization' => 'Bearer ' . $apiKey,
-                ),
-                'timeout' => 15,
-            )
-        );
-
-        if ( is_wp_error( $response ) ) {
-            $api_response[ 'valid' ]   = false;
-            $api_response[ 'message' ] = $response->get_error_message();
-            return $api_response;
-        }
-
-        $httpCode = (int) wp_remote_retrieve_response_code( $response );
-        $body     = wp_remote_retrieve_body( $response );
-
-        if ( 200 === $httpCode ) {
-            $api_response[ 'valid' ]   = true;
-            $api_response[ 'message' ] = 'Valid API Key';
-        } else {
-            $responseData              = json_decode( $body, true );
-            $messageData               = ! empty( $responseData[ 'error' ] ) ? $responseData[ 'error' ] : array();
-            $api_response[ 'valid' ]   = false;
-            $api_response[ 'message' ] = ! empty( $messageData[ 'message' ] ) ? $messageData[ 'message' ] : 'Invalid API Key';
-        }
-
-        // print_r($response);
-
-        return $api_response;
+        $factory = new ProviderFactory( $this->settings );
+        return $factory->validate( $factory->active_platform(), $apiKey );
     }
 
     public function get_api_key() {
-        $api_key = $this->settings->get( 'ai_autowrite_api_key', '' );
-        return $api_key;
+        $factory = new ProviderFactory( $this->settings );
+        return $factory->api_key_for( $factory->active_platform() );
     }
 
     /**
@@ -372,6 +368,73 @@ PROMPT;
         return apply_filters( 'betterdocs_write_with_ai_system_prompt', $prompt );
     }
 
+    /**
+     * Build the system + user messages and chat options shared by the
+     * Write-with-AI generator and the in-editor AI-Edit endpoint. Routes through
+     * the active AI platform (ProviderFactory), so it works for every provider.
+     *
+     * @param string $prompt
+     * @param int|null $max_tokens   Optional cap override (e.g. a "large" doc).
+     * @param array  $extra_system   Optional extra system messages.
+     * @return array array( array $messages, array $options )
+     */
+    private function ai_request_args( $prompt, $max_tokens = null, $extra_system = array() ) {
+        $messages = array_merge(
+            array( array( 'role' => 'system', 'content' => $this->get_system_prompt() ) ),
+            $this->normalize_extra_system( $extra_system ),
+            array( array( 'role' => 'user', 'content' => $prompt ) )
+        );
+
+        return array( $messages, $this->ai_chat_options( $max_tokens ) );
+    }
+
+    /**
+     * Assemble the chat options passed to the active provider. Document
+     * generation is long-running on every platform: reasoning models (gpt-5*)
+     * and larger non-OpenAI models (e.g. Claude Opus) routinely need well over
+     * the old 50s default to return a full doc, which timed them out mid-
+     * generation. Give every request a generous ceiling; fast models simply
+     * finish early and are unaffected.
+     *
+     * @param int|null   $max_tokens  Optional token cap override.
+     * @param float|null $temperature Optional sampling temperature.
+     * @return array
+     */
+    private function ai_chat_options( $max_tokens = null, $temperature = null ) {
+        $timeout = 300;
+        if ( function_exists( 'set_time_limit' ) ) {
+            set_time_limit( 300 );
+        }
+
+        $options = array(
+            'max_tokens' => null !== $max_tokens ? (int) $max_tokens : (int) $this->settings->get( 'ai_autowrite_max_token', 2500 ),
+            'context'    => 'write_with_ai',
+            'timeout'    => $timeout,
+        );
+
+        if ( null !== $temperature ) {
+            $options['temperature'] = $temperature;
+        }
+
+        return $options;
+    }
+
+    public function generate_openai_response( $prompt, $keywords, $max_tokens = null, $extra_system = array() ) {
+        try {
+            list( $messages, $options ) = $this->ai_request_args( $prompt, $max_tokens, $extra_system );
+
+            $result = ( new ProviderFactory( $this->settings ) )->make()->chat( $messages, $options );
+
+            if ( is_wp_error( $result ) ) {
+                return $result->get_error_message();
+            }
+
+            return $result['content'];
+        } catch ( \Exception $error ) {
+            return 'Error: ' . $error->getMessage();
+        }
+    }
+
     public function get_outline_system_prompt() {
         $prompt = <<<'PROMPT'
 You are a Senior Technical Writer. Produce a documentation OUTLINE only — not the full article.
@@ -401,7 +464,7 @@ PROMPT;
         if ( empty( $result['success'] ) ) {
             return array(
                 'success' => false,
-                'error'   => isset( $result['error'] ) ? $result['error'] : 'OpenAI error',
+                'error'   => isset( $result['error'] ) ? $result['error'] : 'AI error',
             );
         }
 
@@ -458,249 +521,94 @@ PROMPT;
         return $outline;
     }
 
-    public function generate_openai_response( $prompt, $keywords, $max_tokens = null, $extra_system = array() ) {
-        try {
-            $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-            // Caller may raise the cap (e.g. a "large" doc) above the saved default.
-            $max_tokens = null !== $max_tokens ? (int) $max_tokens : $this->settings->get( 'ai_autowrite_max_token', 2500 );
-            $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
-
-            $api_endpoint = 'https://api.openai.com/v1/chat/completions'; // Update the endpoint based on OpenAI API version
-
-            $messages = array_merge(
-                array(
-                    array(
-                        'role' => 'system',
-                        'content' => $this->get_system_prompt()
-                    )
-                ),
-                $this->normalize_extra_system( $extra_system ),
-                array(
-                    array(
-                        'role' => 'user',
-                        'content' => $prompt
-                    )
-                )
-            );
-
-            $request_body = AIHelper::build_openai_payload(
-                $model,
-                $messages,
-                $max_tokens,
-                null,
-                'write_with_ai'
-            );
-
-            $request_options = array(
-                'headers' => array(
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $api_key
-                ),
-                'body' => json_encode( $request_body ),
-                'timeout' => 300
-            );
-
-            // GPT-5.5 reasoning can run well past the default limits; give PHP and
-            // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
-            if ( function_exists( 'set_time_limit' ) ) {
-                set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- long-running AI generation needs an extended limit; still bounded by server fpm/nginx timeouts.
-            }
-
-            $response = wp_remote_post( $api_endpoint, $request_options );
-
-            if ( is_wp_error( $response ) ) {
-                return 'Error: ' . $response->get_error_message();
-            } else {
-                $body = wp_remote_retrieve_body( $response );
-
-                $data = json_decode( $body, true );
-
-                if ( ! empty( $data[ 'error' ] ) ) {
-                    return $data[ 'error' ][ 'message' ];
-                }
-
-                return $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ]; // Update this line to get the assistant's message
-            }
-        } catch ( Exception $error ) {
-            return 'Error: ' . $error->getMessage();
-        }
-    }
-
     public function generate_openai_response_ai_edit( $prompt, $extra_system = array() ) {
-        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
-        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
-
-        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
+        $factory = new ProviderFactory( $this->settings );
+        $model   = $factory->active_model();
 
         $messages = array_merge(
-            array(
-                array(
-                    'role' => 'system',
-                    'content' => $this->get_system_prompt()
-                )
-            ),
+            array( array( 'role' => 'system', 'content' => $this->get_system_prompt() ) ),
             $this->normalize_extra_system( $extra_system ),
-            array(
-                array(
-                    'role' => 'user',
-                    'content' => $prompt
-                )
-            )
+            array( array( 'role' => 'user', 'content' => $prompt ) )
         );
 
-        $payload = AIHelper::build_openai_payload(
-            $model,
-            $messages,
-            $max_tokens,
-            null,
-            'write_with_ai'
-        );
+        $result = $factory->make()->chat( $messages, $this->ai_chat_options() );
 
-        $request_options = array(
-            'headers' => array(
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key
-            ),
-            'body' => wp_json_encode( $payload ),
-            'timeout' => 300
-        );
-
-        // GPT-5.5 reasoning can run well past the default limits; give PHP and
-        // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
-        if ( function_exists( 'set_time_limit' ) ) {
-            set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- long-running AI generation needs an extended limit; still bounded by server fpm/nginx timeouts.
-        }
-
-        $response = wp_remote_post( $api_endpoint, $request_options );
-
-        if ( is_wp_error( $response ) ) {
+        if ( is_wp_error( $result ) ) {
             return array(
                 'success' => false,
-                'error' => $response->get_error_message(),
-                'model' => $model
-            );
-        }
-
-        $body = wp_remote_retrieve_body( $response );
-        $data = json_decode( $body, true );
-
-        if ( ! empty( $data[ 'error' ] ) ) {
-            return array(
-                'success' => false,
-                'error' => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
-                'model' => $model,
-                'raw' => $data
-            );
-        }
-
-        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
-        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
-
-        return array(
-            'success' => true,
-            'content' => $content,
-            'model' => $model,
-            'prompt_tokens' => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
-            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
-            'total_tokens' => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
-            'finish_reason' => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
-        );
-    }
-
-    /**
-     * Generic chat completion using the Write-with-AI model/token/key settings.
-     *
-     * Shared by lightweight, plain-text generators (glossary definitions, FAQ answers)
-     * that need the same dynamic model as Write with AI / AI Edit but a caller-supplied
-     * system prompt instead of the doc-authoring HTML prompt. Returns the same structured
-     * array shape as {@see self::generate_openai_response_ai_edit()}.
-     *
-     * @param string $user_prompt   The user message.
-     * @param string $system_prompt Optional system message (omitted when empty).
-     * @return array { success:bool, content?:string, error?:string, model:string, *_tokens?:int }
-     */
-    public function generate_text( $user_prompt, $system_prompt = '', $extra_system = array() ) {
-        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
-        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
-
-        $messages = array();
-        if ( $system_prompt !== '' ) {
-            $messages[] = array(
-                'role'    => 'system',
-                'content' => $system_prompt
-            );
-        }
-        foreach ( $this->normalize_extra_system( $extra_system ) as $extra ) {
-            $messages[] = $extra;
-        }
-        $messages[] = array(
-            'role'    => 'user',
-            'content' => $user_prompt
-        );
-
-        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
-
-        $payload = AIHelper::build_openai_payload( $model, $messages, $max_tokens, null, 'write_with_ai' );
-
-        $request_options = array(
-            'headers' => array(
-                'Content-Type'  => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key
-            ),
-            'body'    => wp_json_encode( $payload ),
-            'timeout' => 300
-        );
-
-        // GPT-5.5 reasoning can run well past the default limits; give PHP and
-        // the HTTP call room to finish (still subject to server php-fpm/nginx limits).
-        if ( function_exists( 'set_time_limit' ) ) {
-            set_time_limit( 300 );
-        }
-
-        $response = wp_remote_post( $api_endpoint, $request_options );
-
-        if ( is_wp_error( $response ) ) {
-            return array(
-                'success' => false,
-                'error'   => $response->get_error_message(),
+                'error'   => $result->get_error_message(),
                 'model'   => $model
             );
         }
 
-        $body = wp_remote_retrieve_body( $response );
-        $data = json_decode( $body, true );
-
-        if ( ! empty( $data[ 'error' ] ) ) {
-            return array(
-                'success' => false,
-                'error'   => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
-                'model'   => $model,
-                'raw'     => $data
-            );
-        }
-
-        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
-        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
+        $usage = isset( $result['usage'] ) && is_array( $result['usage'] ) ? $result['usage'] : array();
 
         return array(
             'success'           => true,
-            'content'           => $content,
-            'model'             => $model,
-            'prompt_tokens'     => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
-            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
-            'total_tokens'      => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
-            'finish_reason'     => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
+            'content'           => $result['content'],
+            'model'             => isset( $result['model'] ) ? $result['model'] : $model,
+            'prompt_tokens'     => isset( $usage['prompt_tokens'] ) ? $usage['prompt_tokens'] : null,
+            'completion_tokens' => isset( $usage['completion_tokens'] ) ? $usage['completion_tokens'] : null,
+            'total_tokens'      => isset( $usage['total_tokens'] ) ? $usage['total_tokens'] : null,
+            'finish_reason'     => isset( $result['finish_reason'] ) ? $result['finish_reason'] : null
         );
     }
 
     /**
-     * Generate an OpenAI chat completion with a caller-supplied system + user
-     * prompt. Mirrors generate_openai_response_ai_edit() (same key/model/token
-     * floor/timeout handling and return shape) but does NOT force the
-     * documentation-writer system prompt, so callers such as the Docs AI Suite
-     * (taxonomy suggestions, excerpts) can supply task-appropriate instructions.
+     * Generic chat completion using the active Write-with-AI platform/model/token
+     * settings. Shared by lightweight, plain-text generators (glossary definitions,
+     * FAQ answers, outlines) that need the same dynamic model as Write with AI /
+     * AI Edit but a caller-supplied system prompt instead of the doc-authoring HTML
+     * prompt. Routes through ProviderFactory so every provider is supported.
+     *
+     * @param string $user_prompt   The user message.
+     * @param string $system_prompt Optional system message (omitted when empty).
+     * @param array  $extra_system  Optional extra system messages.
+     * @return array { success:bool, content?:string, error?:string, model:string, *_tokens?:int }
+     */
+    public function generate_text( $user_prompt, $system_prompt = '', $extra_system = array() ) {
+        $factory = new ProviderFactory( $this->settings );
+        $model   = $factory->active_model();
+
+        $messages = array();
+        if ( $system_prompt !== '' ) {
+            $messages[] = array( 'role' => 'system', 'content' => $system_prompt );
+        }
+        foreach ( $this->normalize_extra_system( $extra_system ) as $extra ) {
+            $messages[] = $extra;
+        }
+        $messages[] = array( 'role' => 'user', 'content' => $user_prompt );
+
+        $result = $factory->make()->chat( $messages, $this->ai_chat_options() );
+
+        if ( is_wp_error( $result ) ) {
+            return array(
+                'success' => false,
+                'error'   => $result->get_error_message(),
+                'model'   => $model
+            );
+        }
+
+        $usage = isset( $result['usage'] ) && is_array( $result['usage'] ) ? $result['usage'] : array();
+
+        return array(
+            'success'           => true,
+            'content'           => $result['content'],
+            'model'             => isset( $result['model'] ) ? $result['model'] : $model,
+            'prompt_tokens'     => isset( $usage['prompt_tokens'] ) ? $usage['prompt_tokens'] : null,
+            'completion_tokens' => isset( $usage['completion_tokens'] ) ? $usage['completion_tokens'] : null,
+            'total_tokens'      => isset( $usage['total_tokens'] ) ? $usage['total_tokens'] : null,
+            'finish_reason'     => isset( $result['finish_reason'] ) ? $result['finish_reason'] : null
+        );
+    }
+
+    /**
+     * Generate a chat completion with a caller-supplied system + user prompt.
+     * Mirrors generate_openai_response_ai_edit() (same model/token floor/timeout
+     * handling and return shape) but does NOT force the documentation-writer
+     * system prompt, so callers such as the Docs AI Suite (taxonomy suggestions,
+     * excerpts) can supply task-appropriate instructions. Routes through the active
+     * provider via ProviderFactory.
      *
      * @param string     $system_prompt System instruction for the model.
      * @param string     $user_prompt   User message / content payload.
@@ -708,75 +616,34 @@ PROMPT;
      * @return array{success:bool,content?:string,error?:string,model:string,...}
      */
     public function generate_openai_response_raw( $system_prompt, $user_prompt, $temperature = null ) {
-        $api_key    = $this->settings->get( 'ai_autowrite_api_key', '' );
-        $max_tokens = $this->settings->get( 'ai_autowrite_max_token', 2500 );
-        $model      = $this->settings->get( 'write_with_ai_model', 'gpt-4o-mini' );
+        $factory = new ProviderFactory( $this->settings );
+        $model   = $factory->active_model();
 
-        $api_endpoint = 'https://api.openai.com/v1/chat/completions';
-
-        $payload = AIHelper::build_openai_payload(
-            $model,
-            array(
-                array(
-                    'role' => 'system',
-                    'content' => $system_prompt
-                ),
-                array(
-                    'role' => 'user',
-                    'content' => $user_prompt
-                )
-            ),
-            $max_tokens,
-            $temperature,
-            'write_with_ai'
+        $messages = array(
+            array( 'role' => 'system', 'content' => $system_prompt ),
+            array( 'role' => 'user', 'content' => $user_prompt )
         );
 
-        $request_options = array(
-            'headers' => array(
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $api_key
-            ),
-            'body' => wp_json_encode( $payload ),
-            'timeout' => 300
-        );
+        $result = $factory->make()->chat( $messages, $this->ai_chat_options( null, $temperature ) );
 
-        if ( function_exists( 'set_time_limit' ) ) {
-            set_time_limit( 300 );
-        }
-
-        $response = wp_remote_post( $api_endpoint, $request_options );
-
-        if ( is_wp_error( $response ) ) {
+        if ( is_wp_error( $result ) ) {
             return array(
                 'success' => false,
-                'error' => $response->get_error_message(),
-                'model' => $model
+                'error'   => $result->get_error_message(),
+                'model'   => $model
             );
         }
 
-        $body = wp_remote_retrieve_body( $response );
-        $data = json_decode( $body, true );
-
-        if ( ! empty( $data[ 'error' ] ) ) {
-            return array(
-                'success' => false,
-                'error' => isset( $data[ 'error' ][ 'message' ] ) ? $data[ 'error' ][ 'message' ] : 'OpenAI error',
-                'model' => $model,
-                'raw' => $data
-            );
-        }
-
-        $content = isset( $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] ) ? $data[ 'choices' ][ 0 ][ 'message' ][ 'content' ] : '';
-        $usage   = isset( $data[ 'usage' ] ) && is_array( $data[ 'usage' ] ) ? $data[ 'usage' ] : array();
+        $usage = isset( $result['usage'] ) && is_array( $result['usage'] ) ? $result['usage'] : array();
 
         return array(
-            'success' => true,
-            'content' => $content,
-            'model' => $model,
-            'prompt_tokens' => isset( $usage[ 'prompt_tokens' ] ) ? (int) $usage[ 'prompt_tokens' ] : null,
-            'completion_tokens' => isset( $usage[ 'completion_tokens' ] ) ? (int) $usage[ 'completion_tokens' ] : null,
-            'total_tokens' => isset( $usage[ 'total_tokens' ] ) ? (int) $usage[ 'total_tokens' ] : null,
-            'finish_reason' => isset( $data[ 'choices' ][ 0 ][ 'finish_reason' ] ) ? $data[ 'choices' ][ 0 ][ 'finish_reason' ] : null
+            'success'           => true,
+            'content'           => $result['content'],
+            'model'             => isset( $result['model'] ) ? $result['model'] : $model,
+            'prompt_tokens'     => isset( $usage['prompt_tokens'] ) ? $usage['prompt_tokens'] : null,
+            'completion_tokens' => isset( $usage['completion_tokens'] ) ? $usage['completion_tokens'] : null,
+            'total_tokens'      => isset( $usage['total_tokens'] ) ? $usage['total_tokens'] : null,
+            'finish_reason'     => isset( $result['finish_reason'] ) ? $result['finish_reason'] : null
         );
     }
 

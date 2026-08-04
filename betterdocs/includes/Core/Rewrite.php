@@ -23,6 +23,46 @@ class Rewrite extends Base {
 		add_action( 'init', [ $this, 'rules' ] );
 		add_action( 'betterdocs::settings::saved', [ $this, 'save_permalink_structure' ], 2, 3 );
 		add_action( 'template_redirect', [ $this, 'handle_pagination_redirect' ] );
+		add_filter( 'term_link', [ $this, 'taxonomy_term_link' ], 10, 3 );
+	}
+
+	/**
+	 * Swap a BetterDocs taxonomy base slug for its WPML-translated value in term links.
+	 *
+	 * doc_tag / doc_category are registered with the default-language slug, so
+	 * WordPress' core get_term_link() always builds `/docs-tag/{slug}/` etc. When
+	 * WPML translates the "URL <taxonomy> tax slug" string, rewrite the base segment
+	 * to the active language's slug so term links match the translated archive URL.
+	 * No-op for other taxonomies, when the slug isn't translated, or when the base
+	 * segment isn't present (e.g. MKB category permalinks that omit it).
+	 *
+	 * @param string   $termlink
+	 * @param \WP_Term $term
+	 * @param string   $taxonomy
+	 * @return string
+	 */
+	public function taxonomy_term_link( $termlink, $term, $taxonomy ) {
+		if ( ! is_string( $termlink ) ) {
+			return $termlink;
+		}
+
+		$slug_map = [
+			'doc_tag'      => trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ),
+			'doc_category' => trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ),
+		];
+
+		if ( ! isset( $slug_map[ $taxonomy ] ) || $slug_map[ $taxonomy ] === '' ) {
+			return $termlink;
+		}
+
+		$default    = $slug_map[ $taxonomy ];
+		$translated = \WPDeveloper\BetterDocs\Utils\Helper::wpml_translated_tax_slug( $taxonomy, $default );
+
+		if ( $translated === $default ) {
+			return $termlink;
+		}
+
+		return preg_replace( '#/' . preg_quote( $default, '#' ) . '/#', '/' . $translated . '/', $termlink, 1 );
 	}
 
 	/**

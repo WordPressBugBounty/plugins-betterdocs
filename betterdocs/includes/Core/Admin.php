@@ -832,7 +832,6 @@ class Admin extends Base {
                 'betterdocs_pro_plugin'          => betterdocs()->is_pro_active(),
                 'betterdocs_pro_version'         => betterdocs()->pro_version(),
                 'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
-                'disabled_embed_model_option'    => get_option( 'disabled_embed_model_option' ),
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
                 'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
@@ -871,8 +870,9 @@ class Admin extends Base {
 		// Get settings and remove unnecessary keys
 		$betterdocs_settings = get_option( 'betterdocs_settings', false );
 		if ( is_array( $betterdocs_settings ) && ! current_user_can( 'edit_docs_settings' ) ) {
-			unset( $betterdocs_settings['ai_autowrite_api_key'] );
-			unset( $betterdocs_settings['ai_chatbot_api_key'] );
+			foreach ( Settings::sensitive_api_key_fields() as $sensitive_key ) {
+				unset( $betterdocs_settings[ $sensitive_key ] );
+			}
 		}
 
 		betterdocs()->assets->localize(

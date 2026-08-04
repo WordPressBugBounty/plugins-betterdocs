@@ -21,18 +21,64 @@ use function WPML\PHP\Logger\error;
 class Helper extends Base {
 
 	/**
-	 * Mask an API key for safe display: first 3 chars + 8 asterisks + last 4 chars.
-	 * Fixed asterisk count avoids leaking the real key length.
+	 * Mask an API key for safe display.
+	 *
+	 * Prefix-aware: when the key carries a recognizable provider prefix
+	 * (OpenAI sk-/sk-proj-, Anthropic sk-ant-/sk-ant-api03-, Gemini AIza) that
+	 * prefix is kept visible so an admin can tell which provider/key is set,
+	 * then a fixed 8-asterisk block, then the last 4 chars. Keys without a known
+	 * prefix fall back to first 3 + 8 asterisks + last 4. The asterisk count is
+	 * always fixed so the real key length is never leaked.
 	 */
 	public static function mask_api_key( $key ) {
 		if ( ! is_string( $key ) || $key === '' ) {
 			return '';
 		}
 		$key = trim( $key );
+		if ( $key === '' ) {
+			return '';
+		}
+
+		// Longest prefixes first so sk-proj-/sk-ant- win over the bare sk-.
+		$prefixes = array( 'sk-ant-api03-', 'sk-ant-', 'sk-proj-', 'sk-', 'AIza' );
+		foreach ( $prefixes as $prefix ) {
+			if ( strncmp( $key, $prefix, strlen( $prefix ) ) === 0
+				&& strlen( $key ) >= strlen( $prefix ) + 4 ) {
+				return $prefix . str_repeat( '*', 8 ) . substr( $key, -4 );
+			}
+		}
+
 		if ( strlen( $key ) < 8 ) {
 			return str_repeat( '*', strlen( $key ) );
 		}
 		return substr( $key, 0, 3 ) . str_repeat( '*', 8 ) . substr( $key, -4 );
+	}
+
+	/**
+	 * Resolve the WPML-translated base slug of a taxonomy for the CURRENT language.
+	 *
+	 * WPML registers each translatable taxonomy's rewrite slug as a string named
+	 * "URL <taxonomy> tax slug" in the "WordPress" domain (e.g. "URL doc_tag tax slug").
+	 * BetterDocs stores only the default-language slug in its settings, so routing and
+	 * term links must read the translated value back here. Returns the trimmed default
+	 * slug unchanged when WPML is inactive or the string has no translation.
+	 *
+	 * @param string $taxonomy     Taxonomy key, e.g. 'doc_tag'.
+	 * @param string $default_slug Default-language base slug from settings.
+	 * @return string Translated base slug for the active language (falls back to default).
+	 */
+	public static function wpml_translated_tax_slug( $taxonomy, $default_slug ) {
+		$default_slug = trim( (string) $default_slug, '/' );
+
+		if ( $default_slug === '' || ! has_filter( 'wpml_translate_single_string' ) ) {
+			return $default_slug;
+		}
+
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML-owned filter; name must be used verbatim.
+		$translated = apply_filters( 'wpml_translate_single_string', $default_slug, 'WordPress', 'URL ' . $taxonomy . ' tax slug' );
+		$translated = trim( (string) $translated, '/' );
+
+		return $translated !== '' ? $translated : $default_slug;
 	}
 
 	public static function get_plugins( $plugin_basename = null ) {

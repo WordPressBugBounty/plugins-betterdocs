@@ -122,7 +122,9 @@ class Scripts extends Base {
 			'betterdocs-category-grid',
 			'betterdocsCategoryGridConfig',
 			[
-				'is_betterdocs_templates' => betterdocs()->helper->is_templates() ? true : false
+				'is_betterdocs_templates' => betterdocs()->helper->is_templates() ? true : false,
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
+				'lazy_load_action'        => 'betterdocs_lazy_category_body'
 			]
 		);
 

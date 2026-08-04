@@ -80,7 +80,7 @@ class CategoryBox extends Shortcode {
 			'terms'              => $this->attributes['terms'],
 			'order'              => $this->attributes['terms_order'],
 			'orderby'            => $this->attributes['terms_orderby'],
-			'multiple_kb'        => $this->attributes['multiple_knowledge_base'],
+			'multiple_kb'        => ( $this->attributes['multiple_knowledge_base'] && ! empty( $this->attributes['kb_slug'] ) ) ? true : false,
 			'kb_slug'            => $this->attributes['kb_slug'],
 			'nested_subcategory' => (bool) $this->attributes['nested_subcategory']
 		];

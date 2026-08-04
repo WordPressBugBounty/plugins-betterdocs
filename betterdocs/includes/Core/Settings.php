@@ -10,6 +10,7 @@ use WP_Error;
 use WP_User;
 use WPDeveloper\BetterDocs\Admin\Builder\GlobalFields;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
+use WPDeveloper\BetterDocs\AI\ModelRegistry;
 use WPDeveloper\BetterDocs\REST\AIEdit;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
 use WPDeveloper\BetterDocs\Utils\Base;
@@ -53,6 +54,7 @@ class Settings extends Base {
         add_action( 'wp_ajax_betterdocs_dark_mode', array( $this, 'dark_mode' ) );
         add_filter( 'betterdocs_settings_tab_advance', array( $this, 'hide_roles_management' ), 11, 1 );
         add_action( 'betterdocs::settings::saved', array( $this, 'fallback_slugs' ), 99, 3 );
+        add_action( 'admin_init', array( $this, 'maybe_migrate_ai_platform_settings' ) );
     }
 
     public function fallback_slugs( $_saved, $_settings, $_old_settings = array() ) {
@@ -78,6 +80,73 @@ class Settings extends Base {
     }
 
     /**
+     * Settings keys holding secret API keys. These are masked before reaching
+     * the browser, stripped for non-admins, and never persisted as their mask.
+     *
+     * Includes the legacy single-key fields plus the per-platform content-suite
+     * keys introduced with multi-platform support.
+     *
+     * @return array<int,string>
+     */
+    public static function sensitive_api_key_fields() {
+        $fields = array(
+            'ai_autowrite_api_key',
+            'ai_chatbot_api_key',
+        );
+        foreach ( array_keys( ModelRegistry::platforms() ) as $platform ) {
+            $fields[] = 'ai_api_key_' . $platform;
+        }
+        // Add-ons (e.g. the AI Chatbot) register their own per-platform keys here
+        // so they are masked in the browser and stripped for non-admins.
+        return apply_filters( 'betterdocs_sensitive_api_key_fields', $fields );
+    }
+
+    /**
+     * One-time copy of pre-multi-platform AI settings onto the new keys so the
+     * settings UI shows the user's existing OpenAI key and model under the new
+     * platform-aware fields. Runtime already falls back via ProviderFactory, so
+     * this only affects what the admin sees. Guarded by an option flag.
+     *
+     * Runs on `admin_init`, which fires for every logged-in user who loads
+     * /wp-admin/ — including a Subscriber. Since this writes settings (and copies
+     * the legacy OpenAI key onto `ai_api_key_openai`), it is gated on the same
+     * `edit_docs_settings` capability used everywhere else for settings writes.
+     * The one-shot flag is deliberately NOT set when the capability check fails,
+     * otherwise the first low-privilege page load would permanently skip the
+     * migration for administrators too.
+     *
+     * @return void
+     */
+    public function maybe_migrate_ai_platform_settings() {
+        if ( get_option( 'betterdocs_ai_platform_migrated' ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_docs_settings' ) ) {
+            return;
+        }
+
+        if ( '' === (string) $this->get_raw_field( 'ai_platform', '' ) ) {
+            $this->save( 'ai_platform', 'openai' );
+        }
+
+        $legacy_key = (string) $this->get( 'ai_autowrite_api_key', '' );
+        if ( '' !== $legacy_key && '' === (string) $this->get_raw_field( 'ai_api_key_openai', '' ) ) {
+            $this->save( 'ai_api_key_openai', $legacy_key );
+        }
+
+        if ( '' === (string) $this->get_raw_field( 'ai_model', '' ) ) {
+            $legacy_model = (string) $this->get( 'write_with_ai_model', '' );
+            if ( '' === $legacy_model ) {
+                $legacy_model = (string) $this->get( 'article_summary_model', 'gpt-4o-mini' );
+            }
+            $this->save( 'ai_model', $legacy_model !== '' ? $legacy_model : 'gpt-4o-mini' );
+        }
+
+        update_option( 'betterdocs_ai_platform_migrated', 1 );
+    }
+
+    /**
      * This method is responsible for enqueueing scripts in settings panel
      *
      * @param string $hook
@@ -96,7 +165,7 @@ class Settings extends Base {
         $settings = GlobalFields::normalize( $this->settings_args() );
 
         // Mask sensitive API keys before they reach the browser. Non-admins still get them stripped entirely below.
-        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key', 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id' );
+        $sensitive_api_keys = self::sensitive_api_key_fields();
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! empty( $settings[ 'values' ][ $api_key_field ] ) ) {
                 $settings[ 'values' ][ $api_key_field ] = Helper::mask_api_key( $settings[ 'values' ][ $api_key_field ] );
@@ -273,6 +342,7 @@ class Settings extends Base {
             'enable_archive_sidebar' => true,
             'archive_nested_subcategory' => true,
             'archive_enable_pagination' => false,
+            'archive_lazy_load_descendants' => false,
             'enable_content_restriction' => false,
             'enable_reporting' => false,
             'enable_sample_data' => false,
@@ -296,6 +366,17 @@ class Settings extends Base {
             'enable_article_summary' => false,
             'article_summary_model' => 'gpt-4o-mini',
             'article_summary_max_token' => 1500,
+            // Multi-platform AI (content suite). `ai_platform` selects the active
+            // provider; `ai_model` is the single global model; keys are stored
+            // per platform so switching never loses a saved key. Legacy keys
+            // above are kept for back-compat and migrated on upgrade.
+            'ai_platform' => 'openai',
+            'ai_model' => 'gpt-4o-mini',
+            'ai_api_key_openai' => '',
+            'ai_api_key_gemini' => '',
+            'ai_api_key_claude' => '',
+            'ai_api_key_deepseek' => '',
+            'ai_api_key_openrouter' => '',
             'enable_estimated_reading_time' => true,
             'enable_encyclopedia' => false,
             'enable_glossaries' => false,
@@ -610,7 +691,7 @@ class Settings extends Base {
         // preserve the corrupted value forever (round-2 follow-up #1). When the stored value is
         // itself mask-shaped it is unrecoverable — clear it so the UI and the GeoIP/GA4 status
         // surfaces honestly report a missing key instead of failing downstream with 401s.
-        $sensitive_api_keys = array( 'ai_autowrite_api_key', 'ai_chatbot_api_key', 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id' );
+        $sensitive_api_keys = self::sensitive_api_key_fields();
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! isset( $settings[ $api_key_field ] ) ) {
                 continue;
@@ -637,14 +718,14 @@ class Settings extends Base {
                 'tab' => 'tab-betterdocs-ai',
                 'context' => 'write_with_ai',
                 'token_key' => 'ai_autowrite_max_token',
-                'model_key' => 'write_with_ai_model',
+                'model_key' => 'ai_model',
                 'label' => __( 'Write with AI', 'betterdocs' )
             ),
             array(
                 'tab' => 'tab-betterdocs-ai',
                 'context' => 'article_summary',
                 'token_key' => 'article_summary_max_token',
-                'model_key' => 'article_summary_model',
+                'model_key' => 'ai_model',
                 'label' => __( 'AI Doc Summarizer', 'betterdocs' )
             )
         );
@@ -1018,13 +1099,22 @@ class Settings extends Base {
                                                                     'default' => 1,
                                                                     'priority' => 1
                                                                 ),
+                                                                'archive_lazy_load_descendants' => array(
+                                                                    'name' => 'archive_lazy_load_descendants',
+                                                                    'type' => 'toggle',
+                                                                    'label' => __( 'Lazy Load Sidebar Docs & Subcategories', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Applies to the Sidebar layout wherever it appears — single docs, category archives, and the Sidebar widget/block. Off by default: enable to render only the active category upfront and fetch the rest on click (or on scroll for the Memphis layout), cutting initial HTML size on large knowledge bases.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => false,
+                                                                    'priority' => 2
+                                                                ),
                                                                 'nested_subcategory' => array(
                                                                     'name' => 'nested_subcategory',
                                                                     'type' => 'toggle',
                                                                     'label' => __( 'Nested Sub Category', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => '',
-                                                                    'priority' => 2
+                                                                    'priority' => 3
                                                                 ),
                                                                 'column_number' => array(
                                                                     'name' => 'column_number',
@@ -1032,7 +1122,7 @@ class Settings extends Base {
                                                                     'label' => __( 'Number Of Columns', 'betterdocs' ),
                                                                     'label_subtitle' => __( 'This setting is not applicable for sleek layout.', 'betterdocs' ),
                                                                     'default' => 3,
-                                                                    'priority' => 3
+                                                                    'priority' => 4
                                                                 ),
                                                                 'posts_number' => apply_filters( 'betterdocs_posts_number', array(
                                                                     'name' => 'posts_number',
@@ -1040,7 +1130,7 @@ class Settings extends Base {
                                                                     'label' => __( 'Number Of Docs', 'betterdocs' ),
                                                                     'label_subtitle' => __( 'This setting is not applicable for handbook layout.', 'betterdocs' ),
                                                                     'default' => 10,
-                                                                    'priority' => 4
+                                                                    'priority' => 5
                                                                 ) ),
                                                                 'post_count' => array(
                                                                     'name' => 'post_count',
@@ -1048,21 +1138,21 @@ class Settings extends Base {
                                                                     'label' => __( 'Doc Count', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => 1,
-                                                                    'priority' => 5
+                                                                    'priority' => 6
                                                                 ),
                                                                 'count_text' => array(
                                                                     'name' => 'count_text',
                                                                     'type' => 'text',
                                                                     'label' => __( 'Count Text', 'betterdocs' ),
                                                                     'default' => __( 'Docs', 'betterdocs' ),
-                                                                    'priority' => 6
+                                                                    'priority' => 7
                                                                 ),
                                                                 'count_text_singular' => array(
                                                                     'name' => 'count_text_singular',
                                                                     'type' => 'text',
                                                                     'label' => __( 'Count Text Singular', 'betterdocs' ),
                                                                     'default' => __( 'Doc', 'betterdocs' ),
-                                                                    'priority' => 7
+                                                                    'priority' => 8
                                                                 ),
                                                                 'exploremore_btn' => array(
                                                                     'name' => 'exploremore_btn',
@@ -1070,14 +1160,14 @@ class Settings extends Base {
                                                                     'label' => __( 'Explore More Button', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => true,
-                                                                    'priority' => 8
+                                                                    'priority' => 9
                                                                 ),
                                                                 'exploremore_btn_txt' => array(
                                                                     'name' => 'exploremore_btn_txt',
                                                                     'type' => 'text',
                                                                     'label' => __( 'Explore More Button Text', 'betterdocs' ),
                                                                     'default' => __( 'Explore More', 'betterdocs' ),
-                                                                    'priority' => 9,
+                                                                    'priority' => 10,
                                                                     'rules' => Rules::is( 'exploremore_btn', true )
                                                                 ),
                                                                 'betterdocs_popular_docs_text' => array(
@@ -1085,7 +1175,7 @@ class Settings extends Base {
                                                                     'type' => 'text',
                                                                     'label' => __( 'Popular Docs Text', 'betterdocs' ),
                                                                     'default' => __( 'Popular Docs', 'betterdocs' ),
-                                                                    'priority' => 10,
+                                                                    'priority' => 11,
                                                                     'is_pro' => true
                                                                 ),
                                                                 'betterdocs_popular_docs_number' => array(
@@ -1093,7 +1183,7 @@ class Settings extends Base {
                                                                     'type' => 'number',
                                                                     'label' => __( 'Popular Docs Number', 'betterdocs' ),
                                                                     'default' => 10,
-                                                                    'priority' => 11,
+                                                                    'priority' => 12,
                                                                     'is_pro' => true
                                                                 )
                                                             )
@@ -2297,16 +2387,80 @@ class Settings extends Base {
                                                 'id' => 'open-ai-settings',
                                                 'name' => 'open-ai-settings',
                                                 'type' => 'section',
-                                                'label' => __( 'API Settings', 'betterdocs' ),
+                                                'label' => __( 'AI Platform & API', 'betterdocs' ),
                                                 'priority' => 1,
                                                 'fields' => array(
-                                                    'ai_autowrite_api_key' => array(
-                                                        'name' => 'ai_autowrite_api_key',
+                                                    'ai_platform' => array(
+                                                        'name' => 'ai_platform',
+                                                        'type' => 'select',
+                                                        'label' => __( 'AI Platform', 'betterdocs' ),
+                                                        'label_subtitle' => __( 'Choose which AI platform powers Write with AI, AI Edit, the Doc Summarizer and Quality Score. The model list and API key field below adapt to your choice.', 'betterdocs' ),
+                                                        'priority' => 1,
+                                                        'multiple' => false,
+                                                        'default' => 'openai',
+                                                        // DeepSeek and OpenRouter are temporarily hidden from the
+                                                        // dropdown. Filter the options here, NOT ModelRegistry::platforms() —
+                                                        // sensitive_api_key_fields() loops the registry to mask each
+                                                        // ai_api_key_{platform}, so trimming the registry would silently
+                                                        // un-mask those keys. Re-enable later by dropping the array_diff_key.
+                                                        'options' => GlobalFields::normalize_fields(
+                                                            array_diff_key( ModelRegistry::platforms(), array_flip( array( 'deepseek', 'openrouter' ) ) )
+                                                        )
+                                                    ),
+                                                    'ai_api_key_openai' => array(
+                                                        'name' => 'ai_api_key_openai',
                                                         'type' => 'text',
-                                                        'label' => __( 'API Key', 'betterdocs' ),
-                                                        'label_subtitle' => sprintf(  /* translators: %s is a link to the documentation about generating an OpenAI API key. */__( 'Check out this <a target="_blank" href="%s">documentation</a> to find out how to generate your OpenAI API Key.', 'betterdocs' ), esc_url( 'https://betterdocs.co/docs/write-with-ai/' ) ),
+                                                        'label' => __( 'OpenAI API Key', 'betterdocs' ),
+                                                        'label_subtitle' => sprintf( /* translators: %s: documentation URL */ __( 'Check out this <a target="_blank" href="%s">documentation</a> to generate your OpenAI API key.', 'betterdocs' ), esc_url( 'https://betterdocs.co/docs/write-with-ai/' ) ),
                                                         'default' => '',
-                                                        'priority' => 1
+                                                        'priority' => 2,
+                                                        'rules' => Rules::is( 'ai_platform', 'openai' )
+                                                    ),
+                                                    'ai_api_key_gemini' => array(
+                                                        'name' => 'ai_api_key_gemini',
+                                                        'type' => 'text',
+                                                        'label' => __( 'Google Gemini API Key', 'betterdocs' ),
+                                                        'label_subtitle' => sprintf( /* translators: %s: Google AI Studio URL */ __( 'Generate a key from <a target="_blank" href="%s">Google AI Studio</a>.', 'betterdocs' ), esc_url( 'https://aistudio.google.com/app/apikey' ) ),
+                                                        'default' => '',
+                                                        'priority' => 2,
+                                                        'rules' => Rules::is( 'ai_platform', 'gemini' )
+                                                    ),
+                                                    'ai_api_key_claude' => array(
+                                                        'name' => 'ai_api_key_claude',
+                                                        'type' => 'text',
+                                                        'label' => __( 'Anthropic Claude API Key', 'betterdocs' ),
+                                                        'label_subtitle' => sprintf( /* translators: %s: Anthropic Console URL */ __( 'Generate a key from the <a target="_blank" href="%s">Anthropic Console</a>.', 'betterdocs' ), esc_url( 'https://console.anthropic.com/settings/keys' ) ),
+                                                        'default' => '',
+                                                        'priority' => 2,
+                                                        'rules' => Rules::is( 'ai_platform', 'claude' )
+                                                    ),
+                                                    'ai_api_key_deepseek' => array(
+                                                        'name' => 'ai_api_key_deepseek',
+                                                        'type' => 'text',
+                                                        'label' => __( 'DeepSeek API Key', 'betterdocs' ),
+                                                        'label_subtitle' => sprintf( /* translators: %s: DeepSeek platform URL */ __( 'Generate a key from the <a target="_blank" href="%s">DeepSeek platform</a>.', 'betterdocs' ), esc_url( 'https://platform.deepseek.com/api_keys' ) ),
+                                                        'default' => '',
+                                                        'priority' => 2,
+                                                        'rules' => Rules::is( 'ai_platform', 'deepseek' )
+                                                    ),
+                                                    'ai_api_key_openrouter' => array(
+                                                        'name' => 'ai_api_key_openrouter',
+                                                        'type' => 'text',
+                                                        'label' => __( 'OpenRouter API Key', 'betterdocs' ),
+                                                        'label_subtitle' => sprintf( /* translators: %s: OpenRouter keys URL */ __( 'Generate a key from <a target="_blank" href="%s">OpenRouter</a>.', 'betterdocs' ), esc_url( 'https://openrouter.ai/keys' ) ),
+                                                        'default' => '',
+                                                        'priority' => 2,
+                                                        'rules' => Rules::is( 'ai_platform', 'openrouter' )
+                                                    ),
+                                                    'ai_model' => array(
+                                                        'name' => 'ai_model',
+                                                        'type' => 'platform_model_select',
+                                                        'label' => __( 'Model', 'betterdocs' ),
+                                                        'label_subtitle' => __( 'Available models depend on the selected platform.', 'betterdocs' ),
+                                                        'priority' => 10,
+                                                        'default' => 'gpt-4o-mini',
+                                                        'catalogue' => ModelRegistry::catalogue(),
+                                                        'defaults' => ModelRegistry::defaults()
                                                     )
                                                 )
                                             ),
@@ -2384,25 +2538,6 @@ class Settings extends Base {
                                                         'enable_disable_text_active' => true,
                                                         'default' => true
                                                     ),
-                                                    'write_with_ai_model' => array(
-                                                        'name' => 'write_with_ai_model',
-                                                        'type' => 'select',
-                                                        'label' => __( 'OpenAI Model*', 'betterdocs' ),
-                                                        'priority' => 20,
-                                                        'multiple' => false,
-                                                        'default' => 'gpt-4o-mini',
-                                                        'options' => GlobalFields::normalize_fields( array(
-                                                            'gpt-4o-mini' => 'GPT-4o Mini',
-                                                            'gpt-4o' => 'GPT-4o',
-                                                            'gpt-4.1-nano' => 'GPT-4.1 Nano',
-                                                            'gpt-4.1-mini' => 'GPT-4.1 Mini',
-                                                            'gpt-4.1' => 'GPT-4.1',
-                                                            'gpt-5-nano' => 'GPT-5 Nano',
-                                                            'gpt-5-mini' => 'GPT-5 Mini',
-                                                            'gpt-5' => 'GPT-5',
-                                                            'gpt-5.5' => 'GPT-5.5'
-                                                        ) )
-                                                    ),
                                                     'ai_autowrite_max_token' => array(
                                                         'name' => 'ai_autowrite_max_token',
                                                         'type' => 'min_token_number',
@@ -2411,7 +2546,7 @@ class Settings extends Base {
                                                             __( 'Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target="_blank" href="%s">link</a>.', 'betterdocs' ), esc_url( 'https://platform.openai.com/account/limits' ) ),
                                                         'default' => 2500,
                                                         'priority' => 10,
-                                                        'model_field' => 'write_with_ai_model',
+                                                        'model_field' => 'ai_model',
                                                         'context' => 'write_with_ai',
                                                         'min_token_map' => AIHelper::get_min_tokens_map( 'write_with_ai' ),
                                                         'classes' => 'wprf-type-text'
@@ -2486,29 +2621,10 @@ class Settings extends Base {
                                                             __( 'Single Doc summarizer will be generated based on the token limits you have set. For more information on Token Limits, you can check out this <a target="_blank" href="%s">link</a>.', 'betterdocs' ), esc_url( 'https://platform.openai.com/account/limits' ) ),
                                                         'default' => 1500,
                                                         'priority' => 5,
-                                                        'model_field' => 'article_summary_model',
+                                                        'model_field' => 'ai_model',
                                                         'context' => 'article_summary',
                                                         'min_token_map' => AIHelper::get_min_tokens_map( 'article_summary' ),
                                                         'classes' => 'wprf-type-text'
-                                                    ),
-                                                    'article_summary_model' => array(
-                                                        'name' => 'article_summary_model',
-                                                        'type' => 'select',
-                                                        'label' => __( 'OpenAI Model*', 'betterdocs' ),
-                                                        'priority' => 10,
-                                                        'multiple' => false,
-                                                        'default' => 'gpt-4o-mini',
-                                                        'options' => GlobalFields::normalize_fields( array(
-                                                            'gpt-4o-mini' => 'GPT-4o Mini',
-                                                            'gpt-4o' => 'GPT-4o',
-                                                            'gpt-4.1-nano' => 'GPT-4.1 Nano',
-                                                            'gpt-4.1-mini' => 'GPT-4.1 Mini',
-                                                            'gpt-4.1' => 'GPT-4.1',
-                                                            'gpt-5-nano' => 'GPT-5 Nano',
-                                                            'gpt-5-mini' => 'GPT-5 Mini',
-                                                            'gpt-5' => 'GPT-5',
-                                                            'gpt-5.5' => 'GPT-5.5'
-                                                        ) )
                                                     )
                                                 )
                                             )

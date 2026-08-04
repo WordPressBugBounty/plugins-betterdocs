@@ -53,7 +53,9 @@ class Helper extends Base {
 
 		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-				$options[ $term->{$key} ] = $term->name;
+				// Decode HTML entities (e.g. "&amp;" → "&") so the select2 control
+				// shows the real term name instead of the escaped entity.
+				$options[ $term->{$key} ] = wp_specialchars_decode( $term->name, ENT_QUOTES );
 			}
 		}
 

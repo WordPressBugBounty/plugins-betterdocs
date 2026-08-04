@@ -7,7 +7,7 @@ use WPDeveloper\BetterDocs\Utils\Base;
 /**
  * Lightweight, non-blocking doc-view collection for the Free Overview.
  *
- * The frontend tracker (assets/public/js/analytics-tracker.js) fires a
+ * The frontend tracker (assets/static/public/js/analytics-tracker.js) fires a
  * sendBeacon after DOMContentLoaded on single docs; the REST ingest endpoint
  * (REST/AnalyticsTracker) calls record_view() which increments the daily
  * aggregate row in {prefix}betterdocs_analytics plus the per-post views meta.
@@ -189,7 +189,13 @@ class AnalyticsTracker extends Base {
 		}
 
 		if ( $this->settings->get( 'exclude_bot_analytics', true ) == 1 ) {
-			$bots      = [ 'google', 'msnbot', 'ia_archiver', 'lycos', 'jeeves', 'scooter', 'fast-webcrawler', 'slurp@inktomi', 'turnitinbot', 'technorati', 'yahoo', 'findexa', 'findlinks', 'gaisbo', 'zyborg', 'surveybot', 'bloglines', 'blogsearch', 'pubsub', 'syndic8', 'userland', 'gigabot', 'become.com', 'baiduspider', '360spider', 'spider', 'sosospider', 'yandex' ];
+			$bots      = [ 'google', 'msnbot', 'ia_archiver', 'lycos', 'jeeves', 'scooter', 'fast-webcrawler', 'slurp@inktomi', 'turnitinbot', 'technorati', 'yahoo', 'findexa', 'findlinks', 'gaisbo', 'zyborg', 'surveybot', 'bloglines', 'blogsearch', 'pubsub', 'syndic8', 'userland', 'gigabot', 'become.com', 'baiduspider', '360spider', 'spider', 'sosospider', 'yandex',
+				// AI agents / crawlers — mirror of the Pro AiTrafficCollector catalog so a
+				// JS-capable or spoofed AI user-agent is never double-counted as a human
+				// view (Pro records it as an AI fetch server-side; the human path is a JS
+				// beacon). Free must not depend on Pro, so the tokens are duplicated here.
+				// stripos is case-insensitive, so lowercase is sufficient.
+				'gptbot', 'chatgpt-user', 'oai-searchbot', 'claudebot', 'anthropic-ai', 'claude-user', 'claude-web', 'claude-searchbot', 'perplexitybot', 'perplexity-user', 'google-extended', 'googleother', 'applebot-extended', 'cursor/', 'copilot', 'meta-externalagent', 'meta-externalfetcher', 'facebookbot', 'youbot', 'ccbot', 'bytespider', 'duckassistbot' ];
 			$useragent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
 			if ( $useragent !== '' ) {
 				foreach ( $bots as $lookfor ) {

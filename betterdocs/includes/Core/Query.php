@@ -28,6 +28,14 @@ class Query extends Base {
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 1 );
         add_filter( 'betterdocs_base_terms_args', array( $this, 'modify_terms_args_for_private_docs' ), 10, 1 );
 
+        // Invalidate cached doc-category counts on any write that could change them.
+        add_action( 'save_post_docs', array( $this, 'flush_term_counts_cache' ) );
+        add_action( 'deleted_post', array( $this, 'flush_term_counts_cache_on_post' ), 10, 2 );
+        add_action( 'edited_doc_category', array( $this, 'flush_term_counts_cache' ) );
+        add_action( 'created_doc_category', array( $this, 'flush_term_counts_cache' ) );
+        add_action( 'delete_doc_category', array( $this, 'flush_term_counts_cache' ) );
+        add_action( 'set_object_terms', array( $this, 'flush_term_counts_cache_on_set' ), 10, 4 );
+
         /**
          * These below filters are hooked for navigation only.
          *
@@ -669,55 +677,33 @@ class Query extends Base {
      * @return array An array of non-empty child term IDs.
      */
     public function get_all_child_term_ids( $taxonomy, $parent_id ) {
-        // Set up the arguments for retrieving child terms
+        $version   = $this->database->get_cache_version( 'betterdocs_term_counts' );
+        $cache_key = "bd_term_counts_v{$version}_child_ids_{$taxonomy}_{$parent_id}";
+
+        $cached = wp_cache_get( $cache_key, 'betterdocs' );
+        if ( false !== $cached ) {
+            return $cached;
+        }
+
+        // get_terms( child_of => X ) walks the full descendant tree using WP's
+        // internally cached term hierarchy, replacing the previous recursive
+        // get_term()-in-a-loop pattern with one call.
         $args = apply_filters(
             'betterdocs_get_child_term_ids_args',
             array(
-                'taxonomy' => $taxonomy,
-                'parent' => $parent_id,
+                'taxonomy'   => $taxonomy,
+                'child_of'   => $parent_id,
                 'hide_empty' => true,
-                'fields' => 'ids'
+                'fields'     => 'ids',
             )
         );
 
-        // Get the terms based on the arguments
-        $terms = get_terms( $args );
+        $ids = get_terms( $args );
+        $ids = ( is_wp_error( $ids ) || ! is_array( $ids ) ) ? array() : array_map( 'intval', $ids );
 
-        // Initialize an empty array to hold non-empty child term IDs
-        $non_empty_children = array();
+        wp_cache_set( $cache_key, $ids, 'betterdocs', HOUR_IN_SECONDS * 6 );
 
-        // Check if terms were retrieved without errors and that the result isn't empty
-        if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
-            $term_ids = array();
-
-            // Loop through each term ID
-            foreach ( $terms as $term_id ) {
-                // Add the current term ID to the term_ids array
-                $term_ids[  ] = $term_id;
-
-                // Recursively get child terms for the current term
-                $child_term_ids = $this->get_all_child_term_ids( $taxonomy, $term_id );
-
-                // If there are child terms, merge them into the term_ids array
-                if ( ! empty( $child_term_ids ) ) {
-                    $term_ids = array_merge( $term_ids, $child_term_ids );
-                }
-            }
-
-            // Loop through all retrieved term IDs to filter out empty ones
-            foreach ( $term_ids as $term_id ) {
-                // Get the term object for the current term ID
-                $child_term = get_term( $term_id, $taxonomy );
-
-                // Only include terms that have a non-zero post count
-                if ( $child_term && isset( $child_term->term_id ) && $child_term->count > 0 ) {
-                    $non_empty_children[  ] = $child_term->term_id;
-                }
-            }
-        }
-
-        // Return the final array of non-empty child term IDs
-        return $non_empty_children;
+        return $ids;
     }
 
     /**
@@ -1128,6 +1114,22 @@ class Query extends Base {
         return $terms;
     }
 
+    public function flush_term_counts_cache() {
+        $this->database->bump_cache_version( 'betterdocs_term_counts' );
+    }
+
+    public function flush_term_counts_cache_on_post( $post_id, $post = null ) {
+        if ( $post && isset( $post->post_type ) && $post->post_type === 'docs' ) {
+            $this->flush_term_counts_cache();
+        }
+    }
+
+    public function flush_term_counts_cache_on_set( $object_id, $terms, $tt_ids, $taxonomy ) {
+        if ( $taxonomy === 'doc_category' ) {
+            $this->flush_term_counts_cache();
+        }
+    }
+
     public function get_docs_count( $term, $nested_subcategory = false, $args = array() ) {
         // Validate term object
         if ( ! is_object( $term ) ) {
@@ -1136,14 +1138,32 @@ class Query extends Base {
 
         $counts = isset( $term->count ) ? $term->count : 0;
 
+        if ( ! isset( $term->term_id ) || ! is_numeric( $term->term_id ) ) {
+            return apply_filters( 'betterdocs_docs_count', $counts, $term, $nested_subcategory, $args );
+        }
+
+        $version  = $this->database->get_cache_version( 'betterdocs_term_counts' );
+        $can_priv = current_user_can( 'read_private_docs' ) ? 1 : 0;
+        $kb_slug  = isset( $args['kb_slug'] ) ? $args['kb_slug'] : '';
+        $multi    = ! empty( $args['multiple_knowledge_base'] ) ? 1 : 0;
+        $nested   = $nested_subcategory ? 1 : 0;
+        $cache_key = "bd_term_counts_v{$version}_docs_count_{$term->term_id}_{$nested}_{$can_priv}_{$kb_slug}_{$multi}";
+
+        $cached = wp_cache_get( $cache_key, 'betterdocs' );
+        if ( false !== $cached ) {
+            return apply_filters( 'betterdocs_docs_count', $cached, $term, $nested_subcategory, $args );
+        }
+
         if ( false == $nested_subcategory ) {
             // For non-nested categories, we need to recalculate counts based on user capabilities
             // Only proceed if we have a valid term with required properties
-            if ( isset( $term->term_id ) && isset( $term->taxonomy ) && is_numeric( $term->term_id ) ) {
+            if ( isset( $term->taxonomy ) ) {
                 // Get all post IDs for this term
                 $post_ids = get_objects_in_term( $term->term_id, $term->taxonomy );
 
                 if ( ! empty( $post_ids ) ) {
+                    _prime_post_caches( $post_ids, false, false );
+
                     if ( current_user_can( 'read_private_docs' ) ) {
                         // For users with read_private_docs capability, include both private and public posts
                         $filtered_post_ids = array_filter( $post_ids, function ( $post_id ) {
@@ -1162,14 +1182,14 @@ class Query extends Base {
                     $counts = 0;
                 }
             }
-
-            return apply_filters( 'betterdocs_docs_count', $counts, $term, $nested_subcategory, $args );
+        } else {
+            $_child_terms_docs_ids = $this->get_doc_ids_by_term( $term, null, $nested_subcategory );
+            if ( is_array( $_child_terms_docs_ids ) ) {
+                $counts = count( $_child_terms_docs_ids );
+            }
         }
 
-        $_child_terms_docs_ids = $this->get_doc_ids_by_term( $term, null, $nested_subcategory );
-        if ( is_array( $_child_terms_docs_ids ) ) {
-            $counts = count( $_child_terms_docs_ids );
-        }
+        wp_cache_set( $cache_key, $counts, 'betterdocs', HOUR_IN_SECONDS * 6 );
 
         return apply_filters( 'betterdocs_docs_count', $counts, $term, $nested_subcategory, $args );
     }
@@ -1178,6 +1198,17 @@ class Query extends Base {
         // Check if term has required properties and is a valid object
         if ( ! is_object( $term ) || ! isset( $term->term_id ) || ! isset( $term->taxonomy ) || ! is_numeric( $term->term_id ) ) {
             return false;
+        }
+
+        $version     = $this->database->get_cache_version( 'betterdocs_term_counts' );
+        $can_priv    = current_user_can( 'read_private_docs' ) ? 1 : 0;
+        $nested      = $nested_subcategory ? 1 : 0;
+        $optional_id = is_object( $optional ) && isset( $optional->term_id ) ? (int) $optional->term_id : 0;
+        $cache_key   = "bd_term_counts_v{$version}_doc_ids_{$term->term_id}_{$nested}_{$optional_id}_{$can_priv}";
+
+        $cached = wp_cache_get( $cache_key, 'betterdocs' );
+        if ( false !== $cached ) {
+            return $cached;
         }
 
         $args = array(
@@ -1205,7 +1236,11 @@ class Query extends Base {
             $_child_terms_docs_ids = array_intersect( $_child_terms_docs_ids, $_optional_doc_ids );
         }
 
-        return array_filter( $_child_terms_docs_ids, function ( $doc_id ) {
+        if ( ! empty( $_child_terms_docs_ids ) ) {
+            _prime_post_caches( $_child_terms_docs_ids, false, false );
+        }
+
+        $filtered = array_filter( $_child_terms_docs_ids, function ( $doc_id ) {
             if ( ! current_user_can( 'read_private_docs' ) ) {
                 return is_post_publicly_viewable( $doc_id );
             }
@@ -1213,6 +1248,10 @@ class Query extends Base {
             $_status = get_post_status( $doc_id );
             return 'private' == $_status || is_post_publicly_viewable( $doc_id );
         } );
+
+        wp_cache_set( $cache_key, $filtered, 'betterdocs', HOUR_IN_SECONDS * 6 );
+
+        return $filtered;
     }
 
     /**

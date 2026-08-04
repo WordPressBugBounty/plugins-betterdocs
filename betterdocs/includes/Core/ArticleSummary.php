@@ -163,7 +163,7 @@ class ArticleSummary extends Base {
 
 		try {
 			if ( ! $this->ai_helper->has_api_key() ) {
-				return new \WP_Error( 'no_api_key', 'OpenAI API key is not configured. Please add your API key in BetterDocs settings.' );
+				return new \WP_Error( 'no_api_key', 'AI API key is not configured. Please add your API key in BetterDocs settings.' );
 			}
 
 			// Prepare content for AI processing

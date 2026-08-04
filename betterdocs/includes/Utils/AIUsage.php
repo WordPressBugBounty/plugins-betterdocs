@@ -48,6 +48,8 @@ class AIUsage {
 		'quality_score',
 		'glossaries_write_with_ai',
 		'faq_write_with_ai',
+		'sample_docs',
+		'ai_suggest_terms',
 	];
 
 	/**
@@ -95,7 +97,16 @@ class AIUsage {
 
 	/**
 	 * Normalised, fixed-schema snapshot for the wpinsight collector. Every feature key
-	 * is always present (default 0); the AI Edit action breakdown is included when set.
+	 * is always present (default 0); action sub-maps are included when set.
+	 *
+	 * Sub-map handling:
+	 *  - `ai_edit_actions`         — shipped as-is (improve/rewrite/shorten/…).
+	 *  - `write_with_ai_modes`     — the raw `write_with_ai_actions` map is rolled up into
+	 *    the three user-facing source modes (prompt / source / git) so wpinsight reads a
+	 *    stable, human-meaningful breakdown regardless of internal action names. Always
+	 *    present so the schema is stable.
+	 *  - `sample_docs_actions`     — per content-type (docs/faq/product_faq), when set.
+	 *  - `ai_suggest_terms_actions`— per taxonomy (doc_category/doc_tag/glossaries), when set.
 	 *
 	 * @return array<string,int|array<string,int>>
 	 */
@@ -112,6 +123,47 @@ class AIUsage {
 			$out['ai_edit_actions'] = array_map( 'intval', $usage['ai_edit_actions'] );
 		}
 
+		// Roll the raw Write-with-AI actions up into the three source modes the user picks.
+		$out['write_with_ai_modes'] = self::write_with_ai_modes( $usage['write_with_ai_actions'] ?? [] );
+
+		if ( ! empty( $usage['sample_docs_actions'] ) && is_array( $usage['sample_docs_actions'] ) ) {
+			$out['sample_docs_actions'] = array_map( 'intval', $usage['sample_docs_actions'] );
+		}
+
+		if ( ! empty( $usage['ai_suggest_terms_actions'] ) && is_array( $usage['ai_suggest_terms_actions'] ) ) {
+			$out['ai_suggest_terms_actions'] = array_map( 'intval', $usage['ai_suggest_terms_actions'] );
+		}
+
 		return $out;
+	}
+
+	/**
+	 * Normalise the raw `write_with_ai_actions` sub-map (keyed by internal action names
+	 * from the Write-with-AI REST endpoint) into the three source modes surfaced in the
+	 * AI Studio "Write Documentation" modal: Prompt | From Source | From Git.
+	 *
+	 *  - `from-source`                                   → source
+	 *  - `from-git`                                      → git
+	 *  - generate-doc / generate-outline / expand-outline (and any future prompt-driven
+	 *    action)                                         → prompt
+	 *
+	 * @param array<string,int> $actions
+	 * @return array{prompt:int,source:int,git:int}
+	 */
+	protected static function write_with_ai_modes( $actions ) {
+		$modes = [ 'prompt' => 0, 'source' => 0, 'git' => 0 ];
+
+		foreach ( (array) $actions as $action => $count ) {
+			$count = (int) $count;
+			if ( 'from-source' === $action ) {
+				$modes['source'] += $count;
+			} elseif ( 'from-git' === $action ) {
+				$modes['git'] += $count;
+			} else {
+				$modes['prompt'] += $count;
+			}
+		}
+
+		return $modes;
 	}
 }

@@ -9,6 +9,10 @@ echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsca
 		<?php
 		if ( $title ) {
 			$title_tag = isset( $title_tag ) ? $title_tag : 'h4';
+			// Allow-list the tag name — esc_attr() does not stop a space/= from
+			// injecting an attribute in this tag-name position (stored XSS via
+			// the shortcode title_tag).
+			$title_tag = betterdocs()->template_helper->is_valid_tag( $title_tag );
 			echo wp_sprintf( '<%1$s class="betterdocs-social-share-title-tag">%2$s</%1$s>', esc_attr( $title_tag ), esc_html( $title ) );
 		}
 		?>

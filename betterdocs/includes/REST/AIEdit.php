@@ -55,7 +55,7 @@ class AIEdit extends BaseAPI {
 
     public function permission_check() {
         // Gate on edit_others_posts to match the sibling FAQ/Glossary AI endpoints
-        // (AIFaq/AIGlossary) and keep Author-role users from spending the OpenAI budget.
+        // (AIFaq/AIGlossary) and keep Author-role users from spending the AI budget.
         return current_user_can( 'edit_others_posts' );
     }
 
@@ -74,7 +74,7 @@ class AIEdit extends BaseAPI {
         if ( empty( $api_key ) ) {
             return $this->error(
                 'ai_no_key',
-                __( 'OpenAI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
+                __( 'AI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
                 400
             );
         }

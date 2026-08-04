@@ -88,7 +88,7 @@ class TemplateSource extends Source_Base {
 				'type'            => 'block',
 				'subtype'         => 'Docs Archive',
 				'title'           => __( 'BetterDocs Tag Archive', 'betterdocs' ),
-				'thumbnail'       => plugins_url( '/assets/admin/images/templates/tag-archive-thumb.png', BETTERDOCS_PLUGIN_FILE ),
+				'thumbnail'       => plugins_url( '/assets/static/admin/images/templates/tag-archive-thumb.png', BETTERDOCS_PLUGIN_FILE ),
 				'date'            => '2024-01-01',
 				'author'          => 'WPDeveloper',
 				'tags'            => [ 'Docs Archive' ],
@@ -96,7 +96,7 @@ class TemplateSource extends Source_Base {
 				'popularityIndex' => 0,
 				'trendIndex'      => 0,
 				'hasPageSettings' => false,
-				'url'             => plugins_url( '/assets/admin/images/templates/tag-archive-thumb.png', BETTERDOCS_PLUGIN_FILE ),
+				'url'             => plugins_url( '/assets/static/admin/images/templates/tag-archive-thumb.png', BETTERDOCS_PLUGIN_FILE ),
 				'favorite'        => false,
 			],
 		];

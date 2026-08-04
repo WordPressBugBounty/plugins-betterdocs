@@ -40,14 +40,15 @@ class CategoryList extends Shortcode {
 			'layout_type'             => '',
 			'list_icon_url'           => '',
 			'sidebar_layout'          => '',
-			'list_icon_name'          => ''
+			'list_icon_name'          => '',
+			'lazy_load'               => false
 		];
 	}
 
 	public function view_params() {
 		$terms_query = $this->query->terms_query(
 			[
-				'multiple_kb'        => $this->attributes['multiple_knowledge_base'],
+				'multiple_kb'        => ( $this->attributes['multiple_knowledge_base'] && ! empty( $this->attributes['kb_slug'] ) ) ? true : false,
 				'kb_slug'            => $this->attributes['kb_slug'],
 				'terms'              => $this->attributes['terms'],
 				'order'              => $this->attributes['terms_order'],
@@ -90,7 +91,8 @@ class CategoryList extends Shortcode {
 			'list_icon_url'         => $this->attributes['list_icon_url'],
 			'sidebar_layout'        => $this->attributes['sidebar_layout'],
 			'list_icon_name'        => $this->attributes['list_icon_name'],
-			'title_tag'             => $this->attributes['title_tag']
+			'title_tag'             => $this->attributes['title_tag'],
+			'lazy_load'             => ! empty( $this->attributes['lazy_load'] )
 		];
 	}
 

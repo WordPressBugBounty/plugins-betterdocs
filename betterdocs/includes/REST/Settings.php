@@ -13,6 +13,8 @@ use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Dependencies\DI\DependencyException;
 use WPDeveloper\BetterDocs\Dependencies\DI\NotFoundException;
 use WPDeveloper\BetterDocsChatbot\Core\AIChatbot;
+use WPDeveloper\BetterDocs\Core\Settings as CoreSettings;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class Settings extends BaseAPI {
 
@@ -57,7 +59,7 @@ class Settings extends BaseAPI {
 		$action = $request->get_param( 'action' );
 
 		if ( $action == 'create-dummy-data' ) {
-			$file             = BETTERDOCS_ABSPATH . 'assets/admin/images/BetterDocs-sample-data.csv';
+			$file             = BETTERDOCS_ABSPATH . 'assets/static/admin/images/BetterDocs-sample-data.csv';
 			$args             = [
 				'fetch_attachments' => true,
 				'action'            => '',
@@ -291,14 +293,29 @@ class Settings extends BaseAPI {
 
 	public function get_settings(): array {
 		$settings = betterdocs()->settings->get_all( true );
-		// Secrets must never reach the browser. The analytics settings tab reads this
-		// endpoint (get_all( true ) is otherwise unmasked), so mask them here;
-		// save_settings() restores the real value when the unchanged mask is sent back.
-		foreach ( array( 'ga4_api_secret', 'maxmind_license_key', 'maxmind_account_id', 'ai_autowrite_api_key', 'ai_chatbot_api_key' ) as $secret ) {
-			if ( ! empty( $settings[ $secret ] ) ) {
-				$settings[ $secret ] = \WPDeveloper\BetterDocs\Utils\Helper::mask_api_key( $settings[ $secret ] );
+
+		// Never hand raw API keys back over REST. The route is already gated to
+		// `edit_docs_settings` (see permission_check() above), but get_all( true ) returned
+		// UNMASKED values, so an authorized admin still received every key in full — the admin
+		// UI only ever needs the masked form. Mask for managers, and strip entirely for anyone
+		// else as defense-in-depth should that capability gate ever loosen. Mirrors the
+		// admin-page localizer (Core\Settings::enqueue()) so the masked-key save round-trip
+		// stays consistent.
+		$sensitive_api_keys = CoreSettings::sensitive_api_key_fields();
+		$can_manage         = current_user_can( 'edit_docs_settings' );
+		foreach ( $sensitive_api_keys as $api_key_field ) {
+			if ( ! isset( $settings[ $api_key_field ] ) ) {
+				continue;
+			}
+			if ( ! $can_manage ) {
+				unset( $settings[ $api_key_field ] );
+				continue;
+			}
+			if ( ! empty( $settings[ $api_key_field ] ) ) {
+				$settings[ $api_key_field ] = Helper::mask_api_key( $settings[ $api_key_field ] );
 			}
 		}
+
 		return $settings;
 	}
 

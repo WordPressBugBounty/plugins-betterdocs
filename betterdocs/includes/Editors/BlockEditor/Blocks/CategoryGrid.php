@@ -72,6 +72,7 @@ class CategoryGrid extends Block {
 			'postsOrderBy'            => 'betterdocs_order',
 			'postsOrder'              => 'asc',
 			'enableNestedSubcategory' => false,
+			'enableLazyLoad'          => false,
 			'postPerSubcategory'      => 3,
 			'buttonIconPosition'      => 'after',
 			'buttonIcon'              => 'fas fa-angle-right',
@@ -227,7 +228,8 @@ class CategoryGrid extends Block {
 			'count_prefix'            => $attributes['prefix'],
 			'count_suffix'            => $attributes['suffix'],
 			'count_suffix_singular'   => $attributes['suffixSingular'],
-			'title_tag'               => $attributes['titleTag']
+			'title_tag'               => $attributes['titleTag'],
+			'lazy_load'               => ! empty( $attributes['enableLazyLoad'] )
 		];
 	}
 }

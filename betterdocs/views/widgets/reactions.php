@@ -8,6 +8,10 @@ echo $wrapper_attr; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEsca
 	<?php
 	if ( $reactions_text ) {
 		$text_tag = isset( $text_tag ) ? $text_tag : 'h5';
+		// The tag lands in a tag-name position where esc_attr() does NOT stop a
+		// space/= from injecting an attribute (stored XSS via the shortcode
+		// text_tag). Clamp it to a safe HTML tag via the allow-list.
+		$text_tag = betterdocs()->template_helper->is_valid_tag( $text_tag );
 		echo wp_sprintf( '<div class="betterdocs-article-reactions-heading"><%1$s class="betterdocs-reactions-title-tag">%2$s</%1$s></div>', esc_attr( $text_tag ), esc_html( $reactions_text ) );
 	}
 	?>

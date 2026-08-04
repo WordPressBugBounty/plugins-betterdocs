@@ -61,6 +61,7 @@ class Sidebar extends Block {
             'postsOrderBy'                  => 'title',
             'postsOrder'                    => 'asc',
             'enableNestedSubcategory'       => false,
+            'enableLazyLoad'                => false,
             'docs_per_subcategory'          => 10,
             'titleTag'                      => 'h1',
             'show_count'                    => false,
@@ -128,8 +129,7 @@ class Sidebar extends Block {
                 'terms_include'            => array_diff( $this->string_to_array( $settings['includeCategories'] ), $this->string_to_array( $settings['excludeCategories'] ) ),
                 'terms_exclude'            => isset( $settings['excludeCategories'] ) ? $this->string_to_array( $settings['excludeCategories'] ) : '',
                 'nested_subcategory'       => $settings['enableNestedSubcategory'],
-                'multiple_knowledge_base'  => $default_multiple_kb,
-                'kb_slug'                  => $kb_slug,
+                'lazy_load'                => ! empty( $settings['enableLazyLoad'] ),
                 'sidebar_list'             => true,
                 'list_icon_url'            => '',
                 'list_icon_name'           => $settings['sidebar_layout'] == 'layout-4' ? '' : ( ! empty( $this->attributes['listIconImageUrl'] ) ? $this->attributes['listIconImageUrl'] : ( ! empty( $this->attributes['listIcon'] ) ? $this->attributes['listIcon'] : ( ! empty( betterdocs()->settings->get( 'docs_list_icon' ) ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : 'list' ) ) ),
@@ -149,6 +149,15 @@ class Sidebar extends Block {
 			$default_view_params['faq_term_ids']   = $settings['searchModalQueriesFaqGroupIds'];
 			$default_view_params['doc_ids']        = $settings['searchModalQueryDocIds'];
 			$default_view_params['doc_term_ids']   = $settings['searchModalQueryTermIds'];
+		}
+
+		// Pass a KB scope only when one is explicitly selected on the block. When none is
+		// set, omit kb_slug so the betterdocs_sidebar_template_shortcode_params filter
+		// (Pro/MKB) can inject the current knowledge_base context on KB templates — the
+		// same path the default sidebar uses. (Passing kb_slug='' would block injection.)
+		if ( ! empty( $kb_slug ) ) {
+			$default_view_params['shortcode_attr']['kb_slug']                 = $kb_slug;
+			$default_view_params['shortcode_attr']['multiple_knowledge_base'] = (bool) $default_multiple_kb;
 		}
 
 		return $default_view_params;

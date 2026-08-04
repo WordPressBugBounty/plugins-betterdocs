@@ -106,7 +106,7 @@ class CategoryGridThree extends Shortcode {
 		$terms_query = $this->query->terms_query(
 			[
 				'taxonomy'           => $this->attributes['taxonomy'],
-				'multiple_kb'        => $this->attributes['multiple_knowledge_base'],
+				'multiple_kb'        => ( $this->attributes['multiple_knowledge_base'] && ! empty( $this->attributes['kb_slug'] ) ) ? true : false,
 				'kb_slug'            => $this->attributes['kb_slug'],
 				'terms'              => $this->attributes['terms'],
 				'order'              => $this->attributes['terms_order'],

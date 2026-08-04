@@ -233,7 +233,7 @@ class UnifiedMetabox extends Base {
 			// Enqueue styles
 			wp_enqueue_style(
 				'betterdocs-unified-metabox',
-				BETTERDOCS_ABSURL . 'assets/admin/css/unified-metabox.css',
+				BETTERDOCS_ABSURL . 'assets/build/admin/css/unified-metabox.css',
 				[],
 				BETTERDOCS_VERSION
 			);

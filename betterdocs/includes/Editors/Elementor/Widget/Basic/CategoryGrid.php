@@ -1916,7 +1916,8 @@ class CategoryGrid extends BaseWidget {
 			],
 			'category_title_link'     => $settings['category_link'],
 			'layout_type'             => 'widget',
-			'list_icon_url'           => ''
+			'list_icon_url'           => '',
+			'lazy_load'               => ! empty( $settings['lazy_load'] )
 		];
 
 		if ( $settings['layout_template'] == 'layout-2' ) {

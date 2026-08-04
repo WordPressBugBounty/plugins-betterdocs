@@ -265,6 +265,19 @@ class Collector extends Base {
 	protected function ai() {
 		$settings = betterdocs()->settings;
 
+		// `show_glossary_suggestions` defaults to true and has no settings-UI field, so
+		// reporting it raw would mark every Free-only site as "using" a feature it can
+		// never run. Mirror the runtime gate in Core\WriteWithAI: the glossaries taxonomy
+		// is registered for Pro only, so the "Suggest glossaries" offer is reachable only
+		// when the glossary feature is on AND Pro is active. Do NOT "simplify" this back
+		// to a bare setting read. ($has_glossary_terms from the runtime gate is
+		// deliberately excluded — that is per-request content state, not config posture.)
+		$glossary_suggestions = (int) (
+			(bool) $settings->get( 'enable_glossaries', false )
+			&& (bool) $settings->get( 'show_glossary_suggestions', true )
+			&& betterdocs()->is_pro_active()
+		);
+
 		return [
 			'write_with_ai'         => (int) (bool) $settings->get( 'enable_write_with_ai', false ),
 			'article_summary'       => (int) (bool) $settings->get( 'enable_article_summary', false ),
@@ -273,6 +286,10 @@ class Collector extends Base {
 			'chatbot_key_set'       => (int) ! empty( $settings->get( 'ai_chatbot_api_key', '' ) ),
 			'write_with_ai_model'   => (string) $settings->get( 'write_with_ai_model', '' ),
 			'article_summary_model' => (string) $settings->get( 'article_summary_model', '' ),
+			// AI adoption toggles introduced with the 4.6.3 AI surfaces.
+			'sample_docs'           => (int) (bool) $settings->get( 'enable_ai_sample_docs', true ),
+			'docs_ai_suite'         => (int) (bool) $settings->get( 'enable_docs_ai_suite', true ),
+			'glossary_suggestions'  => $glossary_suggestions,
 			// Per-feature usage counts (how many times each AI action ran). All keys
 			// always present (default 0); see Utils\AIUsage for the recording side.
 			'usage'                 => \WPDeveloper\BetterDocs\Utils\AIUsage::snapshot(),
@@ -291,6 +308,10 @@ class Collector extends Base {
 			'reporting_frequency' => (string) $settings->get( 'reporting_frequency', '' ),
 			'posts_number'        => (int) $settings->get( 'posts_number', 0 ),
 			'column_number'       => (int) $settings->get( 'column_number', 0 ),
+			// Analytics Overview (4.6.3) posture — key-set booleans only, never secrets.
+			'ga4_configured'      => (int) ! empty( $settings->get( 'ga4_api_secret', '' ) ),
+			'geoip_configured'    => (int) ! empty( $settings->get( 'maxmind_license_key', '' ) ),
+			'dark_mode'           => (int) (bool) $settings->get( 'dark_mode', false ),
 		];
 	}
 }

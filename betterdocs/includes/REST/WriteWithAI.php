@@ -122,8 +122,7 @@ class WriteWithAI extends BaseAPI {
 
     public function permission_check() {
         // Gate on edit_others_posts to match the sibling FAQ/Glossary AI endpoints
-        // (AIFaq/AIGlossary). This keeps Author-role users — who can create their own
-        // posts but not others' — from spending the site's OpenAI budget.
+        // (AIFaq/AIGlossary) and keep Author-role users from spending the AI budget.
         return current_user_can( 'edit_others_posts' );
     }
 

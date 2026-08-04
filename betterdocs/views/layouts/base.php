@@ -60,6 +60,12 @@ if ( $terms_query_args == false ) {
 
 			$terms_count  = count( $terms );
 			$terms_number = 1;
+
+			$_term_ids = wp_list_pluck( $terms, 'term_id' );
+			if ( ! empty( $_term_ids ) ) {
+				update_termmeta_cache( $_term_ids );
+			}
+
 			foreach ( $terms as $term ) {
 				$_counts = betterdocs()->query->get_docs_count(
 					$term,

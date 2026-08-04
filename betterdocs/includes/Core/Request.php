@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Utils\Helper;
 
 class Request extends Base {
 	/**
@@ -1506,12 +1507,22 @@ class Request extends Base {
 			// so that "bn/docs/..." matches the structure "docs/..." correctly.
 			$request_without_lang = preg_replace( '#^[a-zA-Z]{2,3}(?:-[a-zA-Z0-9]{2,8})?/#', '', $request );
 
+			// When WPML translates a taxonomy base slug per language (e.g. doc_tag
+			// "docs-tag" -> "docs-tag-bn"), the incoming URL uses the translated slug,
+			// but perma_structure is built from the default-language slug. Map the
+			// leading translated slug back to its default so the raw structures match.
+			// No-op on non-WPML sites and when the slug isn't translated.
+			$request_canonical = $this->canonicalize_translated_slug( $request_without_lang );
+
 			foreach ( $this->perma_structure as $_type => $structure ) {
 				// First try the raw (possibly language-prefixed) request, then the lang-stripped variant.
 				// This ensures we still match non-multilingual sites without stripping valid slugs.
 				$_perma_vars = $this->is_perma_valid_for( $structure, $request );
 				if ( ! $_perma_vars && $request_without_lang !== $request ) {
 					$_perma_vars = $this->is_perma_valid_for( $structure, $request_without_lang );
+				}
+				if ( ! $_perma_vars && $request_canonical !== $request_without_lang ) {
+					$_perma_vars = $this->is_perma_valid_for( $structure, $request_canonical );
 				}
 
                 // $_valid = empty( $_valid ) && $_perma_vars ? [ 'type' => $_type, 'query_vars' => $_perma_vars ] : $_valid;
@@ -1562,6 +1573,44 @@ class Request extends Base {
             }
         }
     }
+
+	/**
+	 * Map a leading WPML-translated taxonomy base slug back to its default-language
+	 * value so the default-language perma_structure patterns can match a translated URL.
+	 *
+	 * Only the first path segment is considered (the taxonomy base). Returns the
+	 * request unchanged when WPML is inactive or the leading segment isn't a
+	 * translated BetterDocs slug.
+	 *
+	 * @param string $request Language-stripped request path (no leading/trailing slash).
+	 * @return string
+	 */
+	private function canonicalize_translated_slug( $request ) {
+		if ( $request === '' || strpos( $request, '/' ) === false ) {
+			return $request;
+		}
+
+		$slug_map = [
+			'doc_tag'      => trim( $this->settings->get( 'tag_slug', 'docs-tag' ), '/' ),
+			'doc_category' => trim( $this->settings->get( 'category_slug', 'docs-category' ), '/' ),
+		];
+
+		$segments = explode( '/', $request );
+
+		foreach ( $slug_map as $taxonomy => $default ) {
+			if ( $default === '' ) {
+				continue;
+			}
+
+			$translated = Helper::wpml_translated_tax_slug( $taxonomy, $default );
+			if ( $translated !== $default && $segments[0] === $translated ) {
+				$segments[0] = $default;
+				return implode( '/', $segments );
+			}
+		}
+
+		return $request;
+	}
 
 	/**
 	 * This method is responsible for checking a structure is valid again a request.

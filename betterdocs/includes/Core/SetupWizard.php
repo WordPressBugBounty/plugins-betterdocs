@@ -74,7 +74,6 @@ class SetupWizard extends Base {
 		betterdocs()->assets->enqueue( 'betterdocs-icons', 'admin/btd-icon/style.css' );
 		betterdocs()->assets->enqueue( 'betterdocs-setup-wizard-qb-css', 'admin/css/quick-setup.css' );
 		betterdocs()->assets->enqueue( 'betterdocs-setup-wizard-new-css', 'admin/css/setup-wizard.css' );
-		betterdocs()->assets->enqueue( 'betterdocs-icons', 'admin//style.css' );
 		betterdocs()->assets->enqueue( 'betterdocs-setup-wizard-default-js', 'admin/js/setup-wizard.js', [ 'jquery', 'betterdocs-sweetalert' ] );
 
 		// Localize the script with new data

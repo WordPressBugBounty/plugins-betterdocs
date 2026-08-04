@@ -130,7 +130,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.7.0';
+    public $version = '4.8.0';
 
     /**
      * WriteWithAI Class
@@ -192,7 +192,9 @@ final class Plugin {
         $this->define( 'BETTERDOCS_ABSPATH', dirname( BETTERDOCS_PLUGIN_FILE ) . '/' );
         $this->define( 'BETTERDOCS_ABSURL', plugin_dir_url( BETTERDOCS_PLUGIN_FILE ) );
         $this->define( 'BETTERDOCS_PLUGIN_BASENAME', plugin_basename( BETTERDOCS_PLUGIN_FILE ) );
-        $this->define( 'BETTERDOCS_BLOCKS_DIRECTORY', BETTERDOCS_ABSPATH . 'assets/blocks/' );
+        // Compiled block metadata lives under assets/build/ since the Node 24 asset
+        // restructure; register_block_type() fails silently if this path is wrong.
+        $this->define( 'BETTERDOCS_BLOCKS_DIRECTORY', BETTERDOCS_ABSPATH . 'assets/build/blocks/' );
         $this->define( 'BETTERDOCS_ROOT_DIR_PATH', plugin_dir_path( BETTERDOCS_PLUGIN_FILE ) );
         $this->define( 'BETTERDOCS_FSE_TEMPLATES_PATH', BETTERDOCS_ROOT_DIR_PATH . 'views/templates/fse' );
 
