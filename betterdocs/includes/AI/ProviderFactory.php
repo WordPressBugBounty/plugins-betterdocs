@@ -20,8 +20,31 @@ class ProviderFactory {
 
     /**
      * Per-platform API key settings are stored as ai_api_key_<platform>.
+     *
+     * Deliberately private: OpenAI does NOT follow this scheme (see
+     * OPENAI_KEY_FIELD), so hand-concatenating the prefix would silently read
+     * the wrong — always empty — setting for the default platform. Go through
+     * key_field_for() instead; it is the only sanctioned way to name a key field.
      */
-    const KEY_PREFIX = 'ai_api_key_';
+    private const KEY_PREFIX = 'ai_api_key_';
+
+    /**
+     * OpenAI keeps the original single-provider field name. Write with AI has
+     * always been OpenAI-only, so the stored key is already the OpenAI key —
+     * reusing the name means existing installs need no migration and no user
+     * has to re-enter anything when multi-platform support lands.
+     */
+    const OPENAI_KEY_FIELD = 'ai_autowrite_api_key';
+
+    /**
+     * Settings key that holds the API key for a platform.
+     *
+     * @param string $platform
+     * @return string
+     */
+    public static function key_field_for( $platform ) {
+        return 'openai' === $platform ? self::OPENAI_KEY_FIELD : self::KEY_PREFIX . $platform;
+    }
 
     /**
      * @var Settings
@@ -70,18 +93,13 @@ class ProviderFactory {
     }
 
     /**
-     * Stored API key for a platform. OpenAI falls back to the pre-multi-platform
-     * `ai_autowrite_api_key` so existing installs keep working before migration.
+     * Stored API key for a platform.
      *
      * @param string $platform
      * @return string
      */
     public function api_key_for( $platform ) {
-        $key = (string) $this->settings->get( self::KEY_PREFIX . $platform, '' );
-        if ( '' === $key && 'openai' === $platform ) {
-            $key = (string) $this->settings->get( 'ai_autowrite_api_key', '' );
-        }
-        return $key;
+        return (string) $this->settings->get( self::key_field_for( $platform ), '' );
     }
 
     /**

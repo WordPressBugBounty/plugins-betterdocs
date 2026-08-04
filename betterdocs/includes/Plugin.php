@@ -130,7 +130,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.8.0';
+    public $version = '4.8.1';
 
     /**
      * WriteWithAI Class
@@ -385,6 +385,10 @@ final class Plugin {
             } else {
                 wp_safe_redirect( add_query_arg( array( 'page' => 'betterdocs-setup' ), admin_url( 'admin.php' ) ) );
             }
+            // This runs at `admin_init` priority 0. Without exiting, the rest of
+            // admin_init still executes and can mutate the very state the redirect
+            // target depends on before the browser ever follows the Location header.
+            exit;
         }
     }
 

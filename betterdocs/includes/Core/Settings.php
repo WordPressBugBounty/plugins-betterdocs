@@ -11,6 +11,7 @@ use WP_User;
 use WPDeveloper\BetterDocs\Admin\Builder\GlobalFields;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
 use WPDeveloper\BetterDocs\AI\ModelRegistry;
+use WPDeveloper\BetterDocs\AI\ProviderFactory;
 use WPDeveloper\BetterDocs\REST\AIEdit;
 use WPDeveloper\BetterDocs\Utils\AIHelper;
 use WPDeveloper\BetterDocs\Utils\Base;
@@ -54,7 +55,6 @@ class Settings extends Base {
         add_action( 'wp_ajax_betterdocs_dark_mode', array( $this, 'dark_mode' ) );
         add_filter( 'betterdocs_settings_tab_advance', array( $this, 'hide_roles_management' ), 11, 1 );
         add_action( 'betterdocs::settings::saved', array( $this, 'fallback_slugs' ), 99, 3 );
-        add_action( 'admin_init', array( $this, 'maybe_migrate_ai_platform_settings' ) );
     }
 
     public function fallback_slugs( $_saved, $_settings, $_old_settings = array() ) {
@@ -83,67 +83,23 @@ class Settings extends Base {
      * Settings keys holding secret API keys. These are masked before reaching
      * the browser, stripped for non-admins, and never persisted as their mask.
      *
-     * Includes the legacy single-key fields plus the per-platform content-suite
-     * keys introduced with multi-platform support.
+     * Covers the AI Chatbot key plus every content-suite platform key. OpenAI's
+     * is `ai_autowrite_api_key` (see ProviderFactory::key_field_for), hence the
+     * dedupe.
      *
      * @return array<int,string>
      */
     public static function sensitive_api_key_fields() {
         $fields = array(
-            'ai_autowrite_api_key',
+            ProviderFactory::OPENAI_KEY_FIELD,
             'ai_chatbot_api_key',
         );
         foreach ( array_keys( ModelRegistry::platforms() ) as $platform ) {
-            $fields[] = 'ai_api_key_' . $platform;
+            $fields[] = ProviderFactory::key_field_for( $platform );
         }
         // Add-ons (e.g. the AI Chatbot) register their own per-platform keys here
         // so they are masked in the browser and stripped for non-admins.
-        return apply_filters( 'betterdocs_sensitive_api_key_fields', $fields );
-    }
-
-    /**
-     * One-time copy of pre-multi-platform AI settings onto the new keys so the
-     * settings UI shows the user's existing OpenAI key and model under the new
-     * platform-aware fields. Runtime already falls back via ProviderFactory, so
-     * this only affects what the admin sees. Guarded by an option flag.
-     *
-     * Runs on `admin_init`, which fires for every logged-in user who loads
-     * /wp-admin/ — including a Subscriber. Since this writes settings (and copies
-     * the legacy OpenAI key onto `ai_api_key_openai`), it is gated on the same
-     * `edit_docs_settings` capability used everywhere else for settings writes.
-     * The one-shot flag is deliberately NOT set when the capability check fails,
-     * otherwise the first low-privilege page load would permanently skip the
-     * migration for administrators too.
-     *
-     * @return void
-     */
-    public function maybe_migrate_ai_platform_settings() {
-        if ( get_option( 'betterdocs_ai_platform_migrated' ) ) {
-            return;
-        }
-
-        if ( ! current_user_can( 'edit_docs_settings' ) ) {
-            return;
-        }
-
-        if ( '' === (string) $this->get_raw_field( 'ai_platform', '' ) ) {
-            $this->save( 'ai_platform', 'openai' );
-        }
-
-        $legacy_key = (string) $this->get( 'ai_autowrite_api_key', '' );
-        if ( '' !== $legacy_key && '' === (string) $this->get_raw_field( 'ai_api_key_openai', '' ) ) {
-            $this->save( 'ai_api_key_openai', $legacy_key );
-        }
-
-        if ( '' === (string) $this->get_raw_field( 'ai_model', '' ) ) {
-            $legacy_model = (string) $this->get( 'write_with_ai_model', '' );
-            if ( '' === $legacy_model ) {
-                $legacy_model = (string) $this->get( 'article_summary_model', 'gpt-4o-mini' );
-            }
-            $this->save( 'ai_model', $legacy_model !== '' ? $legacy_model : 'gpt-4o-mini' );
-        }
-
-        update_option( 'betterdocs_ai_platform_migrated', 1 );
+        return apply_filters( 'betterdocs_sensitive_api_key_fields', array_values( array_unique( $fields ) ) );
     }
 
     /**
@@ -368,11 +324,11 @@ class Settings extends Base {
             'article_summary_max_token' => 1500,
             // Multi-platform AI (content suite). `ai_platform` selects the active
             // provider; `ai_model` is the single global model; keys are stored
-            // per platform so switching never loses a saved key. Legacy keys
-            // above are kept for back-compat and migrated on upgrade.
+            // per platform so switching never loses a saved key. OpenAI reuses
+            // `ai_autowrite_api_key` above — it has always held an OpenAI key,
+            // so nothing needs migrating.
             'ai_platform' => 'openai',
             'ai_model' => 'gpt-4o-mini',
-            'ai_api_key_openai' => '',
             'ai_api_key_gemini' => '',
             'ai_api_key_claude' => '',
             'ai_api_key_deepseek' => '',
@@ -2401,14 +2357,16 @@ class Settings extends Base {
                                                         // DeepSeek and OpenRouter are temporarily hidden from the
                                                         // dropdown. Filter the options here, NOT ModelRegistry::platforms() —
                                                         // sensitive_api_key_fields() loops the registry to mask each
-                                                        // ai_api_key_{platform}, so trimming the registry would silently
+                                                        // platform's key field, so trimming the registry would silently
                                                         // un-mask those keys. Re-enable later by dropping the array_diff_key.
                                                         'options' => GlobalFields::normalize_fields(
                                                             array_diff_key( ModelRegistry::platforms(), array_flip( array( 'deepseek', 'openrouter' ) ) )
                                                         )
                                                     ),
-                                                    'ai_api_key_openai' => array(
-                                                        'name' => 'ai_api_key_openai',
+                                                    // OpenAI's key field keeps its original name so installs
+                                                    // that already saved a Write with AI key keep it.
+                                                    'ai_autowrite_api_key' => array(
+                                                        'name' => 'ai_autowrite_api_key',
                                                         'type' => 'text',
                                                         'label' => __( 'OpenAI API Key', 'betterdocs' ),
                                                         'label_subtitle' => sprintf( /* translators: %s: documentation URL */ __( 'Check out this <a target="_blank" href="%s">documentation</a> to generate your OpenAI API key.', 'betterdocs' ), esc_url( 'https://betterdocs.co/docs/write-with-ai/' ) ),
@@ -2527,7 +2485,8 @@ class Settings extends Base {
                                                         'label' => __( 'Write Glossaries with AI', 'betterdocs' ),
                                                         'label_subtitle' => __( 'Generate AI based Glossary definitions from the Glossaries admin page', 'betterdocs' ),
                                                         'enable_disable_text_active' => true,
-                                                        'default' => true
+                                                        'default' => true,
+                                                        'is_pro' => true
                                                     ),
                                                     'enable_docs_ai_suite' => array(
                                                         'name' => 'enable_docs_ai_suite',
