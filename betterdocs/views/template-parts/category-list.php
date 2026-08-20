@@ -120,7 +120,22 @@ use WPDeveloper\BetterDocs\Utils\Helper;
                 echo wp_sprintf(
                     '<li>%4$s<a %1$s><span>%2$s</span> %3$s</a></li>',
                     $_link_attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    betterdocs()->template_helper->kses( get_the_title() ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    /**
+                     * Filter a doc item's title markup in category/sidebar doc
+                     * lists (e.g. to prepend an API method badge). Deliberately
+                     * NOT core `the_title` — this must stay scoped to list items.
+                     *
+                     * SECURITY CONTRACT: the return value is echoed as HTML and
+                     * is NOT escaped afterwards — it has to be, or a callback
+                     * could not add the markup this filter exists for. The value
+                     * passed in is already kses'd; a callback that wraps or
+                     * appends to it is responsible for escaping whatever IT
+                     * introduces. Never hand this filter unsanitised user input.
+                     *
+                     * @param string $title_html Kses'd title markup.
+                     * @param int    $post_id
+                     */
+                    apply_filters( 'betterdocs_docs_list_item_title', betterdocs()->template_helper->kses( get_the_title() ), get_the_ID() ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     ( $show_icon && 'right' == $pos ) ? betterdocs()->template_helper->icon( $icon ) : '', // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     ( $show_icon && 'left' == $pos ) ? betterdocs()->template_helper->icon( $icon ) : '' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 );

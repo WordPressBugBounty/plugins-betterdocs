@@ -493,6 +493,7 @@ class Admin extends Base {
 					'betterdocs_page_betterdocs-analytics',
 					'betterdocs_page_betterdocs-glossaries',
 					'betterdocs_page_betterdocs-ai-chatbot',
+					'betterdocs_page_betterdocs-api-docs',
 					'betterdocs_page_betterdocs-doc-categories',
 					'betterdocs_page_betterdocs-doc-tags',
 					'edit-doc_category',
@@ -571,6 +572,7 @@ class Admin extends Base {
 			'edit-doc_tag',
 			'edit-knowledge_base',
 			'betterdocs-ai-chatbot',
+			'betterdocs-api-docs',
 		) );
 
 		if ( in_array( $current_screen_id, $registered_screens ) ) {
@@ -833,6 +835,7 @@ class Admin extends Base {
                 'betterdocs_pro_version'         => betterdocs()->pro_version(),
                 'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
+                'api_docs_teaser'                => betterdocs()->show_api_docs_teaser(),
                 'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
                 'current_admin_language'         => Helper::get_current_admin_language(),
@@ -1150,6 +1153,22 @@ class Admin extends Base {
 			);
 		}
 
+		// API Docs ships in Pro, which overwrites this same key in place — declaring
+		// the slot here is what keeps the item in this position. Without Pro it
+		// holds Free's locked teaser instead.
+		if ( betterdocs()->show_api_docs_teaser() || betterdocs()->has_api_docs() ) {
+			$betterdocs_admin_pages['api_docs'] = $this->normalize_menu(
+				__( 'API Docs', 'betterdocs' ),
+				'betterdocs-api-docs',
+				apply_filters( 'betterdocs_api_ref_capability', 'manage_options' ),
+				array(
+					$this,
+					'output',
+				),
+				$parent_slug
+			);
+		}
+
 		if ( ! betterdocs()->is_chatbot_active() ) {
 			$betterdocs_admin_pages['ai_chatbot'] = $this->normalize_menu(
 				__( 'AI Chatbot', 'betterdocs' ),
@@ -1180,6 +1199,7 @@ class Admin extends Base {
 			'betterdocs-faq'           => 'betterdocs-faq',
 			'betterdocs-glossaries'    => 'betterdocs-glossaries',
 			'betterdocs-ai-chatbot'    => 'betterdocs-ai-chatbot',
+			'betterdocs-api-docs'      => 'betterdocs-api-docs',
 			'edit-tags.php?taxonomy=knowledge_base&post_type=docs' => 'betterdocs-multiplekb',
 		);
 

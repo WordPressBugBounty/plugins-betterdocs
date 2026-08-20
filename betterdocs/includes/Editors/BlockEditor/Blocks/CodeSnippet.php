@@ -27,15 +27,21 @@ class CodeSnippet extends Block {
 	 */
 	public function get_default_attributes() {
 		return [
-			'blockId'           => '',
-			'blockMeta'         => (object) [],
-			'resOption'         => 'Desktop',
-			'codeContent'       => '',
-			'language'          => 'javascript',
-			'showLanguageLabel' => true,
-			'showCopyButton'    => true,
-			'showLineNumbers'   => false,
-			'theme'             => 'light'
+			'blockId'            => '',
+			'blockMeta'          => (object) [],
+			'resOption'          => 'Desktop',
+			'codeContent'        => '',
+			'language'           => 'javascript',
+			'codeVariants'       => [],
+			'showLanguageLabel'  => true,
+			'showCopyButton'     => true,
+			'showHeader'         => true,
+			'showLineNumbers'    => false,
+			'theme'              => 'light',
+			'fileName'           => 'filename.js',
+			'showFileIcon'       => true,
+			'fileIcon'           => '',
+			'showTrafficLights'  => true
 		];
 	}
 
@@ -45,6 +51,19 @@ class CodeSnippet extends Block {
 	public function register_scripts() {
 		$this->assets_manager->register( 'betterdocs-code-snippet', 'public/css/code-snippet.css' );
 		$this->assets_manager->register( 'betterdocs-code-snippet', 'public/js/code-snippet.js', [ 'wp-element' ] );
+
+		// Self-hosted Highlight.js (vendored under assets/static/vendor/highlightjs/,
+		// same convention as assets/vendor/scalar/). The frontend + editor read
+		// these URLs off the localized config instead of hitting cdnjs.
+		$this->assets_manager->localize(
+			'betterdocs-code-snippet',
+			'BetterDocsCodeSnippetConfig',
+			[
+				'hljsUrl'  => $this->assets_manager->asset_url( 'vendor/highlightjs/highlight.min.js' ),
+				'cssLight' => $this->assets_manager->asset_url( 'vendor/highlightjs/github.min.css' ),
+				'cssDark'  => $this->assets_manager->asset_url( 'vendor/highlightjs/github-dark.min.css' )
+			]
+		);
 
 		// Enqueue CodeMirror for Gutenberg editor
 		if ( is_admin() ) {
@@ -105,9 +124,11 @@ class CodeSnippet extends Block {
 		return [
 			'code_content'       => $attributes['codeContent'],
 			'language'           => $attributes['language'],
+			// Combined [primary + codeVariants] list the template renders as a
+			// language dropdown when it holds more than one entry.
+			'code_variants'      => $this->build_variants( $attributes ),
 			'show_language_label' => $attributes['showLanguageLabel'],
 			'show_copy_button'   => $attributes['showCopyButton'],
-			'show_copy_tooltip'  => isset( $attributes['showCopyTooltip'] ) ? $attributes['showCopyTooltip'] : false,
 			'show_header'        => isset( $attributes['showHeader'] ) ? $attributes['showHeader'] : true,
 			'show_line_numbers'  => $attributes['showLineNumbers'],
 			'theme'              => $attributes['theme'],
@@ -120,5 +141,47 @@ class CodeSnippet extends Block {
 			'show_file_icon'     => isset( $attributes['showFileIcon'] ) ? $attributes['showFileIcon'] : true,
 			'file_icon'          => isset( $attributes['fileIcon'] ) ? $attributes['fileIcon'] : '',
 		];
+	}
+
+	/**
+	 * Build the ordered language list: the primary language/code first, then
+	 * each non-empty entry from `codeVariants`. One entry → single-language
+	 * (renders exactly as before); more → language dropdown.
+	 *
+	 * @param array $attributes
+	 * @return array<int, array{language: string, code: string, file_name: string}>
+	 */
+	protected function build_variants( $attributes ) {
+		$variants = [];
+
+		$primary_code = isset( $attributes['codeContent'] ) ? (string) $attributes['codeContent'] : '';
+		if ( '' !== $primary_code ) {
+			$variants[] = [
+				'language'  => isset( $attributes['language'] ) ? (string) $attributes['language'] : 'javascript',
+				'code'      => $primary_code,
+				'file_name' => isset( $attributes['fileName'] ) ? (string) $attributes['fileName'] : ''
+			];
+		}
+
+		if ( ! empty( $attributes['codeVariants'] ) && is_array( $attributes['codeVariants'] ) ) {
+			foreach ( $attributes['codeVariants'] as $variant ) {
+				if ( ! is_array( $variant ) ) {
+					continue;
+				}
+
+				$code = isset( $variant['codeContent'] ) ? (string) $variant['codeContent'] : '';
+				if ( '' === $code ) {
+					continue;
+				}
+
+				$variants[] = [
+					'language'  => isset( $variant['language'] ) ? (string) $variant['language'] : 'javascript',
+					'code'      => $code,
+					'file_name' => isset( $variant['fileName'] ) ? (string) $variant['fileName'] : ''
+				];
+			}
+		}
+
+		return $variants;
 	}
 }

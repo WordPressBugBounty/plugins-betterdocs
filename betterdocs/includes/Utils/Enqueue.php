@@ -64,6 +64,17 @@ class Enqueue extends Base {
 				$dependencies = array_unique( array_merge( $asset_config['dependencies'], $dependencies ) );
 			}
 			$version = $asset_config['version'];
+		} else {
+			// webpack only emits `<name>.asset.php` (with its content hash) for JS
+			// entries, so stylesheets used to fall through to the plugin version
+			// and never cache-busted between builds — browsers kept serving a
+			// stale CSS against freshly-changed markup. Fall back to the file's
+			// mtime so any rebuilt asset gets a new URL.
+			$asset_path = $this->dist_path( $filename );
+
+			if ( file_exists( $asset_path ) ) {
+				$version = (string) filemtime( $asset_path );
+			}
 		}
 
 		return [

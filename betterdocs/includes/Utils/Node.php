@@ -19,7 +19,7 @@ class Node {
 			$html               .= $level === 1 ? '<ul class = "' . $toc_hierarchy_class . '">' : '<ul class = "betterdocs-toc-list-level-' . $level . '">';
 			foreach ( $items as $item ) {
 				$html .= '<li class = "betterdocs-toc-heading-level-' . ( $item->key ) . '">';
-				$html .= '<a href="#' . $item->tag_number . '">' . wp_strip_all_tags( $item->title ) . '</a>';
+				$html .= '<a href="#' . esc_attr( $item->tag_number ) . '">' . esc_html( wp_strip_all_tags( $item->title ) ) . '</a>';
 				if ( ! empty( $items ) ) {
 					$html .= $this->print( $item->items, $toc_hierarchy, ++$level );
 				} else {

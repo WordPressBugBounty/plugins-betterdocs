@@ -50,6 +50,7 @@ class AIUsage {
 		'faq_write_with_ai',
 		'sample_docs',
 		'ai_suggest_terms',
+		'api_docs_ai',
 	];
 
 	/**

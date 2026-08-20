@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 4.8.1
+Stable tag: 4.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -245,6 +245,15 @@ Yes. BetterDocs supports multilingual documentation workflows and integrates wit
 
 
 == Changelog ==
+
+= 4.8.2 - 20/08/2026 =
+
+- New: Code Snippet Tab — a tabbed, multi-language code block available as both a Gutenberg block and an Elementor widget
+- New: Write with AI can now draft from an uploaded file (TXT, MD, DOCX, PDF) or read image attachments (PNG, JPG, WEBP) using a vision model
+- Improvement: Code Snippet block, Elementor widget & shortcode now support multiple languages with a built-in language switcher and self-hosted syntax highlighting (no external requests)
+- Improvement: Content Area Width & Max Width controls for the single doc layout in the Customizer
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.8.1 - 04/08/2026 =
 

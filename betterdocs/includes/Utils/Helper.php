@@ -1498,6 +1498,7 @@ class Helper extends Base {
             'yaml' => '📋',
             'xml' => '📄',
             'markdown' => '📝',
+            'curl' => '💻',
             'bash' => '💻',
             'shell' => '💻',
             'powershell' => '💻',
@@ -1505,6 +1506,87 @@ class Helper extends Base {
         ];
 
         return isset( $icons[$language] ) ? $icons[$language] : '📄';
+    }
+
+    /**
+     * Echo the copy-to-clipboard button used by the Code Snippet and Code
+     * Snippet Tab templates.
+     *
+     * Both icons ship in the markup and CSS cross-fades between them on
+     * `.is-copied`, so the frontend script never rewrites the SVG. The tooltip
+     * carries its own strings as data attributes so the script can swap
+     * "Copy" → "Copied!" without hard-coding English.
+     *
+     * @return void
+     */
+    public static function code_snippet_copy_button() {
+        ?>
+        <div class="betterdocs-code-snippet-copy-container">
+            <button class="betterdocs-code-snippet-copy-button"
+                    type="button"
+                    aria-label="<?php esc_attr_e( 'Copy code to clipboard', 'betterdocs' ); ?>">
+                <span class="betterdocs-code-snippet-copy-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="9" y="9" width="12.5" height="12.5" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                        <path d="M15.5 5.75V5A2.5 2.5 0 0 0 13 2.5H5A2.5 2.5 0 0 0 2.5 5v8A2.5 2.5 0 0 0 5 15.5h.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span class="betterdocs-code-snippet-copied-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 6.5 9.5 17 4 11.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+            </button>
+            <span class="betterdocs-code-snippet-tooltip"
+                  role="status"
+                  data-copy-label="<?php esc_attr_e( 'Copy', 'betterdocs' ); ?>"
+                  data-copied-label="<?php esc_attr_e( 'Copied!', 'betterdocs' ); ?>"
+                  data-error-label="<?php esc_attr_e( 'Copy failed', 'betterdocs' ); ?>"><?php esc_html_e( 'Copy', 'betterdocs' ); ?></span>
+        </div>
+        <?php
+    }
+
+    /**
+     * Human-readable label for a programming-language identifier, used as the
+     * language-dropdown label on multi-language code snippets. Mirrors the
+     * block's LANGUAGE_OPTIONS; falls back to an upper-cased identifier.
+     *
+     * @param string $language Programming language identifier
+     * @return string
+     */
+    public static function get_language_label( $language ) {
+        $labels = [
+            'javascript' => 'JavaScript',
+            'typescript' => 'TypeScript',
+            'php'        => 'PHP',
+            'python'     => 'Python',
+            'java'       => 'Java',
+            'ruby'       => 'Ruby',
+            'curl'       => 'cURL',
+            'bash'       => 'Bash',
+            'shell'      => 'Shell',
+            'json'       => 'JSON',
+            'yaml'       => 'YAML',
+            'html'       => 'HTML',
+            'css'        => 'CSS',
+            'scss'       => 'SCSS',
+            'sql'        => 'SQL',
+            'xml'        => 'XML',
+            'cpp'        => 'C++',
+            'csharp'     => 'C#',
+            'c'          => 'C',
+            'go'         => 'Go',
+            'rust'       => 'Rust',
+            'swift'      => 'Swift',
+            'kotlin'     => 'Kotlin',
+            'markdown'   => 'Markdown'
+        ];
+
+        if ( isset( $labels[ $language ] ) ) {
+            return $labels[ $language ];
+        }
+
+        return ucwords( str_replace( [ '-', '_' ], ' ', (string) $language ) );
     }
 
 	/**

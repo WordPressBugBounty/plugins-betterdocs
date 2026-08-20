@@ -194,6 +194,9 @@ class Install extends Base {
             UNIQUE KEY post_created (post_id, created_at)
         ) {$charset_collate};";
 
+		// The betterdocs_api_specs table moved to Pro (API Documentation is a
+		// Pro-only feature; Pro's Install creates it).
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $search_keyword . $search_log . $analytics_table );
 

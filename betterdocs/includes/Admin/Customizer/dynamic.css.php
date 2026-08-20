@@ -1239,6 +1239,63 @@ $css->add_rule(
 
 /** Single Doc Start **/
 
+/**
+ * Single Doc Content Area Width / Maximum Width.
+ *
+ * One pair of settings, three selectors — each layout family caps its content
+ * wrapper through a different rule in the stylesheet, so the override has to
+ * match the rule it is replacing:
+ *
+ *   layouts 8 / 9 / 10  .betterdocs-wrapper.betterdocs-single-layout-8 ...
+ *                       (9 and 10 also carry the layout-8 class)
+ *   layouts 1 / 6       ...:not(.betterdocs-fluid-wrapper) — these two are the
+ *                       only single layouts without the fluid class
+ *   layout 5            .betterdocs-single-layout-5 ...
+ *
+ * The 1/6 selector is additionally scoped to .betterdocs-single-wrapper: the
+ * docs-archive and category-archive wrappers are also non-fluid, and they have
+ * their own width controls (betterdocs_doc_page_content_* /
+ * betterdocs_archive_content_area_*) that this would otherwise override.
+ *
+ * Layouts 2, 3 and 4 are deliberately absent — they are full-bleed and both
+ * controls are hidden for them in customizer-condition.js.
+ */
+/**
+ * Each selector is prefixed with `body` purely to win the cascade. The base
+ * caps live in common/_normalizer.scss and templates/single.scss, which are
+ * @imported into a dozen front-end bundles (single.css, article-summary.css,
+ * category-grid.css, reactions.css, …), so the identical 0,3,0 rule is emitted
+ * many times over and several of those stylesheets load *after* this inline
+ * block in wp_head. At equal specificity the last one would win and the
+ * setting would silently do nothing. One element selector takes us to 0,3,1
+ * and beats every copy without resorting to !important.
+ */
+$betterdocs_single_content_width_selectors = [
+	'body .betterdocs-wrapper.betterdocs-single-layout-8 .betterdocs-content-wrapper',
+	'body .betterdocs-wrapper.betterdocs-single-wrapper:not(.betterdocs-fluid-wrapper) .betterdocs-content-wrapper',
+	'body .betterdocs-single-layout-5 .betterdocs-content-wrapper'
+];
+
+$css->add_rule(
+	$betterdocs_single_content_width_selectors,
+	$css->properties(
+		[
+			'width' => 'betterdocs_single_doc_content_width'
+		],
+		'%'
+	)
+);
+
+$css->add_rule(
+	$betterdocs_single_content_width_selectors,
+	$css->properties(
+		[
+			'max-width' => 'betterdocs_single_doc_content_max_width'
+		],
+		'px'
+	)
+);
+
 //Single Doc Common Controllers Content Area Background Color
 $css->add_rule(
 	'.betterdocs-wrapper.betterdocs-single-wrapper .betterdocs-content-wrapper',

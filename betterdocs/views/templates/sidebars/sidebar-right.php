@@ -64,4 +64,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} // End password protection check
 			?>
 	</div>
+	<?php
+	/**
+	 * Fires inside the right (ToC) sidebar, after the ToC container. Extension
+	 * point for add-ons that render a sticky side panel next to the ToC (e.g.
+	 * BetterDocs Pro's API-docs code-sample panel).
+	 */
+	do_action( 'betterdocs_after_toc_sidebar' );
+	?>
 </aside>

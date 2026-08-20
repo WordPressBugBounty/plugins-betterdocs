@@ -435,6 +435,101 @@ PROMPT;
         }
     }
 
+    /**
+     * Generate documentation from an uploaded image using a vision-capable model.
+     *
+     * Mirrors generate_openai_response() but sends the picture alongside the text
+     * prompt as an OpenAI-format multimodal user message
+     * (`content: [ {type:text}, {type:image_url} ]`). The OpenAI-compatible
+     * provider forwards that message array to the wire verbatim, so no provider
+     * change is needed. Only OpenAI vision models are wired — Claude and Gemini
+     * use a different image envelope, so they are refused with a clear error
+     * instead of being sent a payload they would reject.
+     *
+     * @param string   $prompt       Composed instruction prompt.
+     * @param array    $image        { data_uri:string, mime:string }.
+     * @param int|null $max_tokens   Optional token cap.
+     * @param array    $extra_system Extra system messages (instruction sets).
+     * @return string|\WP_Error Generated content, or WP_Error on guard/failure.
+     */
+    public function generate_vision_response( $prompt, $image, $max_tokens = null, $extra_system = array() ) {
+        if ( empty( $image['data_uri'] ) ) {
+            return new \WP_Error( 'ai_vision_no_image', __( 'No image data to send to the AI.', 'betterdocs' ) );
+        }
+
+        $factory  = new ProviderFactory( $this->settings );
+        $platform = $factory->active_platform();
+        $model    = $factory->active_model( $platform );
+
+        if ( ! $this->platform_supports_vision( $platform, $model ) ) {
+            return new \WP_Error(
+                'ai_no_vision',
+                sprintf(
+                    /* translators: 1: AI platform id, 2: model name. */
+                    __( 'The configured AI model (%1$s / %2$s) can\'t read images. Switch to an OpenAI vision model such as GPT-4o or GPT-4o mini in BetterDocs → Settings → AI Content Suite, or upload a PDF/DOCX/TXT instead.', 'betterdocs' ),
+                    $platform,
+                    '' !== (string) $model ? $model : 'default'
+                )
+            );
+        }
+
+        try {
+            $messages = array_merge(
+                array( array( 'role' => 'system', 'content' => $this->get_system_prompt() ) ),
+                $this->normalize_extra_system( $extra_system ),
+                array(
+                    array(
+                        'role'    => 'user',
+                        'content' => array(
+                            array( 'type' => 'text', 'text' => (string) $prompt ),
+                            array( 'type' => 'image_url', 'image_url' => array( 'url' => (string) $image['data_uri'] ) ),
+                        ),
+                    ),
+                )
+            );
+
+            $result = $factory->make()->chat( $messages, $this->ai_chat_options( $max_tokens ) );
+
+            if ( is_wp_error( $result ) ) {
+                return $result;
+            }
+
+            return $result['content'];
+        } catch ( \Exception $error ) {
+            return new \WP_Error( 'ai_vision_failed', 'Error: ' . $error->getMessage() );
+        }
+    }
+
+    /**
+     * Whether the active platform + model can accept image input in the OpenAI
+     * multimodal format. Deliberately conservative: only OpenAI vision model
+     * families qualify, because Claude and Gemini require a different image
+     * envelope this path does not build. gpt-3.5 (text-only) is excluded.
+     *
+     * @param string $platform
+     * @param string $model
+     * @return bool
+     */
+    protected function platform_supports_vision( $platform, $model ) {
+        if ( 'openai' !== $platform ) {
+            return false;
+        }
+
+        $model = strtolower( (string) $model );
+
+        if ( '' === $model || false !== strpos( $model, 'gpt-3.5' ) ) {
+            return false;
+        }
+
+        foreach ( array( 'gpt-4o', 'gpt-4.1', 'gpt-4-turbo', 'gpt-4-vision', 'chatgpt-4o', 'gpt-5', 'o1', 'o3', 'o4' ) as $family ) {
+            if ( false !== strpos( $model, $family ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function get_outline_system_prompt() {
         $prompt = <<<'PROMPT'
 You are a Senior Technical Writer. Produce a documentation OUTLINE only — not the full article.

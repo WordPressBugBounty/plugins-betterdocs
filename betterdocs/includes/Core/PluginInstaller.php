@@ -54,26 +54,63 @@ class PluginInstaller
             return new WP_Error('empty_arg', __('Argument should not be empty.', 'betterdocs'));
         }
 
-        $response = wp_remote_post(
-            'http://api.wordpress.org/plugins/info/1.0/',
-            [
-                'body' => [
-                    'action' => 'plugin_information',
-                    'request' => serialize((object) [
-                        'slug' => $slug,
-                        'fields' => [
-                            'version' => false,
-                        ],
-                    ]),
-                ],
-            ]
-        );
-
-        if (is_wp_error($response)) {
-            return $response;
+        // Use core's plugins_api() instead of a hand-rolled request. The old code
+        // POSTed to plaintext http://api.wordpress.org and passed the response
+        // body straight to unserialize(), so anyone able to intercept that
+        // connection could inject a PHP-object-injection payload or a malicious
+        // download_link. plugins_api() talks to api.wordpress.org over HTTPS and
+        // returns a decoded object — no plaintext transport, no unserialize().
+        if (!function_exists('plugins_api')) {
+            include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
         }
 
-        return unserialize(wp_remote_retrieve_body($response));
+        $response = plugins_api('plugin_information', [
+            'slug'   => $slug,
+            'fields' => [
+                'version' => true,
+            ],
+        ]);
+
+        if (is_wp_error($response) || !is_object($response)) {
+            return is_wp_error($response) ? $response : new WP_Error('plugins_api_failed', __('Could not retrieve plugin information.', 'betterdocs'));
+        }
+
+        // Bind the package to the requested slug and to an https WordPress.org
+        // host before anything installs it.
+        if (isset($response->slug) && $response->slug !== $slug) {
+            return new WP_Error('slug_mismatch', __('Plugin information did not match the requested plugin.', 'betterdocs'));
+        }
+
+        if (isset($response->download_link) && !$this->is_allowed_package_url($response->download_link)) {
+            return new WP_Error('bad_package_host', __('Plugin download URL is not an approved WordPress.org address.', 'betterdocs'));
+        }
+
+        return $response;
+    }
+
+    /**
+     * Whether a package URL is safe to hand to the upgrader: https on a
+     * WordPress.org host. Prevents a tampered response from redirecting the
+     * install to an attacker-controlled archive.
+     *
+     * @param string $url
+     * @return bool
+     */
+    protected function is_allowed_package_url($url)
+    {
+        if (!is_string($url) || $url === '') {
+            return false;
+        }
+
+        $parts = wp_parse_url($url);
+
+        if (empty($parts['scheme']) || strtolower($parts['scheme']) !== 'https' || empty($parts['host'])) {
+            return false;
+        }
+
+        $host = strtolower($parts['host']);
+
+        return in_array($host, ['downloads.wordpress.org', 'wordpress.org', 'www.wordpress.org'], true);
     }
 
     /**
@@ -130,7 +167,7 @@ class PluginInstaller
      */
     public function upgrade_plugin($basename = '')
     {
-        if (empty($slug)) {
+        if (empty($basename)) {
             return new WP_Error('empty_arg', __('Argument should not be empty.', 'betterdocs'));
         }
 

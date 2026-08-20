@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterDocs 4.8.0\n"
+"Project-Id-Version: BetterDocs 4.8.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterdocs\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-29T11:51:43+00:00\n"
+"POT-Creation-Date: 2026-08-20T07:07:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: includes/Core/PostType.php:1161
 #: includes/Core/UnifiedMetabox.php:71
 #: includes/Editors/BlockEditor.php:43
-#: includes/Editors/Elementor.php:699
+#: includes/Editors/Elementor.php:711
 #: includes/Editors/Elementor/SingleDocs.php:104
 #: views/templates/parts/credit.php:20
 msgid "BetterDocs"
@@ -69,7 +69,7 @@ msgstr ""
 msgid "BetterDocs Customizer options are not compatible with block-based themes and will not function as expected. Please use the <a href=\"%2$s\">Site Editor</a> to customize your site. <a href=\"%1$s\">Learn more</a>"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:277
+#: includes/Admin/Customizer/Defaults.php:283
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:32
 #: includes/Editors/Elementor/Widget/Feedback.php:63
 #: includes/Shortcodes/FeedbackForm.php:120
@@ -77,7 +77,7 @@ msgstr ""
 msgid "Name:"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:278
+#: includes/Admin/Customizer/Defaults.php:284
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:33
 #: includes/Editors/Elementor/Widget/Feedback.php:73
 #: includes/Shortcodes/FeedbackForm.php:121
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Email:"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:279
+#: includes/Admin/Customizer/Defaults.php:285
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:34
 #: includes/Editors/Elementor/Widget/Feedback.php:82
 #: includes/Shortcodes/FeedbackForm.php:122
@@ -93,45 +93,45 @@ msgstr ""
 msgid "Message:"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:283
+#: includes/Admin/Customizer/Defaults.php:289
 #: includes/Editors/Elementor/Widget/DocShare.php:489
 #: includes/Shortcodes/SocialShare.php:33
 msgid "Share This Article :"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:421
+#: includes/Admin/Customizer/Defaults.php:427
 msgid "How can we help you?"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:537
+#: includes/Admin/Customizer/Defaults.php:543
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4715
-#: includes/Core/Settings.php:1177
+#: includes/Core/Settings.php:1133
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:208
 #: includes/Editors/Elementor/Widget/Sidebar.php:137
 #: assets/build/blocks/editor.js:1
 msgid "Popular Docs"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:592
+#: includes/Admin/Customizer/Defaults.php:598
 #: includes/Editors/BlockEditor/Blocks/Reactions.php:33
 #: includes/Editors/Elementor/Widget/Reactions.php:523
 #: includes/Editors/Elementor/Widget/Reactions.php:583
 msgid "What are your feelings"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:593
+#: includes/Admin/Customizer/Defaults.php:599
 #: includes/Editors/Elementor/Widget/Reactions.php:643
 msgid "Was it helpful ?"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:602
+#: includes/Admin/Customizer/Defaults.php:608
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:109
 #: includes/Shortcodes/FaqList.php:43
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: includes/Admin/Customizer/Defaults.php:1342
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1651
+#: includes/Admin/Customizer/Defaults.php:1348
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1730
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:106
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:502
 #: views/templates/parts/article-summary.php:80
@@ -208,7 +208,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:162
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1092
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1117
-#: includes/Admin/Customizer/Sections/SingleDoc.php:165
+#: includes/Admin/Customizer/Sections/SingleDoc.php:244
 msgid "Background Image"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:189
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1143
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1319
-#: includes/Admin/Customizer/Sections/SingleDoc.php:195
+#: includes/Admin/Customizer/Sections/SingleDoc.php:274
 msgid "Background Property"
 msgstr ""
 
@@ -224,7 +224,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:217
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1172
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1348
-#: includes/Admin/Customizer/Sections/SingleDoc.php:226
+#: includes/Admin/Customizer/Sections/SingleDoc.php:305
 #: includes/Editors/Elementor/Widget/ArchiveList.php:386
 #: includes/Editors/Elementor/Widget/ArchiveList.php:493
 #: includes/Editors/Elementor/Widget/ArchiveList.php:999
@@ -264,7 +264,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:223
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1177
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1353
-#: includes/Admin/Customizer/Sections/SingleDoc.php:231
+#: includes/Admin/Customizer/Sections/SingleDoc.php:310
 msgid "auto"
 msgstr ""
 
@@ -272,7 +272,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:224
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1178
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1354
-#: includes/Admin/Customizer/Sections/SingleDoc.php:232
+#: includes/Admin/Customizer/Sections/SingleDoc.php:311
 msgid "length"
 msgstr ""
 
@@ -280,7 +280,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:225
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1179
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1355
-#: includes/Admin/Customizer/Sections/SingleDoc.php:233
+#: includes/Admin/Customizer/Sections/SingleDoc.php:312
 msgid "cover"
 msgstr ""
 
@@ -288,7 +288,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:226
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1180
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1356
-#: includes/Admin/Customizer/Sections/SingleDoc.php:234
+#: includes/Admin/Customizer/Sections/SingleDoc.php:313
 msgid "contain"
 msgstr ""
 
@@ -304,9 +304,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1357
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1390
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1425
-#: includes/Admin/Customizer/Sections/SingleDoc.php:235
-#: includes/Admin/Customizer/Sections/SingleDoc.php:269
-#: includes/Admin/Customizer/Sections/SingleDoc.php:306
+#: includes/Admin/Customizer/Sections/SingleDoc.php:314
+#: includes/Admin/Customizer/Sections/SingleDoc.php:348
+#: includes/Admin/Customizer/Sections/SingleDoc.php:385
 msgid "initial"
 msgstr ""
 
@@ -322,9 +322,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1358
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1391
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1426
-#: includes/Admin/Customizer/Sections/SingleDoc.php:236
-#: includes/Admin/Customizer/Sections/SingleDoc.php:270
-#: includes/Admin/Customizer/Sections/SingleDoc.php:307
+#: includes/Admin/Customizer/Sections/SingleDoc.php:315
+#: includes/Admin/Customizer/Sections/SingleDoc.php:349
+#: includes/Admin/Customizer/Sections/SingleDoc.php:386
 msgid "inherit"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:253
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1208
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1384
-#: includes/Admin/Customizer/Sections/SingleDoc.php:263
+#: includes/Admin/Customizer/Sections/SingleDoc.php:342
 msgid "Repeat"
 msgstr ""
 
@@ -340,7 +340,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:259
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1213
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1389
-#: includes/Admin/Customizer/Sections/SingleDoc.php:268
+#: includes/Admin/Customizer/Sections/SingleDoc.php:347
 msgid "no-repeat"
 msgstr ""
 
@@ -348,7 +348,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:262
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1216
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1392
-#: includes/Admin/Customizer/Sections/SingleDoc.php:271
+#: includes/Admin/Customizer/Sections/SingleDoc.php:350
 msgid "repeat"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:263
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1217
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1393
-#: includes/Admin/Customizer/Sections/SingleDoc.php:272
+#: includes/Admin/Customizer/Sections/SingleDoc.php:351
 msgid "repeat-x"
 msgstr ""
 
@@ -364,7 +364,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:264
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1218
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1394
-#: includes/Admin/Customizer/Sections/SingleDoc.php:273
+#: includes/Admin/Customizer/Sections/SingleDoc.php:352
 msgid "repeat-y"
 msgstr ""
 
@@ -372,7 +372,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:289
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1244
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1420
-#: includes/Admin/Customizer/Sections/SingleDoc.php:301
+#: includes/Admin/Customizer/Sections/SingleDoc.php:380
 msgid "Attachment"
 msgstr ""
 
@@ -380,7 +380,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:297
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1251
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1427
-#: includes/Admin/Customizer/Sections/SingleDoc.php:308
+#: includes/Admin/Customizer/Sections/SingleDoc.php:387
 msgid "scroll"
 msgstr ""
 
@@ -388,7 +388,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:298
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1252
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1428
-#: includes/Admin/Customizer/Sections/SingleDoc.php:309
+#: includes/Admin/Customizer/Sections/SingleDoc.php:388
 msgid "fixed"
 msgstr ""
 
@@ -396,7 +396,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:299
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1253
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1429
-#: includes/Admin/Customizer/Sections/SingleDoc.php:310
+#: includes/Admin/Customizer/Sections/SingleDoc.php:389
 msgid "local"
 msgstr ""
 
@@ -404,7 +404,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:323
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1279
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1455
-#: includes/Admin/Customizer/Sections/SingleDoc.php:338
+#: includes/Admin/Customizer/Sections/SingleDoc.php:417
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:168
 #: assets/build/blocks/editor.js:1
 msgid "Position"
@@ -414,7 +414,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:329
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1284
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1460
-#: includes/Admin/Customizer/Sections/SingleDoc.php:343
+#: includes/Admin/Customizer/Sections/SingleDoc.php:422
 msgid "left top"
 msgstr ""
 
@@ -422,7 +422,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:330
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1285
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1461
-#: includes/Admin/Customizer/Sections/SingleDoc.php:344
+#: includes/Admin/Customizer/Sections/SingleDoc.php:423
 msgid "left center"
 msgstr ""
 
@@ -430,7 +430,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:331
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1286
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1462
-#: includes/Admin/Customizer/Sections/SingleDoc.php:345
+#: includes/Admin/Customizer/Sections/SingleDoc.php:424
 msgid "left bottom"
 msgstr ""
 
@@ -438,7 +438,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:332
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1287
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1463
-#: includes/Admin/Customizer/Sections/SingleDoc.php:346
+#: includes/Admin/Customizer/Sections/SingleDoc.php:425
 msgid "right top"
 msgstr ""
 
@@ -446,7 +446,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:333
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1288
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1464
-#: includes/Admin/Customizer/Sections/SingleDoc.php:347
+#: includes/Admin/Customizer/Sections/SingleDoc.php:426
 msgid "right center"
 msgstr ""
 
@@ -454,7 +454,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:334
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1289
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1465
-#: includes/Admin/Customizer/Sections/SingleDoc.php:348
+#: includes/Admin/Customizer/Sections/SingleDoc.php:427
 msgid "right bottom"
 msgstr ""
 
@@ -462,7 +462,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:335
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1290
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1466
-#: includes/Admin/Customizer/Sections/SingleDoc.php:349
+#: includes/Admin/Customizer/Sections/SingleDoc.php:428
 msgid "center top"
 msgstr ""
 
@@ -470,7 +470,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:336
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1291
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1467
-#: includes/Admin/Customizer/Sections/SingleDoc.php:350
+#: includes/Admin/Customizer/Sections/SingleDoc.php:429
 msgid "center center"
 msgstr ""
 
@@ -478,7 +478,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:337
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1292
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1468
-#: includes/Admin/Customizer/Sections/SingleDoc.php:351
+#: includes/Admin/Customizer/Sections/SingleDoc.php:430
 msgid "center bottom"
 msgstr ""
 
@@ -546,56 +546,56 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:2851
 #: includes/Admin/Customizer/Sections/Sidebar.php:3185
 #: includes/Admin/Customizer/Sections/Sidebar.php:3322
-#: includes/Admin/Customizer/Sections/SingleDoc.php:406
-#: includes/Admin/Customizer/Sections/SingleDoc.php:548
-#: includes/Admin/Customizer/Sections/SingleDoc.php:690
-#: includes/Admin/Customizer/Sections/SingleDoc.php:832
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1087
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1172
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1546
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2106
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2247
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2551
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2905
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3046
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3209
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3536
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4036
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4175
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4480
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4618
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4912
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5050
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5189
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5327
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6851
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6989
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7128
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7266
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7655
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7797
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7964
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8106
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8460
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8600
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8788
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8930
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9097
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9239
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9594
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9734
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9922
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10064
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10231
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10373
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10634
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10774
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10962
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11104
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11271
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11413
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11674
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11814
+#: includes/Admin/Customizer/Sections/SingleDoc.php:485
+#: includes/Admin/Customizer/Sections/SingleDoc.php:627
+#: includes/Admin/Customizer/Sections/SingleDoc.php:769
+#: includes/Admin/Customizer/Sections/SingleDoc.php:911
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1166
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1251
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1625
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2185
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2326
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2630
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2984
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3125
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3288
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3615
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4115
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4254
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4559
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4697
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4991
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5129
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5268
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5406
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6930
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7068
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7207
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7345
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7734
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7876
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8043
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8185
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8539
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8679
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8867
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9009
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9176
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9318
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9673
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9813
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10001
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10143
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10310
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10452
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10713
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10853
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11041
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11183
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11350
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11492
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11753
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11893
 msgid "Top"
 msgstr ""
 
@@ -649,55 +649,55 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:2877
 #: includes/Admin/Customizer/Sections/Sidebar.php:3212
 #: includes/Admin/Customizer/Sections/Sidebar.php:3349
-#: includes/Admin/Customizer/Sections/SingleDoc.php:434
-#: includes/Admin/Customizer/Sections/SingleDoc.php:576
-#: includes/Admin/Customizer/Sections/SingleDoc.php:718
-#: includes/Admin/Customizer/Sections/SingleDoc.php:860
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1200
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1573
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2134
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2274
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2579
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2933
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3073
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3236
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3564
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4063
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4203
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4507
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4645
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4939
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5077
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5216
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5354
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6878
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7016
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7155
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7293
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7683
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7825
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7992
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8134
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8488
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8628
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8816
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8958
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9125
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9267
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9622
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9762
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9950
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10092
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10259
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10401
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10662
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10802
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10990
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11132
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11299
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11441
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11702
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11842
+#: includes/Admin/Customizer/Sections/SingleDoc.php:513
+#: includes/Admin/Customizer/Sections/SingleDoc.php:655
+#: includes/Admin/Customizer/Sections/SingleDoc.php:797
+#: includes/Admin/Customizer/Sections/SingleDoc.php:939
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1279
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1652
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2213
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2353
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2658
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3012
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3152
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3315
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3643
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4142
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4282
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4586
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4724
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5018
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5156
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5295
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5433
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6957
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7095
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7234
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7372
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7762
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7904
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8071
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8213
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8567
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8707
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8895
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9037
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9204
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9346
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9701
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9841
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10029
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10171
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10338
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10480
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10741
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10881
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11069
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11211
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11378
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11520
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11781
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11921
 #: includes/Editors/Elementor/Widget/ArchiveList.php:727
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1752
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1777
@@ -766,56 +766,56 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:2904
 #: includes/Admin/Customizer/Sections/Sidebar.php:3239
 #: includes/Admin/Customizer/Sections/Sidebar.php:3376
-#: includes/Admin/Customizer/Sections/SingleDoc.php:462
-#: includes/Admin/Customizer/Sections/SingleDoc.php:604
-#: includes/Admin/Customizer/Sections/SingleDoc.php:746
-#: includes/Admin/Customizer/Sections/SingleDoc.php:888
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1115
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1227
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1600
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2162
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2301
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2607
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2961
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3100
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3263
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3592
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4090
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4231
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4534
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4672
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4966
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5104
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5243
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5381
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6905
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7043
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7182
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7320
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7711
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7853
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8020
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8161
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8515
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8655
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8844
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8986
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9153
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9294
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9649
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9789
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9978
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10120
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10287
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10428
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10689
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10829
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11018
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11160
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11327
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11468
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11729
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11869
+#: includes/Admin/Customizer/Sections/SingleDoc.php:541
+#: includes/Admin/Customizer/Sections/SingleDoc.php:683
+#: includes/Admin/Customizer/Sections/SingleDoc.php:825
+#: includes/Admin/Customizer/Sections/SingleDoc.php:967
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1194
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1306
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1679
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2241
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2380
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2686
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3040
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3179
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3342
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3671
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4169
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4310
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4613
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4751
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5045
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5183
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5322
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5460
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6984
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7122
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7261
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7399
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7790
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7932
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8099
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8240
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8594
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8734
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8923
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9065
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9232
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9373
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9728
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9868
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10057
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10199
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10366
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10507
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10768
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10908
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11097
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11239
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11406
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11547
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11808
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11948
 msgid "Bottom"
 msgstr ""
 
@@ -869,55 +869,55 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:2930
 #: includes/Admin/Customizer/Sections/Sidebar.php:3266
 #: includes/Admin/Customizer/Sections/Sidebar.php:3403
-#: includes/Admin/Customizer/Sections/SingleDoc.php:490
-#: includes/Admin/Customizer/Sections/SingleDoc.php:632
-#: includes/Admin/Customizer/Sections/SingleDoc.php:774
-#: includes/Admin/Customizer/Sections/SingleDoc.php:916
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1254
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1627
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2190
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2328
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2635
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2989
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3127
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3290
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3620
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4117
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4259
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4561
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4699
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4993
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5131
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5270
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5408
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6932
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7070
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7209
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7347
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7739
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7881
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8048
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8188
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8542
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8682
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8872
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9014
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9181
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9321
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9676
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9816
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10006
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10148
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10315
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10455
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10716
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10856
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11046
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11188
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11355
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11495
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11756
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11896
+#: includes/Admin/Customizer/Sections/SingleDoc.php:569
+#: includes/Admin/Customizer/Sections/SingleDoc.php:711
+#: includes/Admin/Customizer/Sections/SingleDoc.php:853
+#: includes/Admin/Customizer/Sections/SingleDoc.php:995
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1333
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1706
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2269
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2407
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2714
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3068
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3206
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3369
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3699
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4196
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4338
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4640
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4778
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5072
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5210
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5349
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5487
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7011
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7149
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7288
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7426
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7818
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7960
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8127
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8267
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8621
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8761
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8951
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9093
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9260
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9400
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9755
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9895
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10085
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10227
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10394
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10534
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10795
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10935
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11125
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11267
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11434
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11574
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11835
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11975
 #: includes/Editors/Elementor/Widget/ArchiveList.php:719
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1744
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1769
@@ -935,13 +935,13 @@ msgid "Left"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:543
-#: includes/Admin/Customizer/Sections/SingleDoc.php:940
-#: includes/Core/Settings.php:1195
-#: includes/Core/Settings.php:1252
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1019
+#: includes/Core/Settings.php:1151
+#: includes/Core/Settings.php:1208
 #: includes/Core/SetupWizard.php:167
 #: includes/Editors/BlockEditor/Blocks/SearchForm.php:35
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:320
-#: includes/FrontEnd/TemplateTags.php:324
+#: includes/FrontEnd/TemplateTags.php:335
 #: includes/Shortcodes/SearchForm.php:284
 #: includes/Shortcodes/SearchModal.php:277
 #: views/templates/archives/categories/layout-8.php:112
@@ -968,14 +968,14 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1584
 #: includes/Admin/Customizer/Sections/LiveSearch.php:1724
 #: includes/Admin/Customizer/Sections/Sidebar.php:1728
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1059
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3181
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4008
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4590
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4884
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5022
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6823
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6961
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1138
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3260
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4087
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4669
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4963
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5101
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6902
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7040
 #: includes/Editors/Elementor/Widget/ArchiveList.php:221
 #: includes/Editors/Elementor/Widget/ArchiveList.php:260
 #: includes/Editors/Elementor/Widget/ArchiveList.php:691
@@ -1008,7 +1008,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:178
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:316
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:151
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:272
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:315
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:194
 #: includes/Editors/Elementor/Widget/DocAuthor.php:102
 #: includes/Editors/Elementor/Widget/Navigation.php:218
 #: includes/Editors/Elementor/Widget/ReadingTime.php:191
@@ -1028,13 +1029,13 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2925
 #: includes/Admin/Customizer/Sections/Sidebar.php:1862
 #: includes/Admin/Customizer/Sections/Sidebar.php:2824
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1144
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4147
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4452
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5161
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5299
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7100
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7238
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1223
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4226
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4531
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5240
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5378
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7179
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7317
 #: includes/Editors/Elementor/Widget/ArchiveList.php:209
 #: includes/Editors/Elementor/Widget/ArchiveList.php:248
 #: includes/Editors/Elementor/Widget/ArchiveList.php:703
@@ -1077,10 +1078,13 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:166
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:304
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:139
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:284
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:368
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:485
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:560
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:327
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:411
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:528
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:603
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:206
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:272
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:329
 #: includes/Editors/Elementor/Widget/DocAuthor.php:90
 #: includes/Editors/Elementor/Widget/DocShare.php:589
 #: includes/Editors/Elementor/Widget/DocShare.php:646
@@ -1110,22 +1114,22 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:960
 #: includes/Admin/Customizer/Sections/DocsPage.php:135
-#: includes/Admin/Customizer/Sections/SingleDoc.php:141
+#: includes/Admin/Customizer/Sections/SingleDoc.php:220
 msgid "Content Area Background Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:988
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2219
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3018
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2298
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3097
 msgid "Content Area Margin"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:1125
 #: includes/Admin/Customizer/Sections/ArchivePage.php:1262
 #: includes/Admin/Customizer/Sections/DocsPage.php:364
-#: includes/Admin/Customizer/Sections/SingleDoc.php:378
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2078
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2877
+#: includes/Admin/Customizer/Sections/SingleDoc.php:457
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2157
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2956
 msgid "Content Area Padding"
 msgstr ""
 
@@ -1168,11 +1172,11 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:908
 #: includes/Admin/Customizer/Sections/Sidebar.php:1413
 #: includes/Admin/Customizer/Sections/Sidebar.php:2707
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1676
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2049
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2848
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3768
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3793
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1755
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2128
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2927
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3847
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3872
 #: includes/Editors/Elementor/Widget/ArchiveList.php:649
 #: includes/Editors/Elementor/Widget/ArchiveList.php:776
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:140
@@ -1183,9 +1187,12 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:249
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:121
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:218
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:296
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:380
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:572
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:339
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:423
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:615
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:218
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:284
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:341
 #: includes/Editors/Elementor/Widget/DocAuthor.php:63
 #: includes/Editors/Elementor/Widget/Navigation.php:155
 #: includes/Editors/Elementor/Widget/PrintButton.php:62
@@ -1225,9 +1232,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:587
 #: includes/Admin/Customizer/Sections/Sidebar.php:2386
 #: includes/Admin/Customizer/Sections/Sidebar.php:3568
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1845
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2383
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3320
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1924
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2462
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3399
 msgid "Title Font Size"
 msgstr ""
 
@@ -1237,9 +1244,9 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:512
 #: includes/Admin/Customizer/Sections/Sidebar.php:2311
 #: includes/Admin/Customizer/Sections/Sidebar.php:3541
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1817
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2354
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3153
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1896
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2433
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3232
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:320
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:363
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:568
@@ -1368,11 +1375,11 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4388
 #: includes/Admin/Customizer/Sections/Sidebar.php:1017
 #: includes/Admin/Customizer/Sections/Sidebar.php:2792
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1372
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1461
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3904
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4312
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4394
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1451
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1540
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3983
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4391
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4473
 #: includes/Editors/Elementor/Widget/ArchiveList.php:861
 msgid "Font Size"
 msgstr ""
@@ -1389,8 +1396,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4630
 #: includes/Admin/Customizer/Sections/Sidebar.php:989
 #: includes/Admin/Customizer/Sections/Sidebar.php:2764
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1401
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1490
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1480
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1569
 #: includes/Editors/Elementor/Widget/ArchiveList.php:319
 #: includes/Editors/Elementor/Widget/ArchiveList.php:374
 #: includes/Editors/Elementor/Widget/ArchiveList.php:547
@@ -1507,7 +1514,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/ArchivePage.php:2912
 #: includes/Admin/Customizer/Sections/Sidebar.php:755
 #: includes/Admin/Customizer/Sections/Sidebar.php:2554
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1518
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1597
 #: includes/Editors/Elementor/Widget/ArchiveList.php:1175
 #: includes/Editors/Elementor/Widget/Title.php:226
 #: includes/Editors/Elementor/Widget/ToC.php:317
@@ -1578,8 +1585,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:1092
 #: includes/Admin/Customizer/Sections/Sidebar.php:3026
 #: includes/Admin/Customizer/Sections/Sidebar.php:3723
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2412
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3349
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2491
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3428
 msgid "List Item Color"
 msgstr ""
 
@@ -1587,8 +1594,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:1115
 #: includes/Admin/Customizer/Sections/Sidebar.php:3049
 #: includes/Admin/Customizer/Sections/Sidebar.php:3769
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2436
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3373
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2515
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3452
 msgid "List Item Hover Color"
 msgstr ""
 
@@ -1596,8 +1603,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:1143
 #: includes/Admin/Customizer/Sections/Sidebar.php:3125
 #: includes/Admin/Customizer/Sections/Sidebar.php:3694
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2489
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3474
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2568
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3553
 msgid "List Item Font Size"
 msgstr ""
 
@@ -1694,8 +1701,8 @@ msgid "Active Border Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:17
-#: includes/Core/Settings.php:1630
-#: includes/Core/Settings.php:1636
+#: includes/Core/Settings.php:1586
+#: includes/Core/Settings.php:1592
 msgid "Breadcrumb"
 msgstr ""
 
@@ -1731,13 +1738,13 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:144
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:303
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2460
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3397
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2539
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3476
 msgid "Active Item Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:46
-#: includes/Core/Settings.php:904
+#: includes/Core/Settings.php:860
 #: includes/Core/SetupWizard.php:125
 #: includes/Core/SetupWizard.php:352
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:14
@@ -1767,10 +1774,12 @@ msgid "Card Layout"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:513
+#: includes/Admin/Customizer/Sections/SingleDoc.php:155
 msgid "Content Area Width"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:548
+#: includes/Admin/Customizer/Sections/SingleDoc.php:190
 msgid "Content Area Maximum Width"
 msgstr ""
 
@@ -1893,7 +1902,7 @@ msgid "Image"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2773
-#: includes/Core/Settings.php:1340
+#: includes/Core/Settings.php:1296
 #: includes/Editors/Elementor/Widget/ArchiveList.php:112
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:839
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2577
@@ -1921,11 +1930,11 @@ msgid "Title"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2801
-#: includes/Core/Settings.php:1313
-#: includes/Editors/Elementor.php:240
-#: includes/Editors/Elementor.php:303
-#: includes/Editors/Elementor.php:527
-#: includes/Editors/Elementor.php:601
+#: includes/Core/Settings.php:1269
+#: includes/Editors/Elementor.php:241
+#: includes/Editors/Elementor.php:304
+#: includes/Editors/Elementor.php:528
+#: includes/Editors/Elementor.php:602
 #: includes/Editors/Elementor/Widget/ArchiveList.php:117
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
@@ -1980,7 +1989,7 @@ msgid "Docs List Item Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:3724
-#: includes/Core/Settings.php:1160
+#: includes/Core/Settings.php:1116
 msgid "Explore More Button"
 msgstr ""
 
@@ -2336,7 +2345,7 @@ msgid "Group Active Title Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:37
-#: includes/Core/Settings.php:1201
+#: includes/Core/Settings.php:1157
 msgid "Live Search"
 msgstr ""
 
@@ -2446,7 +2455,7 @@ msgid "Search Field Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2626
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3967
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4046
 msgid "Font Weight"
 msgstr ""
 
@@ -2476,8 +2485,8 @@ msgid "Text Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2778
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1762
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3937
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1841
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4016
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:391
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:408
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:534
@@ -2510,7 +2519,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1005
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1212
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1296
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:336
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:379
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:240
 #: includes/Editors/Elementor/Widget/DocShare.php:174
 #: includes/Editors/Elementor/Widget/DocShare.php:350
 #: includes/Editors/Elementor/Widget/Reactions.php:260
@@ -2654,7 +2664,7 @@ msgid "Modal Content Tabs"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4300
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7376
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7455
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:383
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:400
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:526
@@ -2749,11 +2759,12 @@ msgid "border left"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4337
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1701
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1780
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1074
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:307
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:391
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:519
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:350
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:434
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:562
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:229
 #: includes/Editors/Elementor/Widget/Sidebar.php:1246
 #: assets/build/blocks/editor.js:1
 msgid "Border Color"
@@ -2785,7 +2796,7 @@ msgid "Search Modal Query"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4710
-#: includes/Core/Settings.php:2941
+#: includes/Core/Settings.php:2900
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:204
 #: includes/Editors/Elementor/Widget/Sidebar.php:133
 #: assets/build/blocks/editor.js:1
@@ -2840,7 +2851,7 @@ msgid "Number of FAQ's"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:36
-#: includes/blocks.php:120
+#: includes/blocks.php:121
 msgid "Sidebar"
 msgstr ""
 
@@ -2860,7 +2871,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:440
 #: includes/Admin/Customizer/Sections/Sidebar.php:2240
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1792
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1871
 msgid "Title Background Color"
 msgstr ""
 
@@ -2905,10 +2916,10 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:1068
 #: includes/Admin/Customizer/Sections/Sidebar.php:2978
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8403
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9537
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10577
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11617
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8482
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9616
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10656
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11696
 #: includes/Editors/Elementor/Widget/ArchiveList.php:450
 #: includes/Editors/Elementor/Widget/ArchiveList.php:1088
 msgid "List Background Color"
@@ -2937,7 +2948,7 @@ msgid "Sidebar Search"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/Sidebar.php:1619
-#: includes/Admin/Customizer/Sections/SingleDoc.php:964
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1043
 msgid "Enable"
 msgstr ""
 
@@ -3002,8 +3013,8 @@ msgid "List Item Padding (PX)"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:37
-#: includes/Core/Settings.php:1374
-#: includes/Core/Settings.php:1380
+#: includes/Core/Settings.php:1330
+#: includes/Core/Settings.php:1336
 #: includes/Core/SetupWizard.php:153
 #: includes/Editors/Elementor/SingleDocs.php:40
 msgid "Single Doc"
@@ -3042,488 +3053,488 @@ msgstr ""
 msgid "Select Layout"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:520
+#: includes/Admin/Customizer/Sections/SingleDoc.php:599
 msgid "Doc Content Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:662
+#: includes/Admin/Customizer/Sections/SingleDoc.php:741
 msgid "Post Content Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:804
+#: includes/Admin/Customizer/Sections/SingleDoc.php:883
 msgid "Content Area Inner Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:993
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1072
 msgid "Search Width"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1025
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1104
 msgid "Search Max Width"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1278
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1357
 msgid "Post Title"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1302
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1381
 #: includes/Editors/Elementor/Widget/ArchiveList.php:87
 #: includes/Editors/Elementor/Widget/DocShare.php:497
 #: assets/build/blocks/editor.js:1
 msgid "Title Tag"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1336
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1425
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1415
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1504
 msgid "Text Transform"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1729
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:318
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:402
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:530
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1808
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:361
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:445
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:573
 #: assets/build/blocks/editor.js:1
 msgid "Border Width"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1874
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1953
 msgid "Content Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1902
+#: includes/Admin/Customizer/Sections/SingleDoc.php:1981
 msgid "Content Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1930
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2750
-#: includes/blocks.php:136
-#: includes/Core/Settings.php:313
-#: includes/Core/Settings.php:1523
-#: includes/Core/Settings.php:1532
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2009
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2829
+#: includes/blocks.php:137
+#: includes/Core/Settings.php:269
+#: includes/Core/Settings.php:1479
+#: includes/Core/Settings.php:1488
 #: views/shortcodes/toc.php:31
 msgid "Table of Contents"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1959
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2038
 msgid "Sticky Toc Width"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:1992
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2071
 msgid "Sticky Toc z-index"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2019
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2098
 msgid "Sticky Toc Margin Top"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2523
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3508
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2602
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3587
 msgid "TOC List Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2660
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2739
 msgid "List Number Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2688
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2767
 msgid "List Number Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:2722
+#: includes/Admin/Customizer/Sections/SingleDoc.php:2801
 msgid "TOC Margin Bottom"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3421
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3500
 msgid "Active Item Border Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3445
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3524
 msgid "Active Item Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3644
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3723
 #: includes/Editors/Elementor/Widget/DocAuthor.php:118
 #: assets/build/admin/js/dashboard.js:5
 msgid "Author"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3668
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3693
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3747
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3772
 msgid "Enable Author Info"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3718
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3797
 msgid "Updated Date"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3743
-#: includes/Core/Settings.php:1482
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3822
+#: includes/Core/Settings.php:1438
 #: includes/Core/UnifiedMetabox.php:97
 msgid "Estimated Reading Time"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3817
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3896
 #: includes/Editors/Elementor/Widget/ReadingTime.php:225
 msgid "Clock Icon Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3846
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3925
 msgid "Clock Icon Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:3875
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4342
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4424
+#: includes/Admin/Customizer/Sections/SingleDoc.php:3954
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4421
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4503
 msgid "Font Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4283
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4365
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4362
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4444
 msgid "Entry Content"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4723
-#: includes/blocks.php:128
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4802
+#: includes/blocks.php:129
 msgid "Social Share"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4747
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4826
 msgid "Social Share Title Tag"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4780
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4859
 msgid "Enable Social Sharing?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4805
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4884
 msgid "Social Sharing Title"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4831
-#: includes/Admin/Customizer/Sections/SingleDoc.php:4856
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4910
+#: includes/Admin/Customizer/Sections/SingleDoc.php:4935
 msgid "Title Text Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5433
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5512
 msgid "Facebook Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5458
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5537
 msgid "Twitter Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5483
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5562
 msgid "Linkedin Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5508
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5587
 msgid "Pinterest Sharing"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5532
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5611
 msgid "Entry Footer"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5556
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5635
 #: includes/Editors/Elementor/Widget/Feedback.php:61
 #: assets/build/blocks/editor.js:1
 msgid "Label Name Text"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5581
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5660
 #: includes/Editors/Elementor/Widget/Feedback.php:71
 #: assets/build/blocks/editor.js:1
 msgid "Label Email Text"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5606
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5685
 #: includes/Editors/Elementor/Widget/Feedback.php:80
 #: assets/build/blocks/editor.js:1
 msgid "Label Message Text"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5636
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5715
 msgid "Feedback Icon Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5666
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5745
 msgid "Feedback Icon"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5689
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5768
 msgid "Feedback Link Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5713
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5792
 msgid "Feedback Link Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5742
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5821
 msgid "Feedback Link Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5771
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5850
 msgid "Feedback Form Title Tag"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5810
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5889
 msgid "Feedback Form Title Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5840
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5919
 msgid "Feedback Form Title Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5865
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6007
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5944
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6086
 msgid "Navigation Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5894
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6036
+#: includes/Admin/Customizer/Sections/SingleDoc.php:5973
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6115
 msgid "Navigation Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5923
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6065
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6002
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6144
 msgid "Navigation Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5948
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6090
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6027
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6169
 msgid "Navigation Arrow Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:5977
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6119
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6056
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6198
 msgid "Navigation Arrow Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6149
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6228
 msgid "Last Updated Time Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6178
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6257
 msgid "Last Updated Time Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6210
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6289
 msgid "Powered by Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6239
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6318
 msgid "Powered By Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6269
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6348
 msgid "Powered By Link Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6292
-#: includes/blocks.php:112
-#: includes/Core/Admin.php:604
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6371
+#: includes/blocks.php:113
+#: includes/Core/Admin.php:606
 #: views/admin/analytics.php:16
 #: views/admin/email/analytics/leading-docs.php:34
 #: assets/build/admin/js/dashboard.js:5
 msgid "Reactions"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6316
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6395
 msgid "Reactions Title Tag"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6349
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6428
 msgid "Enable Reactions?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6374
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6453
 msgid "Enable Happy?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6401
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6480
 #: includes/Editors/Elementor/Widget/Reactions.php:92
 msgid "Happy Icon"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6423
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6502
 msgid "Enable Normal?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6450
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6529
 #: includes/Editors/Elementor/Widget/Reactions.php:118
 msgid "Normal Icon"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6472
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6551
 msgid "Enable Sad?"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6499
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6578
 #: includes/Editors/Elementor/Widget/Reactions.php:144
 msgid "Sad Icon"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6521
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6546
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6600
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6625
 msgid "Reactions Title"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6572
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6720
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6745
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6651
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6799
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6824
 msgid "Reactions Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6597
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6770
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6676
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6849
 msgid "Reactions Text Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6622
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6795
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6701
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6874
 msgid "Reactions Icon Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6647
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6726
 msgid "Reactions Icon Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6671
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6750
 msgid "Reactions Icon Hover Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:6695
+#: includes/Admin/Customizer/Sections/SingleDoc.php:6774
 msgid "Reactions Icon Hover Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7404
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7483
 msgid "Border Top"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7431
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7510
 msgid "Border Right"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7458
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7537
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:431
 msgid "Border Bottom"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7485
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7564
 msgid "Border Left"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7573
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8706
-#: includes/Core/Settings.php:1746
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7652
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8785
+#: includes/Core/Settings.php:1702
 #: includes/Core/UnifiedMetabox.php:107
 msgid "Attachments"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7598
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8731
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9865
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10905
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7677
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8810
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9944
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10984
 msgid "Content Background Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7627
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8760
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9894
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10934
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7706
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8839
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9973
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11013
 #: assets/build/blocks/editor.js:1
 msgid "Content Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7769
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8902
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10036
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11076
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7848
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8981
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10115
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11155
 #: assets/build/blocks/editor.js:1
 msgid "Content Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7907
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9040
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10174
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11214
+#: includes/Admin/Customizer/Sections/SingleDoc.php:7986
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9119
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10253
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11293
 #: assets/build/blocks/editor.js:1
 msgid "Label Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:7936
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9069
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10203
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11243
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8015
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9148
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10282
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11322
 msgid "Label Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8078
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9211
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10345
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11385
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8157
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9290
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10424
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11464
 msgid "Label Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8218
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9351
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10485
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11525
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8297
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9430
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10564
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11604
 msgid "List Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8246
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9379
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10513
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11553
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8325
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9458
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10592
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11632
 msgid "List Font Weight"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8284
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9417
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8363
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9496
 msgid "Extension Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8312
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9446
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8391
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9525
 msgid "Extension Font Size"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8340
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9474
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8419
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9553
 msgid "Extension Font Weight"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8378
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9512
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10552
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11592
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8457
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9591
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10631
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11671
 #: includes/Editors/Elementor/Widget/ToC.php:649
 #: assets/build/blocks/editor.js:1
 msgid "List Color"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8432
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9566
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10606
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11646
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8511
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9645
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10685
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11725
 #: includes/Editors/Elementor/Widget/Reactions.php:944
 #: assets/build/blocks/editor.js:1
 msgid "List Padding"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:8572
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9706
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10746
-#: includes/Admin/Customizer/Sections/SingleDoc.php:11786
+#: includes/Admin/Customizer/Sections/SingleDoc.php:8651
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9785
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10825
+#: includes/Admin/Customizer/Sections/SingleDoc.php:11865
 #: includes/Editors/Elementor/Widget/Reactions.php:956
 #: assets/build/blocks/editor.js:1
 msgid "List Margin"
 msgstr ""
 
-#: includes/Admin/Customizer/Sections/SingleDoc.php:9840
-#: includes/Admin/Customizer/Sections/SingleDoc.php:10880
-#: includes/Core/Settings.php:1764
+#: includes/Admin/Customizer/Sections/SingleDoc.php:9919
+#: includes/Admin/Customizer/Sections/SingleDoc.php:10959
+#: includes/Core/Settings.php:1720
 #: includes/Core/UnifiedMetabox.php:117
 msgid "Related Docs"
 msgstr ""
@@ -3643,24 +3654,24 @@ msgid "You have to enable Reporting first."
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:309
-#: includes/Core/Settings.php:2197
+#: includes/Core/Settings.php:2153
 msgid "Once Weekly"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:313
-#: includes/Core/Settings.php:2196
+#: includes/Core/Settings.php:2152
 msgid "Once Daily"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:317
-#: includes/Core/Settings.php:2198
+#: includes/Core/Settings.php:2154
 msgid "Once Monthly"
 msgstr ""
 
 #. Translators: %s is replaced with the website name.
 #. translators: %s is the website name.
 #: includes/Admin/ReportEmail.php:355
-#: includes/Core/Settings.php:2251
+#: includes/Core/Settings.php:2207
 #: views/admin/email/body.php:46
 msgid "Your Documentation Performance of %s Website"
 msgstr ""
@@ -3694,100 +3705,100 @@ msgid "Your %s request hit a quota or rate limit. Check your plan and limits, th
 msgstr ""
 
 #. translators: %s: provider label
-#: includes/AI/Providers/ClaudeProvider.php:79
+#: includes/AI/Providers/ClaudeProvider.php:118
 #: includes/AI/Providers/GeminiProvider.php:66
 #: includes/AI/Providers/OpenAICompatibleProvider.php:93
 msgid "%s API key is not configured."
 msgstr ""
 
-#: includes/AI/Providers/ClaudeProvider.php:109
+#: includes/AI/Providers/ClaudeProvider.php:159
 #: includes/AI/Providers/GeminiProvider.php:97
 #: includes/AI/Providers/OpenAICompatibleProvider.php:117
 msgid "Unknown API error."
 msgstr ""
 
 #. translators: %s: provider label
-#: includes/AI/Providers/ClaudeProvider.php:118
+#: includes/AI/Providers/ClaudeProvider.php:168
 #: includes/AI/Providers/GeminiProvider.php:105
 #: includes/AI/Providers/OpenAICompatibleProvider.php:130
 msgid "No content received from %s."
 msgstr ""
 
-#: includes/AI/Providers/ClaudeProvider.php:160
+#: includes/AI/Providers/ClaudeProvider.php:210
 #: includes/AI/Providers/GeminiProvider.php:147
 #: includes/AI/Providers/OpenAICompatibleProvider.php:157
 msgid "Please insert your API key to use AI features."
 msgstr ""
 
-#: includes/AI/Providers/ClaudeProvider.php:174
+#: includes/AI/Providers/ClaudeProvider.php:224
 #: includes/AI/Providers/GeminiProvider.php:161
 #: includes/AI/Providers/OpenAICompatibleProvider.php:172
 msgid "Valid API Key"
 msgstr ""
 
-#: includes/AI/Providers/ClaudeProvider.php:178
+#: includes/AI/Providers/ClaudeProvider.php:228
 #: includes/AI/Providers/GeminiProvider.php:165
 #: includes/AI/Providers/OpenAICompatibleProvider.php:176
 msgid "Invalid API Key"
 msgstr ""
 
-#: includes/blocks.php:32
+#: includes/blocks.php:33
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:33
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Category Grid"
 msgstr ""
 
-#: includes/blocks.php:40
+#: includes/blocks.php:41
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:39
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Category Box"
 msgstr ""
 
-#: includes/blocks.php:48
+#: includes/blocks.php:49
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:33
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Slate Layout"
 msgstr ""
 
-#: includes/blocks.php:56
+#: includes/blocks.php:57
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:31
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Search Form"
 msgstr ""
 
-#: includes/blocks.php:64
+#: includes/blocks.php:65
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Breadcrumb"
 msgstr ""
 
-#: includes/blocks.php:72
+#: includes/blocks.php:73
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Archive Header"
 msgstr ""
 
-#: includes/blocks.php:80
+#: includes/blocks.php:81
 msgid "Doc Archive List"
 msgstr ""
 
-#: includes/blocks.php:88
+#: includes/blocks.php:89
 #: includes/Editors/Elementor/Widget/Content.php:19
 #: assets/build/blocks/editor.js:1
 msgid "Doc Content"
 msgstr ""
 
-#: includes/blocks.php:96
+#: includes/blocks.php:97
 #: includes/Editors/Elementor/Widget/DocDate.php:20
 msgid "Doc Date"
 msgstr ""
 
-#: includes/blocks.php:104
+#: includes/blocks.php:105
 #: includes/Editors/Elementor/Widget/Navigation.php:19
 msgid "Doc Navigation"
 msgstr ""
 
-#: includes/blocks.php:144
-#: includes/Core/Settings.php:729
-#: includes/Core/Settings.php:2604
+#: includes/blocks.php:145
+#: includes/Core/Settings.php:685
+#: includes/Core/Settings.php:2563
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:36
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:510
 #: views/templates/parts/article-summary.php:107
@@ -3795,17 +3806,17 @@ msgstr ""
 msgid "AI Doc Summarizer"
 msgstr ""
 
-#: includes/blocks.php:152
-#: includes/Core/Settings.php:1864
+#: includes/blocks.php:153
+#: includes/Core/Settings.php:1820
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form"
 msgstr ""
 
-#: includes/blocks.php:160
+#: includes/blocks.php:161
 msgid "Betterdocs Print"
 msgstr ""
 
-#: includes/blocks.php:168
+#: includes/blocks.php:169
 #: includes/Core/FAQBuilder.php:293
 #: includes/Core/FAQBuilder.php:294
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:28
@@ -3813,28 +3824,34 @@ msgstr ""
 msgid "BetterDocs FAQ"
 msgstr ""
 
-#: includes/blocks.php:176
+#: includes/blocks.php:177
 #: includes/Editors/Elementor/Widget/ReadingTime.php:25
 #: includes/Shortcodes/ReadingTime.php:21
 #: assets/build/blocks/editor.js:1
 msgid "Reading Time"
 msgstr ""
 
-#: includes/blocks.php:184
+#: includes/blocks.php:185
 #: includes/Editors/Elementor/Widget/DocAuthor.php:24
 #: assets/build/blocks/editor.js:1
 msgid "Doc Author"
 msgstr ""
 
-#: includes/blocks.php:192
+#: includes/blocks.php:193
 #: includes/Utils/BlockTemplate.php:408
 msgid "Docs Tag"
 msgstr ""
 
-#: includes/blocks.php:200
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:16
+#: includes/blocks.php:201
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:17
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Code Snippet"
+msgstr ""
+
+#: includes/blocks.php:209
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:17
+#: assets/build/blocks/editor.js:1
+msgid "BetterDocs Code Snippet Tab"
 msgstr ""
 
 #: includes/Core/Admin.php:194
@@ -3843,11 +3860,11 @@ msgstr ""
 
 #: includes/Core/Admin.php:240
 #: includes/Core/PostType.php:1162
-#: includes/Core/Settings.php:279
-#: includes/Core/Settings.php:307
-#: includes/Core/Settings.php:890
-#: includes/Core/Settings.php:1147
-#: includes/Core/Settings.php:2948
+#: includes/Core/Settings.php:235
+#: includes/Core/Settings.php:263
+#: includes/Core/Settings.php:846
+#: includes/Core/Settings.php:1103
+#: includes/Core/Settings.php:2907
 #: includes/Core/SetupWizard.php:365
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:53
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:228
@@ -3915,66 +3932,67 @@ msgstr ""
 msgid "I’ll Grab It Later"
 msgstr ""
 
-#: includes/Core/Admin.php:603
+#: includes/Core/Admin.php:605
 #: assets/build/admin/js/dashboard.js:5
 msgid "Word Count"
 msgstr ""
 
-#: includes/Core/Admin.php:772
-#: includes/Core/Admin.php:807
+#: includes/Core/Admin.php:774
+#: includes/Core/Admin.php:809
 msgid "Switch to BetterDocs UI"
 msgstr ""
 
-#: includes/Core/Admin.php:810
+#: includes/Core/Admin.php:812
+#: includes/Utils/Helper.php:1543
 #: assets/build/blocks/editor.js:1
 msgid "Copied!"
 msgstr ""
 
-#: includes/Core/Admin.php:811
+#: includes/Core/Admin.php:813
 msgid "Test Report!"
 msgstr ""
 
-#: includes/Core/Admin.php:812
+#: includes/Core/Admin.php:814
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:925
+#: includes/Core/Admin.php:931
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:927
+#: includes/Core/Admin.php:933
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:1000
-#: includes/Core/Admin.php:1084
+#: includes/Core/Admin.php:1006
+#: includes/Core/Admin.php:1090
 #: includes/Core/PostType.php:1168
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/quick-setup.js:1
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1075
+#: includes/Core/Admin.php:1081
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Core/Admin.php:1091
+#: includes/Core/Admin.php:1097
 #: includes/Core/FAQBuilder.php:297
 #: includes/Core/PostType.php:1163
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:1095
+#: includes/Core/Admin.php:1101
 #: includes/Core/FAQBuilder.php:208
 #: includes/Core/PostType.php:1229
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:1102
+#: includes/Core/Admin.php:1108
 #: includes/Core/PostType.php:1435
-#: includes/Core/Settings.php:1435
+#: includes/Core/Settings.php:1391
 #: includes/Editors/Elementor/Widget/Tags.php:82
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
@@ -3982,66 +4000,70 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:1109
-#: includes/Core/Admin.php:1227
+#: includes/Core/Admin.php:1115
+#: includes/Core/Admin.php:1253
 #: views/admin/template-parts/settings-header-2.php:7
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:1119
+#: includes/Core/Admin.php:1125
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:1129
+#: includes/Core/Admin.php:1135
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:1142
+#: includes/Core/Admin.php:1148
 #: includes/Core/PostType.php:1274
-#: includes/Core/Settings.php:2950
+#: includes/Core/Settings.php:2909
 msgid "Glossaries"
 msgstr ""
 
-#: includes/Core/Admin.php:1155
-#: includes/Core/Settings.php:2642
-#: includes/Core/Settings.php:2652
-#: includes/Core/Settings.php:2666
+#: includes/Core/Admin.php:1161
+#: includes/Core/Settings.php:2601
+#: includes/Core/Settings.php:2611
+#: includes/Core/Settings.php:2625
 #: assets/build/admin/js/dashboard.js:5
 msgid "AI Chatbot"
 msgstr ""
 
-#: includes/Core/Admin.php:1213
+#: includes/Core/Admin.php:1180
+msgid "API Docs"
+msgstr ""
+
+#: includes/Core/Admin.php:1239
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:1230
+#: includes/Core/Admin.php:1256
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/Core/Admin.php:1272
+#: includes/Core/Admin.php:1298
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:1284
+#: includes/Core/Admin.php:1310
 msgid "Visit Encyclopedia"
 msgstr ""
 
-#: includes/Core/Admin.php:1377
+#: includes/Core/Admin.php:1403
 #: includes/Core/ArticleQualityScore.php:358
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/Core/Admin.php:1382
+#: includes/Core/Admin.php:1408
 msgid "Permission denied"
 msgstr ""
 
-#: includes/Core/Admin.php:1389
+#: includes/Core/Admin.php:1415
 msgid "Invalid introduction key"
 msgstr ""
 
-#: includes/Core/Admin.php:1398
+#: includes/Core/Admin.php:1424
 msgid "Pointer dismissed successfully"
 msgstr ""
 
@@ -4441,35 +4463,47 @@ msgid "Migration completed successfully."
 msgstr ""
 
 #: includes/Core/PluginInstaller.php:54
-#: includes/Core/PluginInstaller.php:89
-#: includes/Core/PluginInstaller.php:134
+#: includes/Core/PluginInstaller.php:126
+#: includes/Core/PluginInstaller.php:171
 msgid "Argument should not be empty."
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:152
-#: includes/Core/PluginInstaller.php:175
-#: includes/Core/PluginInstaller.php:194
-#: includes/Core/PluginInstaller.php:215
+#: includes/Core/PluginInstaller.php:75
+msgid "Could not retrieve plugin information."
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:81
+msgid "Plugin information did not match the requested plugin."
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:85
+msgid "Plugin download URL is not an approved WordPress.org address."
+msgstr ""
+
+#: includes/Core/PluginInstaller.php:189
+#: includes/Core/PluginInstaller.php:212
+#: includes/Core/PluginInstaller.php:231
+#: includes/Core/PluginInstaller.php:252
 msgid "you are not allowed to do this action"
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:167
+#: includes/Core/PluginInstaller.php:204
 msgid "Plugin is installed successfully!"
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:185
+#: includes/Core/PluginInstaller.php:222
 msgid "Plugin is updated successfully!"
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:205
+#: includes/Core/PluginInstaller.php:242
 msgid "Plugin couldn't be activated."
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:207
+#: includes/Core/PluginInstaller.php:244
 msgid "Plugin is activated successfully!"
 msgstr ""
 
-#: includes/Core/PluginInstaller.php:221
+#: includes/Core/PluginInstaller.php:258
 msgid "Plugin is deactivated successfully!"
 msgstr ""
 
@@ -4568,7 +4602,7 @@ msgid "Docs Categories"
 msgstr ""
 
 #: includes/Core/PostType.php:1221
-#: includes/Core/Settings.php:2949
+#: includes/Core/Settings.php:2908
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:18
 #: includes/Utils/BlockTemplate.php:406
 msgid "Docs Category"
@@ -4698,18 +4732,18 @@ msgstr ""
 msgid "Failed to generate doc summary. Please try again."
 msgstr ""
 
-#: includes/Core/Settings.php:291
+#: includes/Core/Settings.php:247
 #: assets/build/blocks/editor.js:1
 msgid "Search..."
 msgstr ""
 
-#: includes/Core/Settings.php:292
+#: includes/Core/Settings.php:248
 #: views/templates/taxonomy-doc_tag.php:105
 msgid "Sorry, no docs were found."
 msgstr ""
 
-#: includes/Core/Settings.php:308
-#: includes/Core/Settings.php:1154
+#: includes/Core/Settings.php:264
+#: includes/Core/Settings.php:1110
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:54
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:242
 #: assets/build/admin/js/dashboard.js:5
@@ -4717,22 +4751,22 @@ msgstr ""
 msgid "Doc"
 msgstr ""
 
-#: includes/Core/Settings.php:310
-#: includes/Core/Settings.php:1169
+#: includes/Core/Settings.php:266
+#: includes/Core/Settings.php:1125
 #: includes/Editors/BlockEditor/Blocks/CategoryGrid.php:87
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:324
 #: assets/build/blocks/editor.js:1
 msgid "Explore More"
 msgstr ""
 
-#: includes/Core/Settings.php:324
-#: includes/Core/Settings.php:1654
+#: includes/Core/Settings.php:280
+#: includes/Core/Settings.php:1610
 msgid "Home"
 msgstr ""
 
-#: includes/Core/Settings.php:333
-#: includes/Core/Settings.php:1711
-#: includes/Core/Settings.php:1719
+#: includes/Core/Settings.php:289
+#: includes/Core/Settings.php:1667
+#: includes/Core/Settings.php:1675
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:30
 #: includes/Editors/Elementor/Widget/Feedback.php:91
 #: views/templates/feedback-parts/form.php:97
@@ -4740,12 +4774,12 @@ msgstr ""
 msgid "Still stuck? How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:334
+#: includes/Core/Settings.php:290
 #: includes/FrontEnd/FrontEnd.php:330
 msgid "Thanks for your feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:336
+#: includes/Core/Settings.php:292
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:31
 #: includes/Editors/Elementor/Widget/Feedback.php:99
 #: views/templates/feedback-parts/form.php:108
@@ -4754,16 +4788,16 @@ msgstr ""
 msgid "How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:361
-#: includes/Core/Settings.php:2572
+#: includes/Core/Settings.php:317
+#: includes/Core/Settings.php:2531
 #: includes/Core/WriteWithAI.php:241
 msgid "Default/Core"
 msgstr ""
 
-#: includes/Core/Settings.php:386
-#: includes/Core/Settings.php:387
-#: includes/Core/Settings.php:1499
-#: includes/Core/Settings.php:1507
+#: includes/Core/Settings.php:342
+#: includes/Core/Settings.php:343
+#: includes/Core/Settings.php:1455
+#: includes/Core/Settings.php:1463
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:25
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:26
 #: includes/Editors/Elementor/Widget/ReadingTime.php:68
@@ -4773,174 +4807,174 @@ msgstr ""
 msgid "min read"
 msgstr ""
 
-#: includes/Core/Settings.php:469
+#: includes/Core/Settings.php:425
 #: includes/Core/SetupWizard.php:62
 msgid "Design with Gutenberg"
 msgstr ""
 
-#: includes/Core/Settings.php:469
-#: includes/Core/Settings.php:479
+#: includes/Core/Settings.php:425
+#: includes/Core/Settings.php:435
 #: assets/build/admin/js/dashboard.js:5
 msgid "Learn More"
 msgstr ""
 
-#: includes/Core/Settings.php:479
+#: includes/Core/Settings.php:435
 msgid "Design with Elementor"
 msgstr ""
 
-#: includes/Core/Settings.php:490
+#: includes/Core/Settings.php:446
 msgid "Customize in BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:659
+#: includes/Core/Settings.php:615
 msgid "You don't have any rights for saving settings."
 msgstr ""
 
-#: includes/Core/Settings.php:722
-#: includes/Core/Settings.php:2471
-#: includes/Core/Settings.php:2477
+#: includes/Core/Settings.php:678
+#: includes/Core/Settings.php:2429
+#: includes/Core/Settings.php:2435
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Write with AI"
 msgstr ""
 
 #. translators: 1: feature label, 2: minimum tokens, 3: model id
-#: includes/Core/Settings.php:749
+#: includes/Core/Settings.php:705
 msgid "%1$s max tokens must be at least %2$d for %3$s."
 msgstr ""
 
-#: includes/Core/Settings.php:801
+#: includes/Core/Settings.php:757
 #: includes/Core/SetupWizard.php:195
 msgid "Select a Page"
 msgstr ""
 
-#: includes/Core/Settings.php:813
+#: includes/Core/Settings.php:769
 msgid "All logged in users"
 msgstr ""
 
-#: includes/Core/Settings.php:819
+#: includes/Core/Settings.php:775
 #: assets/build/blocks/editor.js:1
 msgid "betterdocs"
 msgstr ""
 
-#: includes/Core/Settings.php:835
+#: includes/Core/Settings.php:791
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 msgid "Save"
 msgstr ""
 
-#: includes/Core/Settings.php:836
+#: includes/Core/Settings.php:792
 msgid "Saving..."
 msgstr ""
 
-#: includes/Core/Settings.php:850
-#: includes/Core/Settings.php:1074
-#: includes/Core/Settings.php:1405
+#: includes/Core/Settings.php:806
+#: includes/Core/Settings.php:1030
+#: includes/Core/Settings.php:1361
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:51
 #: includes/Editors/Elementor/Widget/DocDate.php:44
 #: assets/build/blocks/editor.js:1
 msgid "General"
 msgstr ""
 
-#: includes/Core/Settings.php:857
+#: includes/Core/Settings.php:813
 msgid "General Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:863
+#: includes/Core/Settings.php:819
 #: assets/build/admin/js/dashboard.js:5
 msgid "Multiple Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:872
+#: includes/Core/Settings.php:828
 #: includes/Core/SetupWizard.php:340
 msgid "Built-in Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:880
+#: includes/Core/Settings.php:836
 msgid "Enable Category Hierarchy Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:884
+#: includes/Core/Settings.php:840
 msgid "Shows Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page"
 msgstr ""
 
-#: includes/Core/Settings.php:889
+#: includes/Core/Settings.php:845
 #: includes/Core/SetupWizard.php:364
 msgid "Documentation Page Title"
 msgstr ""
 
-#: includes/Core/Settings.php:897
+#: includes/Core/Settings.php:853
 #: includes/Core/SetupWizard.php:372
 msgid "BetterDocs Root Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:910
+#: includes/Core/Settings.php:866
 #: includes/Core/SetupWizard.php:358
 msgid "You will need to insert BetterDocs Shortcode inside the page. This page will be used as docs permalink."
 msgstr ""
 
-#: includes/Core/Settings.php:917
+#: includes/Core/Settings.php:873
 msgid "Custom Category Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:924
+#: includes/Core/Settings.php:880
 msgid "Custom Tag Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:931
+#: includes/Core/Settings.php:887
 #: includes/Core/SetupWizard.php:380
 msgid "Single Docs Permalink"
 msgstr ""
 
-#: includes/Core/Settings.php:938
+#: includes/Core/Settings.php:894
 #: includes/Core/SetupWizard.php:389
 msgid "Make sure to keep Docs Root Slug in the Single Docs Permalink. You are not able to keep it blank. You can use the available tags from below."
 msgstr ""
 
-#: includes/Core/Settings.php:943
+#: includes/Core/Settings.php:899
 #: includes/Core/SetupWizard.php:395
 msgid "Show Glossary"
 msgstr ""
 
-#: includes/Core/Settings.php:944
+#: includes/Core/Settings.php:900
 #: includes/Core/SetupWizard.php:396
 msgid "Enable the glossary feature to allow users to look up definitions for terms used within your encyclopedia or glossaries themselves."
 msgstr ""
 
-#: includes/Core/Settings.php:953
+#: includes/Core/Settings.php:909
 #: includes/Core/SetupWizard.php:405
 msgid "Built-in Encyclopedia Page"
 msgstr ""
 
-#: includes/Core/Settings.php:962
+#: includes/Core/Settings.php:918
 #: includes/Core/SetupWizard.php:422
 msgid "FAQ Schema"
 msgstr ""
 
-#: includes/Core/Settings.php:970
+#: includes/Core/Settings.php:926
 msgid "Analytics From"
 msgstr ""
 
-#: includes/Core/Settings.php:972
+#: includes/Core/Settings.php:928
 msgid "Everyone"
 msgstr ""
 
-#: includes/Core/Settings.php:973
+#: includes/Core/Settings.php:929
 msgid "Guests Only"
 msgstr ""
 
-#: includes/Core/Settings.php:974
+#: includes/Core/Settings.php:930
 msgid "Registered Users Only"
 msgstr ""
 
-#: includes/Core/Settings.php:983
+#: includes/Core/Settings.php:939
 msgid "Unique Visitor Count"
 msgstr ""
 
-#: includes/Core/Settings.php:992
+#: includes/Core/Settings.php:948
 msgid "Exclude Bot Analytics"
 msgstr ""
 
-#: includes/Core/Settings.php:1005
+#: includes/Core/Settings.php:961
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:47
 #: includes/Editors/Elementor/Widget/Sidebar.php:242
 #: assets/build/admin/js/dashboard.js:1
@@ -4948,541 +4982,541 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/Core/Settings.php:1012
-#: includes/Core/Settings.php:1018
+#: includes/Core/Settings.php:968
+#: includes/Core/Settings.php:974
 msgid "Layout Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:1043
-#: includes/Core/Settings.php:1049
+#: includes/Core/Settings.php:999
+#: includes/Core/Settings.php:1005
 msgid "Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1081
+#: includes/Core/Settings.php:1037
 msgid "Docs List Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1082
+#: includes/Core/Settings.php:1038
 msgid "Upload your own preferred document list icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1088
+#: includes/Core/Settings.php:1044
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:307
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:167
 #: assets/build/blocks/editor.js:1
 msgid "Category Title Link"
 msgstr ""
 
-#: includes/Core/Settings.php:1089
+#: includes/Core/Settings.php:1045
 msgid "This setting is applicable for category grid layout"
 msgstr ""
 
-#: includes/Core/Settings.php:1097
+#: includes/Core/Settings.php:1053
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:107
 #: assets/build/blocks/editor.js:1
 msgid "Masonry"
 msgstr ""
 
-#: includes/Core/Settings.php:1105
+#: includes/Core/Settings.php:1061
 msgid "Lazy Load Sidebar Docs & Subcategories"
 msgstr ""
 
-#: includes/Core/Settings.php:1106
+#: includes/Core/Settings.php:1062
 msgid "Applies to the Sidebar layout wherever it appears — single docs, category archives, and the Sidebar widget/block. Off by default: enable to render only the active category upfront and fetch the rest on click (or on scroll for the Memphis layout), cutting initial HTML size on large knowledge bases."
 msgstr ""
 
-#: includes/Core/Settings.php:1114
+#: includes/Core/Settings.php:1070
 #: assets/build/blocks/editor.js:1
 msgid "Nested Sub Category"
 msgstr ""
 
-#: includes/Core/Settings.php:1122
+#: includes/Core/Settings.php:1078
 msgid "Number Of Columns"
 msgstr ""
 
-#: includes/Core/Settings.php:1123
+#: includes/Core/Settings.php:1079
 msgid "This setting is not applicable for sleek layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1130
+#: includes/Core/Settings.php:1086
 msgid "Number Of Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1131
+#: includes/Core/Settings.php:1087
 msgid "This setting is not applicable for handbook layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1138
+#: includes/Core/Settings.php:1094
 msgid "Doc Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1146
+#: includes/Core/Settings.php:1102
 msgid "Count Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1153
+#: includes/Core/Settings.php:1109
 msgid "Count Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1168
+#: includes/Core/Settings.php:1124
 msgid "Explore More Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1176
+#: includes/Core/Settings.php:1132
 msgid "Popular Docs Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1184
+#: includes/Core/Settings.php:1140
 msgid "Popular Docs Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1209
+#: includes/Core/Settings.php:1165
 #: includes/Core/SetupWizard.php:432
 msgid "Advanced Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1219
+#: includes/Core/Settings.php:1175
 msgid "Exclude Child Terms In Category Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1228
+#: includes/Core/Settings.php:1184
 msgid "Minimum amount of Keywords Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1236
+#: includes/Core/Settings.php:1192
 msgid "Minimum Character Limit For Search Result"
 msgstr ""
 
-#: includes/Core/Settings.php:1243
+#: includes/Core/Settings.php:1199
 msgid "Search Placeholder"
 msgstr ""
 
-#: includes/Core/Settings.php:1244
+#: includes/Core/Settings.php:1200
 msgid "Search.."
 msgstr ""
 
-#: includes/Core/Settings.php:1250
+#: includes/Core/Settings.php:1206
 msgid "Search Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1257
+#: includes/Core/Settings.php:1213
 msgid "Search Not Found Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1264
+#: includes/Core/Settings.php:1220
 msgid "Search Result Image"
 msgstr ""
 
-#: includes/Core/Settings.php:1272
+#: includes/Core/Settings.php:1228
 msgid "KB Based Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1282
+#: includes/Core/Settings.php:1238
 msgid "Search Modal Source"
 msgstr ""
 
-#: includes/Core/Settings.php:1283
+#: includes/Core/Settings.php:1239
 msgid "Choose the content type to be shown in the search modal. <br> <b>Note:</b> This is only applicable on Modal Search."
 msgstr ""
 
-#: includes/Core/Settings.php:1286
+#: includes/Core/Settings.php:1242
 msgid "Both (Docs + FAQs)"
 msgstr ""
 
-#: includes/Core/Settings.php:1287
+#: includes/Core/Settings.php:1243
 msgid "Docs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1288
+#: includes/Core/Settings.php:1244
 msgid "FAQs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1298
-#: includes/Editors/Elementor.php:294
-#: includes/Editors/Elementor.php:351
+#: includes/Core/Settings.php:1254
+#: includes/Editors/Elementor.php:295
+#: includes/Editors/Elementor.php:352
 #: includes/Editors/Elementor/Widget/ArchiveList.php:108
 #: assets/build/blocks/editor.js:1
 msgid "Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1304
-#: includes/Editors/Elementor.php:231
+#: includes/Core/Settings.php:1260
+#: includes/Editors/Elementor.php:232
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1307
-#: includes/Core/Settings.php:1337
-#: includes/Editors/Elementor.php:234
-#: includes/Editors/Elementor.php:297
-#: includes/Editors/Elementor.php:595
+#: includes/Core/Settings.php:1263
+#: includes/Core/Settings.php:1293
+#: includes/Editors/Elementor.php:235
+#: includes/Editors/Elementor.php:298
+#: includes/Editors/Elementor.php:596
 #: includes/Editors/Elementor/Widget/ArchiveList.php:111
 #: assets/build/blocks/editor.js:1
 msgid "No order"
 msgstr ""
 
-#: includes/Core/Settings.php:1308
-#: includes/Editors/Elementor.php:235
-#: includes/Editors/Elementor.php:298
-#: includes/Editors/Elementor.php:522
-#: includes/Editors/Elementor.php:596
+#: includes/Core/Settings.php:1264
+#: includes/Editors/Elementor.php:236
+#: includes/Editors/Elementor.php:299
+#: includes/Editors/Elementor.php:523
+#: includes/Editors/Elementor.php:597
 #: views/admin/email/feedback-email.php:5
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Name"
 msgstr ""
 
-#: includes/Core/Settings.php:1309
-#: includes/Editors/Elementor.php:236
-#: includes/Editors/Elementor.php:299
-#: includes/Editors/Elementor.php:523
-#: includes/Editors/Elementor.php:597
+#: includes/Core/Settings.php:1265
+#: includes/Editors/Elementor.php:237
+#: includes/Editors/Elementor.php:300
+#: includes/Editors/Elementor.php:524
+#: includes/Editors/Elementor.php:598
 #: includes/Editors/Elementor/Widget/ArchiveList.php:113
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:1310
-#: includes/Editors/Elementor.php:237
-#: includes/Editors/Elementor.php:300
-#: includes/Editors/Elementor.php:524
-#: includes/Editors/Elementor.php:598
+#: includes/Core/Settings.php:1266
+#: includes/Editors/Elementor.php:238
+#: includes/Editors/Elementor.php:301
+#: includes/Editors/Elementor.php:525
+#: includes/Editors/Elementor.php:599
 #: includes/Editors/Elementor/Widget/ArchiveList.php:114
 #: assets/build/blocks/editor.js:1
 msgid "Term Group"
 msgstr ""
 
-#: includes/Core/Settings.php:1311
-#: includes/Editors/Elementor.php:238
-#: includes/Editors/Elementor.php:301
-#: includes/Editors/Elementor.php:525
-#: includes/Editors/Elementor.php:599
-#: includes/Editors/Elementor/Widget/ArchiveList.php:115
-msgid "Term ID"
-msgstr ""
-
-#: includes/Core/Settings.php:1312
+#: includes/Core/Settings.php:1267
 #: includes/Editors/Elementor.php:239
 #: includes/Editors/Elementor.php:302
 #: includes/Editors/Elementor.php:526
 #: includes/Editors/Elementor.php:600
+#: includes/Editors/Elementor/Widget/ArchiveList.php:115
+msgid "Term ID"
+msgstr ""
+
+#: includes/Core/Settings.php:1268
+#: includes/Editors/Elementor.php:240
+#: includes/Editors/Elementor.php:303
+#: includes/Editors/Elementor.php:527
+#: includes/Editors/Elementor.php:601
 #: includes/Editors/Elementor/Widget/ArchiveList.php:116
 #: assets/build/blocks/editor.js:1
 msgid "ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1314
-#: includes/Editors/Elementor.php:241
-#: includes/Editors/Elementor.php:304
-#: includes/Editors/Elementor.php:528
-#: includes/Editors/Elementor.php:602
-#: includes/Editors/Elementor/Widget/ArchiveList.php:118
-msgid "Parent"
-msgstr ""
-
-#: includes/Core/Settings.php:1315
-#: includes/Core/Settings.php:1347
+#: includes/Core/Settings.php:1270
 #: includes/Editors/Elementor.php:242
 #: includes/Editors/Elementor.php:305
 #: includes/Editors/Elementor.php:529
 #: includes/Editors/Elementor.php:603
+#: includes/Editors/Elementor/Widget/ArchiveList.php:118
+msgid "Parent"
+msgstr ""
+
+#: includes/Core/Settings.php:1271
+#: includes/Core/Settings.php:1303
+#: includes/Editors/Elementor.php:243
+#: includes/Editors/Elementor.php:306
+#: includes/Editors/Elementor.php:530
+#: includes/Editors/Elementor.php:604
 #: includes/Editors/Elementor/Widget/ArchiveList.php:119
 #: assets/build/blocks/editor.js:1
 msgid "BetterDocs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1322
-#: includes/Editors/Elementor.php:251
+#: includes/Core/Settings.php:1278
+#: includes/Editors/Elementor.php:252
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1334
-#: includes/Editors/Elementor.php:268
+#: includes/Core/Settings.php:1290
+#: includes/Editors/Elementor.php:269
 msgid "Docs Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1338
+#: includes/Core/Settings.php:1294
 msgid "Docs ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1339
+#: includes/Core/Settings.php:1295
 msgid "Docs Author"
 msgstr ""
 
-#: includes/Core/Settings.php:1341
+#: includes/Core/Settings.php:1297
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1342
+#: includes/Core/Settings.php:1298
 #: assets/build/blocks/editor.js:1
 msgid "Last Modified Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1343
+#: includes/Core/Settings.php:1299
 #: assets/build/blocks/editor.js:1
 msgid "Parent Id"
 msgstr ""
 
-#: includes/Core/Settings.php:1344
+#: includes/Core/Settings.php:1300
 #: assets/build/blocks/editor.js:1
 msgid "Random"
 msgstr ""
 
-#: includes/Core/Settings.php:1345
+#: includes/Core/Settings.php:1301
 #: assets/build/blocks/editor.js:1
 msgid "Comment Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1346
+#: includes/Core/Settings.php:1302
 #: assets/build/blocks/editor.js:1
 msgid "Menu Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1354
-#: includes/Editors/Elementor.php:278
+#: includes/Core/Settings.php:1310
+#: includes/Editors/Elementor.php:279
 msgid "Docs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1411
+#: includes/Core/Settings.php:1367
 #: includes/Editors/Elementor/Tags/TitleTag.php:17
 #: includes/Editors/Elementor/Widget/Title.php:26
 #: views/admin/email/analytics/leading-docs.php:24
 msgid "Doc Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1419
-#: includes/Core/Settings.php:1792
+#: includes/Core/Settings.php:1375
+#: includes/Core/Settings.php:1748
 msgid "Sidebar Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1427
+#: includes/Core/Settings.php:1383
 msgid "Print Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1443
+#: includes/Core/Settings.php:1399
 msgid "Last Update Time"
 msgstr ""
 
-#: includes/Core/Settings.php:1451
+#: includes/Core/Settings.php:1407
 #: assets/build/blocks/editor.js:1
 msgid "Navigation"
 msgstr ""
 
-#: includes/Core/Settings.php:1459
+#: includes/Core/Settings.php:1415
 msgid "Comment"
 msgstr ""
 
-#: includes/Core/Settings.php:1467
+#: includes/Core/Settings.php:1423
 #: includes/Core/SetupWizard.php:414
 msgid "Show Powered by BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:1475
+#: includes/Core/Settings.php:1431
 msgid "Reaction Feedback Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1476
+#: includes/Core/Settings.php:1432
 msgid "Thanks for your feedback."
 msgstr ""
 
-#: includes/Core/Settings.php:1490
+#: includes/Core/Settings.php:1446
 msgid "Estimated Reading Time Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1498
+#: includes/Core/Settings.php:1454
 msgid "Estimated Reading Time Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1506
+#: includes/Core/Settings.php:1462
 msgid "Estimated Reading Time Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1517
+#: includes/Core/Settings.php:1473
 msgid "TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1531
+#: includes/Core/Settings.php:1487
 #: includes/Editors/Elementor/Widget/ToC.php:67
 #: assets/build/blocks/editor.js:1
 msgid "TOC Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1540
+#: includes/Core/Settings.php:1496
 msgid "TOC Hierarchy"
 msgstr ""
 
-#: includes/Core/Settings.php:1549
+#: includes/Core/Settings.php:1505
 msgid "TOC List Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1558
+#: includes/Core/Settings.php:1514
 msgid "Show TOC Title in Anchor Links"
 msgstr ""
 
-#: includes/Core/Settings.php:1567
+#: includes/Core/Settings.php:1523
 #: includes/Editors/Elementor/Widget/Sidebar.php:352
 #: assets/build/blocks/editor.js:1
 msgid "Sticky TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1576
+#: includes/Core/Settings.php:1532
 msgid "Collapsible TOC on small devices"
 msgstr ""
 
-#: includes/Core/Settings.php:1585
+#: includes/Core/Settings.php:1541
 msgid "Title Link Copy To Clipboard"
 msgstr ""
 
-#: includes/Core/Settings.php:1592
+#: includes/Core/Settings.php:1548
 msgid "TOC Supported Heading Tag"
 msgstr ""
 
-#: includes/Core/Settings.php:1618
+#: includes/Core/Settings.php:1574
 msgid "Content Offset"
 msgstr ""
 
-#: includes/Core/Settings.php:1621
+#: includes/Core/Settings.php:1577
 msgid "content offset from top on scroll."
 msgstr ""
 
-#: includes/Core/Settings.php:1644
+#: includes/Core/Settings.php:1600
 msgid "Enable Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1653
+#: includes/Core/Settings.php:1609
 msgid "Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1667
+#: includes/Core/Settings.php:1623
 msgid "Breadcrumb Home URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1675
+#: includes/Core/Settings.php:1631
 msgid "Category on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1684
+#: includes/Core/Settings.php:1640
 msgid "Title on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1696
-#: includes/Core/Settings.php:1702
+#: includes/Core/Settings.php:1652
+#: includes/Core/Settings.php:1658
 msgid "Email Feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:1710
+#: includes/Core/Settings.php:1666
 msgid "Feedback Link Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1718
+#: includes/Core/Settings.php:1674
 #: includes/Editors/Elementor/Widget/Feedback.php:97
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1726
+#: includes/Core/Settings.php:1682
 msgid "Email Address"
 msgstr ""
 
-#: includes/Core/Settings.php:1729
+#: includes/Core/Settings.php:1685
 msgid "The email address where the Feedback form will be sent"
 msgstr ""
 
-#: includes/Core/Settings.php:1735
+#: includes/Core/Settings.php:1691
 msgid "Feedback URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1754
+#: includes/Core/Settings.php:1710
 msgid "Show Attachment"
 msgstr ""
 
-#: includes/Core/Settings.php:1772
+#: includes/Core/Settings.php:1728
 msgid "Show Related Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1786
+#: includes/Core/Settings.php:1742
 msgid "Archive Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1800
-#: includes/Editors/Elementor.php:430
-#: includes/Editors/Elementor.php:465
-#: includes/Editors/Elementor.php:552
+#: includes/Core/Settings.php:1756
+#: includes/Editors/Elementor.php:431
+#: includes/Editors/Elementor.php:466
+#: includes/Editors/Elementor.php:553
 #: includes/Editors/Elementor/Widget/ArchiveList.php:142
 #: assets/build/blocks/editor.js:1
 msgid "Nested Subcategory"
 msgstr ""
 
-#: includes/Core/Settings.php:1808
+#: includes/Core/Settings.php:1764
 #: includes/Editors/Elementor/Widget/ArchiveList.php:154
 #: assets/build/blocks/editor.js:1
 msgid "Enable Pagination"
 msgstr ""
 
-#: includes/Core/Settings.php:1823
-#: includes/Core/Settings.php:1829
+#: includes/Core/Settings.php:1779
+#: includes/Core/Settings.php:1785
 #: includes/Core/SetupWizard.php:489
 msgid "Design"
 msgstr ""
 
-#: includes/Core/Settings.php:1836
-#: includes/Core/Settings.php:1844
+#: includes/Core/Settings.php:1792
+#: includes/Core/Settings.php:1800
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/Core/Settings.php:1847
+#: includes/Core/Settings.php:1803
 msgid "Search for shortcode"
 msgstr ""
 
-#: includes/Core/Settings.php:1848
+#: includes/Core/Settings.php:1804
 msgid "No Shortcodes Found with these keywords"
 msgstr ""
 
-#: includes/Core/Settings.php:1853
+#: includes/Core/Settings.php:1809
 msgid "Search Form"
 msgstr ""
 
-#: includes/Core/Settings.php:1857
+#: includes/Core/Settings.php:1813
 msgid "[betterdocs_search_form placeholder=\"Search...\" heading=\"Heading\" subheading=\"Subheading\" category_search=\"true\" search_button=\"true\" popular_search=\"true\"]"
 msgstr ""
 
+#: includes/Core/Settings.php:1814
+#: includes/Core/Settings.php:1825
+#: includes/Core/Settings.php:1836
+#: includes/Core/Settings.php:1847
 #: includes/Core/Settings.php:1858
 #: includes/Core/Settings.php:1869
 #: includes/Core/Settings.php:1880
 #: includes/Core/Settings.php:1891
 #: includes/Core/Settings.php:1902
-#: includes/Core/Settings.php:1913
-#: includes/Core/Settings.php:1924
-#: includes/Core/Settings.php:1935
-#: includes/Core/Settings.php:1946
 msgid "Example with parameters:"
 msgstr ""
 
-#: includes/Core/Settings.php:1868
+#: includes/Core/Settings.php:1824
 msgid "[betterdocs_feedback_form button_text=\"Send\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1875
+#: includes/Core/Settings.php:1831
 msgid "Category Grid- Layout 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1879
+#: includes/Core/Settings.php:1835
 msgid "[betterdocs_category_grid show_count=\"true\" show_icon=\"true\" masonry=\"true\" column=\"3\" posts_per_page=\"5\" nested_subcategory=\"true\" terms=\"term_ID, term_ID\" terms_orderby=\"\" terms_order=\"\" multiple_knowledge_base=\"\" kb_slug=\"\" title_tag=\"h2\" orderby=\"\" order=\"\" ]"
 msgstr ""
 
-#: includes/Core/Settings.php:1886
+#: includes/Core/Settings.php:1842
 msgid "Category Box- Layout 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1890
+#: includes/Core/Settings.php:1846
 msgid "[betterdocs_category_box orderby=\"\" column=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" show_icon=\"\" kb_slug=\"\" title_tag=\"h2\" multiple_knowledge_base=\"false\" border_bottom=\"false\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1897
+#: includes/Core/Settings.php:1853
 #: includes/Editors/Elementor/Widget/ArchiveList.php:281
 #: includes/Editors/Elementor/Widget/ArchiveList.php:439
 #: includes/Editors/Elementor/Widget/ArchiveList.php:1077
@@ -5491,249 +5525,249 @@ msgstr ""
 msgid "Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1901
+#: includes/Core/Settings.php:1857
 msgid "[betterdocs_category_list orderby=\"\" order=\"\" posts_per_page=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" terms_order=\"\" kb_slug=\"\" multiple_knowledge_base=\"false\" title_tag=\"h2\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1908
+#: includes/Core/Settings.php:1864
 msgid "FAQ Layout - 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1912
+#: includes/Core/Settings.php:1868
 msgid "[betterdocs_faq_list_modern groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1919
+#: includes/Core/Settings.php:1875
 msgid "FAQ Layout - 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1923
+#: includes/Core/Settings.php:1879
 msgid "[betterdocs_faq_list_classic groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1930
+#: includes/Core/Settings.php:1886
 msgid "FAQ Layout - 3"
 msgstr ""
 
-#: includes/Core/Settings.php:1934
+#: includes/Core/Settings.php:1890
 msgid "[betterdocs_faq_list_layout_3 class=\"faq-doc betterdocs-faq-layout-3\" groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1941
+#: includes/Core/Settings.php:1897
 msgid "FAQ Layout - 4"
 msgstr ""
 
-#: includes/Core/Settings.php:1945
+#: includes/Core/Settings.php:1901
 msgid "[betterdocs_faq_tab class=\"faq-doc betterdocs-faq-layout-4\" groups=\"group_id\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1955
-#: includes/Core/Settings.php:1962
-#: includes/Core/Settings.php:1968
+#: includes/Core/Settings.php:1911
+#: includes/Core/Settings.php:1918
+#: includes/Core/Settings.php:1924
 msgid "Access & Restrictions"
 msgstr ""
 
-#: includes/Core/Settings.php:1993
+#: includes/Core/Settings.php:1949
 msgid "Global Role Management"
 msgstr ""
 
-#: includes/Core/Settings.php:1999
+#: includes/Core/Settings.php:1955
 msgid "Who Can Write Docs?"
 msgstr ""
 
-#: includes/Core/Settings.php:2010
+#: includes/Core/Settings.php:1966
 msgid "Who Can Edit Settings?"
 msgstr ""
 
-#: includes/Core/Settings.php:2021
+#: includes/Core/Settings.php:1977
 msgid "Who Can Check Analytics?"
 msgstr ""
 
-#: includes/Core/Settings.php:2032
+#: includes/Core/Settings.php:1988
 msgid "Who Can Check FAQ Builder?"
 msgstr ""
 
-#: includes/Core/Settings.php:2047
-#: includes/Core/Settings.php:2055
+#: includes/Core/Settings.php:2003
+#: includes/Core/Settings.php:2011
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Internal Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2062
+#: includes/Core/Settings.php:2018
 msgid "Choose a Rule Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2063
+#: includes/Core/Settings.php:2019
 msgid "Choose a rule type: apply access globally (Basic), or configure detailed restrictions (Advanced) for docs, categories, and KBs."
 msgstr ""
 
-#: includes/Core/Settings.php:2068
-#: includes/Core/Settings.php:2092
-#: includes/Core/Settings.php:2113
-#: includes/Core/Settings.php:2134
-#: includes/Core/Settings.php:2962
-#: includes/Core/Settings.php:2981
-#: includes/Core/Settings.php:2995
+#: includes/Core/Settings.php:2024
+#: includes/Core/Settings.php:2048
+#: includes/Core/Settings.php:2069
+#: includes/Core/Settings.php:2090
+#: includes/Core/Settings.php:2921
+#: includes/Core/Settings.php:2940
+#: includes/Core/Settings.php:2954
 msgid "Select any"
 msgstr ""
 
-#: includes/Core/Settings.php:2085
+#: includes/Core/Settings.php:2041
 msgid "Restrict Access to"
 msgstr ""
 
-#: includes/Core/Settings.php:2086
+#: includes/Core/Settings.php:2042
 msgid "Only selected User Roles will be able to view your Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2106
+#: includes/Core/Settings.php:2062
 msgid "Restriction on Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2107
+#: includes/Core/Settings.php:2063
 msgid "Selected Docs pages will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2127
+#: includes/Core/Settings.php:2083
 msgid "Restriction on Docs Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2128
+#: includes/Core/Settings.php:2084
 msgid "Selected Docs categories will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2148
+#: includes/Core/Settings.php:2104
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/Core/Settings.php:2149
+#: includes/Core/Settings.php:2105
 msgid "Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the \"404 not found\" page"
 msgstr ""
 
-#: includes/Core/Settings.php:2171
-#: includes/Core/Settings.php:2177
-#: includes/Core/Settings.php:2182
+#: includes/Core/Settings.php:2127
+#: includes/Core/Settings.php:2133
+#: includes/Core/Settings.php:2138
 #: views/admin/email/pro.php:22
 msgid "Email Reporting"
 msgstr ""
 
-#: includes/Core/Settings.php:2191
+#: includes/Core/Settings.php:2147
 msgid "Reporting Frequency"
 msgstr ""
 
-#: includes/Core/Settings.php:2205
+#: includes/Core/Settings.php:2161
 msgid "Reporting Day"
 msgstr ""
 
-#: includes/Core/Settings.php:2213
+#: includes/Core/Settings.php:2169
 msgid "Sunday"
 msgstr ""
 
-#: includes/Core/Settings.php:2214
+#: includes/Core/Settings.php:2170
 msgid "Monday"
 msgstr ""
 
-#: includes/Core/Settings.php:2215
+#: includes/Core/Settings.php:2171
 msgid "Tuesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2216
+#: includes/Core/Settings.php:2172
 msgid "Wednesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2217
+#: includes/Core/Settings.php:2173
 msgid "Thursday"
 msgstr ""
 
-#: includes/Core/Settings.php:2218
+#: includes/Core/Settings.php:2174
 msgid "Friday"
 msgstr ""
 
-#: includes/Core/Settings.php:2219
+#: includes/Core/Settings.php:2175
 msgid "Saturday"
 msgstr ""
 
-#: includes/Core/Settings.php:2221
+#: includes/Core/Settings.php:2177
 msgid "This is only applicable for the “Weekly” report"
 msgstr ""
 
-#: includes/Core/Settings.php:2226
+#: includes/Core/Settings.php:2182
 msgid "Select Reporting Data"
 msgstr ""
 
-#: includes/Core/Settings.php:2241
+#: includes/Core/Settings.php:2197
 msgid "Reporting Email"
 msgstr ""
 
-#: includes/Core/Settings.php:2249
+#: includes/Core/Settings.php:2205
 msgid "Reporting Email Subject"
 msgstr ""
 
-#: includes/Core/Settings.php:2258
+#: includes/Core/Settings.php:2214
 msgid "Reporting Test"
 msgstr ""
 
-#: includes/Core/Settings.php:2259
+#: includes/Core/Settings.php:2215
 msgid "Test Report"
 msgstr ""
 
-#: includes/Core/Settings.php:2275
+#: includes/Core/Settings.php:2231
 msgid "Successfully Sent a Test Report in Your Email."
 msgstr ""
 
-#: includes/Core/Settings.php:2287
+#: includes/Core/Settings.php:2243
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2293
+#: includes/Core/Settings.php:2249
 msgid "Git Sync Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2299
+#: includes/Core/Settings.php:2255
 msgid "Enable Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2304
+#: includes/Core/Settings.php:2260
 msgid "Enable bidirectional synchronization between BetterDocs and Git repositories"
 msgstr ""
 
-#: includes/Core/Settings.php:2314
-#: includes/Core/Settings.php:2321
+#: includes/Core/Settings.php:2270
+#: includes/Core/Settings.php:2277
 #: includes/Core/SetupWizard.php:445
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2336
-#: includes/Core/Settings.php:2682
+#: includes/Core/Settings.php:2292
+#: includes/Core/Settings.php:2641
 msgid "Enable Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2351
-#: includes/Core/Settings.php:2357
+#: includes/Core/Settings.php:2307
+#: includes/Core/Settings.php:2313
 msgid "AI Content Suite"
 msgstr ""
 
-#: includes/Core/Settings.php:2363
+#: includes/Core/Settings.php:2319
 msgid "AI Content Suite Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2390
+#: includes/Core/Settings.php:2346
 msgid "AI Platform & API"
 msgstr ""
 
-#: includes/Core/Settings.php:2396
+#: includes/Core/Settings.php:2352
 msgid "AI Platform"
 msgstr ""
 
-#: includes/Core/Settings.php:2397
+#: includes/Core/Settings.php:2353
 msgid "Choose which AI platform powers Write with AI, AI Edit, the Doc Summarizer and Quality Score. The model list and API key field below adapt to your choice."
 msgstr ""
 
-#: includes/Core/Settings.php:2413
+#: includes/Core/Settings.php:2371
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/faq.js:1
@@ -5743,291 +5777,291 @@ msgid "OpenAI API Key"
 msgstr ""
 
 #. translators: %s: documentation URL
-#: includes/Core/Settings.php:2414
+#: includes/Core/Settings.php:2372
 msgid "Check out this <a target=\"_blank\" href=\"%s\">documentation</a> to generate your OpenAI API key."
 msgstr ""
 
-#: includes/Core/Settings.php:2422
+#: includes/Core/Settings.php:2380
 msgid "Google Gemini API Key"
 msgstr ""
 
 #. translators: %s: Google AI Studio URL
-#: includes/Core/Settings.php:2423
+#: includes/Core/Settings.php:2381
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">Google AI Studio</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2431
+#: includes/Core/Settings.php:2389
 msgid "Anthropic Claude API Key"
 msgstr ""
 
 #. translators: %s: Anthropic Console URL
-#: includes/Core/Settings.php:2432
+#: includes/Core/Settings.php:2390
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">Anthropic Console</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2440
+#: includes/Core/Settings.php:2398
 msgid "DeepSeek API Key"
 msgstr ""
 
 #. translators: %s: DeepSeek platform URL
-#: includes/Core/Settings.php:2441
+#: includes/Core/Settings.php:2399
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">DeepSeek platform</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2449
+#: includes/Core/Settings.php:2407
 msgid "OpenRouter API Key"
 msgstr ""
 
 #. translators: %s: OpenRouter keys URL
-#: includes/Core/Settings.php:2450
+#: includes/Core/Settings.php:2408
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">OpenRouter</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2458
+#: includes/Core/Settings.php:2416
 msgid "Model"
 msgstr ""
 
-#: includes/Core/Settings.php:2459
+#: includes/Core/Settings.php:2417
 msgid "Available models depend on the selected platform."
 msgstr ""
 
-#: includes/Core/Settings.php:2502
+#: includes/Core/Settings.php:2460
 msgid "Configuration"
 msgstr ""
 
-#: includes/Core/Settings.php:2509
+#: includes/Core/Settings.php:2467
 msgid "Write Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2510
+#: includes/Core/Settings.php:2468
 msgid "Generate AI based Documentation in your Gutenberg Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2518
+#: includes/Core/Settings.php:2476
 msgid "Write FAQ with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2519
+#: includes/Core/Settings.php:2477
 msgid "Generate AI based FAQ in your Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2527
+#: includes/Core/Settings.php:2485
 msgid "Write Glossaries with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2528
+#: includes/Core/Settings.php:2486
 msgid "Generate AI based Glossary definitions from the Glossaries admin page"
 msgstr ""
 
-#: includes/Core/Settings.php:2536
+#: includes/Core/Settings.php:2495
 msgid "Enhance Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2537
+#: includes/Core/Settings.php:2496
 msgid "Add BetterDocs AI actions for suggesting categories, tags and excerpts inside the native Docs editor panels."
 msgstr ""
 
-#: includes/Core/Settings.php:2544
-#: includes/Core/Settings.php:2619
+#: includes/Core/Settings.php:2503
+#: includes/Core/Settings.php:2578
 msgid "Set Max Tokens"
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2546
+#: includes/Core/Settings.php:2505
 msgid "Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2560
+#: includes/Core/Settings.php:2519
 msgid "Write AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2566
+#: includes/Core/Settings.php:2525
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/ai-edit.js:1
 #: assets/build/blocks/write-with-ai.js:1
 msgid "Instructions"
 msgstr ""
 
-#: includes/Core/Settings.php:2567
+#: includes/Core/Settings.php:2526
 msgid "Add reusable instruction sets to steer how BetterDocs AI writes. The \"Default/Core\" set is always applied; extra sets can be picked in the Write with AI popup."
 msgstr ""
 
-#: includes/Core/Settings.php:2583
+#: includes/Core/Settings.php:2542
 msgid "Edit AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2589
+#: includes/Core/Settings.php:2548
 #: assets/build/admin/js/dashboard.js:5
 msgid "Actions"
 msgstr ""
 
-#: includes/Core/Settings.php:2590
+#: includes/Core/Settings.php:2549
 msgid "Choose which Edit with AI actions appear in the editor. Toggle actions on or off, edit each action's instruction, or add your own custom actions. All predefined actions are enabled by default."
 msgstr ""
 
-#: includes/Core/Settings.php:2611
+#: includes/Core/Settings.php:2570
 msgid "AI Powered Doc Summarizer"
 msgstr ""
 
-#: includes/Core/Settings.php:2612
+#: includes/Core/Settings.php:2571
 msgid "Enable AI-powered article summaries on single doc pages. Requires OpenAI API key."
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2621
+#: includes/Core/Settings.php:2580
 msgid "Single Doc summarizer will be generated based on the token limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2667
+#: includes/Core/Settings.php:2626
 msgid "Enable AI Chatbot"
 msgstr ""
 
-#: includes/Core/Settings.php:2681
+#: includes/Core/Settings.php:2640
 msgid "Instant Answer is currently disabled. The AI Chatbot won't appear on your site until Instant Answer is enabled."
 msgstr ""
 
-#: includes/Core/Settings.php:2758
-#: includes/Core/Settings.php:2764
+#: includes/Core/Settings.php:2717
+#: includes/Core/Settings.php:2723
 msgid "Import / Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2770
+#: includes/Core/Settings.php:2729
 msgid "Import Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2795
-#: includes/Core/Settings.php:2801
+#: includes/Core/Settings.php:2754
+#: includes/Core/Settings.php:2760
 msgid "Import"
 msgstr ""
 
-#: includes/Core/Settings.php:2826
-#: includes/Core/Settings.php:2832
+#: includes/Core/Settings.php:2785
+#: includes/Core/Settings.php:2791
 msgid "Import Docs"
 msgstr ""
 
 #. Translators: %1$s is a link to download a sample CSV file.
-#: includes/Core/Settings.php:2834
+#: includes/Core/Settings.php:2793
 msgid "To import your Docs, please upload the .xml / .csv file here. <a href=\"%1$s\">Download sample csv file</a>"
 msgstr ""
 
+#: includes/Core/Settings.php:2795
+#: includes/Core/Settings.php:2796
+#: includes/Core/Settings.php:2835
 #: includes/Core/Settings.php:2836
-#: includes/Core/Settings.php:2837
-#: includes/Core/Settings.php:2876
-#: includes/Core/Settings.php:2877
-#: includes/Core/Settings.php:3026
-#: includes/Core/Settings.php:3027
+#: includes/Core/Settings.php:2985
+#: includes/Core/Settings.php:2986
 msgid "Proceed"
 msgstr ""
 
-#: includes/Core/Settings.php:2838
-#: includes/Core/Settings.php:2878
+#: includes/Core/Settings.php:2797
+#: includes/Core/Settings.php:2837
 msgid "Importing..."
 msgstr ""
 
-#: includes/Core/Settings.php:2839
+#: includes/Core/Settings.php:2798
 msgid "It seems like documentations with same slugs already exist on your website. What would you like to do?"
 msgstr ""
 
-#: includes/Core/Settings.php:2845
-#: includes/Core/Settings.php:2887
+#: includes/Core/Settings.php:2804
+#: includes/Core/Settings.php:2846
 msgid "Import completed successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:2860
-#: includes/Core/Settings.php:2866
+#: includes/Core/Settings.php:2819
+#: includes/Core/Settings.php:2825
 msgid "Import Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2867
+#: includes/Core/Settings.php:2826
 msgid "To import BetterDocs Settings, please upload BetterDocs settings you have exported from another website in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:2868
+#: includes/Core/Settings.php:2827
 msgid "Change"
 msgstr ""
 
-#: includes/Core/Settings.php:2905
-#: includes/Core/Settings.php:2911
+#: includes/Core/Settings.php:2864
+#: includes/Core/Settings.php:2870
 msgid "Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2936
+#: includes/Core/Settings.php:2895
 msgid "Export Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2942
+#: includes/Core/Settings.php:2901
 msgid "Choose an export type: All Docs, a specific Knowledge Base, or a Doc Category"
 msgstr ""
 
-#: includes/Core/Settings.php:2956
+#: includes/Core/Settings.php:2915
 msgid "Select Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2957
+#: includes/Core/Settings.php:2916
 msgid "Selected docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2975
+#: includes/Core/Settings.php:2934
 msgid "Select Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2976
+#: includes/Core/Settings.php:2935
 msgid "Selected categories and its docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2989
+#: includes/Core/Settings.php:2948
 msgid "Select Glossaries"
 msgstr ""
 
-#: includes/Core/Settings.php:2990
+#: includes/Core/Settings.php:2949
 msgid "Selected glossary terms will be exported."
 msgstr ""
 
-#: includes/Core/Settings.php:3002
+#: includes/Core/Settings.php:2961
 msgid "Select File Type"
 msgstr ""
 
-#: includes/Core/Settings.php:3003
+#: includes/Core/Settings.php:2962
 msgid "Choose a file type"
 msgstr ""
 
-#: includes/Core/Settings.php:3009
+#: includes/Core/Settings.php:2968
 msgid ".xml"
 msgstr ""
 
-#: includes/Core/Settings.php:3010
+#: includes/Core/Settings.php:2969
 msgid ".csv"
 msgstr ""
 
-#: includes/Core/Settings.php:3017
+#: includes/Core/Settings.php:2976
 msgid "Export FAQ"
 msgstr ""
 
-#: includes/Core/Settings.php:3018
+#: includes/Core/Settings.php:2977
 msgid "Export FAQ Related Terms & Posts"
 msgstr ""
 
-#: includes/Core/Settings.php:3028
-#: includes/Core/Settings.php:3068
+#: includes/Core/Settings.php:2987
+#: includes/Core/Settings.php:3027
 msgid "Exporting..."
 msgstr ""
 
-#: includes/Core/Settings.php:3045
+#: includes/Core/Settings.php:3004
 msgid "Exported Successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:3058
-#: includes/Core/Settings.php:3063
-#: includes/Core/Settings.php:3066
-#: includes/Core/Settings.php:3067
+#: includes/Core/Settings.php:3017
+#: includes/Core/Settings.php:3022
+#: includes/Core/Settings.php:3025
+#: includes/Core/Settings.php:3026
 msgid "Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:3064
+#: includes/Core/Settings.php:3023
 msgid "Simply click on “Export Settings” button to download your BetterDocs settings in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:3079
+#: includes/Core/Settings.php:3038
 msgid "File downloaded successfully."
 msgstr ""
 
@@ -6567,6 +6601,15 @@ msgstr ""
 msgid "Article Quality Analysis"
 msgstr ""
 
+#: includes/Core/WriteWithAI.php:457
+msgid "No image data to send to the AI."
+msgstr ""
+
+#. translators: 1: AI platform id, 2: model name.
+#: includes/Core/WriteWithAI.php:469
+msgid "The configured AI model (%1$s / %2$s) can't read images. Switch to an OpenAI vision model such as GPT-4o or GPT-4o mini in BetterDocs → Settings → AI Content Suite, or upload a PDF/DOCX/TXT instead."
+msgstr ""
+
 #: includes/Editors/BlockEditor.php:140
 msgid "Betterdocs"
 msgstr ""
@@ -6684,58 +6727,58 @@ msgstr ""
 msgid "Editor: %s does not exist."
 msgstr ""
 
-#: includes/Editors/Elementor.php:134
+#: includes/Editors/Elementor.php:135
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:583
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Query"
 msgstr ""
 
-#: includes/Editors/Elementor.php:147
+#: includes/Editors/Elementor.php:148
 msgid "Knowledge Bases"
 msgstr ""
 
-#: includes/Editors/Elementor.php:154
+#: includes/Editors/Elementor.php:155
 #: assets/build/admin/js/dashboard.js:4
 msgid "All Knowledge Base"
 msgstr ""
 
-#: includes/Editors/Elementor.php:165
+#: includes/Editors/Elementor.php:166
 msgid "Category Grid"
 msgstr ""
 
-#: includes/Editors/Elementor.php:174
+#: includes/Editors/Elementor.php:175
 #: assets/build/blocks/editor.js:1
 msgid "Include"
 msgstr ""
 
-#: includes/Editors/Elementor.php:186
+#: includes/Editors/Elementor.php:187
 #: assets/build/blocks/editor.js:1
 msgid "Exclude"
 msgstr ""
 
-#: includes/Editors/Elementor.php:199
+#: includes/Editors/Elementor.php:200
 #: assets/build/blocks/editor.js:1
 msgid "Grid Per Page"
 msgstr ""
 
-#: includes/Editors/Elementor.php:209
+#: includes/Editors/Elementor.php:210
 msgid "Tabs Per Page"
 msgstr ""
 
-#: includes/Editors/Elementor.php:210
+#: includes/Editors/Elementor.php:211
 #: assets/build/blocks/editor.js:1
 msgid "Box Per Page"
 msgstr ""
 
-#: includes/Editors/Elementor.php:220
+#: includes/Editors/Elementor.php:221
 #: assets/build/blocks/editor.js:1
 msgid "Offset"
 msgstr ""
 
-#: includes/Editors/Elementor.php:314
-#: includes/Editors/Elementor.php:361
-#: includes/Editors/Elementor.php:538
+#: includes/Editors/Elementor.php:315
+#: includes/Editors/Elementor.php:362
+#: includes/Editors/Elementor.php:539
 #: includes/Editors/Elementor/Widget/ArchiveList.php:128
 #: views/admin/taxonomy/add.php:9
 #: views/admin/taxonomy/edit.php:23
@@ -6744,33 +6787,17 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: includes/Editors/Elementor.php:333
+#: includes/Editors/Elementor.php:334
 msgid "Grid List Posts"
 msgstr ""
 
-#: includes/Editors/Elementor.php:342
+#: includes/Editors/Elementor.php:343
 msgid "Post Per Page"
 msgstr ""
 
-#: includes/Editors/Elementor.php:379
+#: includes/Editors/Elementor.php:380
 #: assets/build/blocks/editor.js:1
 msgid "Enable Nested Subcategory"
-msgstr ""
-
-#: includes/Editors/Elementor.php:381
-#: includes/Editors/Elementor.php:418
-#: includes/Editors/Elementor.php:432
-#: includes/Editors/Elementor.php:444
-#: includes/Editors/Elementor.php:467
-#: includes/Editors/Elementor.php:480
-#: includes/Editors/Elementor.php:554
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/dashboard.js:5
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/faq.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Yes"
 msgstr ""
 
 #: includes/Editors/Elementor.php:382
@@ -6786,71 +6813,87 @@ msgstr ""
 #: assets/build/admin/js/faq.js:1
 #: assets/build/admin/js/faq.js:4
 #: assets/build/admin/js/glossaries.js:1
+msgid "Yes"
+msgstr ""
+
+#: includes/Editors/Elementor.php:383
+#: includes/Editors/Elementor.php:420
+#: includes/Editors/Elementor.php:434
+#: includes/Editors/Elementor.php:446
+#: includes/Editors/Elementor.php:469
+#: includes/Editors/Elementor.php:482
+#: includes/Editors/Elementor.php:556
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/faq.js:4
+#: assets/build/admin/js/glossaries.js:1
 msgid "No"
 msgstr ""
 
-#: includes/Editors/Elementor.php:391
+#: includes/Editors/Elementor.php:392
 #: assets/build/blocks/editor.js:1
 msgid "Subcategory Per Grid"
 msgstr ""
 
-#: includes/Editors/Elementor.php:403
+#: includes/Editors/Elementor.php:404
 msgid "Post Per Subcategory"
 msgstr ""
 
-#: includes/Editors/Elementor.php:415
-#: includes/Editors/Elementor.php:477
+#: includes/Editors/Elementor.php:416
+#: includes/Editors/Elementor.php:478
 #: assets/build/blocks/editor.js:1
 msgid "Lazy Load Docs & Subcategories"
 msgstr ""
 
-#: includes/Editors/Elementor.php:416
+#: includes/Editors/Elementor.php:417
 msgid "Render only the active category upfront; fetch the rest on click. Recommended for large knowledge bases when this widget is used as a sidebar."
 msgstr ""
 
-#: includes/Editors/Elementor.php:442
+#: includes/Editors/Elementor.php:443
 msgid "Show Categories Dynamically"
 msgstr ""
 
-#: includes/Editors/Elementor.php:455
+#: includes/Editors/Elementor.php:456
 msgid "Note: This option is only applicable for BetterDocs Category Archive page. If enabled, this will show the Categories dynamically in your BetterDocs Category Archive page."
 msgstr ""
 
-#: includes/Editors/Elementor.php:478
+#: includes/Editors/Elementor.php:479
 msgid "Render only the active category upfront; fetch the rest on click (or on scroll for the Memphis sidebar layout)."
 msgstr ""
 
-#: includes/Editors/Elementor.php:492
+#: includes/Editors/Elementor.php:493
 msgid "Tab List Posts"
 msgstr ""
 
-#: includes/Editors/Elementor.php:501
+#: includes/Editors/Elementor.php:502
 msgid "Box Per Tabs"
 msgstr ""
 
-#: includes/Editors/Elementor.php:510
+#: includes/Editors/Elementor.php:511
 msgid "Posts Per Tab"
 msgstr ""
 
-#: includes/Editors/Elementor.php:519
+#: includes/Editors/Elementor.php:520
 msgid "Posts Order By"
 msgstr ""
 
-#: includes/Editors/Elementor.php:564
+#: includes/Editors/Elementor.php:565
 #: includes/Editors/Elementor/Widget/ArchiveList.php:169
 #: assets/build/blocks/editor.js:1
 msgid "Posts Per Page"
 msgstr ""
 
-#: includes/Editors/Elementor.php:576
+#: includes/Editors/Elementor.php:577
 msgid "Nested Subcategory Order"
 msgstr ""
 
-#: includes/Editors/Elementor.php:592
+#: includes/Editors/Elementor.php:593
 msgid "Nested Subcategory Order By"
 msgstr ""
 
-#: includes/Editors/Elementor.php:718
+#: includes/Editors/Elementor.php:730
 msgid "BetterDocs Multiple KB"
 msgstr ""
 
@@ -6957,13 +7000,15 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:137
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:80
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:92
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:127
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:140
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:156
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:173
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:187
 #: includes/Editors/Elementor/Widget/CodeSnippet.php:200
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:224
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:237
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:216
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:243
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:267
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:280
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:145
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:158
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:173
 #: includes/Editors/Elementor/Widget/Content.php:56
 #: includes/Editors/Elementor/Widget/DocShare.php:516
 #: includes/Editors/Elementor/Widget/DocShare.php:528
@@ -7001,13 +7046,15 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:138
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:81
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:93
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:128
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:141
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:157
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:174
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:188
 #: includes/Editors/Elementor/Widget/CodeSnippet.php:201
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:225
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:238
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:217
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:244
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:268
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:281
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:146
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:159
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:174
 #: includes/Editors/Elementor/Widget/Content.php:57
 #: includes/Editors/Elementor/Widget/DocShare.php:517
 #: includes/Editors/Elementor/Widget/DocShare.php:529
@@ -7679,7 +7726,8 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1706
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1889
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:264
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:307
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:186
 #: includes/Editors/Elementor/Widget/Sidebar.php:416
 #: includes/Editors/Elementor/Widget/Tags.php:40
 #: assets/build/blocks/editor.js:1
@@ -8248,303 +8296,404 @@ msgstr ""
 msgid "Color Hover"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:48
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:49
 #: assets/build/blocks/editor.js:1
 msgid "Code Snippet"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:56
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:57
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:136
 msgid "Code"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:61
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:62
 msgid "Enter your code snippet here..."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:62
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:63
 msgid "Enter your code snippet. Use Tab for indentation and enjoy syntax highlighting in the editor."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:69
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:70
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:105
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:78
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/ai-edit.js:2
+#: assets/build/blocks/editor.js:1
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Language"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:73
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:74
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:109
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:54
 #: assets/build/blocks/editor.js:1
 msgid "JavaScript"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:74
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:75
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:110
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:55
 #: assets/build/blocks/editor.js:1
 msgid "PHP"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:75
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:76
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:111
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:56
 #: assets/build/blocks/editor.js:1
 msgid "Python"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:76
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:77
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:112
 #: assets/build/blocks/editor.js:1
 msgid "Java"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:77
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:78
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:113
 #: assets/build/blocks/editor.js:1
 msgid "Ruby"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:78
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:79
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:114
+#: assets/build/blocks/editor.js:1
+msgid "cURL"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:80
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:115
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:57
 #: assets/build/blocks/editor.js:1
 msgid "Bash"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:79
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:81
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:116
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:51
 #: assets/build/blocks/editor.js:1
 msgid "JSON"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:80
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:82
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:117
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:53
 #: assets/build/blocks/editor.js:1
 msgid "YAML"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:81
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:83
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:118
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:58
 #: assets/build/blocks/editor.js:1
 msgid "HTML"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:82
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:84
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:119
 #: assets/build/blocks/editor.js:1
 msgid "CSS"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:83
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:85
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:120
 #: assets/build/blocks/editor.js:1
 msgid "SQL"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:84
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:86
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:121
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:52
 #: assets/build/blocks/editor.js:1
 msgid "XML"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:85
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:87
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:122
 #: assets/build/blocks/editor.js:1
 msgid "C++"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:86
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:88
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:123
 #: assets/build/blocks/editor.js:1
 msgid "C#"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:87
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:89
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:124
 #: assets/build/blocks/editor.js:1
 msgid "Go"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:88
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:90
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:125
 #: assets/build/blocks/editor.js:1
 msgid "Rust"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:89
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:91
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:126
 #: assets/build/blocks/editor.js:1
 msgid "Swift"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:90
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:92
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:127
 #: assets/build/blocks/editor.js:1
 msgid "Kotlin"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:91
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:93
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:128
 #: assets/build/blocks/editor.js:1
 msgid "TypeScript"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:93
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:95
 #: assets/build/blocks/editor.js:1
 msgid "Choose language for syntax highlighting."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:103
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:141
+msgid "Paste or type your code here…"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:148
+msgid "Additional Languages"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:153
+msgid "Add the same snippet in other languages. A language dropdown appears when you add one or more."
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:163
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:121
 #: assets/build/blocks/editor.js:1
 msgid "Appearance"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:111
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:171
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:129
 #: assets/build/blocks/editor.js:1
 msgid "Theme"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:115
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:175
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:133
 #: assets/build/blocks/editor.js:1
 msgid "Light"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:116
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:176
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:134
 #: assets/build/blocks/editor.js:1
 msgid "Dark"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:118
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:178
 #: assets/build/blocks/editor.js:1
 msgid "Choose light or dark styling for the code snippet block."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:125
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:185
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:143
 #: assets/build/blocks/editor.js:1
 msgid "Show header bar"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:131
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:191
 #: assets/build/blocks/editor.js:1
 msgid "Toggle the filename header and copy button."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:138
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:198
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:156
 #: assets/build/blocks/editor.js:1
 msgid "Enable copy button"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:144
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:204
 #: assets/build/blocks/editor.js:1
 msgid "Show a one-click copy-to-clipboard icon."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:154
-#: assets/build/blocks/editor.js:1
-msgid "Enable copy tooltip"
-msgstr ""
-
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:160
-#: assets/build/blocks/editor.js:1
-msgid "Display a tooltip (‘Copied!’) on copy button hover or click."
-msgstr ""
-
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:171
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:214
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:171
 #: assets/build/blocks/editor.js:1
 msgid "Show line numbers"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:177
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:220
 #: assets/build/blocks/editor.js:1
 msgid "Display line numbers in the code block."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:187
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:230
 #: assets/build/blocks/editor.js:1
 msgid "File Preview Header"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:198
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:241
 msgid "Show Language Label"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:204
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:247
 msgid "Display the programming language label in the header."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:211
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:254
 msgid "File Name"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:214
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:257
 msgid "Enter filename with extension"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:215
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:258
 msgid "Enter the filename to display in the header (e.g., hero-section.tsx)"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:222
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:265
 #: assets/build/blocks/editor.js:1
 msgid "Show window buttons"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:228
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:271
 #: assets/build/blocks/editor.js:1
 msgid "Display macOS-style close/minimize/maximize circles."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:235
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:278
 #: assets/build/blocks/editor.js:1
 msgid "Show language icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:241
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:284
 #: assets/build/blocks/editor.js:1
 msgid "Display the default icon for this file type."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:248
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:291
 #: assets/build/blocks/editor.js:1
 msgid "Custom language icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:251
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:294
 #: assets/build/blocks/editor.js:1
 msgid "Upload a custom icon to override the default."
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:357
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:400
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:261
 #: assets/build/blocks/editor.js:1
 msgid "Header"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:414
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:457
 #: assets/build/blocks/editor.js:1
 msgid "Controls border bottom width"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:422
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:465
 #: assets/build/blocks/editor.js:1
 msgid "File Name Typography"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:430
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:473
 #: assets/build/blocks/editor.js:1
 msgid "File Name Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:441
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:484
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:304
 #: assets/build/blocks/editor.js:1
 msgid "Copy Button Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:455
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:498
 #: assets/build/blocks/editor.js:1
 msgid "Copy Button Border Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:474
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:517
 #: assets/build/blocks/editor.js:1
 msgid "Line Numbers"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:497
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:540
 #: assets/build/blocks/editor.js:1
 msgid "Line Number Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:508
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:551
 #: assets/build/blocks/editor.js:1
 msgid "Line Number Background"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:542
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:585
 #: assets/build/blocks/editor.js:1
 msgid "Controls border right width"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/CodeSnippet.php:552
+#: includes/Editors/Elementor/Widget/CodeSnippet.php:595
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:321
 #: assets/build/blocks/editor.js:1
 msgid "Code Content Area"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:45
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:100
+#: assets/build/blocks/editor.js:1
+msgid "Responses"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:59
+#: assets/build/blocks/editor.js:1
+msgid "Plain Text"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:67
+#: assets/build/blocks/editor.js:1
+msgid "Status / Response type"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:70
+#: assets/build/blocks/editor.js:1
+msgid "e.g. 200, 404"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:71
+msgid "Shown as the tab label. A colored dot is derived from the first digit (2xx green, 4xx/5xx red)."
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:88
+#: assets/build/blocks/editor.js:1
+msgid "Response Body"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:93
+#: assets/build/blocks/editor.js:1
+msgid "Paste the example response here…"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:111
+msgid "Add one entry per HTTP status. Each becomes a tab. Click Add Item for another response."
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:136
+#: assets/build/blocks/editor.js:1
+msgid "Choose light or dark styling for the response block."
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:149
+msgid "Toggle the status tabs + copy button header."
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/CodeSnippetTab.php:296
+msgid "Tab Typography"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/Content.php:54
@@ -8963,7 +9112,7 @@ msgstr ""
 msgid "How did you feel?"
 msgstr ""
 
-#: includes/FrontEnd/TemplateTags.php:440
+#: includes/FrontEnd/TemplateTags.php:451
 msgid "Copy URL"
 msgstr ""
 
@@ -9033,7 +9182,7 @@ msgstr ""
 
 #: includes/REST/AIEdit.php:68
 #: includes/REST/DocsAISuite.php:99
-#: includes/REST/WriteWithAI.php:135
+#: includes/REST/WriteWithAI.php:140
 msgid "Write with AI is disabled. Enable it from BetterDocs settings."
 msgstr ""
 
@@ -9042,13 +9191,13 @@ msgid "AI API key is missing. Add one in BetterDocs settings."
 msgstr ""
 
 #: includes/REST/AIEdit.php:115
-#: includes/REST/WriteWithAI.php:323
+#: includes/REST/WriteWithAI.php:371
 msgid "Unknown AI action."
 msgstr ""
 
 #: includes/REST/AIEdit.php:123
-#: includes/REST/WriteWithAI.php:332
-#: includes/REST/WriteWithAI.php:365
+#: includes/REST/WriteWithAI.php:380
+#: includes/REST/WriteWithAI.php:424
 msgid "Please provide a prompt for the AI."
 msgstr ""
 
@@ -9060,7 +9209,7 @@ msgstr ""
 #: includes/REST/AIFaq.php:91
 #: includes/REST/AIGlossary.php:93
 #: includes/REST/DocsAISuite.php:183
-#: includes/REST/WriteWithAI.php:371
+#: includes/REST/WriteWithAI.php:430
 msgid "Unknown AI error."
 msgstr ""
 
@@ -9137,7 +9286,7 @@ msgstr ""
 #: includes/REST/AIFaq.php:58
 #: includes/REST/AIGlossary.php:63
 #: includes/REST/DocsAISuite.php:107
-#: includes/REST/WriteWithAI.php:143
+#: includes/REST/WriteWithAI.php:148
 msgid "OpenAI API key is missing. Add one in BetterDocs settings."
 msgstr ""
 
@@ -9271,133 +9420,204 @@ msgstr ""
 msgid "There are no changes to be saved."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:183
+#: includes/REST/WriteWithAI.php:188
 msgid "No outline provided to expand."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:186
+#: includes/REST/WriteWithAI.php:191
 msgid "Write the full documentation following EXACTLY this approved outline. Keep the heading order and levels:"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:195
+#: includes/REST/WriteWithAI.php:200
 msgid "Please paste some source content."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:199
+#: includes/REST/WriteWithAI.php:204
 msgid "support transcript"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:200
+#: includes/REST/WriteWithAI.php:205
 msgid "forum thread"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:201
+#: includes/REST/WriteWithAI.php:206
 msgid "raw notes"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:203
-#: includes/REST/WriteWithAI.php:299
+#: includes/REST/WriteWithAI.php:208
+#: includes/REST/WriteWithAI.php:347
 msgid "source material"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:208
+#: includes/REST/WriteWithAI.php:213
 msgid "The source below is a customer-support conversation. Focus on the user's problem and its resolution; ignore greetings and small talk."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:209
+#: includes/REST/WriteWithAI.php:214
 msgid "The source below is a forum discussion among multiple people. Treat the accepted or most-supported answer as authoritative and skip off-topic replies."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:210
+#: includes/REST/WriteWithAI.php:215
 msgid "The source below is rough notes. Expand them into clear, complete prose."
 msgstr ""
 
 #. translators: %s: source content type, e.g. "support transcript".
 #. translators: %s: the kind of Git source, e.g. "pull request" or "documentation file".
-#: includes/REST/WriteWithAI.php:219
-#: includes/REST/WriteWithAI.php:315
+#: includes/REST/WriteWithAI.php:224
+#: includes/REST/WriteWithAI.php:363
 msgid "Turn the following %s into structured documentation. Use only the information it contains; do not invent details:"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:234
-#: includes/REST/WriteWithAI.php:276
+#. translators: %s: the uploaded image file name.
+#: includes/REST/WriteWithAI.php:249
+msgid "Read the attached image \"%s\" and turn what it shows — its text, tables, diagrams, UI or screenshots — into structured documentation. Describe only what is actually visible in the image; do not invent details:"
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:261
+msgid "No readable text was found in that file."
+msgstr ""
+
+#. translators: %s: the uploaded file name.
+#: includes/REST/WriteWithAI.php:267
+msgid "Turn the content of the uploaded file \"%s\" into structured documentation. Use only the information it contains; do not invent details:"
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:282
+#: includes/REST/WriteWithAI.php:324
 msgid "Generating from Git is a BetterDocs Pro feature."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:244
-#: includes/REST/WriteWithAI.php:258
+#: includes/REST/WriteWithAI.php:292
+#: includes/REST/WriteWithAI.php:306
 msgid "Please choose a repository."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:268
+#: includes/REST/WriteWithAI.php:316
 msgid "Could not reach Git. Confirm Git Sync is connected."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:281
+#: includes/REST/WriteWithAI.php:329
 msgid "Please paste a Git URL (a pull request or a repository file)."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:291
+#: includes/REST/WriteWithAI.php:339
 msgid "Could not read anything from that Git URL. Check the link, or confirm Git Sync is connected."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:297
+#: includes/REST/WriteWithAI.php:345
 msgid "The fetched Git content was empty."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:304
+#: includes/REST/WriteWithAI.php:352
 msgid "The source below was fetched from a Git pull request or code change. Explain, in end-user documentation terms, what the feature does and how to use it — not the implementation details or code."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:305
+#: includes/REST/WriteWithAI.php:353
 msgid "The source below is an existing documentation file from a Git repository. Rewrite it as a fresh doc for this site, keeping the meaning but improving clarity and structure."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:306
+#: includes/REST/WriteWithAI.php:354
 msgid "Turn the source below into a concise, step-by-step how-to guide."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:341
+#: includes/REST/WriteWithAI.php:400
 msgid "The AI returned no content. Try again or rephrase your prompt."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:427
+#: includes/REST/WriteWithAI.php:487
+msgid "No file was received. Choose a file to write from."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:493
+msgid "The upload did not complete — please try again."
+msgstr ""
+
+#. translators: %s: maximum allowed size, e.g. "5 MB".
+#: includes/REST/WriteWithAI.php:501
+msgid "The file exceeds the %s limit."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:525
+msgid "Unsupported file type. Upload a .pdf, .docx, .txt, .md, or an image (.png, .jpg, .webp)."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:534
+msgid "Could not read the image file."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:541
+msgid "That file is not a valid PNG, JPG or WEBP image."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:578
+msgid "Could not read the file."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:583
+msgid "Reading .docx files needs the PHP Zip extension, which is not available on this server. Upload a .txt or .md instead."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:587
+msgid "Could not open that .docx file — it may be corrupt."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:593
+msgid "That .docx file has no readable document body."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:612
+msgid "Unsupported file type."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:634
+msgid "That does not look like a valid PDF file."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:642
+msgid "This PDF is password-protected or encrypted, so its text can't be read. Remove the protection, or paste the text instead."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:689
+msgid "No selectable text was found in that PDF — it may be a scanned image. Try a text-based PDF, or paste the content into the prompt."
+msgstr ""
+
+#: includes/REST/WriteWithAI.php:820
 msgid "Write documentation for the following request:"
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:445
+#: includes/REST/WriteWithAI.php:838
 msgid "Write in a warm, friendly, approachable tone."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:446
+#: includes/REST/WriteWithAI.php:839
 msgid "Write in a polished, professional tone."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:447
+#: includes/REST/WriteWithAI.php:840
 msgid "Write in a precise, technical tone suited to a technical audience."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:448
+#: includes/REST/WriteWithAI.php:841
 msgid "Write in a formal tone."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:449
+#: includes/REST/WriteWithAI.php:842
 msgid "Write in a casual, conversational tone."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:457
+#: includes/REST/WriteWithAI.php:850
 msgid "Keep the documentation concise — roughly 300–500 words, covering only the essential points."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:458
+#: includes/REST/WriteWithAI.php:851
 msgid "Aim for a moderate length — roughly 600–1000 words."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:459
+#: includes/REST/WriteWithAI.php:852
 msgid "Be comprehensive and in-depth — roughly 1200 words or more, with thorough coverage and examples."
 msgstr ""
 
-#: includes/REST/WriteWithAI.php:467
+#: includes/REST/WriteWithAI.php:860
 msgid "Begin the output with a single <h1> element containing a concise, descriptive title for this documentation, then continue with the body content."
 msgstr ""
 
@@ -9483,6 +9703,22 @@ msgstr ""
 
 #: includes/Utils/Database.php:30
 msgid "Key cannot be empty."
+msgstr ""
+
+#: includes/Utils/Helper.php:1527
+#: assets/build/blocks/editor.js:1
+msgid "Copy code to clipboard"
+msgstr ""
+
+#: includes/Utils/Helper.php:1542
+#: includes/Utils/Helper.php:1544
+#: assets/build/blocks/editor.js:1
+msgid "Copy"
+msgstr ""
+
+#: includes/Utils/Helper.php:1544
+#: assets/build/blocks/editor.js:1
+msgid "Copy failed"
 msgstr ""
 
 #: includes/Utils/Views.php:124
@@ -9749,18 +9985,9 @@ msgstr ""
 msgid "This is a preview of the AI Doc Summarizer. The actual AI-generated summary will appear here when viewed on the frontend."
 msgstr ""
 
-#: views/templates/parts/code-snippet.php:84
+#: views/templates/parts/code-snippet.php:146
 #: assets/build/blocks/editor.js:1
 msgid "File icon"
-msgstr ""
-
-#: views/templates/parts/code-snippet.php:105
-msgid "Copy code to clipboard"
-msgstr ""
-
-#: views/templates/parts/code-snippet.php:111
-#: assets/build/blocks/editor.js:1
-msgid "Copy to clipboard"
 msgstr ""
 
 #: views/templates/parts/credit.php:18
@@ -11205,11 +11432,6 @@ msgstr ""
 
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/quick-setup.js:1
-msgid "All"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/quick-setup.js:1
 msgid "There are no #tabs args defined in props."
 msgstr ""
 
@@ -12563,6 +12785,58 @@ msgid "Configurable data-retention windows"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:5
+msgid "URL sync"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Upload"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Endpoints"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Postman"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Payments API"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "OpenAPI 3.1"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Try it"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "API Documentation is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Upload an OpenAPI or Postman file — or point BetterDocs at its URL — and every endpoint becomes a real doc inside your knowledge base, searchable, styled like the rest of your docs, and re-synced whenever the spec changes."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "OpenAPI 3.x, Swagger 2.0 & Postman collections"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Every endpoint generated as a native, searchable doc"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Built-in \"Try it\" console with live request samples"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Re-sync from a URL to keep docs matching your API"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
 msgid "Drag to reorder"
 msgstr ""
 
@@ -13675,6 +13949,54 @@ msgid "breadcrumb"
 msgstr ""
 
 #: assets/build/blocks/editor.js:1
+msgid "CodeMirror failed to load. Using plain textarea."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Loading code editor..."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Add one entry per HTTP status. Each becomes a tab (200, 404, …)."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "+ Add response"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Toggle the status tabs + copy button."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Display a tooltip (‘Copied!’) on copy button hover or click."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Display line numbers in the response body."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Show HTTP responses as status-code tabs (200, 404, …), each with a copyable code example."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "response"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "api"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "http"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "status"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
 msgid "Heading Alignment"
 msgstr ""
 
@@ -13816,74 +14138,6 @@ msgstr ""
 
 #: assets/build/blocks/editor.js:1
 msgid "Category Name"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "CodeMirror failed to load. Using plain textarea."
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Loading code editor..."
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Code Settings"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Choose Programming Language"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "// Paste or type your code here..."
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Enter your code snippet. Use Tab for indentation. Syntax highlighting will appear in the preview."
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Filename"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "hero-section.tsx"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Enter the name to display in header (e.g., hero-section.tsx)"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Change Icon"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Upload Icon"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "File icon preview"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Display code snippets with syntax highlighting and copy functionality."
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "code"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "snippet"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "syntax"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "highlight"
 msgstr ""
 
 #: assets/build/blocks/editor.js:1
@@ -14150,6 +14404,78 @@ msgstr ""
 
 #: assets/build/blocks/editor.js:1
 msgid "betterdocs reactions"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Code Settings"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Choose Programming Language"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "// Paste or type your code here..."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Enter your code snippet. Use Tab for indentation. Syntax highlighting will appear in the preview."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Add the same snippet in other languages. When you add one or more, the header shows a language dropdown to switch between them."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Programming Language"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "+ Add Language"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Filename"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "hero-section.tsx"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Enter the name to display in header (e.g., hero-section.tsx)"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Change Icon"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Upload Icon"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "File icon preview"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "Display code snippets with syntax highlighting and copy functionality."
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "code"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "snippet"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "syntax"
+msgstr ""
+
+#: assets/build/blocks/editor.js:1
+msgid "highlight"
 msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
@@ -14453,6 +14779,10 @@ msgid "From Git"
 msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
+msgid "From Attachment"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
 msgid "to use this Write with AI feature."
 msgstr ""
 
@@ -14529,6 +14859,26 @@ msgid "Add extra instructions for this doc, or tap a suggestion above — e.g. \
 msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
+msgid "Upload a file to write from:"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
+msgid "Click to choose a file"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
+msgid "PDF, DOCX, TXT, MD, or an image (PNG/JPG/WEBP) — up to 5 MB"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
+msgid "Optional: how should BetterDocs AI treat this file? — e.g. \"Turn this into a step-by-step how-to guide.\""
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
+msgid "BetterDocs AI reads the file's text and writes only from its content — it won't invent details."
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
 msgid "Advanced settings"
 msgstr ""
 
@@ -14549,6 +14899,10 @@ msgid "Generate from Git"
 msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
+msgid "Generate from attachment"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
 msgid "Connect an API key in Settings → AI to enable generation."
 msgstr ""
 
@@ -14562,6 +14916,10 @@ msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Fetching from Git"
+msgstr ""
+
+#: assets/build/blocks/write-with-ai.js:2
+msgid "Reading your file"
 msgstr ""
 
 #: assets/build/blocks/write-with-ai.js:2
@@ -14642,6 +15000,48 @@ msgctxt "block description"
 msgid "Represent knowledge base categories with amazing grid view."
 msgstr ""
 
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block title"
+msgid "BetterDocs Code Snippet Tab"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block description"
+msgid "Show HTTP responses as status-code tabs (200, 404, …), each with a copyable code example."
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block keyword"
+msgid "response"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block keyword"
+msgid "api"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block keyword"
+msgid "http"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+msgctxt "block keyword"
+msgid "status"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+#: assets/build/blocks/code-snippet/block.json
+msgctxt "block keyword"
+msgid "code"
+msgstr ""
+
+#: assets/build/blocks/code-snippet-tab/block.json
+#: assets/build/blocks/code-snippet/block.json
+msgctxt "block keyword"
+msgid "betterdocs"
+msgstr ""
+
 #: assets/build/blocks/code-snippet/block.json
 msgctxt "block title"
 msgid "BetterDocs Code Snippet"
@@ -14650,11 +15050,6 @@ msgstr ""
 #: assets/build/blocks/code-snippet/block.json
 msgctxt "block description"
 msgid "Insert stylized, language-aware code blocks with copy-to-clipboard functionality."
-msgstr ""
-
-#: assets/build/blocks/code-snippet/block.json
-msgctxt "block keyword"
-msgid "code"
 msgstr ""
 
 #: assets/build/blocks/code-snippet/block.json
@@ -14675,11 +15070,6 @@ msgstr ""
 #: assets/build/blocks/code-snippet/block.json
 msgctxt "block keyword"
 msgid "programming"
-msgstr ""
-
-#: assets/build/blocks/code-snippet/block.json
-msgctxt "block keyword"
-msgid "betterdocs"
 msgstr ""
 
 #: assets/build/blocks/doc-archive-list/block.json

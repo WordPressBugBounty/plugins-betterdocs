@@ -1475,6 +1475,15 @@ class Request extends Base {
 	public function parse( $wp ) {
 		static::$already_parsed = true;
 
+		// An API Reference rewrite rule already matched (/docs/api/{slug}).
+		// The permalink magic below re-interprets the raw path against the
+		// docs/category/KB structures and would hijack the request whenever a
+		// doc_category or knowledge_base term shares the reference's slug —
+		// an explicit CPT match always wins.
+		if ( isset( $wp->query_vars['betterdocs_api_ref'] ) ) {
+			return;
+		}
+
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- legacy public filter name, retained for back-compat with Pro/extensions.
         $this->perma_structure = apply_filters('docs_rewrite_rules', $this->perma_structure);
 

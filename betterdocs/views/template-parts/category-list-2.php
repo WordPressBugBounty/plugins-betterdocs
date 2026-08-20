@@ -42,7 +42,8 @@ use WPDeveloper\BetterDocs\Utils\Helper;
                 echo wp_sprintf(
                     '<li><a %1$s>%2$s</a></li>',
                     $_link_attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    betterdocs()->template_helper->kses( get_the_title() ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    // Same per-item filter as category-list.php (API method badges etc.).
+                    apply_filters( 'betterdocs_docs_list_item_title', betterdocs()->template_helper->kses( get_the_title() ), get_the_ID() ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 );
             endwhile;
 

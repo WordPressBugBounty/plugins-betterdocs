@@ -122,6 +122,85 @@ class SingleDoc extends Section {
 		);
 	}
 
+	/**
+	 * Content area width for the single doc, mirroring the Docs Page pair.
+	 *
+	 * Only meaningful on the layouts whose content wrapper is actually capped
+	 * by the stylesheet — 1, 5, 6, 8, 9 and 10. Layouts 2, 3 and 4 are
+	 * full-bleed by design and have no width to constrain, so both controls are
+	 * hidden for them in customizer-condition.js (the codebase drives control
+	 * visibility from JS bound to the layout setting, not active_callback).
+	 */
+	public function single_doc_content_area_width() {
+		$this->customizer->add_setting(
+			'betterdocs_single_doc_content_width',
+			apply_filters(
+				'betterdocs_single_doc_content_width',
+				[
+					'default'           => $this->defaults['betterdocs_single_doc_content_width'],
+					'capability'        => 'edit_theme_options',
+					'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+				]
+			)
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_single_doc_content_width',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_single_doc_content_width',
+					'label'       => __( 'Content Area Width', 'betterdocs' ),
+					'priority'    => 103,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 0,
+						'max'    => 100,
+						'step'   => 1,
+						'suffix' => '%' //optional suffix
+					]
+				]
+			)
+		);
+	}
+
+	public function single_doc_content_area_max_width() {
+		$this->customizer->add_setting(
+			'betterdocs_single_doc_content_max_width',
+			apply_filters(
+				'betterdocs_single_doc_content_max_width',
+				[
+					'default'           => $this->defaults['betterdocs_single_doc_content_max_width'],
+					'capability'        => 'edit_theme_options',
+					'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+				]
+			)
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_single_doc_content_max_width',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_single_doc_content_max_width',
+					'label'       => __( 'Content Area Maximum Width', 'betterdocs' ),
+					'priority'    => 103,
+					'input_attrs' => [
+						'class'  => 'betterdocs-range-value',
+						'min'    => 100,
+						'max'    => 1600,
+						'step'   => 1,
+						'suffix' => 'px' //optional suffix
+					]
+				]
+			)
+		);
+	}
+
 	public function doc_single_content_area_bg_color() {
 		$this->customizer->add_setting(
 			'betterdocs_doc_single_content_area_bg_color',

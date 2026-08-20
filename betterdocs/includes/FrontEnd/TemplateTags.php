@@ -234,10 +234,21 @@ class TemplateTags extends Base {
 
 	/**
 	 * Is Valid Tag
+	 *
+	 * Returns the tag only when it is in the allowlist, otherwise 'div'. This is
+	 * an output-safety control: several templates interpolate the result straight
+	 * into an opening/closing tag name. It is called with values that originate
+	 * in request/attribute data, which can arrive as a non-string (e.g. an array
+	 * `title_tag[]=…`), so guard against that instead of letting strtolower()
+	 * throw a TypeError on PHP 8 and fatal the render.
+	 *
 	 * @param string $tag
 	 * @return string
 	 */
 	public function is_valid_tag( $tag ) {
+		if ( ! is_string( $tag ) || '' === $tag ) {
+			return 'div';
+		}
 		return in_array( strtolower( $tag ), self::ALLOWED_HTML_TAGS ) ? $tag : 'div';
 	}
 

@@ -48,6 +48,12 @@ class Defaults extends Base {
 			'betterdocs_doc_page_content_padding_left'     => '0',
 			'betterdocs_doc_page_content_width'            => '100',
 			'betterdocs_doc_page_content_max_width'        => '1400',
+			// Single doc content area. Defaults mirror the stock stylesheet
+			// (width:100%; max-width:1400px on every layout that has a capped
+			// content wrapper), so existing sites render identically until the
+			// sliders are actually moved.
+			'betterdocs_single_doc_content_width'          => '100',
+			'betterdocs_single_doc_content_max_width'      => '1400',
 			'betterdocs_doc_page_column_settings'          => '',
 			'betterdocs_sleek_docs_page_column_number'     => '4',
 			'betterdocs_doc_page_column_space'             => '15',

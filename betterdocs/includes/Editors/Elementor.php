@@ -28,6 +28,7 @@ use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Basic\FAQ;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Reactions;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Navigation;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\CodeSnippet;
+use WPDeveloper\BetterDocs\Editors\Elementor\Widget\CodeSnippetTab;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\ArchiveList;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\PrintButton;
 use WPDeveloper\BetterDocs\Editors\Elementor\Widget\Breadcrumbs;
@@ -698,7 +699,8 @@ class Elementor extends BaseEditor {
             'betterdocs-elementor-category-box'      => CategoryBox::class,
             'betterdocs-elementor-category-slate'    => CategorySlateLayout::class,
             'betterdocs-faq-widget'                  => FAQ::class,
-            'betterdocs-code-snippet'                => CodeSnippet::class
+            'betterdocs-code-snippet'                => CodeSnippet::class,
+            'betterdocs-code-snippet-tab'            => CodeSnippetTab::class
         ];
 
         return $widget_arr;
@@ -761,12 +763,14 @@ class Elementor extends BaseEditor {
         $assets->register( 'betterdocs-el-articles-list', 'elementor/css/articles-list.css' );
         $assets->register( 'betterdocs-el-navigation', 'elementor/css/navigation.css' );
         $assets->register( 'betterdocs-code-snippet', 'public/css/code-snippet.css' );
+        $assets->register( 'betterdocs-code-snippet-tab', 'public/css/code-snippet-tab.css' );
 
         /**
          * Widget's JS
          */
         $assets->register( 'betterdocs-el-category-grid', 'elementor/js/category-grid.js', ['jquery', 'betterdocs-category-toggler'] );
         $assets->register( 'betterdocs-code-snippet', 'public/js/code-snippet.js', ['jquery'] );
+        $assets->register( 'betterdocs-code-snippet-tab', 'public/js/code-snippet-tab.js', ['jquery'] );
 
         /**
          * Localize This In Order To Know If This Block Is Arriving From Betterdocs Templates Or Not

@@ -203,7 +203,8 @@ foreach ( $_nested_categories as $_nested_category ) :
 						'<li>%s<a %s>%s</a></li>',
 						$_icon, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						$_link_attributes, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						betterdocs()->template_helper->kses( get_the_title() ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						// Same per-item filter as category-list.php (API method badges etc.).
+						apply_filters( 'betterdocs_docs_list_item_title', betterdocs()->template_helper->kses( get_the_title() ), get_the_ID() ) //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					);
 				endwhile;
 			}

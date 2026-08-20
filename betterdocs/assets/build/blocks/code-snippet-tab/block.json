@@ -1,16 +1,16 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "betterdocs/code-snippet",
-	"title": "BetterDocs Code Snippet",
+	"name": "betterdocs/code-snippet-tab",
+	"title": "BetterDocs Code Snippet Tab",
 	"category": "betterdocs",
-	"description": "Insert stylized, language-aware code blocks with copy-to-clipboard functionality.",
+	"description": "Show HTTP responses as status-code tabs (200, 404, …), each with a copyable code example.",
 	"keywords": [
+		"response",
+		"api",
+		"http",
+		"status",
 		"code",
-		"snippet",
-		"syntax",
-		"highlight",
-		"programming",
 		"betterdocs"
 	],
 	"textdomain": "betterdocs",
@@ -25,23 +25,21 @@
 			"type": "string",
 			"default": "Desktop"
 		},
-		"codeContent": {
-			"type": "string",
-			"default": ""
-		},
-		"language": {
-			"type": "string",
-			"default": "javascript"
-		},
-		"codeVariants": {
+		"responses": {
 			"type": "array",
-			"default": []
+			"default": [
+				{
+					"status": "200",
+					"language": "json",
+					"codeContent": "{\n  \"success\": true\n}"
+				}
+			]
 		},
-		"showLanguageLabel": {
+		"showCopyButton": {
 			"type": "boolean",
 			"default": true
 		},
-		"showCopyButton": {
+		"showHeader": {
 			"type": "boolean",
 			"default": true
 		},

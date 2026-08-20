@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\Editors\Elementor\Widget;
 use WPDeveloper\BetterDocs\Editors\Elementor\BaseWidget;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
+use Elementor\Repeater;
 
 class CodeSnippet extends BaseWidget {
 
@@ -75,6 +76,7 @@ class CodeSnippet extends BaseWidget {
                     'python'      => __( 'Python', 'betterdocs' ),
                     'java'        => __( 'Java', 'betterdocs' ),
                     'ruby'        => __( 'Ruby', 'betterdocs' ),
+                    'curl'        => __( 'cURL', 'betterdocs' ),
                     'bash'        => __( 'Bash', 'betterdocs' ),
                     'json'        => __( 'JSON', 'betterdocs' ),
                     'yaml'        => __( 'YAML', 'betterdocs' ),
@@ -91,6 +93,64 @@ class CodeSnippet extends BaseWidget {
                     'typescript'  => __( 'TypeScript', 'betterdocs' ),
                 ],
                 'description' => __( 'Choose language for syntax highlighting.', 'betterdocs' ),
+            ]
+        );
+
+        // Additional languages → renders a Mintlify-style language dropdown.
+        $variant_repeater = new Repeater();
+
+        $variant_repeater->add_control(
+            'variant_language',
+            [
+                'label'   => __( 'Language', 'betterdocs' ),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'php',
+                'options' => [
+                    'javascript'  => __( 'JavaScript', 'betterdocs' ),
+                    'php'         => __( 'PHP', 'betterdocs' ),
+                    'python'      => __( 'Python', 'betterdocs' ),
+                    'java'        => __( 'Java', 'betterdocs' ),
+                    'ruby'        => __( 'Ruby', 'betterdocs' ),
+                    'curl'        => __( 'cURL', 'betterdocs' ),
+                    'bash'        => __( 'Bash', 'betterdocs' ),
+                    'json'        => __( 'JSON', 'betterdocs' ),
+                    'yaml'        => __( 'YAML', 'betterdocs' ),
+                    'html'        => __( 'HTML', 'betterdocs' ),
+                    'css'         => __( 'CSS', 'betterdocs' ),
+                    'sql'         => __( 'SQL', 'betterdocs' ),
+                    'xml'         => __( 'XML', 'betterdocs' ),
+                    'cpp'         => __( 'C++', 'betterdocs' ),
+                    'csharp'      => __( 'C#', 'betterdocs' ),
+                    'go'          => __( 'Go', 'betterdocs' ),
+                    'rust'        => __( 'Rust', 'betterdocs' ),
+                    'swift'       => __( 'Swift', 'betterdocs' ),
+                    'kotlin'      => __( 'Kotlin', 'betterdocs' ),
+                    'typescript'  => __( 'TypeScript', 'betterdocs' ),
+                ],
+            ]
+        );
+
+        $variant_repeater->add_control(
+            'variant_code',
+            [
+                'label'       => __( 'Code', 'betterdocs' ),
+                'type'        => Controls_Manager::CODE,
+                'language'    => 'html',
+                'rows'        => 10,
+                'default'     => '',
+                'placeholder' => __( 'Paste or type your code here…', 'betterdocs' ),
+            ]
+        );
+
+        $this->add_control(
+            'code_variants',
+            [
+                'label'       => __( 'Additional Languages', 'betterdocs' ),
+                'type'        => Controls_Manager::REPEATER,
+                'fields'      => $variant_repeater->get_controls(),
+                'default'     => [],
+                'title_field' => '{{{ variant_language }}}',
+                'description' => __( 'Add the same snippet in other languages. A language dropdown appears when you add one or more.', 'betterdocs' ),
             ]
         );
 
@@ -144,23 +204,6 @@ class CodeSnippet extends BaseWidget {
                 'description'  => __( 'Show a one-click copy-to-clipboard icon.', 'betterdocs' ),
                 'condition'    => [
                     'show_header' => 'yes',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'show_copy_tooltip',
-            [
-                'label'        => __( 'Enable copy tooltip', 'betterdocs' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => __( 'Show', 'betterdocs' ),
-                'label_off'    => __( 'Hide', 'betterdocs' ),
-                'return_value' => 'yes',
-                'default'      => 'no',
-                'description'  => __( 'Display a tooltip (‘Copied!’) on copy button hover or click.', 'betterdocs' ),
-                'condition'    => [
-                    'show_header' => 'yes',
-                    'show_copy_button' => 'yes',
                 ],
             ]
         );
@@ -583,12 +626,36 @@ class CodeSnippet extends BaseWidget {
     public function view_params() {
         $settings = $this->get_settings_for_display();
 
+        // Combined [primary + additional] language list — the shared template
+        // renders a dropdown when it holds more than one entry.
+        $variants = [];
+        if ( ! empty( $settings['code_content'] ) ) {
+            $variants[] = [
+                'language'  => $settings['language'],
+                'code'      => $settings['code_content'],
+                'file_name' => isset( $settings['file_name'] ) ? $settings['file_name'] : ''
+            ];
+        }
+        if ( ! empty( $settings['code_variants'] ) && is_array( $settings['code_variants'] ) ) {
+            foreach ( $settings['code_variants'] as $variant ) {
+                $code = isset( $variant['variant_code'] ) ? (string) $variant['variant_code'] : '';
+                if ( '' === $code ) {
+                    continue;
+                }
+                $variants[] = [
+                    'language'  => isset( $variant['variant_language'] ) ? $variant['variant_language'] : 'javascript',
+                    'code'      => $code,
+                    'file_name' => ''
+                ];
+            }
+        }
+
         return [
             'code_content'       => $settings['code_content'],
             'language'           => $settings['language'],
+            'code_variants'      => $variants,
             'show_language_label' => $settings['show_language_label'] === 'yes',
             'show_copy_button'   => $settings['show_copy_button'] === 'yes',
-            'show_copy_tooltip'  => isset( $settings['show_copy_tooltip'] ) ? $settings['show_copy_tooltip'] === 'yes' : false,
             'show_header'        => isset( $settings['show_header'] ) ? $settings['show_header'] === 'yes' : true,
             'show_line_numbers'  => $settings['show_line_numbers'] === 'yes',
             'theme'              => $settings['theme'],

@@ -25,6 +25,7 @@ use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\BetterdocsPrint;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocAuthor;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\DocsTag;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CodeSnippet;
+use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CodeSnippetTab;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\Blocks\CategorySlateLayout;
 
 return [
@@ -201,6 +202,14 @@ return [
 		'value'      => 'code-snippet',
 		'visibility' => true,
 		'object'     => CodeSnippet::class,
+		'demo'       => '',
+		'docs'       => ''
+	],
+	'code-snippet-tab'  => [
+		'label'      => __( 'BetterDocs Code Snippet Tab', 'betterdocs' ),
+		'value'      => 'code-snippet-tab',
+		'visibility' => true,
+		'object'     => CodeSnippetTab::class,
 		'demo'       => '',
 		'docs'       => ''
 	]

@@ -130,7 +130,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.8.1';
+    public $version = '4.8.2';
 
     /**
      * WriteWithAI Class
@@ -428,6 +428,33 @@ final class Plugin {
         return false;
     }
 
+    /**
+     * Whether Pro provides the real API Documentation screen.
+     *
+     * Pro flips this via `betterdocs_pro_has_api_docs`; the class_exists() default
+     * keeps the gate correct against a Pro build that predates that filter.
+     *
+     * @return bool
+     */
+    public function has_api_docs() {
+        return (bool) apply_filters(
+            'betterdocs_pro_has_api_docs',
+            class_exists( '\\WPDeveloper\\BetterDocsPro\\Core\\ApiReferences' )
+        );
+    }
+
+    /**
+     * Whether Free should show its locked API Docs teaser.
+     *
+     * Only without Pro. An older Pro has already paid, so they get nothing here —
+     * they need a plugin update, not an upsell.
+     *
+     * @return bool
+     */
+    public function show_api_docs_teaser() {
+        return ! $this->is_pro_active() && ! $this->has_api_docs();
+    }
+
     public function pro_version() {
         if ( ! $this->is_pro_active() ) {
             return false;
@@ -485,6 +512,7 @@ final class Plugin {
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
+            'betterdocs_page_betterdocs-api-docs',
             'betterdocs_page_betterdocs-doc-categories',
             'betterdocs_page_betterdocs-doc-tags',
         ) );
@@ -510,6 +538,7 @@ final class Plugin {
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
+            'betterdocs_page_betterdocs-api-docs',
             'betterdocs_page_betterdocs-doc-categories',
             'betterdocs_page_betterdocs-doc-tags',
             'edit-docs'
