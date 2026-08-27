@@ -493,7 +493,7 @@ class FAQBuilder extends Base {
 			wp_send_json_error( __( 'Nonce Failed', 'betterdocs' ) );
 		}
 
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
+		if ( ! $this->can_manage_faqs() ) {
 			wp_send_json_error( __( 'You don\'t have permission to manage FAQ groups.', 'betterdocs' ) );
 		}
 
@@ -568,6 +568,37 @@ class FAQBuilder extends Base {
 		return $pieces;
 	}
 
+	/**
+	 * Whether the current user may manage FAQ groups and FAQs.
+	 *
+	 * Two capabilities, either of which is enough. Nothing that could reach
+	 * these routes before can be turned away now — the gate only widens.
+	 *
+	 * - `edit_others_posts` is the original gate, kept verbatim for backward
+	 *   compatibility: every site that granted FAQ Builder access by granting a
+	 *   core editor-level role keeps working exactly as it did.
+	 * - `edit_others_docs` is the BetterDocs-side answer, added in 4.9.0. The
+	 *   `betterdocs_faq` post type is registered with
+	 *   `capability_type => [ 'doc', 'docs' ]` and `map_meta_cap => true`, so
+	 *   WordPress already governs individual FAQ posts with the docs capability
+	 *   family — the routes were the one place that asked for a *core* post
+	 *   capability instead. A documentation-only role (BetterDocs' own `editor`
+	 *   bucket, or anything Pro's `article_roles` grants) could edit every FAQ
+	 *   post through `wp/v2/betterdocs_faq` and still get a 403 from the FAQ
+	 *   Builder's own API.
+	 *
+	 * It is also what lines the REST routes up with the MCP FAQ abilities, which
+	 * are gated on `edit_others_docs`: an agent that may create an FAQ through
+	 * `bd-create-faq` reaches these same routes underneath.
+	 *
+	 * @since 4.9.0
+	 *
+	 * @return bool
+	 */
+	private function can_manage_faqs() {
+		return current_user_can( 'edit_others_posts' ) || current_user_can( 'edit_others_docs' );
+	}
+
 	public function register_api_endpoint() {
 		register_rest_route(
 			$this->namespace,
@@ -576,7 +607,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'create_faq_sample' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -588,7 +619,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'fetch_faq_posts' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -600,7 +631,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'create_faq_category' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -612,7 +643,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_faq_category' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -624,7 +655,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'delete_faq_category' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -636,7 +667,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'create_betterdocs_faq' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -648,7 +679,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_betterdocs_faq' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -660,7 +691,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'delete_betterdocs_faq' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -672,7 +703,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_category_status' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -684,7 +715,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_faq_category_order' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -696,7 +727,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_faq_order_by_category' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -708,7 +739,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'POST' ],
 				'callback'            => [ $this, 'update_faq_order_preference' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -720,7 +751,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'get_uncategorised_faq' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				}
 			]
 		);
@@ -732,7 +763,7 @@ class FAQBuilder extends Base {
 				'methods'             => [ 'GET' ],
 				'callback'            => [ $this, 'category_search' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_others_posts' );
+					return $this->can_manage_faqs();
 				},
 				'args'                => [
 					'title' => [
@@ -1326,7 +1357,7 @@ class FAQBuilder extends Base {
 		$posts = get_posts(
 			[
 				'post_type'      => 'betterdocs_faq',
-				'post_status'    => current_user_can( 'edit_others_posts' ) ? [ 'publish', 'draft' ] : 'publish',
+				'post_status'    => $this->can_manage_faqs() ? [ 'publish', 'draft' ] : 'publish',
 				'posts_per_page' => -1,
 				'tax_query'      => $tax_query,
 				'meta_query'     => $meta_query,

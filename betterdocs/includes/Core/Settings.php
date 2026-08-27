@@ -344,7 +344,19 @@ class Settings extends Base {
             'betterdocs_access_control_repeater' => array(),
             'internal_knowledge_base_type' => 'basic',
             'betterdocs_access_control_repeater_kb' => array(),
-            'enable_git_integration' => false
+            'enable_git_integration' => false,
+            /**
+             * MCP master switch. Off by default; the toggle lives on the
+             * BetterDocs → MCP page, not in the settings tree, and writes
+             * through POST betterdocs/v1/settings.
+             *
+             * The key has to be listed here or `get()` cannot see it at all:
+             * it answers `$default` for anything absent from the defaults
+             * array, whatever the stored option holds.
+             *
+             * @since 4.9.0
+             */
+            'enable_mcp' => ''
         );
 
         $_default = apply_filters( 'betterdocs_default_settings', $_default );

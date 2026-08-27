@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterDocs 4.8.2\n"
+"Project-Id-Version: BetterDocs 4.9.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterdocs\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-20T07:07:23+00:00\n"
+"POT-Creation-Date: 2026-08-27T06:55:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -17,13 +17,15 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: betterdocs.php
+#: includes/Abilities/AbilitiesRegistrar.php:133
 #: includes/Admin/Customizer/Customizer.php:66
-#: includes/Core/PostType.php:1161
+#: includes/Core/PostType.php:1254
 #: includes/Core/UnifiedMetabox.php:71
 #: includes/Editors/BlockEditor.php:43
 #: includes/Editors/Elementor.php:711
 #: includes/Editors/Elementor/SingleDocs.php:104
 #: views/templates/parts/credit.php:20
+#: assets/build/admin/js/dashboard.js:19
 msgid "BetterDocs"
 msgstr ""
 
@@ -45,6 +47,1197 @@ msgstr ""
 #. Author URI of the plugin
 #: betterdocs.php
 msgid "https://wpdeveloper.com"
+msgstr ""
+
+#: includes/Abilities/AbilitiesRegistrar.php:134
+msgid "Create and manage docs, categories, tags, FAQs, knowledge bases, settings and analytics."
+msgstr ""
+
+#: includes/Abilities/AbilitiesRegistrar.php:432
+#: assets/build/admin/js/dashboard.js:15
+msgid "WordPress core"
+msgstr ""
+
+#: includes/Abilities/AbilitiesRegistrar.php:433
+msgid "BetterDocs' bundled runtime"
+msgstr ""
+
+#: includes/Abilities/AbilitiesRegistrar.php:434
+msgid "another plugin"
+msgstr ""
+
+#: includes/Abilities/AbilitiesRegistrar.php:435
+msgid "nobody"
+msgstr ""
+
+#. translators: 1: capability name, 2: what the caller was trying to do.
+#: includes/Abilities/AbilityError.php:49
+msgid "You need the \"%1$s\" capability to %2$s."
+msgstr ""
+
+#: includes/Abilities/AbilityError.php:56
+msgid "Ask an administrator to grant it (bd-get-status lists missing capabilities)."
+msgstr ""
+
+#. translators: %s: feature name.
+#: includes/Abilities/AbilityError.php:80
+msgid "%s need BetterDocs Pro, which is installed but not active on this site."
+msgstr ""
+
+#. translators: %s: feature name.
+#: includes/Abilities/AbilityError.php:84
+msgid "%s need BetterDocs Pro, which is active but has no valid licence on this site."
+msgstr ""
+
+#. translators: %s: feature name.
+#: includes/Abilities/AbilityError.php:88
+msgid "%s need BetterDocs Pro, which is not installed on this site."
+msgstr ""
+
+#. translators: %s: feature name.
+#: includes/Abilities/AbilityError.php:123
+msgid "%s is off. Enable it and this will work (from the next request)."
+msgstr ""
+
+#. translators: 1: object type, 2: identifier.
+#: includes/Abilities/AbilityError.php:178
+msgid "No %1$s found with the id %2$s."
+msgstr ""
+
+#. translators: %s: MCP tool name.
+#: includes/Abilities/AbilityError.php:255
+msgid "The credential this connection uses is read-only, so \"%s\" cannot run."
+msgstr ""
+
+#. translators: %s: MCP tool name.
+#: includes/Abilities/AbilityError.php:279
+msgid "There is no tool called \"%s\" on this site. Call tools/list for the current catalog."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:54
+msgid "Get doc analytics"
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:55
+msgid "Read one doc's views, unique views and reactions, for all time or a date range, optionally broken down by day. BetterDocs Free counts a view only when someone opens the single doc page in a browser, so these are page views, not REST reads. Site-wide analytics is bd-get-analytics, which needs BetterDocs Pro."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:87
+msgid "The doc to report on. Required."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:91
+msgid "First day to count, as YYYY-MM-DD. Omit for all time."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:95
+msgid "Last day to count, as YYYY-MM-DD, inclusive. Omit for all time."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:101
+msgid "day also returns a per-day series. Days with no activity are absent from it rather than reported as zero."
+msgstr ""
+
+#: includes/Abilities/Analytics/GetDocAnalytics.php:192
+msgid "start_date is after end_date."
+msgstr ""
+
+#. translators: 1: field name, 2: the value sent.
+#: includes/Abilities/Analytics/GetDocAnalytics.php:330
+msgid "%1$s must be a date as YYYY-MM-DD; got \"%2$s\"."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:62
+msgid "Create doc"
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:63
+msgid "Create a BetterDocs doc. Content is markdown by default and is converted to WordPress blocks. Categories, tags and glossary terms may be given by id or by name — a name that does not exist yet is created. Knowledge bases must already exist. Glossary terms need the enable_glossaries setting on."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:95
+msgid "The doc title. Required."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:99
+msgid "The body, in the format named by content_format."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:105
+msgid "How to read content: markdown (default, converted to blocks), html (converted to blocks) or blocks (already serialised block markup)."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:111
+msgid "Publication status. Publishing needs the publish_docs capability."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:115
+msgid "Optional summary. Plain text."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:117
+msgid "Doc categories, by id or name. A name that does not exist is created."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:118
+msgid "Doc tags, by id or name. A name that does not exist is created."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:119
+msgid "Knowledge bases, by id, slug or name. Never created here — use bd-create-knowledge-base."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:120
+msgid "Glossary terms, by id or name. A name that does not exist is created. Needs the enable_glossaries setting on."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:123
+msgid "User id to credit. Defaults to the calling user; setting someone else needs edit_others_docs."
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:158
+msgid "create a doc"
+msgstr ""
+
+#: includes/Abilities/Docs/CreateDoc.php:162
+msgid "The doc was not created and WordPress reported no reason."
+msgstr ""
+
+#: includes/Abilities/Docs/DeleteDoc.php:40
+msgid "Delete doc"
+msgstr ""
+
+#: includes/Abilities/Docs/DeleteDoc.php:41
+msgid "Trash a BetterDocs doc, or delete it permanently with force:true. Trashing is reversible; force is not."
+msgstr ""
+
+#: includes/Abilities/Docs/DeleteDoc.php:73
+msgid "The doc id to delete. Required."
+msgstr ""
+
+#: includes/Abilities/Docs/DeleteDoc.php:78
+msgid "false (default) moves the doc to the trash and can be undone. true deletes it permanently."
+msgstr ""
+
+#. translators: %d: doc id.
+#: includes/Abilities/Docs/DeleteDoc.php:122
+#: includes/Abilities/Docs/DeleteDoc.php:142
+msgid "delete doc #%d"
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:55
+msgid "Get doc"
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:56
+msgid "Read one BetterDocs doc by id or slug: its raw block content, its rendered HTML, its categories, tags and knowledge bases, its view and reaction counts, and which FAQ groups its FAQ blocks show."
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:87
+msgid "The doc id. Give this or slug."
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:91
+msgid "The doc slug, as it appears in the URL. Give this or id."
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:97
+msgid "edit (default) includes the raw block content, and quietly falls back to view for a doc you may read but not edit; view returns only the rendered HTML."
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:152
+msgid "Give either id or slug."
+msgstr ""
+
+#. translators: %d: doc id.
+#: includes/Abilities/Docs/GetDoc.php:174
+#: includes/Abilities/Docs/GetDoc.php:193
+msgid "read doc #%d"
+msgstr ""
+
+#: includes/Abilities/Docs/GetDoc.php:249
+msgid "look a doc up by slug"
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:61
+msgid "List docs"
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:62
+msgid "List and filter BetterDocs docs by search text, category, tag, knowledge base, glossary term, status, author or slug. Terms may be given by id, slug or name; a filter never creates a term. Returns a page of doc summaries. total counts every match, while items omits any doc this user may not read, so a page can be shorter than total suggests."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:93
+msgid "Free-text search over title and content."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:97
+msgid "A doc category, by id, slug or name. Never created."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:101
+msgid "A doc tag, by id, slug or name. Never created."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:105
+msgid "A knowledge base, by id, slug or name. Never created."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:109
+msgid "A glossary term, by id, slug or name. Never created. Needs the enable_glossaries setting on."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:115
+msgid "Publication status to filter on. Defaults to any."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:119
+msgid "Only docs by this user id."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:123
+msgid "Only the doc with this exact slug."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:129
+msgid "Sort field. relevance only means anything alongside search."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:146
+msgid "Docs per page, 1–100."
+msgstr ""
+
+#: includes/Abilities/Docs/ListDocs.php:238
+msgid "list docs"
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:45
+msgid "Update doc"
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:46
+msgid "Update a BetterDocs doc by id. Only the fields you send change. content replaces the whole body; append_content adds to the end of it. Category, tag, knowledge base and glossary term lists REPLACE what the doc has — omit them to leave the terms alone."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:77
+msgid "The doc id to update. Required."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:80
+msgid "A new title. Omit to leave it alone."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:82
+msgid "Replacement body, in the format named by content_format. Omit to leave the body alone."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:86
+msgid "Content to add to the end of the doc, in the format named by content_format. The existing blocks are left byte-identical. Cannot be combined with content."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:89
+msgid "A new publication status. Omit to leave it alone."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:93
+msgid "REPLACES the doc categories, by id or name. A name that does not exist is created. Omit to leave them alone; send [] to clear them."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:94
+msgid "REPLACES the doc tags, by id or name. A name that does not exist is created. Omit to leave them alone; send [] to clear them."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:95
+msgid "REPLACES the knowledge bases, by id, slug or name. Never created here. Omit to leave them alone; send [] to clear them."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:96
+msgid "REPLACES the glossary terms, by id or name. A name that does not exist is created. Omit to leave them alone; send [] to clear them. Needs the enable_glossaries setting on."
+msgstr ""
+
+#. translators: %d: doc id.
+#: includes/Abilities/Docs/UpdateDoc.php:127
+#: includes/Abilities/Docs/UpdateDoc.php:170
+msgid "edit doc #%d"
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:136
+msgid "Send either content (replaces the body) or append_content (adds to it), not both."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:159
+msgid "Nothing to update: send at least one field besides id."
+msgstr ""
+
+#: includes/Abilities/Docs/UpdateDoc.php:198
+msgid "read the doc before appending to it"
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:56
+msgid "Attach FAQ groups to a doc"
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:57
+msgid "Show FAQ groups on a doc. Attaching writes a betterdocs/faq block into the doc content (there is no relation field). Re-running with the same groups is a no-op. Use replace_faq_blocks to narrow to a different set. Bare-id FAQ blocks already in the doc are repaired to the form the block editor can read."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:89
+msgid "The doc to attach the FAQ groups to. Required."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:94
+msgid "FAQ groups to show, by id."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:99
+msgid "FAQ groups to show, by name or slug. They must already exist — this tool never creates one; use bd-create-faq-group."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:105
+msgid "append adds a block unless one already filters on exactly these groups. replace_faq_blocks removes every FAQ block in the doc first, so the doc ends up showing these groups and nothing else; with no groups at all it just removes them."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:110
+msgid "FAQ block layout: layout-1 Modern, layout-2 Classic, layout-3 Abstract, layout-4 Tab. Defaults to the block's own layout-1."
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:115
+msgid "FAQ groups to leave out of this block, by id — the block's excludeFaqGroup attribute."
+msgstr ""
+
+#. translators: %d: doc id.
+#: includes/Abilities/Faq/AttachFAQ.php:178
+msgid "attach FAQ groups to doc #%d"
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:199
+msgid "read the doc's content"
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:218
+msgid "write the doc's content"
+msgstr ""
+
+#: includes/Abilities/Faq/AttachFAQ.php:297
+msgid "Name at least one FAQ group, by id in group_ids or by name in group_names."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:43
+msgid "Create FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:44
+msgid "Create a BetterDocs FAQ — one question and its answer — optionally in a group. The answer is markdown by default and is stored as HTML. group_name creates the group when it does not exist yet; group_id must already exist."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:76
+msgid "The question, as a visitor would ask it. Required. Stored as the FAQ's title, so HTML is stripped."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:80
+msgid "The answer. Required. Markdown by default; see answer_format."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:86
+msgid "How to read the answer. markdown is converted to HTML with Parsedown in safe mode; html is passed through wp_kses_post. FAQ answers are HTML, never blocks."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:90
+msgid "File the FAQ into this FAQ group, by id. The group must exist."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:94
+msgid "File the FAQ into this FAQ group, by name or slug. The group is created when nothing matches. Send group_id or group_name, not both."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:100
+msgid "Post status. Defaults to publish, which is what the FAQ Builder does; a draft FAQ does not render."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:129
+#: includes/Abilities/Faq/UpdateFAQ.php:111
+msgid "An FAQ needs a question."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:161
+msgid "create an FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:167
+msgid "The FAQ was not created and BetterDocs reported no reason."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQ.php:222
+msgid "change an FAQ's status"
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:42
+msgid "Create FAQ group"
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:43
+msgid "Create a BetterDocs FAQ group (the FAQ Builder calls it a category). A name that already exists is returned as it is, with created:false, so the call is safe to repeat. FAQ groups are what bd-attach-faq puts on a doc."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:75
+msgid "The group name, as a human would write it. Required. Capped at 200 characters, the WordPress term-name limit."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:79
+msgid "Optional description, shown by some FAQ layouts."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:83
+#: includes/Abilities/ProStubs.php:62
+#: includes/Abilities/Terms/CreateTerm.php:85
+msgid "URL slug. Derived from the name when omitted."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:119
+#: includes/Abilities/Faq/UpdateFAQGroup.php:125
+#: includes/Abilities/Traits/ShapesFAQs.php:533
+msgid "An FAQ group needs a name."
+msgstr ""
+
+#: includes/Abilities/Faq/CreateFAQGroup.php:230
+msgid "change an FAQ group's status"
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQ.php:42
+msgid "Delete FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQ.php:43
+msgid "Delete a BetterDocs FAQ. This is permanent on a standard site: WordPress sends only posts and pages to the trash, so a custom post type like an FAQ is removed outright. The answer reports whether it was trashed or deleted."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQ.php:75
+#: includes/Abilities/Faq/UpdateFAQ.php:73
+msgid "The FAQ id. Required."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQ.php:118
+msgid "delete an FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQ.php:122
+msgid "BetterDocs did not confirm the FAQ deletion."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:43
+msgid "Delete FAQ group"
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:44
+msgid "Delete a BetterDocs FAQ group. By default its questions survive without a group; with with_all_faqs true every FAQ in the group is permanently deleted, including drafts. Docs that referenced the group stop showing it."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:76
+#: includes/Abilities/Faq/UpdateFAQGroup.php:76
+msgid "The FAQ group id. Required."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:81
+msgid "true also deletes every FAQ in the group, permanently and in every status. false (the default) leaves the questions in place without a group."
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:139
+msgid "delete an FAQ group"
+msgstr ""
+
+#: includes/Abilities/Faq/DeleteFAQGroup.php:143
+msgid "BetterDocs did not confirm the FAQ group deletion."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:44
+msgid "List FAQ groups"
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:45
+msgid "List BetterDocs FAQ groups with their question counts and whether each is published or draft, in the order the site shows them. Call this before creating a group so you reuse what exists."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:76
+msgid "Free-text search over group names and slugs."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:82
+msgid "publish lists only the groups the front end shows, draft only the hidden ones. Defaults to any."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:94
+msgid "Groups per page, 1–100."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQGroups.php:155
+msgid "list FAQ groups"
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:40
+msgid "List FAQs"
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:41
+msgid "List BetterDocs FAQs with their questions, answers and groups. Filter by group, search text or status. Naming a group that does not exist is an error here, not an invitation to create it."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:72
+msgid "Only FAQs in this group, by id."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:76
+msgid "Only FAQs in this group, by name or slug. The group must already exist. Send group_id or group_name, not both."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:80
+msgid "Free-text search over questions and answers."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:86
+msgid "Post status to list. Defaults to any, which is everything except trashed FAQs."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:98
+msgid "FAQs per page, 1–100. Answers are returned in full, so keep this small."
+msgstr ""
+
+#: includes/Abilities/Faq/ListFAQs.php:177
+msgid "list FAQs"
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:38
+msgid "Update FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:39
+msgid "Edit a BetterDocs FAQ: its question, its answer, the group it belongs to, or its status. Fields you leave out keep their current values. Moving an FAQ to another group replaces its group rather than adding one."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:79
+msgid "A new question. Left alone when omitted."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:80
+msgid "A new answer, replacing the old one. Left alone when omitted."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:81
+msgid "Move the FAQ to this group, by name or slug; the group is created when nothing matches. Send group_id or group_name, not both."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:82
+msgid "A new post status. Left alone when omitted."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:106
+msgid "Nothing to update: send at least one of question, answer, group_id, group_name or status."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:190
+msgid "update an FAQ"
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQ.php:194
+msgid "BetterDocs did not confirm the FAQ update."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:41
+msgid "Update FAQ group"
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:42
+msgid "Rename a BetterDocs FAQ group, change its description or slug, or switch it between publish and draft (the FAQ Builder's enabled/disabled switch). Fields you leave out keep their current values."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:82
+msgid "A new name for the group. Left alone when omitted; changing it does not change the slug."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:83
+msgid "A new URL slug. Left alone when omitted."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:120
+msgid "Nothing to update: send at least one of title, description, slug or status."
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:185
+msgid "update an FAQ group"
+msgstr ""
+
+#: includes/Abilities/Faq/UpdateFAQGroup.php:189
+msgid "BetterDocs did not confirm the FAQ group update."
+msgstr ""
+
+#: includes/Abilities/ProState.php:139
+msgid "Requires BetterDocs Pro, which is not active on this site."
+msgstr ""
+
+#. translators: %s: licence status reported by BetterDocs Pro.
+#: includes/Abilities/ProState.php:147
+msgid "BetterDocs Pro is active but its licence is not valid (status: %s); the tool still works."
+msgstr ""
+
+#: includes/Abilities/ProState.php:148
+#: includes/Abilities/Status/GetStatus.php:589
+msgid "none"
+msgstr ""
+
+#. translators: %s: MCP tool name that writes settings.
+#: includes/Abilities/ProState.php:155
+msgid "Multiple Knowledge Base is off — enable it with %s ({\"multiple_kb\": true}); it takes effect from the next request."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:48
+msgid "Create knowledge base"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:49
+msgid "Create a knowledge base. Groups doc categories under a named knowledge base; pass categories by id or name to file them into it."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:50
+#: includes/Abilities/ProStubs.php:79
+#: includes/Abilities/ProStubs.php:112
+#: includes/Abilities/ProStubs.php:140
+#: includes/Abilities/Traits/ResolvesTerms.php:230
+#: includes/Abilities/Traits/ResolvesTerms.php:235
+msgid "Knowledge bases"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:58
+msgid "Name of the knowledge base."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:66
+msgid "Short description shown on the knowledge-base listing."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:77
+msgid "Update knowledge base"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:78
+msgid "Update a knowledge base. Rename it, change its slug or description, or replace the doc categories filed under it."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:87
+#: includes/Abilities/ProStubs.php:120
+msgid "Knowledge-base term id."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:91
+msgid "New name."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:95
+msgid "New URL slug."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:99
+msgid "New description."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:110
+msgid "Delete knowledge base"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:111
+msgid "Delete a knowledge base. The doc categories filed under it are unfiled, never deleted."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:138
+msgid "List knowledge bases"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:139
+msgid "List the knowledge bases on this site, each with the doc categories filed under it."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:148
+msgid "Match knowledge bases whose name contains this text."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:153
+msgid "Page of results, 1-based."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:159
+msgid "Results per page, up to 100."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:184
+msgid "Get analytics"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:185
+msgid "Report site-wide BetterDocs analytics: views and reactions, the leading docs, categories and knowledge bases, and what visitors searched for."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:186
+msgid "Site-wide analytics"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:195
+msgid "First day to report on, as YYYY-MM-DD."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:196
+msgid "Last day to report on, as YYYY-MM-DD."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:201
+msgid "How many rows each leading-items list returns, up to 100."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:245
+msgid "Doc categories to file under this knowledge base, by term id or by name."
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettings.php:38
+msgid "Get settings"
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettings.php:39
+msgid "Read BetterDocs settings as they are now, merged with the defaults. Ask for specific keys or a whole tab; with neither, every setting comes back. API keys are masked and can never be read."
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettings.php:71
+msgid "Only these setting keys. Unknown keys are reported in unknown rather than failing the call."
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettings.php:75
+msgid "Only the settings on this tab, by tab id."
+msgstr ""
+
+#. translators: %s: tab id.
+#: includes/Abilities/Settings/GetSettings.php:123
+#: includes/Abilities/Settings/GetSettingsSchema.php:121
+msgid "There is no settings tab called \"%s\" on this site."
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettingsSchema.php:37
+msgid "Get settings schema"
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettingsSchema.php:38
+msgid "List every BetterDocs setting this site accepts, with its type, default, allowed values, tab, whether it needs Pro, and any consequence of changing it. Call this before bd-update-settings: the settings differ from site to site, and a value that is not in a key's allowed list is refused."
+msgstr ""
+
+#: includes/Abilities/Settings/GetSettingsSchema.php:69
+msgid "Only the settings on this tab, by tab id (the ids are in the tabs list this tool returns). Worth using: the whole schema is large."
+msgstr ""
+
+#. translators: %s: setting key.
+#: includes/Abilities/Settings/SettingsSchema.php:321
+msgid "\"%s\" is not a BetterDocs setting; call bd-get-settings-schema for the keys this site accepts."
+msgstr ""
+
+#. translators: %s: setting key.
+#: includes/Abilities/Settings/SettingsSchema.php:332
+msgid "\"%s\" is listed but not writable on this site — BetterDocs disables the field, usually because the feature it belongs to is not installed."
+msgstr ""
+
+#. translators: 1: setting key, 2: default value.
+#: includes/Abilities/Settings/SettingsSchema.php:355
+msgid "\"%1$s\" cannot be empty: BetterDocs puts the default (\"%2$s\") back on save, so an empty value is silently discarded."
+msgstr ""
+
+#. translators: 1: value, 2: setting key.
+#: includes/Abilities/Settings/SettingsSchema.php:372
+msgid "\"%1$s\" is not an allowed value for \"%2$s\"."
+msgstr ""
+
+#. translators: 1: setting key, 2: minimum.
+#: includes/Abilities/Settings/SettingsSchema.php:388
+msgid "\"%1$s\" must be at least %2$s."
+msgstr ""
+
+#. translators: 1: setting key, 2: maximum.
+#: includes/Abilities/Settings/SettingsSchema.php:400
+msgid "\"%1$s\" must be at most %2$s."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:649
+msgid "Changing this makes the permalink rules stale; BetterDocs flushes them on the next request, so pretty URLs may take one more request to settle."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:653
+#: includes/Abilities/Settings/UpdateSettings.php:259
+msgid "Takes effect from the next request: the knowledge_base taxonomy registers on the next load."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:657
+msgid "Cannot be empty: BetterDocs restores the default when an empty value is saved, so this tool refuses one instead."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:659
+msgid "With builtin_doc_page off, saving this empty switches builtin_doc_page back on rather than leaving the site without a docs page."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:663
+msgid "Write-only: this value is never read back, only replaced."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:667
+msgid "Disabled on this site, so it cannot be written."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:671
+msgid "Needs BetterDocs Pro."
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:786
+msgid "true or false"
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:791
+msgid "a whole number"
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:795
+#: includes/Abilities/Settings/SettingsSchema.php:800
+msgid "an array of strings"
+msgstr ""
+
+#: includes/Abilities/Settings/SettingsSchema.php:807
+msgid "a string"
+msgstr ""
+
+#. translators: 1: setting key, 2: what the field accepts, 3: what was sent.
+#: includes/Abilities/Settings/SettingsSchema.php:826
+msgid "\"%1$s\" takes %2$s; got %3$s."
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:44
+msgid "Update settings"
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:45
+msgid "Change BetterDocs settings. Call bd-get-settings-schema first: each key has a type and, often, a closed set of values. Every key is checked before anything is written, so a call either applies in full or changes nothing. enable_mcp cannot be changed here. Some keys make permalinks stale or only take effect from the next request — the answer says which."
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:79
+msgid "The settings to write, as {key: value}. Types follow bd-get-settings-schema: toggles take true/false, numbers take whole numbers, selects take one of their allowed values, checkbox-selects take an array of them."
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:121
+msgid "Send at least one setting to change, as {key: value}."
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:159
+msgid "change BetterDocs settings"
+msgstr ""
+
+#: includes/Abilities/Settings/UpdateSettings.php:255
+msgid "Permalinks will be flushed on the next request; pretty URLs may take one more request to settle."
+msgstr ""
+
+#. translators: %s: setting key.
+#: includes/Abilities/Settings/UpdateSettings.php:266
+msgid "\"%s\" was written but can never be read back; bd-get-settings returns it masked."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:99
+msgid "Get status"
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:100
+msgid "Get BetterDocs status: versions, Pro state, Multiple Knowledge Base state, content counts, your capabilities (held and missing by name), registered tools. Call this first."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:564
+msgid "Glossaries are off: the glossaries taxonomy is not registered, so the term tools and the doc tools refuse a glossary until bd-update-settings {enable_glossaries:true}. It takes effect from the next request."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:569
+msgid "BetterDocs Pro is not installed: the knowledge base and site-wide analytics tools are listed but will refuse."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:570
+msgid "BetterDocs Pro is installed but not active: the knowledge base and site-wide analytics tools are listed but will refuse until an administrator activates it."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:572
+msgid "Multiple Knowledge Base is off: knowledge base tools will refuse until bd-update-settings {multiple_kb:true}. It takes effect from the next request."
+msgstr ""
+
+#. translators: %s: comma-separated list of capability names.
+#: includes/Abilities/Status/GetStatus.php:578
+msgid "You do not hold: %s. Tools gated on those will refuse with capability_missing."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:583
+msgid "An administrator can grant them to this user's role with do_action( 'betterdocs_grant_caps', 'the-role' )."
+msgstr ""
+
+#. translators: 1: comma-separated setting names, 2: comma-separated role names.
+#: includes/Abilities/Status/GetStatus.php:587
+msgid "On a Pro site those come from %1$s: an administrator can add this user's role (%2$s) to them with bd-update-settings — see capabilities.governed_by for what each holds today."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:595
+msgid "The MCP server is switched off (BetterDocs → MCP): the abilities are registered but the MCP endpoint refuses every request."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:599
+msgid "This credential is read-only: write tools are not listed and calling one is refused with read_only_credential."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:603
+msgid "The knowledge_base taxonomy is not registered on this site, so knowledge base counts and tools are unavailable."
+msgstr ""
+
+#: includes/Abilities/Status/GetStatus.php:607
+msgid "No BetterDocs tools are registered: the Abilities API may be owned by another plugin. See the abilities section."
+msgstr ""
+
+#: includes/Abilities/StubAbility.php:180
+#: includes/Core/Settings.php:831
+#: assets/build/admin/js/dashboard.js:5
+msgid "Multiple Knowledge Base"
+msgstr ""
+
+#: includes/Abilities/StubAbility.php:194
+msgid "BetterDocs Pro is active but did not register this ability; update BetterDocs Pro."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:47
+msgid "Create term"
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:48
+msgid "Create a BetterDocs doc category or doc tag. A name that already exists is returned as it is, with created:false, so the call is safe to repeat. Doc categories may also be filed into knowledge bases, which must already exist."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:81
+msgid "The term name, as a human would write it. Required."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:89
+msgid "Optional description shown on the term archive."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:93
+msgid "Parent doc category, by id or name. Send 0 (or null) to move it to the top level. doc_category only."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:95
+msgid "Knowledge bases to file this doc category into, by id, slug or name. doc_category only; never created here — use bd-create-knowledge-base."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:99
+msgid "Whether the glossary term is shown on the front end. glossaries only; defaults to publish."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:104
+msgid "Sort position among glossary terms, lowest first. glossaries only."
+msgstr ""
+
+#. translators: %s: term type, e.g. "doc category".
+#: includes/Abilities/Terms/CreateTerm.php:171
+msgid "create a %s"
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:182
+msgid "read the term that already exists"
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:189
+msgid "The term was not created and WordPress reported no reason."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:249
+#: includes/Abilities/Terms/CreateTerm.php:336
+#: includes/Abilities/Terms/ListTerms.php:210
+msgid "Only doc categories belong to knowledge bases."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:260
+#: includes/Abilities/Terms/ListTerms.php:433
+msgid "These tools nest doc categories only; a doc tag takes no parent."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:373
+msgid "Only glossary terms take a status or an order."
+msgstr ""
+
+#: includes/Abilities/Terms/CreateTerm.php:408
+#: includes/Abilities/Traits/ShapesTerms.php:279
+msgid "assign knowledge bases to a doc category"
+msgstr ""
+
+#: includes/Abilities/Terms/DeleteTerm.php:44
+msgid "Delete term"
+msgstr ""
+
+#: includes/Abilities/Terms/DeleteTerm.php:45
+msgid "Delete a BetterDocs doc category or doc tag. Terms have no trash, so this cannot be undone. Docs in a deleted category are not deleted — they become uncategorised — and child categories move up to the top level."
+msgstr ""
+
+#: includes/Abilities/Terms/DeleteTerm.php:78
+msgid "The term id to delete. Required."
+msgstr ""
+
+#. translators: 1: term type, 2: term id.
+#: includes/Abilities/Terms/DeleteTerm.php:145
+msgid "delete %1$s #%2$d"
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:56
+msgid "List terms"
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:57
+msgid "List BetterDocs doc categories or doc tags, with their doc counts, parents and knowledge bases. Filter by search text, parent or knowledge base. Call this before creating terms so you reuse what exists instead of making near-duplicates."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:90
+msgid "Free-text search over term names and slugs."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:94
+msgid "Only the children of this doc category, by id or name. Use 0 for top-level terms only."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:98
+msgid "Only doc categories filed into this knowledge base, by id, slug or name. Needs BetterDocs Pro with Multiple Knowledge Base on."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:103
+msgid "true drops terms with no docs in them. Defaults to false. Both taxonomies are hierarchical, so WordPress keeps a parent whose child has docs even when the parent itself has none — and counts it out of total, which is why total can be lower than the number of items on this filter."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:109
+msgid "Sort field. doc_category_order is the manual order set in the BetterDocs admin, and applies to doc_category only."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:126
+msgid "Terms per page, 1–100."
+msgstr ""
+
+#: includes/Abilities/Terms/ListTerms.php:236
+#: includes/Abilities/Terms/ListTerms.php:312
+msgid "list terms"
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:40
+msgid "Update term"
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:41
+msgid "Update a BetterDocs doc category or doc tag by id. Only the fields you send change. knowledge_bases REPLACES the list a doc category belongs to — send [] to clear it. Changing it also changes the category permalink, because the knowledge base slug is part of the URL."
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:70
+msgid "A new name. Omit to leave it alone."
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:72
+msgid "REPLACES the knowledge bases this doc category belongs to, by id, slug or name. Send [] to clear it, omit to leave it alone. Never created here."
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:79
+msgid "The term id to update. Required."
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:128
+msgid "Nothing to update: send at least one field besides taxonomy and id."
+msgstr ""
+
+#. translators: 1: term type, 2: term id.
+#: includes/Abilities/Terms/UpdateTerm.php:143
+msgid "edit %1$s #%2$d"
+msgstr ""
+
+#: includes/Abilities/Terms/UpdateTerm.php:170
+msgid "read the term back"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:112
+msgid "A term reference must be a term id, a slug or a name."
+msgstr ""
+
+#. translators: 1: term name, 2: taxonomy name.
+#: includes/Abilities/Traits/ResolvesTerms.php:168
+msgid "create the %1$s \"%2$s\""
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:208
+#: includes/Core/Admin.php:1407
+#: includes/Core/PostType.php:1367
+#: includes/Core/Settings.php:2921
+msgid "Glossaries"
+msgstr ""
+
+#. translators: %s: taxonomy name.
+#: includes/Abilities/Traits/ResolvesTerms.php:217
+msgid "The \"%s\" taxonomy is not registered on this site."
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:239
+msgid "The knowledge_base taxonomy is not registered, although BetterDocs Pro reports itself able to register it."
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:303
+msgid "doc category"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:304
+msgid "doc tag"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:305
+msgid "knowledge base"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:306
+msgid "glossary term"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:307
+msgid "FAQ group"
+msgstr ""
+
+#: includes/Abilities/Traits/ResolvesTerms.php:310
+msgid "term"
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:74
+msgid "publish shows the group on the front end, draft hides it. This is the FAQ Builder's enabled/disabled switch, stored as the group's status term meta."
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:306
+msgid "read an FAQ group"
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:331
+msgid "read an FAQ"
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:360
+msgid "An FAQ group reference must be a group id, a slug or a name."
+msgstr ""
+
+#. translators: %s: FAQ group name.
+#: includes/Abilities/Traits/ShapesFAQs.php:405
+msgid "create the FAQ group \"%s\""
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:414
+msgid "The FAQ group was not created and BetterDocs reported no reason."
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:436
+msgid "Send group_id or group_name, not both."
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesFAQs.php:525
+msgid "An FAQ group with that name already exists."
+msgstr ""
+
+#: includes/Abilities/Traits/ShapesTerms.php:45
+msgid "Which taxonomy: doc_category, doc_tag or glossaries. Knowledge bases have their own tools. Glossary terms need the enable_glossaries setting on. Required."
 msgstr ""
 
 #: includes/Admin/Analytics.php:52
@@ -105,7 +1298,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Defaults.php:543
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4715
-#: includes/Core/Settings.php:1133
+#: includes/Core/Settings.php:1145
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:208
 #: includes/Editors/Elementor/Widget/Sidebar.php:137
 #: assets/build/blocks/editor.js:1
@@ -936,8 +2129,8 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:543
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1019
-#: includes/Core/Settings.php:1151
-#: includes/Core/Settings.php:1208
+#: includes/Core/Settings.php:1163
+#: includes/Core/Settings.php:1220
 #: includes/Core/SetupWizard.php:167
 #: includes/Editors/BlockEditor/Blocks/SearchForm.php:35
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:320
@@ -1701,8 +2894,8 @@ msgid "Active Border Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:17
-#: includes/Core/Settings.php:1586
-#: includes/Core/Settings.php:1592
+#: includes/Core/Settings.php:1598
+#: includes/Core/Settings.php:1604
 msgid "Breadcrumb"
 msgstr ""
 
@@ -1744,7 +2937,7 @@ msgid "Active Item Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:46
-#: includes/Core/Settings.php:860
+#: includes/Core/Settings.php:872
 #: includes/Core/SetupWizard.php:125
 #: includes/Core/SetupWizard.php:352
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:14
@@ -1902,7 +3095,7 @@ msgid "Image"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2773
-#: includes/Core/Settings.php:1296
+#: includes/Core/Settings.php:1308
 #: includes/Editors/Elementor/Widget/ArchiveList.php:112
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:839
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2577
@@ -1930,7 +3123,7 @@ msgid "Title"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2801
-#: includes/Core/Settings.php:1269
+#: includes/Core/Settings.php:1281
 #: includes/Editors/Elementor.php:241
 #: includes/Editors/Elementor.php:304
 #: includes/Editors/Elementor.php:528
@@ -1989,7 +3182,7 @@ msgid "Docs List Item Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:3724
-#: includes/Core/Settings.php:1116
+#: includes/Core/Settings.php:1128
 msgid "Explore More Button"
 msgstr ""
 
@@ -2345,7 +3538,7 @@ msgid "Group Active Title Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:37
-#: includes/Core/Settings.php:1157
+#: includes/Core/Settings.php:1169
 msgid "Live Search"
 msgstr ""
 
@@ -2796,7 +3989,7 @@ msgid "Search Modal Query"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4710
-#: includes/Core/Settings.php:2900
+#: includes/Core/Settings.php:2912
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:204
 #: includes/Editors/Elementor/Widget/Sidebar.php:133
 #: assets/build/blocks/editor.js:1
@@ -3013,8 +4206,8 @@ msgid "List Item Padding (PX)"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:37
-#: includes/Core/Settings.php:1330
-#: includes/Core/Settings.php:1336
+#: includes/Core/Settings.php:1342
+#: includes/Core/Settings.php:1348
 #: includes/Core/SetupWizard.php:153
 #: includes/Editors/Elementor/SingleDocs.php:40
 msgid "Single Doc"
@@ -3109,8 +4302,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2829
 #: includes/blocks.php:137
 #: includes/Core/Settings.php:269
-#: includes/Core/Settings.php:1479
-#: includes/Core/Settings.php:1488
+#: includes/Core/Settings.php:1491
+#: includes/Core/Settings.php:1500
 #: views/shortcodes/toc.php:31
 msgid "Table of Contents"
 msgstr ""
@@ -3168,7 +4361,7 @@ msgid "Updated Date"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:3822
-#: includes/Core/Settings.php:1438
+#: includes/Core/Settings.php:1450
 #: includes/Core/UnifiedMetabox.php:97
 msgid "Estimated Reading Time"
 msgstr ""
@@ -3332,7 +4525,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:6371
 #: includes/blocks.php:113
-#: includes/Core/Admin.php:606
+#: includes/Core/Admin.php:646
 #: views/admin/analytics.php:16
 #: views/admin/email/analytics/leading-docs.php:34
 #: assets/build/admin/js/dashboard.js:5
@@ -3426,7 +4619,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:7652
 #: includes/Admin/Customizer/Sections/SingleDoc.php:8785
-#: includes/Core/Settings.php:1702
+#: includes/Core/Settings.php:1714
 #: includes/Core/UnifiedMetabox.php:107
 msgid "Attachments"
 msgstr ""
@@ -3534,7 +4727,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:9919
 #: includes/Admin/Customizer/Sections/SingleDoc.php:10959
-#: includes/Core/Settings.php:1720
+#: includes/Core/Settings.php:1732
 #: includes/Core/UnifiedMetabox.php:117
 msgid "Related Docs"
 msgstr ""
@@ -3654,24 +4847,24 @@ msgid "You have to enable Reporting first."
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:309
-#: includes/Core/Settings.php:2153
+#: includes/Core/Settings.php:2165
 msgid "Once Weekly"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:313
-#: includes/Core/Settings.php:2152
+#: includes/Core/Settings.php:2164
 msgid "Once Daily"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:317
-#: includes/Core/Settings.php:2154
+#: includes/Core/Settings.php:2166
 msgid "Once Monthly"
 msgstr ""
 
 #. Translators: %s is replaced with the website name.
 #. translators: %s is the website name.
 #: includes/Admin/ReportEmail.php:355
-#: includes/Core/Settings.php:2207
+#: includes/Core/Settings.php:2219
 #: views/admin/email/body.php:46
 msgid "Your Documentation Performance of %s Website"
 msgstr ""
@@ -3797,8 +4990,8 @@ msgid "Doc Navigation"
 msgstr ""
 
 #: includes/blocks.php:145
-#: includes/Core/Settings.php:685
-#: includes/Core/Settings.php:2563
+#: includes/Core/Settings.php:697
+#: includes/Core/Settings.php:2575
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:36
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:510
 #: views/templates/parts/article-summary.php:107
@@ -3807,7 +5000,7 @@ msgid "AI Doc Summarizer"
 msgstr ""
 
 #: includes/blocks.php:153
-#: includes/Core/Settings.php:1820
+#: includes/Core/Settings.php:1832
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form"
 msgstr ""
@@ -3854,17 +5047,17 @@ msgstr ""
 msgid "BetterDocs Code Snippet Tab"
 msgstr ""
 
-#: includes/Core/Admin.php:194
+#: includes/Core/Admin.php:228
 msgid "Deactivate BetterDocs Pro First"
 msgstr ""
 
-#: includes/Core/Admin.php:240
-#: includes/Core/PostType.php:1162
+#: includes/Core/Admin.php:274
+#: includes/Core/PostType.php:1255
 #: includes/Core/Settings.php:235
 #: includes/Core/Settings.php:263
-#: includes/Core/Settings.php:846
-#: includes/Core/Settings.php:1103
-#: includes/Core/Settings.php:2907
+#: includes/Core/Settings.php:858
+#: includes/Core/Settings.php:1115
+#: includes/Core/Settings.php:2919
 #: includes/Core/SetupWizard.php:365
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:53
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:228
@@ -3878,121 +5071,125 @@ msgstr ""
 msgid "Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:285
+#: includes/Core/Admin.php:319
 msgid "Want to help make <strong>BetterDocs</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage."
 msgstr ""
 
-#: includes/Core/Admin.php:286
+#: includes/Core/Admin.php:320
 msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
 msgstr ""
 
-#: includes/Core/Admin.php:321
+#: includes/Core/Admin.php:355
 msgid "We hope you're enjoying BetterDocs! Could you please do us a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: includes/Core/Admin.php:330
+#: includes/Core/Admin.php:364
 msgid "Sure, you deserve it!"
 msgstr ""
 
-#: includes/Core/Admin.php:334
+#: includes/Core/Admin.php:368
 msgid "I already did"
 msgstr ""
 
-#: includes/Core/Admin.php:341
-#: includes/Core/Admin.php:397
+#: includes/Core/Admin.php:375
+#: includes/Core/Admin.php:431
 #: includes/Core/KBMigration.php:55
 msgid "Maybe Later"
 msgstr ""
 
-#: includes/Core/Admin.php:353
+#: includes/Core/Admin.php:387
 msgid "I need help"
 msgstr ""
 
-#: includes/Core/Admin.php:357
-#: includes/Core/Admin.php:405
+#: includes/Core/Admin.php:391
+#: includes/Core/Admin.php:439
 msgid "Never show again"
 msgstr ""
 
 #. translators: %s is the name of the existing knowledge base plugin.
-#: includes/Core/Admin.php:381
+#: includes/Core/Admin.php:415
 msgid "Already using %s? Power up your Knowledge Base by migrating all your docs and settings to BetterDocs with just 1 click."
 msgstr ""
 
-#: includes/Core/Admin.php:389
+#: includes/Core/Admin.php:423
 #: includes/Core/KBMigration.php:54
 #: includes/Core/KBMigration.php:218
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Core/Admin.php:457
+#: includes/Core/Admin.php:491
 msgid "Upgrade To PRO Now"
 msgstr ""
 
-#: includes/Core/Admin.php:460
+#: includes/Core/Admin.php:494
 msgid "I’ll Grab It Later"
 msgstr ""
 
-#: includes/Core/Admin.php:605
+#: includes/Core/Admin.php:645
 #: assets/build/admin/js/dashboard.js:5
 msgid "Word Count"
 msgstr ""
 
-#: includes/Core/Admin.php:774
-#: includes/Core/Admin.php:809
+#: includes/Core/Admin.php:814
+#: includes/Core/Admin.php:849
 msgid "Switch to BetterDocs UI"
 msgstr ""
 
-#: includes/Core/Admin.php:812
+#: includes/Core/Admin.php:852
 #: includes/Utils/Helper.php:1543
 #: assets/build/blocks/editor.js:1
 msgid "Copied!"
 msgstr ""
 
-#: includes/Core/Admin.php:813
+#: includes/Core/Admin.php:853
 msgid "Test Report!"
 msgstr ""
 
-#: includes/Core/Admin.php:814
+#: includes/Core/Admin.php:854
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:931
+#: includes/Core/Admin.php:982
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:933
+#: includes/Core/Admin.php:984
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:1006
-#: includes/Core/Admin.php:1090
-#: includes/Core/PostType.php:1168
+#: includes/Core/Admin.php:1160
+msgid "New"
+msgstr ""
+
+#: includes/Core/Admin.php:1255
+#: includes/Core/Admin.php:1339
+#: includes/Core/PostType.php:1261
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/quick-setup.js:1
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1081
+#: includes/Core/Admin.php:1330
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Core/Admin.php:1097
+#: includes/Core/Admin.php:1346
 #: includes/Core/FAQBuilder.php:297
-#: includes/Core/PostType.php:1163
+#: includes/Core/PostType.php:1256
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:1101
+#: includes/Core/Admin.php:1350
 #: includes/Core/FAQBuilder.php:208
-#: includes/Core/PostType.php:1229
+#: includes/Core/PostType.php:1322
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:1108
-#: includes/Core/PostType.php:1435
-#: includes/Core/Settings.php:1391
+#: includes/Core/Admin.php:1357
+#: includes/Core/PostType.php:1528
+#: includes/Core/Settings.php:1403
 #: includes/Editors/Elementor/Widget/Tags.php:82
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
@@ -4000,70 +5197,69 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:1115
-#: includes/Core/Admin.php:1253
+#: includes/Core/Admin.php:1364
+#: includes/Core/Admin.php:1510
 #: views/admin/template-parts/settings-header-2.php:7
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:1125
+#: includes/Core/Admin.php:1374
+#: assets/build/admin/js/dashboard.js:20
+msgid "MCP"
+msgstr ""
+
+#: includes/Core/Admin.php:1384
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:1135
+#: includes/Core/Admin.php:1394
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:1148
-#: includes/Core/PostType.php:1274
-#: includes/Core/Settings.php:2909
-msgid "Glossaries"
+#: includes/Core/Admin.php:1423
+msgid "API Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1161
-#: includes/Core/Settings.php:2601
-#: includes/Core/Settings.php:2611
-#: includes/Core/Settings.php:2625
+#: includes/Core/Admin.php:1436
+#: includes/Core/Settings.php:2613
+#: includes/Core/Settings.php:2623
+#: includes/Core/Settings.php:2637
 #: assets/build/admin/js/dashboard.js:5
 msgid "AI Chatbot"
 msgstr ""
 
-#: includes/Core/Admin.php:1180
-msgid "API Docs"
-msgstr ""
-
-#: includes/Core/Admin.php:1239
+#: includes/Core/Admin.php:1496
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:1256
+#: includes/Core/Admin.php:1513
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/Core/Admin.php:1298
+#: includes/Core/Admin.php:1555
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:1310
+#: includes/Core/Admin.php:1567
 msgid "Visit Encyclopedia"
 msgstr ""
 
-#: includes/Core/Admin.php:1403
+#: includes/Core/Admin.php:1660
 #: includes/Core/ArticleQualityScore.php:358
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/Core/Admin.php:1408
+#: includes/Core/Admin.php:1665
 msgid "Permission denied"
 msgstr ""
 
-#: includes/Core/Admin.php:1415
+#: includes/Core/Admin.php:1672
 msgid "Invalid introduction key"
 msgstr ""
 
-#: includes/Core/Admin.php:1424
+#: includes/Core/Admin.php:1681
 msgid "Pointer dismissed successfully"
 msgstr ""
 
@@ -4188,6 +5384,7 @@ msgstr ""
 
 #: includes/Core/ArticleQualityScore.php:434
 #: includes/Core/ArticleQualityScore.php:482
+#: includes/Mcp/MCPManager.php:469
 msgid "Security check failed"
 msgstr ""
 
@@ -4267,13 +5464,13 @@ msgid "Parent FAQ Category:"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:204
-#: includes/Core/PostType.php:1225
+#: includes/Core/PostType.php:1318
 #: assets/build/admin/js/dashboard.js:5
 msgid "Edit Category"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:205
-#: includes/Core/PostType.php:1226
+#: includes/Core/PostType.php:1319
 #: assets/build/admin/js/dashboard.js:5
 msgid "Update Category"
 msgstr ""
@@ -4321,7 +5518,7 @@ msgid "New Product FAQ Category Name"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:298
-#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:20
 msgid "Add New FAQ"
 msgstr ""
 
@@ -4358,9 +5555,9 @@ msgid "Add new faq from here"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:493
-#: includes/Core/PostType.php:900
-#: includes/Core/PostType.php:960
-#: includes/Core/PostType.php:1023
+#: includes/Core/PostType.php:993
+#: includes/Core/PostType.php:1053
+#: includes/Core/PostType.php:1116
 msgid "Nonce Failed"
 msgstr ""
 
@@ -4369,23 +5566,23 @@ msgid "You don't have permission to manage FAQ groups."
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:525
-#: includes/Core/PostType.php:952
-#: includes/Core/PostType.php:1004
-#: includes/Core/PostType.php:1012
-#: includes/Core/PostType.php:1079
+#: includes/Core/PostType.php:1045
+#: includes/Core/PostType.php:1097
+#: includes/Core/PostType.php:1105
+#: includes/Core/PostType.php:1172
 msgid "Successfully updated."
 msgstr ""
 
-#: includes/Core/FAQBuilder.php:1066
-#: includes/Core/FAQBuilder.php:1121
+#: includes/Core/FAQBuilder.php:1097
+#: includes/Core/FAQBuilder.php:1152
 #: includes/REST/FaqSearchedTerms.php:176
 msgid "Invalid FAQ ID."
 msgstr ""
 
 #: includes/Core/Glossaries.php:565
-#: includes/Core/PostType.php:1313
-#: includes/Core/PostType.php:1332
-#: includes/Core/PostType.php:1384
+#: includes/Core/PostType.php:1406
+#: includes/Core/PostType.php:1425
+#: includes/Core/PostType.php:1477
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/glossaries.js:1
 msgid "Glossary Term Description"
@@ -4507,212 +5704,216 @@ msgstr ""
 msgid "Plugin is deactivated successfully!"
 msgstr ""
 
-#: includes/Core/PostType.php:397
+#: includes/Core/PostType.php:131
+msgid "Knowledge Bases this doc category belongs to, by slug."
+msgstr ""
+
+#: includes/Core/PostType.php:431
 msgid "BetterDocs Multilingual Migration Required"
 msgstr ""
 
-#: includes/Core/PostType.php:398
+#: includes/Core/PostType.php:432
 msgid "Your site uses a multilingual plugin and has existing ordering data that needs to be migrated:"
 msgstr ""
 
 #. translators: %d: number of categories
-#: includes/Core/PostType.php:401
+#: includes/Core/PostType.php:435
 msgid "• Category ordering (%d categories)"
 msgstr ""
 
 #. translators: %d: number of categories
-#: includes/Core/PostType.php:404
+#: includes/Core/PostType.php:438
 msgid "• Document ordering (%d categories with custom doc orders)"
 msgstr ""
 
-#: includes/Core/PostType.php:407
+#: includes/Core/PostType.php:441
 msgid "Run Migration Now"
 msgstr ""
 
-#: includes/Core/PostType.php:904
+#: includes/Core/PostType.php:997
 msgid "You don't have permission to manage docs term."
 msgstr ""
 
-#: includes/Core/PostType.php:964
-#: includes/Core/PostType.php:1027
+#: includes/Core/PostType.php:1057
+#: includes/Core/PostType.php:1120
 msgid "You don't have permission to update docs term."
 msgstr ""
 
-#: includes/Core/PostType.php:983
+#: includes/Core/PostType.php:1076
 msgid "Invalid term ID."
 msgstr ""
 
-#: includes/Core/PostType.php:989
-#: includes/Core/PostType.php:1052
+#: includes/Core/PostType.php:1082
+#: includes/Core/PostType.php:1145
 msgid "Invalid category."
 msgstr ""
 
-#: includes/Core/PostType.php:1015
-#: includes/Core/PostType.php:1082
+#: includes/Core/PostType.php:1108
+#: includes/Core/PostType.php:1175
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/Core/PostType.php:1040
+#: includes/Core/PostType.php:1133
 msgid "Invalid object or term ID."
 msgstr ""
 
-#: includes/Core/PostType.php:1046
+#: includes/Core/PostType.php:1139
 msgid "Invalid document."
 msgstr ""
 
-#: includes/Core/PostType.php:1164
-#: assets/build/admin/js/dashboard.js:5
+#: includes/Core/PostType.php:1257
+#: assets/build/admin/js/dashboard.js:20
 msgid "Add New Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1165
+#: includes/Core/PostType.php:1258
 msgid "New Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1166
+#: includes/Core/PostType.php:1259
 msgid "Edit Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1167
+#: includes/Core/PostType.php:1260
 msgid "View Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1169
+#: includes/Core/PostType.php:1262
 msgid "Search Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1171
+#: includes/Core/PostType.php:1264
 msgid "No docs found"
 msgstr ""
 
-#: includes/Core/PostType.php:1172
+#: includes/Core/PostType.php:1265
 msgid "No docs found in trash"
 msgstr ""
 
-#: includes/Core/PostType.php:1179
+#: includes/Core/PostType.php:1272
 msgid "Add new doc from here"
 msgstr ""
 
-#: includes/Core/PostType.php:1220
-#: includes/Core/PostType.php:1222
+#: includes/Core/PostType.php:1313
+#: includes/Core/PostType.php:1315
 msgid "Docs Categories"
 msgstr ""
 
-#: includes/Core/PostType.php:1221
-#: includes/Core/Settings.php:2908
+#: includes/Core/PostType.php:1314
+#: includes/Core/Settings.php:2920
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:18
 #: includes/Utils/BlockTemplate.php:406
 msgid "Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1223
+#: includes/Core/PostType.php:1316
 msgid "Parent Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1224
+#: includes/Core/PostType.php:1317
 msgid "Parent Docs Category:"
 msgstr ""
 
-#: includes/Core/PostType.php:1227
+#: includes/Core/PostType.php:1320
 msgid "Add New Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1228
+#: includes/Core/PostType.php:1321
 msgid "New Docs Category Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1265
-#: includes/Core/PostType.php:1267
+#: includes/Core/PostType.php:1358
+#: includes/Core/PostType.php:1360
 msgid "Glossaries Terms"
 msgstr ""
 
-#: includes/Core/PostType.php:1266
+#: includes/Core/PostType.php:1359
 msgid "Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1268
+#: includes/Core/PostType.php:1361
 msgid "Parent Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1269
+#: includes/Core/PostType.php:1362
 msgid "Parent Glossaries Term:"
 msgstr ""
 
-#: includes/Core/PostType.php:1270
+#: includes/Core/PostType.php:1363
 msgid "Edit Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1271
+#: includes/Core/PostType.php:1364
 msgid "Update Glossary"
 msgstr ""
 
-#: includes/Core/PostType.php:1272
+#: includes/Core/PostType.php:1365
 msgid "Add New Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1273
+#: includes/Core/PostType.php:1366
 msgid "New Glossaries Term Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1320
-#: includes/Core/PostType.php:1322
-#: includes/Core/PostType.php:1348
+#: includes/Core/PostType.php:1413
+#: includes/Core/PostType.php:1415
+#: includes/Core/PostType.php:1441
 msgid "Enter a description for the glossary term"
 msgstr ""
 
-#: includes/Core/PostType.php:1421
+#: includes/Core/PostType.php:1514
 msgid "Docs Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1422
+#: includes/Core/PostType.php:1515
 msgid "Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1423
+#: includes/Core/PostType.php:1516
 #: assets/build/admin/js/dashboard.js:5
 msgid "Search Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1424
+#: includes/Core/PostType.php:1517
 msgid "Popular Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1425
+#: includes/Core/PostType.php:1518
 msgid "All Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1428
+#: includes/Core/PostType.php:1521
 #: assets/build/admin/js/dashboard.js:5
 msgid "Edit Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1429
+#: includes/Core/PostType.php:1522
 #: assets/build/admin/js/dashboard.js:5
 msgid "Update Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1430
+#: includes/Core/PostType.php:1523
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1431
+#: includes/Core/PostType.php:1524
 msgid "New Tag Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1432
+#: includes/Core/PostType.php:1525
 msgid "Separate tags with commas"
 msgstr ""
 
-#: includes/Core/PostType.php:1433
+#: includes/Core/PostType.php:1526
 msgid "Add or remove tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1434
+#: includes/Core/PostType.php:1527
 msgid "Choose from the most used tags"
 msgstr ""
 
@@ -4725,6 +5926,7 @@ msgid "No categories to create."
 msgstr ""
 
 #: includes/Core/Scripts.php:85
+#: assets/build/admin/js/dashboard.js:12
 msgid "Copied"
 msgstr ""
 
@@ -4743,7 +5945,7 @@ msgid "Sorry, no docs were found."
 msgstr ""
 
 #: includes/Core/Settings.php:264
-#: includes/Core/Settings.php:1110
+#: includes/Core/Settings.php:1122
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:54
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:242
 #: assets/build/admin/js/dashboard.js:5
@@ -4752,7 +5954,7 @@ msgid "Doc"
 msgstr ""
 
 #: includes/Core/Settings.php:266
-#: includes/Core/Settings.php:1125
+#: includes/Core/Settings.php:1137
 #: includes/Editors/BlockEditor/Blocks/CategoryGrid.php:87
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:324
 #: assets/build/blocks/editor.js:1
@@ -4760,13 +5962,13 @@ msgid "Explore More"
 msgstr ""
 
 #: includes/Core/Settings.php:280
-#: includes/Core/Settings.php:1610
+#: includes/Core/Settings.php:1622
 msgid "Home"
 msgstr ""
 
 #: includes/Core/Settings.php:289
-#: includes/Core/Settings.php:1667
-#: includes/Core/Settings.php:1675
+#: includes/Core/Settings.php:1679
+#: includes/Core/Settings.php:1687
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:30
 #: includes/Editors/Elementor/Widget/Feedback.php:91
 #: views/templates/feedback-parts/form.php:97
@@ -4789,15 +5991,15 @@ msgid "How can we help?"
 msgstr ""
 
 #: includes/Core/Settings.php:317
-#: includes/Core/Settings.php:2531
+#: includes/Core/Settings.php:2543
 #: includes/Core/WriteWithAI.php:241
 msgid "Default/Core"
 msgstr ""
 
 #: includes/Core/Settings.php:342
 #: includes/Core/Settings.php:343
-#: includes/Core/Settings.php:1455
-#: includes/Core/Settings.php:1463
+#: includes/Core/Settings.php:1467
+#: includes/Core/Settings.php:1475
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:25
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:26
 #: includes/Editors/Elementor/Widget/ReadingTime.php:68
@@ -4807,174 +6009,169 @@ msgstr ""
 msgid "min read"
 msgstr ""
 
-#: includes/Core/Settings.php:425
+#: includes/Core/Settings.php:437
 #: includes/Core/SetupWizard.php:62
 msgid "Design with Gutenberg"
 msgstr ""
 
-#: includes/Core/Settings.php:425
-#: includes/Core/Settings.php:435
+#: includes/Core/Settings.php:437
+#: includes/Core/Settings.php:447
 #: assets/build/admin/js/dashboard.js:5
 msgid "Learn More"
 msgstr ""
 
-#: includes/Core/Settings.php:435
+#: includes/Core/Settings.php:447
 msgid "Design with Elementor"
 msgstr ""
 
-#: includes/Core/Settings.php:446
+#: includes/Core/Settings.php:458
 msgid "Customize in BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:615
+#: includes/Core/Settings.php:627
 msgid "You don't have any rights for saving settings."
 msgstr ""
 
-#: includes/Core/Settings.php:678
-#: includes/Core/Settings.php:2429
-#: includes/Core/Settings.php:2435
+#: includes/Core/Settings.php:690
+#: includes/Core/Settings.php:2441
+#: includes/Core/Settings.php:2447
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Write with AI"
 msgstr ""
 
 #. translators: 1: feature label, 2: minimum tokens, 3: model id
-#: includes/Core/Settings.php:705
+#: includes/Core/Settings.php:717
 msgid "%1$s max tokens must be at least %2$d for %3$s."
 msgstr ""
 
-#: includes/Core/Settings.php:757
+#: includes/Core/Settings.php:769
 #: includes/Core/SetupWizard.php:195
 msgid "Select a Page"
 msgstr ""
 
-#: includes/Core/Settings.php:769
+#: includes/Core/Settings.php:781
 msgid "All logged in users"
 msgstr ""
 
-#: includes/Core/Settings.php:775
+#: includes/Core/Settings.php:787
 #: assets/build/blocks/editor.js:1
 msgid "betterdocs"
 msgstr ""
 
-#: includes/Core/Settings.php:791
+#: includes/Core/Settings.php:803
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 msgid "Save"
 msgstr ""
 
-#: includes/Core/Settings.php:792
+#: includes/Core/Settings.php:804
 msgid "Saving..."
 msgstr ""
 
-#: includes/Core/Settings.php:806
-#: includes/Core/Settings.php:1030
-#: includes/Core/Settings.php:1361
+#: includes/Core/Settings.php:818
+#: includes/Core/Settings.php:1042
+#: includes/Core/Settings.php:1373
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:51
 #: includes/Editors/Elementor/Widget/DocDate.php:44
 #: assets/build/blocks/editor.js:1
 msgid "General"
 msgstr ""
 
-#: includes/Core/Settings.php:813
+#: includes/Core/Settings.php:825
 msgid "General Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:819
-#: assets/build/admin/js/dashboard.js:5
-msgid "Multiple Knowledge Base"
-msgstr ""
-
-#: includes/Core/Settings.php:828
+#: includes/Core/Settings.php:840
 #: includes/Core/SetupWizard.php:340
 msgid "Built-in Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:836
+#: includes/Core/Settings.php:848
 msgid "Enable Category Hierarchy Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:840
+#: includes/Core/Settings.php:852
 msgid "Shows Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page"
 msgstr ""
 
-#: includes/Core/Settings.php:845
+#: includes/Core/Settings.php:857
 #: includes/Core/SetupWizard.php:364
 msgid "Documentation Page Title"
 msgstr ""
 
-#: includes/Core/Settings.php:853
+#: includes/Core/Settings.php:865
 #: includes/Core/SetupWizard.php:372
 msgid "BetterDocs Root Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:866
+#: includes/Core/Settings.php:878
 #: includes/Core/SetupWizard.php:358
 msgid "You will need to insert BetterDocs Shortcode inside the page. This page will be used as docs permalink."
 msgstr ""
 
-#: includes/Core/Settings.php:873
+#: includes/Core/Settings.php:885
 msgid "Custom Category Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:880
+#: includes/Core/Settings.php:892
 msgid "Custom Tag Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:887
+#: includes/Core/Settings.php:899
 #: includes/Core/SetupWizard.php:380
 msgid "Single Docs Permalink"
 msgstr ""
 
-#: includes/Core/Settings.php:894
+#: includes/Core/Settings.php:906
 #: includes/Core/SetupWizard.php:389
 msgid "Make sure to keep Docs Root Slug in the Single Docs Permalink. You are not able to keep it blank. You can use the available tags from below."
 msgstr ""
 
-#: includes/Core/Settings.php:899
+#: includes/Core/Settings.php:911
 #: includes/Core/SetupWizard.php:395
 msgid "Show Glossary"
 msgstr ""
 
-#: includes/Core/Settings.php:900
+#: includes/Core/Settings.php:912
 #: includes/Core/SetupWizard.php:396
 msgid "Enable the glossary feature to allow users to look up definitions for terms used within your encyclopedia or glossaries themselves."
 msgstr ""
 
-#: includes/Core/Settings.php:909
+#: includes/Core/Settings.php:921
 #: includes/Core/SetupWizard.php:405
 msgid "Built-in Encyclopedia Page"
 msgstr ""
 
-#: includes/Core/Settings.php:918
+#: includes/Core/Settings.php:930
 #: includes/Core/SetupWizard.php:422
 msgid "FAQ Schema"
 msgstr ""
 
-#: includes/Core/Settings.php:926
+#: includes/Core/Settings.php:938
 msgid "Analytics From"
 msgstr ""
 
-#: includes/Core/Settings.php:928
+#: includes/Core/Settings.php:940
 msgid "Everyone"
 msgstr ""
 
-#: includes/Core/Settings.php:929
+#: includes/Core/Settings.php:941
 msgid "Guests Only"
 msgstr ""
 
-#: includes/Core/Settings.php:930
+#: includes/Core/Settings.php:942
 msgid "Registered Users Only"
 msgstr ""
 
-#: includes/Core/Settings.php:939
+#: includes/Core/Settings.php:951
 msgid "Unique Visitor Count"
 msgstr ""
 
-#: includes/Core/Settings.php:948
+#: includes/Core/Settings.php:960
 msgid "Exclude Bot Analytics"
 msgstr ""
 
-#: includes/Core/Settings.php:961
+#: includes/Core/Settings.php:973
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:47
 #: includes/Editors/Elementor/Widget/Sidebar.php:242
 #: assets/build/admin/js/dashboard.js:1
@@ -4982,156 +6179,156 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/Core/Settings.php:968
-#: includes/Core/Settings.php:974
+#: includes/Core/Settings.php:980
+#: includes/Core/Settings.php:986
 msgid "Layout Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:999
-#: includes/Core/Settings.php:1005
+#: includes/Core/Settings.php:1011
+#: includes/Core/Settings.php:1017
 msgid "Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1037
+#: includes/Core/Settings.php:1049
 msgid "Docs List Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1038
+#: includes/Core/Settings.php:1050
 msgid "Upload your own preferred document list icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1044
+#: includes/Core/Settings.php:1056
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:307
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:167
 #: assets/build/blocks/editor.js:1
 msgid "Category Title Link"
 msgstr ""
 
-#: includes/Core/Settings.php:1045
+#: includes/Core/Settings.php:1057
 msgid "This setting is applicable for category grid layout"
 msgstr ""
 
-#: includes/Core/Settings.php:1053
+#: includes/Core/Settings.php:1065
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:107
 #: assets/build/blocks/editor.js:1
 msgid "Masonry"
 msgstr ""
 
-#: includes/Core/Settings.php:1061
+#: includes/Core/Settings.php:1073
 msgid "Lazy Load Sidebar Docs & Subcategories"
 msgstr ""
 
-#: includes/Core/Settings.php:1062
+#: includes/Core/Settings.php:1074
 msgid "Applies to the Sidebar layout wherever it appears — single docs, category archives, and the Sidebar widget/block. Off by default: enable to render only the active category upfront and fetch the rest on click (or on scroll for the Memphis layout), cutting initial HTML size on large knowledge bases."
 msgstr ""
 
-#: includes/Core/Settings.php:1070
+#: includes/Core/Settings.php:1082
 #: assets/build/blocks/editor.js:1
 msgid "Nested Sub Category"
 msgstr ""
 
-#: includes/Core/Settings.php:1078
+#: includes/Core/Settings.php:1090
 msgid "Number Of Columns"
 msgstr ""
 
-#: includes/Core/Settings.php:1079
+#: includes/Core/Settings.php:1091
 msgid "This setting is not applicable for sleek layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1086
+#: includes/Core/Settings.php:1098
 msgid "Number Of Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1087
+#: includes/Core/Settings.php:1099
 msgid "This setting is not applicable for handbook layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1094
+#: includes/Core/Settings.php:1106
 msgid "Doc Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1102
+#: includes/Core/Settings.php:1114
 msgid "Count Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1109
+#: includes/Core/Settings.php:1121
 msgid "Count Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1124
+#: includes/Core/Settings.php:1136
 msgid "Explore More Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1132
+#: includes/Core/Settings.php:1144
 msgid "Popular Docs Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1140
+#: includes/Core/Settings.php:1152
 msgid "Popular Docs Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1165
+#: includes/Core/Settings.php:1177
 #: includes/Core/SetupWizard.php:432
 msgid "Advanced Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1175
+#: includes/Core/Settings.php:1187
 msgid "Exclude Child Terms In Category Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1184
+#: includes/Core/Settings.php:1196
 msgid "Minimum amount of Keywords Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1192
+#: includes/Core/Settings.php:1204
 msgid "Minimum Character Limit For Search Result"
 msgstr ""
 
-#: includes/Core/Settings.php:1199
+#: includes/Core/Settings.php:1211
 msgid "Search Placeholder"
 msgstr ""
 
-#: includes/Core/Settings.php:1200
+#: includes/Core/Settings.php:1212
 msgid "Search.."
 msgstr ""
 
-#: includes/Core/Settings.php:1206
+#: includes/Core/Settings.php:1218
 msgid "Search Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1213
+#: includes/Core/Settings.php:1225
 msgid "Search Not Found Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1220
+#: includes/Core/Settings.php:1232
 msgid "Search Result Image"
 msgstr ""
 
-#: includes/Core/Settings.php:1228
+#: includes/Core/Settings.php:1240
 msgid "KB Based Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1238
+#: includes/Core/Settings.php:1250
 msgid "Search Modal Source"
 msgstr ""
 
-#: includes/Core/Settings.php:1239
+#: includes/Core/Settings.php:1251
 msgid "Choose the content type to be shown in the search modal. <br> <b>Note:</b> This is only applicable on Modal Search."
 msgstr ""
 
-#: includes/Core/Settings.php:1242
+#: includes/Core/Settings.php:1254
 msgid "Both (Docs + FAQs)"
 msgstr ""
 
-#: includes/Core/Settings.php:1243
+#: includes/Core/Settings.php:1255
 msgid "Docs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1244
+#: includes/Core/Settings.php:1256
 msgid "FAQs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1254
+#: includes/Core/Settings.php:1266
 #: includes/Editors/Elementor.php:295
 #: includes/Editors/Elementor.php:352
 #: includes/Editors/Elementor/Widget/ArchiveList.php:108
@@ -5139,14 +6336,14 @@ msgstr ""
 msgid "Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1260
+#: includes/Core/Settings.php:1272
 #: includes/Editors/Elementor.php:232
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1263
-#: includes/Core/Settings.php:1293
+#: includes/Core/Settings.php:1275
+#: includes/Core/Settings.php:1305
 #: includes/Editors/Elementor.php:235
 #: includes/Editors/Elementor.php:298
 #: includes/Editors/Elementor.php:596
@@ -5155,7 +6352,7 @@ msgstr ""
 msgid "No order"
 msgstr ""
 
-#: includes/Core/Settings.php:1264
+#: includes/Core/Settings.php:1276
 #: includes/Editors/Elementor.php:236
 #: includes/Editors/Elementor.php:299
 #: includes/Editors/Elementor.php:523
@@ -5166,7 +6363,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/Core/Settings.php:1265
+#: includes/Core/Settings.php:1277
 #: includes/Editors/Elementor.php:237
 #: includes/Editors/Elementor.php:300
 #: includes/Editors/Elementor.php:524
@@ -5177,7 +6374,7 @@ msgstr ""
 msgid "Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:1266
+#: includes/Core/Settings.php:1278
 #: includes/Editors/Elementor.php:238
 #: includes/Editors/Elementor.php:301
 #: includes/Editors/Elementor.php:525
@@ -5187,7 +6384,7 @@ msgstr ""
 msgid "Term Group"
 msgstr ""
 
-#: includes/Core/Settings.php:1267
+#: includes/Core/Settings.php:1279
 #: includes/Editors/Elementor.php:239
 #: includes/Editors/Elementor.php:302
 #: includes/Editors/Elementor.php:526
@@ -5196,7 +6393,7 @@ msgstr ""
 msgid "Term ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1268
+#: includes/Core/Settings.php:1280
 #: includes/Editors/Elementor.php:240
 #: includes/Editors/Elementor.php:303
 #: includes/Editors/Elementor.php:527
@@ -5206,7 +6403,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1270
+#: includes/Core/Settings.php:1282
 #: includes/Editors/Elementor.php:242
 #: includes/Editors/Elementor.php:305
 #: includes/Editors/Elementor.php:529
@@ -5215,8 +6412,8 @@ msgstr ""
 msgid "Parent"
 msgstr ""
 
-#: includes/Core/Settings.php:1271
-#: includes/Core/Settings.php:1303
+#: includes/Core/Settings.php:1283
+#: includes/Core/Settings.php:1315
 #: includes/Editors/Elementor.php:243
 #: includes/Editors/Elementor.php:306
 #: includes/Editors/Elementor.php:530
@@ -5226,223 +6423,223 @@ msgstr ""
 msgid "BetterDocs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1278
+#: includes/Core/Settings.php:1290
 #: includes/Editors/Elementor.php:252
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1290
+#: includes/Core/Settings.php:1302
 #: includes/Editors/Elementor.php:269
 msgid "Docs Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1294
+#: includes/Core/Settings.php:1306
 msgid "Docs ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1295
+#: includes/Core/Settings.php:1307
 msgid "Docs Author"
 msgstr ""
 
-#: includes/Core/Settings.php:1297
+#: includes/Core/Settings.php:1309
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1298
+#: includes/Core/Settings.php:1310
 #: assets/build/blocks/editor.js:1
 msgid "Last Modified Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1299
+#: includes/Core/Settings.php:1311
 #: assets/build/blocks/editor.js:1
 msgid "Parent Id"
 msgstr ""
 
-#: includes/Core/Settings.php:1300
+#: includes/Core/Settings.php:1312
 #: assets/build/blocks/editor.js:1
 msgid "Random"
 msgstr ""
 
-#: includes/Core/Settings.php:1301
+#: includes/Core/Settings.php:1313
 #: assets/build/blocks/editor.js:1
 msgid "Comment Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1302
+#: includes/Core/Settings.php:1314
 #: assets/build/blocks/editor.js:1
 msgid "Menu Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1310
+#: includes/Core/Settings.php:1322
 #: includes/Editors/Elementor.php:279
 msgid "Docs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1367
+#: includes/Core/Settings.php:1379
 #: includes/Editors/Elementor/Tags/TitleTag.php:17
 #: includes/Editors/Elementor/Widget/Title.php:26
 #: views/admin/email/analytics/leading-docs.php:24
 msgid "Doc Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1375
-#: includes/Core/Settings.php:1748
+#: includes/Core/Settings.php:1387
+#: includes/Core/Settings.php:1760
 msgid "Sidebar Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1383
+#: includes/Core/Settings.php:1395
 msgid "Print Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1399
+#: includes/Core/Settings.php:1411
 msgid "Last Update Time"
 msgstr ""
 
-#: includes/Core/Settings.php:1407
+#: includes/Core/Settings.php:1419
 #: assets/build/blocks/editor.js:1
 msgid "Navigation"
 msgstr ""
 
-#: includes/Core/Settings.php:1415
+#: includes/Core/Settings.php:1427
 msgid "Comment"
 msgstr ""
 
-#: includes/Core/Settings.php:1423
+#: includes/Core/Settings.php:1435
 #: includes/Core/SetupWizard.php:414
 msgid "Show Powered by BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:1431
+#: includes/Core/Settings.php:1443
 msgid "Reaction Feedback Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1432
+#: includes/Core/Settings.php:1444
 msgid "Thanks for your feedback."
 msgstr ""
 
-#: includes/Core/Settings.php:1446
+#: includes/Core/Settings.php:1458
 msgid "Estimated Reading Time Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1454
+#: includes/Core/Settings.php:1466
 msgid "Estimated Reading Time Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1462
+#: includes/Core/Settings.php:1474
 msgid "Estimated Reading Time Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1473
+#: includes/Core/Settings.php:1485
 msgid "TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1487
+#: includes/Core/Settings.php:1499
 #: includes/Editors/Elementor/Widget/ToC.php:67
 #: assets/build/blocks/editor.js:1
 msgid "TOC Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1496
+#: includes/Core/Settings.php:1508
 msgid "TOC Hierarchy"
 msgstr ""
 
-#: includes/Core/Settings.php:1505
+#: includes/Core/Settings.php:1517
 msgid "TOC List Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1514
+#: includes/Core/Settings.php:1526
 msgid "Show TOC Title in Anchor Links"
 msgstr ""
 
-#: includes/Core/Settings.php:1523
+#: includes/Core/Settings.php:1535
 #: includes/Editors/Elementor/Widget/Sidebar.php:352
 #: assets/build/blocks/editor.js:1
 msgid "Sticky TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1532
+#: includes/Core/Settings.php:1544
 msgid "Collapsible TOC on small devices"
 msgstr ""
 
-#: includes/Core/Settings.php:1541
+#: includes/Core/Settings.php:1553
 msgid "Title Link Copy To Clipboard"
 msgstr ""
 
-#: includes/Core/Settings.php:1548
+#: includes/Core/Settings.php:1560
 msgid "TOC Supported Heading Tag"
 msgstr ""
 
-#: includes/Core/Settings.php:1574
+#: includes/Core/Settings.php:1586
 msgid "Content Offset"
 msgstr ""
 
-#: includes/Core/Settings.php:1577
+#: includes/Core/Settings.php:1589
 msgid "content offset from top on scroll."
 msgstr ""
 
-#: includes/Core/Settings.php:1600
+#: includes/Core/Settings.php:1612
 msgid "Enable Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1609
+#: includes/Core/Settings.php:1621
 msgid "Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1623
+#: includes/Core/Settings.php:1635
 msgid "Breadcrumb Home URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1631
+#: includes/Core/Settings.php:1643
 msgid "Category on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1640
+#: includes/Core/Settings.php:1652
 msgid "Title on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1652
-#: includes/Core/Settings.php:1658
+#: includes/Core/Settings.php:1664
+#: includes/Core/Settings.php:1670
 msgid "Email Feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:1666
+#: includes/Core/Settings.php:1678
 msgid "Feedback Link Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1674
+#: includes/Core/Settings.php:1686
 #: includes/Editors/Elementor/Widget/Feedback.php:97
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1682
+#: includes/Core/Settings.php:1694
 msgid "Email Address"
 msgstr ""
 
-#: includes/Core/Settings.php:1685
+#: includes/Core/Settings.php:1697
 msgid "The email address where the Feedback form will be sent"
 msgstr ""
 
-#: includes/Core/Settings.php:1691
+#: includes/Core/Settings.php:1703
 msgid "Feedback URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1710
+#: includes/Core/Settings.php:1722
 msgid "Show Attachment"
 msgstr ""
 
-#: includes/Core/Settings.php:1728
+#: includes/Core/Settings.php:1740
 msgid "Show Related Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1742
+#: includes/Core/Settings.php:1754
 msgid "Archive Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1756
+#: includes/Core/Settings.php:1768
 #: includes/Editors/Elementor.php:431
 #: includes/Editors/Elementor.php:466
 #: includes/Editors/Elementor.php:553
@@ -5451,72 +6648,72 @@ msgstr ""
 msgid "Nested Subcategory"
 msgstr ""
 
-#: includes/Core/Settings.php:1764
+#: includes/Core/Settings.php:1776
 #: includes/Editors/Elementor/Widget/ArchiveList.php:154
 #: assets/build/blocks/editor.js:1
 msgid "Enable Pagination"
 msgstr ""
 
-#: includes/Core/Settings.php:1779
-#: includes/Core/Settings.php:1785
+#: includes/Core/Settings.php:1791
+#: includes/Core/Settings.php:1797
 #: includes/Core/SetupWizard.php:489
 msgid "Design"
 msgstr ""
 
-#: includes/Core/Settings.php:1792
-#: includes/Core/Settings.php:1800
+#: includes/Core/Settings.php:1804
+#: includes/Core/Settings.php:1812
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/Core/Settings.php:1803
+#: includes/Core/Settings.php:1815
 msgid "Search for shortcode"
 msgstr ""
 
-#: includes/Core/Settings.php:1804
+#: includes/Core/Settings.php:1816
 msgid "No Shortcodes Found with these keywords"
 msgstr ""
 
-#: includes/Core/Settings.php:1809
+#: includes/Core/Settings.php:1821
 msgid "Search Form"
 msgstr ""
 
-#: includes/Core/Settings.php:1813
+#: includes/Core/Settings.php:1825
 msgid "[betterdocs_search_form placeholder=\"Search...\" heading=\"Heading\" subheading=\"Subheading\" category_search=\"true\" search_button=\"true\" popular_search=\"true\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1814
-#: includes/Core/Settings.php:1825
-#: includes/Core/Settings.php:1836
-#: includes/Core/Settings.php:1847
-#: includes/Core/Settings.php:1858
-#: includes/Core/Settings.php:1869
-#: includes/Core/Settings.php:1880
-#: includes/Core/Settings.php:1891
-#: includes/Core/Settings.php:1902
+#: includes/Core/Settings.php:1826
+#: includes/Core/Settings.php:1837
+#: includes/Core/Settings.php:1848
+#: includes/Core/Settings.php:1859
+#: includes/Core/Settings.php:1870
+#: includes/Core/Settings.php:1881
+#: includes/Core/Settings.php:1892
+#: includes/Core/Settings.php:1903
+#: includes/Core/Settings.php:1914
 msgid "Example with parameters:"
 msgstr ""
 
-#: includes/Core/Settings.php:1824
+#: includes/Core/Settings.php:1836
 msgid "[betterdocs_feedback_form button_text=\"Send\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1831
+#: includes/Core/Settings.php:1843
 msgid "Category Grid- Layout 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1835
+#: includes/Core/Settings.php:1847
 msgid "[betterdocs_category_grid show_count=\"true\" show_icon=\"true\" masonry=\"true\" column=\"3\" posts_per_page=\"5\" nested_subcategory=\"true\" terms=\"term_ID, term_ID\" terms_orderby=\"\" terms_order=\"\" multiple_knowledge_base=\"\" kb_slug=\"\" title_tag=\"h2\" orderby=\"\" order=\"\" ]"
 msgstr ""
 
-#: includes/Core/Settings.php:1842
+#: includes/Core/Settings.php:1854
 msgid "Category Box- Layout 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1846
+#: includes/Core/Settings.php:1858
 msgid "[betterdocs_category_box orderby=\"\" column=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" show_icon=\"\" kb_slug=\"\" title_tag=\"h2\" multiple_knowledge_base=\"false\" border_bottom=\"false\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1853
+#: includes/Core/Settings.php:1865
 #: includes/Editors/Elementor/Widget/ArchiveList.php:281
 #: includes/Editors/Elementor/Widget/ArchiveList.php:439
 #: includes/Editors/Elementor/Widget/ArchiveList.php:1077
@@ -5525,249 +6722,249 @@ msgstr ""
 msgid "Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1857
+#: includes/Core/Settings.php:1869
 msgid "[betterdocs_category_list orderby=\"\" order=\"\" posts_per_page=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" terms_order=\"\" kb_slug=\"\" multiple_knowledge_base=\"false\" title_tag=\"h2\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1864
+#: includes/Core/Settings.php:1876
 msgid "FAQ Layout - 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1868
+#: includes/Core/Settings.php:1880
 msgid "[betterdocs_faq_list_modern groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1875
+#: includes/Core/Settings.php:1887
 msgid "FAQ Layout - 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1879
+#: includes/Core/Settings.php:1891
 msgid "[betterdocs_faq_list_classic groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1886
+#: includes/Core/Settings.php:1898
 msgid "FAQ Layout - 3"
 msgstr ""
 
-#: includes/Core/Settings.php:1890
+#: includes/Core/Settings.php:1902
 msgid "[betterdocs_faq_list_layout_3 class=\"faq-doc betterdocs-faq-layout-3\" groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1897
+#: includes/Core/Settings.php:1909
 msgid "FAQ Layout - 4"
 msgstr ""
 
-#: includes/Core/Settings.php:1901
+#: includes/Core/Settings.php:1913
 msgid "[betterdocs_faq_tab class=\"faq-doc betterdocs-faq-layout-4\" groups=\"group_id\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1911
-#: includes/Core/Settings.php:1918
-#: includes/Core/Settings.php:1924
+#: includes/Core/Settings.php:1923
+#: includes/Core/Settings.php:1930
+#: includes/Core/Settings.php:1936
 msgid "Access & Restrictions"
 msgstr ""
 
-#: includes/Core/Settings.php:1949
+#: includes/Core/Settings.php:1961
 msgid "Global Role Management"
 msgstr ""
 
-#: includes/Core/Settings.php:1955
+#: includes/Core/Settings.php:1967
 msgid "Who Can Write Docs?"
 msgstr ""
 
-#: includes/Core/Settings.php:1966
+#: includes/Core/Settings.php:1978
 msgid "Who Can Edit Settings?"
 msgstr ""
 
-#: includes/Core/Settings.php:1977
+#: includes/Core/Settings.php:1989
 msgid "Who Can Check Analytics?"
 msgstr ""
 
-#: includes/Core/Settings.php:1988
+#: includes/Core/Settings.php:2000
 msgid "Who Can Check FAQ Builder?"
 msgstr ""
 
-#: includes/Core/Settings.php:2003
-#: includes/Core/Settings.php:2011
+#: includes/Core/Settings.php:2015
+#: includes/Core/Settings.php:2023
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Internal Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2018
+#: includes/Core/Settings.php:2030
 msgid "Choose a Rule Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2019
+#: includes/Core/Settings.php:2031
 msgid "Choose a rule type: apply access globally (Basic), or configure detailed restrictions (Advanced) for docs, categories, and KBs."
 msgstr ""
 
-#: includes/Core/Settings.php:2024
-#: includes/Core/Settings.php:2048
-#: includes/Core/Settings.php:2069
-#: includes/Core/Settings.php:2090
-#: includes/Core/Settings.php:2921
-#: includes/Core/Settings.php:2940
-#: includes/Core/Settings.php:2954
+#: includes/Core/Settings.php:2036
+#: includes/Core/Settings.php:2060
+#: includes/Core/Settings.php:2081
+#: includes/Core/Settings.php:2102
+#: includes/Core/Settings.php:2933
+#: includes/Core/Settings.php:2952
+#: includes/Core/Settings.php:2966
 msgid "Select any"
 msgstr ""
 
-#: includes/Core/Settings.php:2041
+#: includes/Core/Settings.php:2053
 msgid "Restrict Access to"
 msgstr ""
 
-#: includes/Core/Settings.php:2042
+#: includes/Core/Settings.php:2054
 msgid "Only selected User Roles will be able to view your Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2062
+#: includes/Core/Settings.php:2074
 msgid "Restriction on Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2063
+#: includes/Core/Settings.php:2075
 msgid "Selected Docs pages will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2083
+#: includes/Core/Settings.php:2095
 msgid "Restriction on Docs Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2084
+#: includes/Core/Settings.php:2096
 msgid "Selected Docs categories will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2104
+#: includes/Core/Settings.php:2116
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/Core/Settings.php:2105
+#: includes/Core/Settings.php:2117
 msgid "Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the \"404 not found\" page"
 msgstr ""
 
-#: includes/Core/Settings.php:2127
-#: includes/Core/Settings.php:2133
-#: includes/Core/Settings.php:2138
+#: includes/Core/Settings.php:2139
+#: includes/Core/Settings.php:2145
+#: includes/Core/Settings.php:2150
 #: views/admin/email/pro.php:22
 msgid "Email Reporting"
 msgstr ""
 
-#: includes/Core/Settings.php:2147
+#: includes/Core/Settings.php:2159
 msgid "Reporting Frequency"
 msgstr ""
 
-#: includes/Core/Settings.php:2161
+#: includes/Core/Settings.php:2173
 msgid "Reporting Day"
 msgstr ""
 
-#: includes/Core/Settings.php:2169
+#: includes/Core/Settings.php:2181
 msgid "Sunday"
 msgstr ""
 
-#: includes/Core/Settings.php:2170
+#: includes/Core/Settings.php:2182
 msgid "Monday"
 msgstr ""
 
-#: includes/Core/Settings.php:2171
+#: includes/Core/Settings.php:2183
 msgid "Tuesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2172
+#: includes/Core/Settings.php:2184
 msgid "Wednesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2173
+#: includes/Core/Settings.php:2185
 msgid "Thursday"
 msgstr ""
 
-#: includes/Core/Settings.php:2174
+#: includes/Core/Settings.php:2186
 msgid "Friday"
 msgstr ""
 
-#: includes/Core/Settings.php:2175
+#: includes/Core/Settings.php:2187
 msgid "Saturday"
 msgstr ""
 
-#: includes/Core/Settings.php:2177
+#: includes/Core/Settings.php:2189
 msgid "This is only applicable for the “Weekly” report"
 msgstr ""
 
-#: includes/Core/Settings.php:2182
+#: includes/Core/Settings.php:2194
 msgid "Select Reporting Data"
 msgstr ""
 
-#: includes/Core/Settings.php:2197
+#: includes/Core/Settings.php:2209
 msgid "Reporting Email"
 msgstr ""
 
-#: includes/Core/Settings.php:2205
+#: includes/Core/Settings.php:2217
 msgid "Reporting Email Subject"
 msgstr ""
 
-#: includes/Core/Settings.php:2214
+#: includes/Core/Settings.php:2226
 msgid "Reporting Test"
 msgstr ""
 
-#: includes/Core/Settings.php:2215
+#: includes/Core/Settings.php:2227
 msgid "Test Report"
 msgstr ""
 
-#: includes/Core/Settings.php:2231
+#: includes/Core/Settings.php:2243
 msgid "Successfully Sent a Test Report in Your Email."
 msgstr ""
 
-#: includes/Core/Settings.php:2243
+#: includes/Core/Settings.php:2255
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2249
+#: includes/Core/Settings.php:2261
 msgid "Git Sync Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2255
+#: includes/Core/Settings.php:2267
 msgid "Enable Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2260
+#: includes/Core/Settings.php:2272
 msgid "Enable bidirectional synchronization between BetterDocs and Git repositories"
 msgstr ""
 
-#: includes/Core/Settings.php:2270
-#: includes/Core/Settings.php:2277
+#: includes/Core/Settings.php:2282
+#: includes/Core/Settings.php:2289
 #: includes/Core/SetupWizard.php:445
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2292
-#: includes/Core/Settings.php:2641
+#: includes/Core/Settings.php:2304
+#: includes/Core/Settings.php:2653
 msgid "Enable Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2307
-#: includes/Core/Settings.php:2313
+#: includes/Core/Settings.php:2319
+#: includes/Core/Settings.php:2325
 msgid "AI Content Suite"
 msgstr ""
 
-#: includes/Core/Settings.php:2319
+#: includes/Core/Settings.php:2331
 msgid "AI Content Suite Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2346
+#: includes/Core/Settings.php:2358
 msgid "AI Platform & API"
 msgstr ""
 
-#: includes/Core/Settings.php:2352
+#: includes/Core/Settings.php:2364
 msgid "AI Platform"
 msgstr ""
 
-#: includes/Core/Settings.php:2353
+#: includes/Core/Settings.php:2365
 msgid "Choose which AI platform powers Write with AI, AI Edit, the Doc Summarizer and Quality Score. The model list and API key field below adapt to your choice."
 msgstr ""
 
-#: includes/Core/Settings.php:2371
+#: includes/Core/Settings.php:2383
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/faq.js:1
@@ -5777,291 +6974,292 @@ msgid "OpenAI API Key"
 msgstr ""
 
 #. translators: %s: documentation URL
-#: includes/Core/Settings.php:2372
+#: includes/Core/Settings.php:2384
 msgid "Check out this <a target=\"_blank\" href=\"%s\">documentation</a> to generate your OpenAI API key."
 msgstr ""
 
-#: includes/Core/Settings.php:2380
+#: includes/Core/Settings.php:2392
 msgid "Google Gemini API Key"
 msgstr ""
 
 #. translators: %s: Google AI Studio URL
-#: includes/Core/Settings.php:2381
+#: includes/Core/Settings.php:2393
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">Google AI Studio</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2389
+#: includes/Core/Settings.php:2401
 msgid "Anthropic Claude API Key"
 msgstr ""
 
 #. translators: %s: Anthropic Console URL
-#: includes/Core/Settings.php:2390
+#: includes/Core/Settings.php:2402
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">Anthropic Console</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2398
+#: includes/Core/Settings.php:2410
 msgid "DeepSeek API Key"
 msgstr ""
 
 #. translators: %s: DeepSeek platform URL
-#: includes/Core/Settings.php:2399
+#: includes/Core/Settings.php:2411
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">DeepSeek platform</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2407
+#: includes/Core/Settings.php:2419
 msgid "OpenRouter API Key"
 msgstr ""
 
 #. translators: %s: OpenRouter keys URL
-#: includes/Core/Settings.php:2408
+#: includes/Core/Settings.php:2420
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">OpenRouter</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2416
+#: includes/Core/Settings.php:2428
 msgid "Model"
 msgstr ""
 
-#: includes/Core/Settings.php:2417
+#: includes/Core/Settings.php:2429
 msgid "Available models depend on the selected platform."
 msgstr ""
 
-#: includes/Core/Settings.php:2460
+#: includes/Core/Settings.php:2472
 msgid "Configuration"
 msgstr ""
 
-#: includes/Core/Settings.php:2467
+#: includes/Core/Settings.php:2479
 msgid "Write Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2468
+#: includes/Core/Settings.php:2480
 msgid "Generate AI based Documentation in your Gutenberg Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2476
+#: includes/Core/Settings.php:2488
 msgid "Write FAQ with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2477
+#: includes/Core/Settings.php:2489
 msgid "Generate AI based FAQ in your Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2485
+#: includes/Core/Settings.php:2497
 msgid "Write Glossaries with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2486
+#: includes/Core/Settings.php:2498
 msgid "Generate AI based Glossary definitions from the Glossaries admin page"
 msgstr ""
 
-#: includes/Core/Settings.php:2495
+#: includes/Core/Settings.php:2507
 msgid "Enhance Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2496
+#: includes/Core/Settings.php:2508
 msgid "Add BetterDocs AI actions for suggesting categories, tags and excerpts inside the native Docs editor panels."
 msgstr ""
 
-#: includes/Core/Settings.php:2503
-#: includes/Core/Settings.php:2578
+#: includes/Core/Settings.php:2515
+#: includes/Core/Settings.php:2590
 msgid "Set Max Tokens"
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2505
+#: includes/Core/Settings.php:2517
 msgid "Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2519
+#: includes/Core/Settings.php:2531
 msgid "Write AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2525
+#: includes/Core/Settings.php:2537
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/ai-edit.js:1
 #: assets/build/blocks/write-with-ai.js:1
 msgid "Instructions"
 msgstr ""
 
-#: includes/Core/Settings.php:2526
+#: includes/Core/Settings.php:2538
 msgid "Add reusable instruction sets to steer how BetterDocs AI writes. The \"Default/Core\" set is always applied; extra sets can be picked in the Write with AI popup."
 msgstr ""
 
-#: includes/Core/Settings.php:2542
+#: includes/Core/Settings.php:2554
 msgid "Edit AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2548
+#: includes/Core/Settings.php:2560
 #: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:9
 msgid "Actions"
 msgstr ""
 
-#: includes/Core/Settings.php:2549
+#: includes/Core/Settings.php:2561
 msgid "Choose which Edit with AI actions appear in the editor. Toggle actions on or off, edit each action's instruction, or add your own custom actions. All predefined actions are enabled by default."
 msgstr ""
 
-#: includes/Core/Settings.php:2570
+#: includes/Core/Settings.php:2582
 msgid "AI Powered Doc Summarizer"
 msgstr ""
 
-#: includes/Core/Settings.php:2571
+#: includes/Core/Settings.php:2583
 msgid "Enable AI-powered article summaries on single doc pages. Requires OpenAI API key."
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2580
+#: includes/Core/Settings.php:2592
 msgid "Single Doc summarizer will be generated based on the token limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2626
+#: includes/Core/Settings.php:2638
 msgid "Enable AI Chatbot"
 msgstr ""
 
-#: includes/Core/Settings.php:2640
+#: includes/Core/Settings.php:2652
 msgid "Instant Answer is currently disabled. The AI Chatbot won't appear on your site until Instant Answer is enabled."
 msgstr ""
 
-#: includes/Core/Settings.php:2717
-#: includes/Core/Settings.php:2723
+#: includes/Core/Settings.php:2729
+#: includes/Core/Settings.php:2735
 msgid "Import / Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2729
+#: includes/Core/Settings.php:2741
 msgid "Import Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2754
-#: includes/Core/Settings.php:2760
+#: includes/Core/Settings.php:2766
+#: includes/Core/Settings.php:2772
 msgid "Import"
 msgstr ""
 
-#: includes/Core/Settings.php:2785
-#: includes/Core/Settings.php:2791
+#: includes/Core/Settings.php:2797
+#: includes/Core/Settings.php:2803
 msgid "Import Docs"
 msgstr ""
 
 #. Translators: %1$s is a link to download a sample CSV file.
-#: includes/Core/Settings.php:2793
+#: includes/Core/Settings.php:2805
 msgid "To import your Docs, please upload the .xml / .csv file here. <a href=\"%1$s\">Download sample csv file</a>"
 msgstr ""
 
-#: includes/Core/Settings.php:2795
-#: includes/Core/Settings.php:2796
-#: includes/Core/Settings.php:2835
-#: includes/Core/Settings.php:2836
-#: includes/Core/Settings.php:2985
-#: includes/Core/Settings.php:2986
+#: includes/Core/Settings.php:2807
+#: includes/Core/Settings.php:2808
+#: includes/Core/Settings.php:2847
+#: includes/Core/Settings.php:2848
+#: includes/Core/Settings.php:2997
+#: includes/Core/Settings.php:2998
 msgid "Proceed"
 msgstr ""
 
-#: includes/Core/Settings.php:2797
-#: includes/Core/Settings.php:2837
+#: includes/Core/Settings.php:2809
+#: includes/Core/Settings.php:2849
 msgid "Importing..."
 msgstr ""
 
-#: includes/Core/Settings.php:2798
+#: includes/Core/Settings.php:2810
 msgid "It seems like documentations with same slugs already exist on your website. What would you like to do?"
 msgstr ""
 
-#: includes/Core/Settings.php:2804
-#: includes/Core/Settings.php:2846
+#: includes/Core/Settings.php:2816
+#: includes/Core/Settings.php:2858
 msgid "Import completed successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:2819
-#: includes/Core/Settings.php:2825
+#: includes/Core/Settings.php:2831
+#: includes/Core/Settings.php:2837
 msgid "Import Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2826
+#: includes/Core/Settings.php:2838
 msgid "To import BetterDocs Settings, please upload BetterDocs settings you have exported from another website in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:2827
+#: includes/Core/Settings.php:2839
 msgid "Change"
 msgstr ""
 
-#: includes/Core/Settings.php:2864
-#: includes/Core/Settings.php:2870
+#: includes/Core/Settings.php:2876
+#: includes/Core/Settings.php:2882
 msgid "Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2895
+#: includes/Core/Settings.php:2907
 msgid "Export Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2901
+#: includes/Core/Settings.php:2913
 msgid "Choose an export type: All Docs, a specific Knowledge Base, or a Doc Category"
 msgstr ""
 
-#: includes/Core/Settings.php:2915
+#: includes/Core/Settings.php:2927
 msgid "Select Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2916
+#: includes/Core/Settings.php:2928
 msgid "Selected docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2934
+#: includes/Core/Settings.php:2946
 msgid "Select Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2935
+#: includes/Core/Settings.php:2947
 msgid "Selected categories and its docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2948
+#: includes/Core/Settings.php:2960
 msgid "Select Glossaries"
 msgstr ""
 
-#: includes/Core/Settings.php:2949
+#: includes/Core/Settings.php:2961
 msgid "Selected glossary terms will be exported."
 msgstr ""
 
-#: includes/Core/Settings.php:2961
+#: includes/Core/Settings.php:2973
 msgid "Select File Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2962
+#: includes/Core/Settings.php:2974
 msgid "Choose a file type"
 msgstr ""
 
-#: includes/Core/Settings.php:2968
+#: includes/Core/Settings.php:2980
 msgid ".xml"
 msgstr ""
 
-#: includes/Core/Settings.php:2969
+#: includes/Core/Settings.php:2981
 msgid ".csv"
 msgstr ""
 
-#: includes/Core/Settings.php:2976
+#: includes/Core/Settings.php:2988
 msgid "Export FAQ"
 msgstr ""
 
-#: includes/Core/Settings.php:2977
+#: includes/Core/Settings.php:2989
 msgid "Export FAQ Related Terms & Posts"
 msgstr ""
 
-#: includes/Core/Settings.php:2987
-#: includes/Core/Settings.php:3027
+#: includes/Core/Settings.php:2999
+#: includes/Core/Settings.php:3039
 msgid "Exporting..."
 msgstr ""
 
-#: includes/Core/Settings.php:3004
+#: includes/Core/Settings.php:3016
 msgid "Exported Successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:3017
-#: includes/Core/Settings.php:3022
-#: includes/Core/Settings.php:3025
-#: includes/Core/Settings.php:3026
+#: includes/Core/Settings.php:3029
+#: includes/Core/Settings.php:3034
+#: includes/Core/Settings.php:3037
+#: includes/Core/Settings.php:3038
 msgid "Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:3023
+#: includes/Core/Settings.php:3035
 msgid "Simply click on “Export Settings” button to download your BetterDocs settings in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:3038
+#: includes/Core/Settings.php:3050
 msgid "File downloaded successfully."
 msgstr ""
 
@@ -7024,6 +8222,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ToC.php:96
 #: includes/Editors/Elementor/Widget/ToC.php:108
 #: includes/Editors/Elementor/Widget/ToC.php:120
+#: assets/build/admin/js/dashboard.js:12
 msgid "Show"
 msgstr ""
 
@@ -7070,6 +8269,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ToC.php:97
 #: includes/Editors/Elementor/Widget/ToC.php:109
 #: includes/Editors/Elementor/Widget/ToC.php:121
+#: assets/build/admin/js/dashboard.js:12
 msgid "Hide"
 msgstr ""
 
@@ -7805,6 +9005,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:170
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:440
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:452
+#: assets/build/admin/js/dashboard.js:20
 msgid "Off"
 msgstr ""
 
@@ -8373,6 +9574,7 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/CodeSnippet.php:81
 #: includes/Editors/Elementor/Widget/CodeSnippet.php:116
 #: includes/Editors/Elementor/Widget/CodeSnippetTab.php:51
+#: assets/build/admin/js/dashboard.js:13
 #: assets/build/blocks/editor.js:1
 msgid "JSON"
 msgstr ""
@@ -8942,6 +10144,7 @@ msgstr ""
 
 #: includes/Editors/Elementor/Widget/Sidebar.php:1217
 #: includes/Editors/Elementor/Widget/Sidebar.php:1402
+#: assets/build/admin/js/dashboard.js:20
 msgid "Active"
 msgstr ""
 
@@ -9178,6 +10381,462 @@ msgstr ""
 
 #: includes/Insights/Insights.php:1146
 msgid "Just Deactivate"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:407
+msgid "MCP is switched off"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:408
+msgid "This site is not accepting AI client connections right now. An administrator can switch MCP on under BetterDocs → MCP."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:439
+msgid "This account cannot connect an AI client"
+msgstr ""
+
+#. translators: %s: the required WordPress capability, e.g. edit_docs.
+#: includes/Mcp/MCPManager.php:442
+msgid "Your account can't connect an AI client to BetterDocs: it needs the \"%s\" capability. Ask an administrator, or use bd-get-status's capability list."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:463
+msgid "Could not authorize"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:470
+msgid "This consent form is no longer valid. Start the connection again from your AI client."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:476
+msgid "The user denied the request."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:584
+msgid "An AI assistant"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:596
+#: assets/build/admin/js/dashboard.js:10
+msgid "Read-only"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:597
+#: assets/build/admin/js/dashboard.js:10
+msgid "Read & write"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:600
+msgid "It can read your documentation, but it cannot change anything on this site."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:601
+msgid "It acts as you: anything it creates, edits or deletes is recorded under your account."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:631
+msgid "Connect an AI client to BetterDocs"
+msgstr ""
+
+#. translators: 1: the AI client's name, escaped and wrapped in <strong>. 2: this site's host, escaped and wrapped in <strong>.
+#: includes/Mcp/MCPManager.php:673
+msgid "%1$s wants to work with the documentation on %2$s."
+msgstr ""
+
+#. translators: 1: the login of the person approving, escaped and wrapped in <strong>. 2: their role.
+#: includes/Mcp/MCPManager.php:688
+msgid "Signed in as %1$s &middot; %2$s"
+msgstr ""
+
+#. translators: %s: the login of the person approving, escaped and wrapped in <strong>.
+#: includes/Mcp/MCPManager.php:695
+msgid "Signed in as %s"
+msgstr ""
+
+#. translators: 1: the AI client's name. 2: how many things it will be able to do.
+#: includes/Mcp/MCPManager.php:712
+msgid "What %1$s will be able to do (%2$d)"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:724
+msgid "Secured with OAuth. You can revoke this app at any time under BetterDocs → MCP."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:729
+msgid "Deny"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:730
+msgid "Approve"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:754
+msgid "Authorization error"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:802
+msgid "Read docs, categories, tags and knowledge bases"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:802
+msgid "Create and edit docs"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:803
+msgid "Trash and delete docs"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:804
+msgid "Create and manage doc categories and tags"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:805
+msgid "Create and manage knowledge bases (BetterDocs Pro)"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:806
+msgid "Read FAQs and FAQ groups"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:806
+msgid "Create and manage FAQs and FAQ groups"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:807
+msgid "Read BetterDocs settings (API keys stay hidden)"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:807
+#: assets/build/admin/js/dashboard.js:20
+msgid "Read and change BetterDocs settings"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:808
+#: assets/build/admin/js/dashboard.js:20
+msgid "Read documentation analytics"
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1346
+msgid "Grant read-only access: no doc, term, FAQ or settings changes."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1363
+msgid "Optionally set read-only on the new token; omit to keep the current scopes."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1398
+msgid "The OAuth client_id to revoke."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1426
+msgid "Report this user's capabilities instead of the caller's."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1467
+msgid "The BetterDocs MCP endpoint accepts POST only."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1513
+#: includes/Mcp/MCPManager.php:1538
+#: includes/Mcp/MCPManager.php:1575
+msgid "MCP is disabled on this site."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1775
+msgid "A client_id is required to revoke an OAuth app."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1823
+msgid "No user with that id exists on this site."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1857
+msgid "BetterDocs MCP: AI assistants will connect but see no tools."
+msgstr ""
+
+#: includes/Mcp/MCPManager.php:1858
+msgid "MCP access is enabled, but the bundled Abilities runtime (dependencies/vendor/autoload_packages.php) is missing from this installation — usually a plugin package built without it. Reinstall BetterDocs from wordpress.org or an official build; until then, connected AI clients get an empty tool list."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:300
+msgid "At least one valid redirect_uri is required."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:305
+#: includes/Mcp/MCPOAuth.php:659
+msgid "MCP Client"
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:360
+msgid "Unknown client_id."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:364
+msgid "redirect_uri does not match a registered value."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:370
+msgid "Only response_type=code is supported."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:384
+msgid "PKCE with code_challenge_method=S256 is required."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:455
+msgid "Unsupported grant_type."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:721
+msgid "Unknown or expired authorization code."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:732
+msgid "Authorization code expired."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:736
+#: includes/Mcp/MCPOAuth.php:773
+msgid "client_id mismatch."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:740
+msgid "redirect_uri mismatch."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:744
+msgid "PKCE verification failed."
+msgstr ""
+
+#: includes/Mcp/MCPOAuth.php:767
+msgid "Unknown refresh token."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:107
+msgid "MCP access is turned off, so the endpoint refuses every request. Switch MCP on above and run the test again."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:114
+msgid "No connection token exists yet. Click Connect to mint one, then run the test again."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:123
+msgid "This site is paired, but the stored copy of the connection token cannot be decrypted — usually because the WordPress security salts changed. Existing clients still authenticate; rotate the token and reconnect them to be able to test it."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:139
+msgid "Connection URL"
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:140
+msgid "REST fallback URL"
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:144
+msgid "OAuth discovery"
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:151
+msgid "OAuth challenge"
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:158
+msgid "Client access"
+msgstr ""
+
+#. translators: 1: pretty MCP endpoint URL, 2: REST fallback URL.
+#: includes/Mcp/MCPSelfTest.php:169
+msgid "The connection URL %1$s did not answer correctly, but the REST fallback %2$s works. Re-save Settings → Permalinks to rebuild the rewrite rules; until then, give your AI client the fallback URL."
+msgstr ""
+
+#. translators: %d: number of MCP tools returned.
+#: includes/Mcp/MCPSelfTest.php:192
+msgid "Connection healthy: the endpoint authenticated, offered OAuth, and returned %d tool."
+msgid_plural "Connection healthy: the endpoint authenticated, offered OAuth, and returned %d tools."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: endpoint URL, 2: the transport error PHP reported.
+#: includes/Mcp/MCPSelfTest.php:255
+msgid "PHP could not verify this site's TLS certificate (common on local sites with self-signed certificates). %1$s reported: %2$s. Add `add_filter( 'https_local_ssl_verify', '__return_false' );` in a mu-plugin for local testing."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: the transport error PHP reported.
+#: includes/Mcp/MCPSelfTest.php:266
+msgid "%1$s could not be reached: %2$s."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: the URL it redirected to.
+#: includes/Mcp/MCPSelfTest.php:284
+msgid "%1$s redirected to %2$s instead of answering. A redirect between HTTP and HTTPS usually means the Site Address and WordPress Address schemes disagree."
+msgstr ""
+
+#. translators: %s: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:290
+msgid "%s redirected instead of answering, which usually means the Site Address and WordPress Address schemes disagree."
+msgstr ""
+
+#. translators: %s: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:301
+msgid "%s returned 404 — WordPress does not know this URL. Re-save Settings → Permalinks to rebuild the rewrite rules."
+msgstr ""
+
+#. translators: %s: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:312
+msgid "%s rejected the connection token (authentication failed). Rotate the token and reconnect your AI client."
+msgstr ""
+
+#. translators: %s: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:323
+msgid "%s is rate-limiting this server after repeated failed tokens. Wait for the lockout to lapse, then rotate the token and reconnect."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: HTTP status code, 3: the Content-Type header received.
+#: includes/Mcp/MCPSelfTest.php:343
+msgid "%1$s answered %2$d with %3$s instead of JSON — WordPress is serving an ordinary page at this URL, not the MCP endpoint. Under plain permalinks the pretty URL silently returns the front page; re-save Settings → Permalinks, or give your AI client the REST fallback URL."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:346
+msgid "no content type"
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: HTTP status code.
+#: includes/Mcp/MCPSelfTest.php:356
+msgid "%1$s answered %2$d with JSON that is not a JSON-RPC response, so something other than the MCP endpoint is serving this URL. Re-save Settings → Permalinks, or use the REST fallback URL."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: abilities-registry diagnostic summary.
+#: includes/Mcp/MCPSelfTest.php:380
+msgid "%1$s answered but returned no tool catalog. Confirm the MCP runtime shipped with this build and that abilities registered. Diagnostics — %2$s"
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: number of tools returned.
+#: includes/Mcp/MCPSelfTest.php:391
+msgid "%1$s authenticated and returned %2$d tools."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:450
+msgid "The REST discovery aliases are served and identify this site exactly. The /.well-known/ documents are not — see the caveat below."
+msgstr ""
+
+#. translators: %s: the reason the /.well-known/ document could not be read.
+#: includes/Mcp/MCPSelfTest.php:454
+msgid "This site does not serve the /.well-known/ OAuth documents, usually because the web server handles that path itself before WordPress sees it. Every client we have tested finds the metadata through the 401 challenge instead, which points at the REST alias, so this is not fatal — but a client that only tries /.well-known/ will not connect. Details: %s"
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:476
+msgid "All four OAuth discovery documents are served and advertise this site's MCP endpoint exactly."
+msgstr ""
+
+#. translators: 1: discovery document URL, 2: transport error.
+#: includes/Mcp/MCPSelfTest.php:512
+msgid "The OAuth discovery document %1$s could not be fetched: %2$s. Clients that connect by URL alone cannot authenticate without it."
+msgstr ""
+
+#. translators: 1: discovery document URL, 2: HTTP status code.
+#: includes/Mcp/MCPSelfTest.php:527
+msgid "The OAuth discovery document %1$s returned %2$d instead of valid metadata. Re-save Settings → Permalinks; if it persists, the web server or another plugin is claiming that URL."
+msgstr ""
+
+#. translators: 1: metadata field name, 2: value found in the document, 3: the value it should carry, 4: discovery document URL.
+#: includes/Mcp/MCPSelfTest.php:538
+msgid "The discovery document %4$s advertises %1$s \"%2$s\" but this site's MCP endpoint is \"%3$s\". RFC 9728 requires an exact match, so clients reject the metadata and report that the server does not implement OAuth. If the two differ only by scheme, a reverse proxy is terminating TLS without passing X-Forwarded-Proto; otherwise something else is serving this URL."
+msgstr ""
+
+#. translators: 1: the http:// endpoint the documents advertise, 2: the https:// endpoint that also answers.
+#: includes/Mcp/MCPSelfTest.php:580
+msgid "The discovery documents advertise %1$s, but %2$s answers as well — WordPress is storing an http:// Site Address behind a proxy that terminates TLS. AI clients connect over https and reject the http identifier as a mismatch. Fix the Site Address in Settings → General, or have the proxy send X-Forwarded-Proto."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: HTTP status code.
+#: includes/Mcp/MCPSelfTest.php:619
+msgid "An unauthenticated call to %1$s answered %2$d instead of 401. Clients that connect by URL alone need the 401 challenge to start the OAuth flow."
+msgstr ""
+
+#. translators: %s: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:631
+msgid "%s answered 401 but sent no WWW-Authenticate header — a security plugin or proxy is most likely stripping it. Clients that connect by URL alone will report that this server does not implement OAuth."
+msgstr ""
+
+#. translators: 1: endpoint URL, 2: the WWW-Authenticate header value received.
+#: includes/Mcp/MCPSelfTest.php:644
+msgid "%1$s sent a WWW-Authenticate header with no resource_metadata URL (%2$s). Clients have nowhere to look up this site's OAuth metadata."
+msgstr ""
+
+#. translators: 1: the resource_metadata URL from the challenge header, 2: endpoint URL.
+#: includes/Mcp/MCPSelfTest.php:671
+msgid "The challenge from %2$s points at %1$s, but that URL does not return OAuth metadata. It is the first thing a client fetches, so the connection fails there."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:686
+msgid "The OAuth challenge could not be checked because the endpoint did not answer. Fix the connection error above and run the test again."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:692
+msgid "Unauthenticated calls answer with the OAuth challenge, so clients that have only the URL can authenticate."
+msgstr ""
+
+#. translators: 1: the User-Agent string tried, 2: the HTTP status it received, 3: the HTTP status WordPress' own User-Agent received.
+#: includes/Mcp/MCPSelfTest.php:733
+msgid "The endpoint answered %3$d for WordPress but %2$d for an AI client's User-Agent (%1$s). A security plugin, firewall or \"block bad bots\" rule is refusing non-browser clients — exempt the MCP and /.well-known/ paths, or no AI client will ever reach this site."
+msgstr ""
+
+#: includes/Mcp/MCPSelfTest.php:743
+msgid "The endpoint answers AI-client User-Agents the same way it answers WordPress, so no bot filter is blocking them. This cannot see an IP-level block of the AI vendor."
+msgstr ""
+
+#. translators: 1: number of locked-out clients, 2: the filter name that overrides client identification.
+#: includes/Mcp/MCPSelfTest.php:773
+msgid "%1$d client address is locked out after repeated failed authentications — usually a connector still holding a rotated-away token. While a lockout holds, that address is refused even when it presents a valid token, so behind a reverse proxy (where every client shares one address) one stale connector can wall off everyone; the `%2$s` filter is how you teach the limiter to read the real client address. Lockouts clear within 15 minutes of the retries stopping."
+msgid_plural "%1$d client addresses are locked out after repeated failed authentications — usually connectors still holding rotated-away tokens. While a lockout holds, that address is refused even when it presents a valid token, so behind a reverse proxy (where every client shares one address) one stale connector can wall off everyone; the `%2$s` filter is how you teach the limiter to read the real client address. Lockouts clear within 15 minutes of the retries stopping."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Mcp/MCPSelfTest.php:783
+#: assets/build/admin/js/dashboard.js:19
+msgid "Client lockouts"
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:109
+msgid "MCP is disabled on this site. Enable it under BetterDocs → MCP."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:123
+msgid "Too many failed attempts. Try again later."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:145
+msgid "Unauthorized: invalid or missing connection token."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:169
+msgid "Parse error: body is not valid JSON."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:195
+msgid "Invalid request."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:309
+msgid "Call bd-get-status first: it reports the BetterDocs and BetterDocs Pro versions, which capabilities the connected user holds, and which features are switched on, so you can tell a refusal apart from a misconfiguration before you try anything. Every tool describes its own availability — a tool that needs BetterDocs Pro, or a setting that is currently off, says so in its description and returns a typed error explaining what would make it work. Prefer names over ids where a tool accepts both; it will find or create the matching term."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:332
+msgid "Missing tool name."
+msgstr ""
+
+#: includes/Mcp/MCPServer.php:481
+msgid "use this MCP connection"
+msgstr ""
+
+#. translators: %s: tool label.
+#: includes/Mcp/MCPTools.php:256
+msgid "%s (Pro)"
+msgstr ""
+
+#. translators: %s: MCP tool name.
+#: includes/Mcp/MCPTools.php:368
+msgid "run the \"%s\" tool"
 msgstr ""
 
 #: includes/REST/AIEdit.php:68
@@ -9712,6 +11371,7 @@ msgstr ""
 
 #: includes/Utils/Helper.php:1542
 #: includes/Utils/Helper.php:1544
+#: assets/build/admin/js/dashboard.js:12
 #: assets/build/blocks/editor.js:1
 msgid "Copy"
 msgstr ""
@@ -10119,6 +11779,7 @@ msgstr ""
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:20
 msgid "Saving…"
 msgstr ""
 
@@ -10747,6 +12408,8 @@ msgstr ""
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:11
+#: assets/build/admin/js/dashboard.js:13
 #: assets/build/admin/js/faq.js:1
 #: assets/build/admin/js/faq.js:4
 #: assets/build/admin/js/glossaries.js:1
@@ -13081,6 +14744,652 @@ msgid "No tags yet. Click \"Add New Tag\" to create one."
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:5
+msgid "Never"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Just now"
+msgstr ""
+
+#. translators: %d: number of minutes.
+#: assets/build/admin/js/dashboard.js:7
+msgid "%d minute ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of hours.
+#: assets/build/admin/js/dashboard.js:9
+msgid "%d hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Access revoked."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Couldn't revoke that connection."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+#: assets/build/admin/js/dashboard.js:20
+msgid "Connected apps"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Apps that signed in through OAuth. Each one acts as the person who approved it, and revoking cuts it off at once. Clients using the connection token are not listed here — rotate the token to cut those off."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Refresh"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Loading connected apps…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Couldn't load connected apps. Reload the page and try again."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "No apps connected yet"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "When someone approves an AI client on the consent screen, it appears here."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "App"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Sends access to"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Approved by"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Approved"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Last used"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "Access"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:9
+msgid "—"
+msgstr ""
+
+#. translators: %d: WordPress user id, shown when the user no longer exists.
+#: assets/build/admin/js/dashboard.js:10
+msgid "User #%d"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:10
+msgid "Revoke this app?"
+msgstr ""
+
+#. translators: %s: the connected app's name.
+#: assets/build/admin/js/dashboard.js:11
+msgid "“%s” loses access immediately and has to be approved again to reconnect."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:11
+#: assets/build/admin/js/dashboard.js:12
+msgid "Revoke"
+msgstr ""
+
+#. translators: %s: the connected app's name.
+#: assets/build/admin/js/dashboard.js:12
+msgid "Revoke %s"
+msgstr ""
+
+#. translators: %s: the REST fallback endpoint URL.
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste into any client that takes a JSON MCP config. If pretty permalinks are off, use %s as the url."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste into any client that takes a JSON MCP config."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Copy the command above and run it in your terminal."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Ask Claude to call bd-get-status to confirm the connection."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Copy the block above into the client's MCP configuration file."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Restart the client so it reads the new server."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Copy the prompt above."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste it into an assistant that can edit its own MCP configuration."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "CLI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Add the server from your terminal, approve once in the browser."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Command"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Run /mcp in Claude Code and choose BetterDocs — your browser opens this site's approval screen; sign in and approve."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Editor"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "One click opens Cursor with BetterDocs prefilled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Add to Cursor"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Opens cursor://… with the server URL."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Click \"Add to Cursor\". It opens Cursor with BetterDocs prefilled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Confirm the install when Cursor asks."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Approve the connection in the browser Cursor opens for this site's sign-in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Opens cursor://… with the server URL and the token."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "One click opens VS Code with BetterDocs prefilled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Add to VS Code"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Opens vscode:mcp/install… with the server URL."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Click \"Add to VS Code\". It opens VS Code with BetterDocs prefilled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Confirm the install when VS Code asks."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Approve the connection in the browser VS Code opens for this site's sign-in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Opens vscode:mcp/install… with the server URL and the token."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Claude Desktop & JSON clients"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste a block into any client that takes a JSON MCP config."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "mcpServers block"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Approve the connection in the browser it opens for this site's sign-in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Ask your AI to set it up"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+#: assets/build/blocks/ai-edit.js:2
+#: assets/build/blocks/write-with-ai.js:2
+msgid "Prompt"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste a prompt and the assistant adds the connection itself."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "It carries no credential — the assistant is sent here to sign in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Approve the connection in the browser it opens, then ask it to call bd-get-status."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Pick your tool"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "How this client signs in"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Sign in in your browser"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "· Recommended"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Use the connection token"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "This carries your site's connection token. Only for a machine with no browser."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "How to"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "OAuth"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Editors & CLI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Signs in with a one-time approval. No token to paste."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Connector URL"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "How to add a connector"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Connection token rotated. Reconnect your clients with the new one."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Couldn't rotate the connection token."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Rotate the connection token?"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "A new token is generated immediately. Every client using the old one — Claude Code, Cursor, VS Code, Claude Desktop — stops working until you give it the new command. Apps connected through OAuth are unaffected."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Rotate token"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Add BetterDocs to your client"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Pick your assistant below — it opens or copies fully configured."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "How it works"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Preparing your connection…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Couldn't load the MCP connection status."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "The stored copy of your connection token can't be read."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "This happens when the WordPress security salts change. Clients you already connected keep working — but to see or share the token again you have to rotate it, which disconnects them."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Claude (web, mobile & desktop)"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "In Claude, open Settings → Connectors → Add Connector → Add custom connector."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste the connector URL above and give it a name (e.g. BetterDocs)."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Click Add, then approve access when Claude asks you to sign in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "In ChatGPT, open Settings → Connectors → Add New."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Enter a name (e.g. BetterDocs)."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Paste the connector URL above."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Save, then approve access when ChatGPT asks you to sign in."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Rotate the connection token if it may have leaked. Clients that use the token will need the new one; browser sign-ins are unaffected."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Rotating…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "No Abilities API is available, so no tools can be offered to an AI client."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:13
+msgid "Another plugin is providing the Abilities API. BetterDocs registers into it, but the version it ships governs."
+msgstr ""
+
+#. translators: %s: the bundled abilities-api package version.
+#: assets/build/admin/js/dashboard.js:14
+msgid "Provided by the runtime bundled with BetterDocs (%s)."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:14
+msgid "unknown version"
+msgstr ""
+
+#. translators: %s: the WordPress version providing the Abilities API.
+#: assets/build/admin/js/dashboard.js:15
+msgid "Provided by WordPress %s."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "(unknown version)"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "BetterDocs (bundled)"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Another plugin"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Nobody"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "The test request itself failed. Reload the page and try again."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Checking connection health…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Couldn't load the health report. Reload the page and try again."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "HTTPS is on and every WordPress URL agrees."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "The REST API URL uses a different scheme from the site address, which redirects MCP requests."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Site Address and WordPress Address use different schemes, so requests can bounce between HTTP and HTTPS."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "This site is served over HTTP. Most AI clients refuse to connect to anything but HTTPS."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Pro active"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Pro active, unlicensed"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Pro inactive"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Free only"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Connection health"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "What an AI client finds when it reaches this site. Test connection makes the real round trip from this server and names the first step that fails."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Re-check"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Testing…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Test connection"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Secure connection"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "OK"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Check"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+msgid "Abilities API"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:15
+#: assets/build/admin/js/dashboard.js:20
+msgid "Registered tools"
+msgstr ""
+
+#. translators: %d: number of registered BetterDocs tools.
+#: assets/build/admin/js/dashboard.js:16
+msgid "%d BetterDocs tool is registered and offered to connected clients."
+msgid_plural "%d BetterDocs tools are registered and offered to connected clients."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:16
+msgid "No BetterDocs tools are registered, so a client would connect and find nothing to call."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:16
+msgid "Your capabilities"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:16
+msgid "Complete"
+msgstr ""
+
+#. translators: %d: number of missing capabilities.
+#: assets/build/admin/js/dashboard.js:17
+msgid "%d missing"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:17
+msgid "You hold every BetterDocs capability, so no tool will refuse you."
+msgstr ""
+
+#. translators: %s: comma-separated capability names.
+#: assets/build/admin/js/dashboard.js:18
+msgid "Tools needing these will refuse you: %s."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:18
+msgid "Database"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:18
+msgid "Up to date"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:18
+msgid "Update due"
+msgstr ""
+
+#. translators: %s: database schema version.
+#: assets/build/admin/js/dashboard.js:19
+msgid "Schema v%s installed."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:19
+msgid "A database update is pending. Reload the admin so it can run."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:19
+msgid "One or more client addresses are locked out after repeated failed authentications — usually a client still holding a rotated-away token. While a lockout holds, that address is refused even with a valid token. It clears itself within 15 minutes of the retries stopping."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:19
+msgid "Server status"
+msgstr ""
+
+#. translators: %s: the date this site's connection was established.
+#: assets/build/admin/js/dashboard.js:20
+msgid "since %s"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Last activity"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Enable MCP access"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Create, update and delete docs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Organise doc categories, tags and knowledge bases"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Write and attach FAQs and FAQ groups"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Setup needed"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "MCP is on. Connect an AI client below."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "MCP is off. AI clients can no longer connect."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Couldn't save that. Check your permissions and try again."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Let AI assistants such as Claude, ChatGPT and Cursor read and write your documentation directly, over the Model Context Protocol. Access runs through a revocable connection token or a one-time OAuth approval, and every action is performed as the person who granted it — nothing an assistant does exceeds that account's own permissions. Switch this off and BetterDocs refuses every AI connection."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "What a connected assistant can do"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "Every action honours the capabilities of the account that approved the connection, and every change is an ordinary revision you can review or undo."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "The MCP runtime did not load."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
+msgid "The Abilities API is not available, so BetterDocs can offer no tools — an AI client would connect and find nothing to call. This normally means the plugin package is incomplete (dependencies/vendor is missing). Reinstall BetterDocs from wordpress.org or an official build."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:20
 msgid "total"
 msgstr ""
 
@@ -13329,11 +15638,6 @@ msgstr ""
 
 #: assets/build/blocks/ai-edit.js:2
 msgid "Tell AI exactly what you want"
-msgstr ""
-
-#: assets/build/blocks/ai-edit.js:2
-#: assets/build/blocks/write-with-ai.js:2
-msgid "Prompt"
 msgstr ""
 
 #: assets/build/blocks/ai-edit.js:2

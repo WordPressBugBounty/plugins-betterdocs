@@ -20,6 +20,33 @@ use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class Admin extends Base {
 	/**
+	 * Per-user flag recording that this administrator has opened the MCP screen.
+	 *
+	 * Stores the timestamp of the first visit, but only its **presence** is read:
+	 * absent means "this user has not seen MCP yet", which is what puts the
+	 * one-time discovery badge on the menu (ADR-063). Per user on purpose — two
+	 * administrators each get their own first look, and neither clears the other's.
+	 *
+	 * @var string
+	 * @since 4.9.0
+	 */
+	const MCP_SEEN_META = 'betterdocs_mcp_seen';
+
+	/**
+	 * Whether this request painted the MCP discovery badge onto the menu.
+	 *
+	 * Decided once in `menus()` (on `admin_menu`) and read again in
+	 * `mcp_badge_styles()` (on `admin_head`), rather than re-deciding, because the
+	 * two must agree: on the request that opens the MCP screen the badge is still
+	 * painted while the meta is already written, and re-deciding at `admin_head`
+	 * would leave that one painted pill unstyled.
+	 *
+	 * @var bool
+	 * @since 4.9.0
+	 */
+	private $mcp_badge = false;
+
+	/**
 	 * @var CacheBank
 	 */
 	private static $cache_bank;
@@ -122,8 +149,15 @@ class Admin extends Base {
 		add_filter( 'admin_init', array( $this, 'save_admin_page' ), 99 );
 
 		add_action( 'admin_menu', array( $this, 'menus' ) );
+		// The badge's clear runs on `admin_init` — a hook that fires for every
+		// admin request — and identifies the screen by its page slug, rather
+		// than on `load-{$hook_suffix}` (ADR-065). `admin_init` fires *after*
+		// `admin_menu`, measured on the rig, so the badge is still painted on
+		// the request that opens the screen exactly as before.
+		add_action( 'admin_init', array( $this, 'mark_mcp_seen' ) );
 		add_action( 'admin_menu', array( $this, 'reset_submenu' ) );
 		add_action( 'admin_head', array( $this, 'add_custom_classes_to_menu_items' ) );
+		add_action( 'admin_head', array( $this, 'mcp_badge_styles' ) );
 		add_filter( 'plugin_action_links_' . BETTERDOCS_PLUGIN_BASENAME, array( $this, 'insert_plugin_links' ) );
 
 		// $this->container->get( SetupWizard::class )->init();
@@ -573,6 +607,12 @@ class Admin extends Base {
 			'edit-knowledge_base',
 			'betterdocs-ai-chatbot',
 			'betterdocs-api-docs',
+			// Without this the MCP screen never receives `betterdocs-admin`, and
+			// the design tokens' dark-mode overrides — which are declared on
+			// `.betterdocs-admin.betterdocs-dark-mode` — can never apply there:
+			// the switcher in the header flips the cookie and the page stays
+			// light. @since 4.9.0
+			'betterdocs-mcp',
 		) );
 
 		if ( in_array( $current_screen_id, $registered_screens ) ) {
@@ -841,6 +881,20 @@ class Admin extends Base {
                 'current_admin_language'         => Helper::get_current_admin_language(),
                 'is_multilingual'                => Helper::is_multilingual_active(),
                 'languages'                      => Helper::get_admin_languages(),
+                /**
+                 * MCP page bootstrap. `abilities_api_available` decides whether the
+                 * page offers a connection at all: without the Abilities API there
+                 * is no tool catalog, so an AI client would connect and find
+                 * nothing. `enabled` is only the initial paint — the toggle owns
+                 * the value from then on.
+                 *
+                 * @since 4.9.0
+                 */
+                'mcp'                            => array(
+                    'abilities_api_available' => function_exists( 'wp_register_ability' ),
+                    'enabled'                 => (bool) betterdocs()->settings->get( 'enable_mcp', false ),
+                    'rest'                    => 'betterdocs/v1',
+                ),
 			)
 		);
 
@@ -964,6 +1018,11 @@ class Admin extends Base {
 		// Always register both UI endpoints
 		$this->register_modern_ui_fallback();
 
+		// The one-time MCP discovery badge (ADR-063). Decided once, here, and
+		// remembered for `mcp_badge_styles()`: the pill's markup and the pill's
+		// stylesheet have to be printed on the same requests as each other.
+		$this->mcp_badge = self::should_flag_mcp();
+
 		foreach ( $this->menu_list() as $key => $value ) {
 			if ( 'betterdocs' === $key ) {
 				$callable = 'add_menu_page';
@@ -994,6 +1053,199 @@ class Admin extends Base {
 				++$_menu_position;
 			}
 		}
+
+		$this->paint_mcp_badge();
+	}
+
+	/**
+	 * Append the discovery badge to the registered menu titles.
+	 *
+	 * **After** registration, editing `$menu` / `$submenu` in place — the same
+	 * shape `add_custom_classes_to_menu_items()` uses — and never by passing a
+	 * decorated title to `add_menu_page()`. That distinction is not cosmetic:
+	 * core stores `sanitize_title( $menu_title )` as `$admin_page_hooks[ $slug ]`
+	 * (`wp-admin/includes/plugin.php:1397`) and builds every child page's hook
+	 * suffix from it (`get_plugin_page_hookname()`), so markup in the parent's
+	 * title renames `betterdocs_page_betterdocs-mcp` — and the MCP screen, whose
+	 * asset enqueue is keyed on that exact suffix, silently loads no React
+	 * bundle at all. Measured: the first visit came back 102,513 bytes with no
+	 * `dashboard.js`, against 489,272 bytes once the badge had cleared.
+	 *
+	 * Titles are only ever appended to, never rebuilt: the menu list is filtered
+	 * (`betterdocs_admin_menu`), so whatever a filter put in a title survives.
+	 *
+	 * @return void
+	 * @since 4.9.0
+	 */
+	private function paint_mcp_badge() {
+		if ( ! $this->mcp_badge ) {
+			return;
+		}
+
+		global $menu, $submenu;
+
+		if ( is_array( $menu ) ) {
+			foreach ( $menu as &$item ) {
+				if ( isset( $item[2] ) && $this->slug === $item[2] ) {
+					$item[0] .= self::mcp_parent_bubble();
+					break;
+				}
+			}
+			unset( $item );
+		}
+
+		if ( isset( $submenu[ $this->slug ] ) && is_array( $submenu[ $this->slug ] ) ) {
+			foreach ( $submenu[ $this->slug ] as &$sub_item ) {
+				if ( isset( $sub_item[2] ) && 'betterdocs-mcp' === $sub_item[2] ) {
+					$sub_item[0] .= self::mcp_submenu_pill();
+					break;
+				}
+			}
+			unset( $sub_item );
+		}
+	}
+
+	/**
+	 * Whether the current user should see the one-time MCP discovery badge.
+	 *
+	 * True only for a user who can actually reach the screen and has never
+	 * opened it. The capability is the one the MCP menu item is already
+	 * registered with (`manage_options`) rather than a second, re-derived rule —
+	 * so the badge can never advertise a page its reader cannot open.
+	 *
+	 * @return bool
+	 * @since 4.9.0
+	 */
+	public static function should_flag_mcp() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$user_id = get_current_user_id();
+
+		if ( ! $user_id ) {
+			return false;
+		}
+
+		// `get_user_meta( …, true )` answers '' for a key that is not there, and
+		// the value written is always `time()` — so an empty string is the only
+		// shape "never opened" takes.
+		return '' === get_user_meta( $user_id, self::MCP_SEEN_META, true );
+	}
+
+	/**
+	 * WordPress' own update-count bubble, for the BetterDocs parent menu item.
+	 *
+	 * Core's markup on purpose: the red bubble, its position and its dark-mode
+	 * colours are already in `wp-admin`'s stylesheet, so this needs no CSS of
+	 * ours and cannot drift from the Plugins/Updates bubbles beside it.
+	 *
+	 * @return string
+	 * @since 4.9.0
+	 */
+	private static function mcp_parent_bubble() {
+		return ' <span class="update-plugins count-1"><span class="update-count">1</span></span>';
+	}
+
+	/**
+	 * The green "New" pill for the MCP submenu item.
+	 *
+	 * Core has no submenu-badge markup, so this one is ours — styled by
+	 * `mcp_badge_styles()`.
+	 *
+	 * @return string
+	 * @since 4.9.0
+	 */
+	private static function mcp_submenu_pill() {
+		return ' <span class="bd-menu-pill">' . esc_html__( 'New', 'betterdocs' ) . '</span>';
+	}
+
+	/**
+	 * Whether this request is the MCP screen being opened by someone who can
+	 * open it.
+	 *
+	 * The whole of the clearing decision, in one static so it can be pinned by
+	 * a test. It reads the **page slug** rather than an admin hook suffix
+	 * because the suffix is derived state: core builds it from
+	 * `sanitize_title()` of the *parent* menu title (`get_plugin_page_hookname()`),
+	 * that title is filtered (`betterdocs_admin_menu`), and the parent slug is
+	 * spelled two ways in this class already. `?page=betterdocs-mcp` is the one
+	 * thing that identifies this screen on every install (ADR-065).
+	 *
+	 * The capability is `manage_options`, the same one the MCP menu item is
+	 * registered with and the same one {@see self::should_flag_mcp()} gates on:
+	 * nothing may be written for a user who cannot reach the page.
+	 *
+	 * @return bool
+	 * @since 4.9.0
+	 */
+	public static function is_mcp_screen_request() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection; see mark_mcp_seen().
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( 'betterdocs-mcp' !== $page ) {
+			return false;
+		}
+
+		return current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Record that this user has now seen the MCP screen.
+	 *
+	 * Bound to `admin_init` — which fires for every admin request — and gated on
+	 * the page slug, rather than to `load-{$hook_suffix}` for the one suffix
+	 * `add_submenu_page()` happened to return. `admin_menu` has already run by
+	 * the time `admin_init` fires (measured), so the badge is still painted on
+	 * *this* request and is gone from the next admin page — that is expected and
+	 * correct. Do not add JavaScript to strip it mid-request.
+	 *
+	 * **No nonce, on purpose.** A nonce protects a state change an attacker
+	 * could make a logged-in administrator perform unknowingly. The only state
+	 * here is "this administrator has now been shown the MCP screen once", it is
+	 * written for the current user alone, it holds no attacker-chosen value, and
+	 * the worst a forged request can achieve is hiding a discovery badge from
+	 * the person it was drawn for. A nonce on a plain page view would also have
+	 * to survive the menu link, which carries none.
+	 *
+	 * @return void
+	 * @since 4.9.0
+	 */
+	public function mark_mcp_seen() {
+		if ( ! self::is_mcp_screen_request() ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		if ( ! $user_id ) {
+			return;
+		}
+
+		update_user_meta( $user_id, self::MCP_SEEN_META, time() );
+	}
+
+	/**
+	 * The handful of declarations the "New" pill needs, inline, and only while
+	 * it is being shown.
+	 *
+	 * The menu is read from the WordPress Dashboard, and `styles()` above
+	 * early-returns on non-BetterDocs screens — so `admin/css/dashboard.css` is
+	 * not loaded where this pill is seen. Loading the whole BetterDocs admin
+	 * stylesheet globally, or shipping a stylesheet file for nine declarations,
+	 * both cost far more than printing them here. The accent is written out
+	 * rather than taken from `--base-color-700`: that token lives in
+	 * `dashboard.css`, which is exactly the file that is not loaded here.
+	 *
+	 * @return void
+	 * @since 4.9.0
+	 */
+	public function mcp_badge_styles() {
+		if ( ! $this->mcp_badge ) {
+			return;
+		}
+
+		echo '<style id="betterdocs-menu-pill">#adminmenu .bd-menu-pill{display:inline-block;background:#00b884;color:#fff;font-size:10px;text-transform:uppercase;line-height:1.6;padding:1px 6px;margin-left:6px;border-radius:9px;}</style>' . "\n";
 	}
 
 	private function register_modern_ui_fallback() {
@@ -1118,6 +1370,16 @@ class Admin extends Base {
 				),
 				$parent_slug
 			),
+			'mcp'        => $this->normalize_menu(
+				__( 'MCP', 'betterdocs' ),
+				'betterdocs-mcp',
+				'manage_options',
+				array(
+					$this,
+					'output',
+				),
+				$parent_slug
+			),
 			'analytics'  => $this->normalize_menu(
 				__( 'Analytics', 'betterdocs' ),
 				'betterdocs-analytics',
@@ -1195,6 +1457,7 @@ class Admin extends Base {
 			'betterdocs-doc-categories'                           => 'betterdocs-categories',
 			'betterdocs-doc-tags'                                 => 'betterdocs-tags',
 			'betterdocs-settings'      => 'betterdocs-settings',
+			'betterdocs-mcp'           => 'betterdocs-mcp',
 			'betterdocs-analytics'     => 'betterdocs-analytics',
 			'betterdocs-faq'           => 'betterdocs-faq',
 			'betterdocs-glossaries'    => 'betterdocs-glossaries',

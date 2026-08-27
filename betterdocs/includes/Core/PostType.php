@@ -110,6 +110,40 @@ class PostType extends Base {
 			]
 		);
 
+		// The Knowledge Base assignment. Written since 3.x from $_POST['doc_category_kb']
+		// on the classic term screens and read in ~30 places (Free Request/Query, the
+		// category blocks and widgets, Pro's MultipleKB/AccessControl/ContentRestrictions)
+		// as a serialised array of KB **slugs** compared with LIKE or in_array() — but
+		// never registered, so it was invisible to the REST API and unwritable by anything
+		// that is not a form POST. Registering it here is what lets the doc-category REST
+		// route (and the MCP `bd-create-term` / `bd-update-term` tools) file a category
+		// into a knowledge base.
+		//
+		// `manage_knowledge_base_terms` rather than `edit_docs`: this is the same decision
+		// as creating a knowledge base, and Pro gates the taxonomy itself on that cap.
+		//
+		// @since 4.9.0
+		register_term_meta(
+			'doc_category',
+			'doc_category_knowledge_base',
+			[
+				'type'              => 'array',
+				'description'       => __( 'Knowledge Bases this doc category belongs to, by slug.', 'betterdocs' ),
+				'single'            => true,
+				'default'           => [],
+				'sanitize_callback' => [ $this, 'sanitize_category_knowledge_bases' ],
+				'auth_callback'     => function () {
+					return current_user_can( 'manage_knowledge_base_terms' );
+				},
+				'show_in_rest'      => [
+					'schema' => [
+						'type'  => 'array',
+						'items' => [ 'type' => 'string' ],
+					],
+				],
+			]
+		);
+
 		// Expose (and allow setting) a term's language for WPML/Polylang so the React
 		// admin can show a language filter bar + a language selector. Applies to both
 		// the doc_category and doc_tag taxonomies.
@@ -558,6 +592,65 @@ class PostType extends Base {
 				'icon_id' => $cat_icon_id
 			]
 		);
+	}
+
+	/**
+	 * Normalise a doc category's Knowledge Base assignment to a list of slugs.
+	 *
+	 * Runs on **every** write to `doc_category_knowledge_base` — the REST route,
+	 * the classic term screens, the importers — because that is what a registered
+	 * `sanitize_callback` does.
+	 *
+	 * Slugs, never ids. Every reader compares this array against a KB term's
+	 * `slug`, either with `in_array()` or with a `meta_query` `LIKE` over the
+	 * serialised string, so a numeric id in the list would match nothing it was
+	 * meant to and would widen the `LIKE` into unrelated rows (`7` matches
+	 * `i:7;`, `"7"`, any slug containing a 7). Numeric entries are therefore
+	 * **dropped**, not slugified — the one cost being a knowledge base whose slug
+	 * is literally a number, which cannot be told apart from an id here.
+	 *
+	 * `sanitize_title()` is the right normaliser because it is what WordPress
+	 * used to build the slug in the first place: it is the identity on an
+	 * existing slug, turns a name ("Install Guide") into one, and percent-encodes
+	 * a non-ASCII slug back to the stored form. That last case also repairs the
+	 * classic write path, which `urldecode()`s before storing (L594) and so wrote
+	 * a decoded string the readers' primary comparison could not match —
+	 * `Request::get_term_by_slug_or_encoded()` exists to work around exactly that.
+	 *
+	 * @since 4.9.0
+	 *
+	 * @param mixed $value Raw value: an array of slugs, or a single slug.
+	 * @return string[] Unique, non-empty slugs, re-indexed.
+	 */
+	public function sanitize_category_knowledge_bases( $value ) {
+		if ( ! is_array( $value ) ) {
+			$value = ( null === $value || '' === $value ) ? [] : [ $value ];
+		}
+
+		$slugs = [];
+
+		foreach ( $value as $item ) {
+			if ( is_array( $item ) || is_object( $item ) || is_bool( $item ) ) {
+				continue;
+			}
+
+			$item = trim( (string) $item );
+
+			// An id, not a slug. See the docblock.
+			if ( '' === $item || is_numeric( $item ) ) {
+				continue;
+			}
+
+			$slug = sanitize_title( $item );
+
+			if ( '' === $slug ) {
+				continue;
+			}
+
+			$slugs[] = $slug;
+		}
+
+		return array_values( array_unique( $slugs ) );
 	}
 
 	/**

@@ -1,15 +1,15 @@
-=== BetterDocs –  AI Documentation, Knowledge Base, Docs, Wikis, FAQ with Chatbot ===
+=== BetterDocs – AI Documentation, Knowledge Base, MCP Server, Docs, Wikis, FAQ & Chatbot ===
 Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, jamilbd07
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.8.2
+Stable tag: 4.9.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Documentation, FAQ & Knowledge Base plugin to create docs, FAQs, product FAQ, wikis & help center with AI writing, instant answers & AI Chatbot.
+Documentation, FAQ & Knowledge Base plugin to create docs, FAQs, product FAQ, wikis & help center with MCP, AI writing, instant answers & AI Chatbot.
 == Description ==
 
 Do you want to reduce support tickets immediately? How about you creating a resourceful knowledge base for your customers with AI-powered documentation and FAQs? 🤔
@@ -36,6 +36,7 @@ Let the visitors instantly find the answers they are searching for without havin
 - Table of Contents or Sticky TOC to provide an absolute user experience
 - An in-built advanced live search bar to help visitors get the exact docs solution
 - Advanced List View & Drag & Drop Grid View feature
+- Connect AI assistants like Claude, ChatGPT, and Cursor to your documentation via MCP with a simple OAuth-based setup — no coding or manual API configuration required
 - Create & manage multiple knowledge bases for all products separately (PRO)
 - Manage roles for your knowledgebase users & give access accordingly
 - Integrated with Analytics to track and evaluate the performance
@@ -75,6 +76,10 @@ Design FAQ sections for your Knowledge base easily with the help of BetterDocs F
 ## ✅ FULL SITE EDITOR (FSE) COMPATIBILITY ##
 
 Design your documentation, single docs, and archive pages effortlessly in the Block Editor using BetterDocs.
+
+## 🛠️ AI-NATIVE DOCUMENTATION ACCESS WITH MCP ##
+
+Let AI assistants like Claude, ChatGPT, and Cursor read and write your documentation directly through the Model Context Protocol, so your team can create, update, and manage docs from chat instead of switching between tools.
 
 ## 📋 INTERACTIVE TABLE OF CONTENTS (TOC) ##
 
@@ -240,11 +245,24 @@ Yes. BetterDocs provides analytics-focused features to help you understand docum
 = Is BetterDocs useful for multilingual documentation? =
 Yes. BetterDocs supports multilingual documentation workflows and integrates with multilingual tools such as WPML, helping you create knowledge base content for users in different languages.
 
+= Can I connect ChatGPT or Claude to my documentation? =
+Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude, ChatGPT, Cursor and VS Code work with your documentation directly. Turn it on under BetterDocs → MCP, copy the connection URL, and add it to your assistant — it will ask you to approve the connection on your own site.
+
 == Screenshots ==
 
 
 
 == Changelog ==
+
+= 4.9.0 - 27/08/2026 =
+
+- New: MCP Server — connect Claude, Cursor, VS Code and other MCP-capable editors directly to your knowledge base over a per-site endpoint, with OAuth 2.1 consent, pairing tokens and rate limiting
+- New: BetterDocs registers its docs, categories, tags, glossary, FAQ, settings and analytics with the WordPress Abilities API, so any Abilities-aware tool can read and write your knowledge base
+- New: MCP admin page with a connection health report, self-test, per-tool picker and ready-made setup snippets for each supported editor
+- Improvement: Knowledge base meta is now visible over REST, and the FAQ Builder capability check repairs itself when roles drift
+- Fix: Document import no longer fails on PHP 8 — WP_Importer has no constructor, and calling it aborted every import
+- Fix: The FAQ block now accepts bare term IDs in its group filters
+- Few minor bug fixes and improvements
 
 = 4.8.2 - 20/08/2026 =
 

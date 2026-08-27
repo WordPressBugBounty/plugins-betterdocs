@@ -47,6 +47,7 @@ class FAQ extends Block {
 			'faqSectionTitleTag'      => 'h2',
 			'faqGroupTitleTag'        => 'h3',
 			'faqSectionTitleColor'    => null,
+			// JSON string of `[{value:int, label:string}]`; a bare id array (`[5]`) is also accepted since 4.9.0.
 			'includeFaqGroup'         => '',
 			'excludeFaqGroup'         => '',
 			'faqGroupTitleColor'      => null,
@@ -97,14 +98,29 @@ class FAQ extends Block {
 		$renderer->render_for_product( $product_id, $this->attributes['faqLayout'] ?? null );
 	}
 
+	/**
+	 * Flatten a group-selection attribute into a comma separated list of term ids.
+	 *
+	 * The attribute is a JSON string. The editor writes
+	 * `[{"value":5,"label":"Install"}]`; REST clients and other programmatic
+	 * writers commonly write the bare form `[5]`. Both are accepted — before
+	 * 4.9.0 the bare form flattened to an empty string, which
+	 * `Query::faq_terms_query_args()` reads as "no filter", so every group
+	 * rendered and the block warned on every view.
+	 *
+	 * @since 4.9.0 Bare ids are accepted alongside `{ value, label }` objects;
+	 *              ids are cast with `absint()` and de-duplicated.
+	 *
+	 * @param mixed $json JSON encoded list of term ids or `{ value, label }` objects.
+	 *
+	 * @return string Comma separated term ids, or '' when there is nothing to filter by.
+	 */
 	public function get_groups_ids( $json ) {
-		$data = json_decode( $json, true );
-		$ids  = '';
-		if ( $data !== null ) {
-			$ids = implode( ',', array_column( $data, 'value' ) );
-		}
+		$data = is_string( $json ) ? json_decode( $json, true ) : $json;
+		$ids  = array_filter( self::normalize_id_list( $data ), 'is_numeric' );
+		$ids  = array_unique( array_map( 'absint', $ids ) );
 
-		return $ids;
+		return implode( ',', $ids );
 	}
 
 	public function view_params() {

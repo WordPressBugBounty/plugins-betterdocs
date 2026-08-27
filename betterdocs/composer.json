@@ -58,6 +58,7 @@
     "scripts": {
         "format": "@php ./bin/phpcbf",
         "lint": "@php ./vendor/bin/phpcs --report=summary,code,source",
+        "test": "@php ./tests/vendor/bin/phpunit",
         "pre-install-cmd": [
             "rm -Rf includes/Dependencies",
             "rm -Rf includes/classes"

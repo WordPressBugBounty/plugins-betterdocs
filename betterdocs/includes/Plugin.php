@@ -35,6 +35,8 @@ use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
 use WPDeveloper\BetterDocs\FrontEnd\SearchExtender;
 use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
 use WPDeveloper\BetterDocs\FrontEnd\WooProductFAQ;
+use WPDeveloper\BetterDocs\Abilities\AbilitiesRegistrar;
+use WPDeveloper\BetterDocs\Mcp\MCPManager;
 use WPDeveloper\BetterDocs\Modules\StyleHandler as ModulesStyleHandler;
 use WPDeveloper\BetterDocs\Utils\Database;
 use WPDeveloper\BetterDocs\Utils\Enqueue;
@@ -130,7 +132,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.8.2';
+    public $version = '4.9.0';
 
     /**
      * WriteWithAI Class
@@ -162,6 +164,19 @@ final class Plugin {
          * and version updates check
          */
         $this->container->get( Install::class );
+
+        /**
+         * Abilities API registrar.
+         *
+         * Resolved here, at plugin load, and not from initialize(): both the
+         * bundled Abilities API and WordPress core's build their registry as a
+         * lazy singleton and fire `wp_abilities_api_init` from it, at or after
+         * `init`, the first time anything reads the registry. Our listeners
+         * therefore have to be attached before that first read, whenever it
+         * happens — and a container resolve on `init` would already be too late
+         * for a plugin that reads the registry earlier in the same hook.
+         */
+        $this->container->get( AbilitiesRegistrar::class );
 
         add_action( 'init', array( $this, 'initialize' ), 0 );
 
@@ -281,6 +296,15 @@ final class Plugin {
 
         $this->container->get( Admin::class );
         $this->container->get( Roles::class );
+
+        /**
+         * MCP transport: rewrite rules, the pretty endpoint, OAuth discovery
+         * and every REST route. Resolved here rather than at plugin load
+         * (where the abilities registrar has to be) because its earliest hook
+         * is `init`, which is what this method already runs on.
+         */
+        $this->container->get( MCPManager::class );
+
         $this->container->get( ReportEmail::class );
         // Usage-analytics collector. Registered here (runs on every request, incl.
         // WP-Cron) rather than in Admin so its `betterdocs_insights_data` filter
@@ -509,6 +533,7 @@ final class Plugin {
             'betterdocs_page_betterdocs-admin',
             'betterdocs_page_betterdocs-analytics',
             'betterdocs_page_betterdocs-settings',
+            'betterdocs_page_betterdocs-mcp',
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',
             'betterdocs_page_betterdocs-ai-chatbot',
@@ -534,6 +559,7 @@ final class Plugin {
             'admin_page_betterdocs-admin',
             'betterdocs_page_betterdocs-admin',
             'betterdocs_page_betterdocs-settings',
+            'betterdocs_page_betterdocs-mcp',
             'betterdocs_page_betterdocs-analytics',
             'betterdocs_page_betterdocs-faq',
             'betterdocs_page_betterdocs-glossaries',

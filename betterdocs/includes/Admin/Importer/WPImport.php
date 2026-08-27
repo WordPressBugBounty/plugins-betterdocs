@@ -1676,7 +1676,14 @@ class WPImport extends WP_Importer {
 	 * @param array $args
 	 */
 	public function __construct( $file, array $args = [] ) {
-		parent::__construct();
+		// WP core's WP_Importer has no constructor, and on PHP 8 calling
+		// parent::__construct() on a constructor-less parent throws
+		// "Error: Cannot call constructor" — which aborted every import. Only
+		// call the parent when it actually defines one (future-proof if WP adds
+		// it back).
+		if ( method_exists( get_parent_class( $this ), '__construct' ) ) {
+			parent::__construct();
+		}
 
 		$this->requested_file_path = $file;
 		$this->args                = $args;

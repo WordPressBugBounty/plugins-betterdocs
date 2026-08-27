@@ -95,17 +95,60 @@ abstract class Block extends Base {
 		$this->load_frontend_scripts();
 	}
 
+	/**
+	 * Flatten a decoded selection attribute into a plain list of values.
+	 *
+	 * Selection attributes are saved by the editor as `[{ value, label }]`
+	 * objects, but a bare list of values — `[5, 7]` — is what REST clients and
+	 * other programmatic writers naturally produce. Both shapes are accepted:
+	 * an array element contributes its `$key`, a scalar element contributes
+	 * itself, and elements that carry no value are dropped.
+	 *
+	 * @since 4.9.0
+	 *
+	 * @param mixed  $decoded Decoded attribute value. Anything that is not an array yields an empty list.
+	 * @param string $key     Key holding the value on object elements. Default 'value'.
+	 *
+	 * @return array Re-indexed list of values.
+	 */
+	public static function normalize_id_list( $decoded, $key = 'value' ) {
+		if ( ! is_array( $decoded ) ) {
+			return [];
+		}
+
+		$_values = array_map(
+			function ( $item ) use ( $key ) {
+				return is_array( $item ) ? ( isset( $item[ $key ] ) ? $item[ $key ] : null ) : $item;
+			},
+			$decoded
+		);
+
+		return array_values(
+			array_filter(
+				$_values,
+				function ( $value ) {
+					return null !== $value;
+				}
+			)
+		);
+	}
+
+	/**
+	 * Decode a JSON attribute string into a list of values.
+	 *
+	 * @since 4.9.0 Bare-value lists (`"[5]"`) are accepted alongside the
+	 *              editor's `[{ value, label }]` form, and no longer warn.
+	 *
+	 * @param mixed  $data JSON encoded attribute value; non-strings yield an empty list.
+	 * @param string $key  Key holding the value on object elements. Default 'value'.
+	 *
+	 * @return array
+	 */
 	public function string_to_array( $data = [], $key = 'value' ) {
 		$_return_val = [];
 
 		if ( is_string( $data ) && ! empty( $data ) ) {
-			$_return_val = json_decode( $data, true );
-			$_return_val = array_map(
-				function ( $item ) use ( &$key ) {
-					return $item[ $key ];
-				},
-				$_return_val == null || empty( $_return_val ) ? [] : $_return_val
-			);
+			$_return_val = self::normalize_id_list( json_decode( $data, true ), $key );
 		}
 
 		return $_return_val;
