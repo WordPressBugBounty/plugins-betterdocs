@@ -876,6 +876,7 @@ class Admin extends Base {
                 'analytics_older'                => version_compare( betterdocs()->pro_version(), '3.3.4', '<=' ),
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
                 'api_docs_teaser'                => betterdocs()->show_api_docs_teaser(),
+                'glossaries_teaser'              => betterdocs()->show_glossary_teaser(),
                 'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
                 'current_admin_language'         => Helper::get_current_admin_language(),
@@ -1402,11 +1403,14 @@ class Admin extends Base {
 			),
 		);
 
-		if ( betterdocs()->is_pro_active() && betterdocs()->settings->get( 'enable_glossaries' ) == true ) {
+		// Glossaries is Pro. Reserve this same 'glossaries' slot for Free's locked
+		// teaser so the item keeps this position; once Pro is active the real
+		// screen overwrites the key in place (same pattern as API Docs below).
+		if ( betterdocs()->show_glossary_teaser() || ( betterdocs()->is_pro_active() && betterdocs()->settings->get( 'enable_glossaries' ) == true ) ) {
 			$betterdocs_admin_pages['glossaries'] = $this->normalize_menu(
 				__( 'Glossaries', 'betterdocs' ),
 				'betterdocs-glossaries',
-				'read_docs_analytics',
+				betterdocs()->show_glossary_teaser() ? 'manage_options' : 'read_docs_analytics',
 				array(
 					$this,
 					'output',

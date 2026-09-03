@@ -65,7 +65,10 @@ if ( $bd_is_outermost ) {
 	$bd_queried   = (int) get_queried_object_id();
 	$bd_is_single = is_singular( 'docs' ) ? 1 : 0;
 	$bd_version   = betterdocs()->database->get_cache_version( 'betterdocs_term_counts' );
-	$bd_cache_key = 'bd_nested_frag_' . md5( "v{$bd_version}_term{$term_id}_m{$bd_multi_kb}_k{$bd_kb_slug}_p{$bd_can_priv}_i{$bd_cat_icon}_q{$bd_queried}_s{$bd_is_single}" );
+	$bd_icon_disc  = md5( wp_json_encode( isset( $list_icon_name ) ? $list_icon_name : "" ) );
+	$bd_show_icon  = ( isset( $show_list_icon ) && $show_list_icon === false ) ? 0 : 1;
+	$bd_order_disc = md5( wp_json_encode( array( isset( $nested_terms_query ) ? $nested_terms_query : array(), isset( $nested_docs_query_args ) ? $nested_docs_query_args : array() ) ) );
+	$bd_cache_key = 'bd_nested_frag_' . md5( "v{$bd_version}_term{$term_id}_m{$bd_multi_kb}_k{$bd_kb_slug}_p{$bd_can_priv}_i{$bd_cat_icon}_q{$bd_queried}_s{$bd_is_single}_ic{$bd_icon_disc}_si{$bd_show_icon}_o{$bd_order_disc}" );
 
 	$bd_cached = get_transient( $bd_cache_key );
 	if ( false !== $bd_cached ) {

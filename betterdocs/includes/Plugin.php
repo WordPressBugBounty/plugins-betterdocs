@@ -32,6 +32,7 @@ use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
 use WPDeveloper\BetterDocs\FrontEnd\FrontEnd;
+use WPDeveloper\BetterDocs\FrontEnd\PrintTemplate;
 use WPDeveloper\BetterDocs\FrontEnd\SearchExtender;
 use WPDeveloper\BetterDocs\FrontEnd\TemplateTags;
 use WPDeveloper\BetterDocs\FrontEnd\WooProductFAQ;
@@ -132,7 +133,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.9.0';
+    public $version = '4.9.1';
 
     /**
      * WriteWithAI Class
@@ -319,6 +320,11 @@ final class Plugin {
         $this->container->get( FrontEnd::class );
         $this->container->get( SearchExtender::class );
 
+        // Running logo header / page footer for the browser's own Print command.
+        // Registered unconditionally: it covers every front-end page, including
+        // the ones that carry no BetterDocs print button.
+        $this->container->get( PrintTemplate::class );
+
         /**
          * Single-product FAQ rendering (WooCommerce). The class itself bails when
          * WooCommerce is inactive or the feature is disabled.
@@ -477,6 +483,33 @@ final class Plugin {
      */
     public function show_api_docs_teaser() {
         return ! $this->is_pro_active() && ! $this->has_api_docs();
+    }
+
+    /**
+     * Whether the real Glossaries screen is available (i.e. Pro is licensing it).
+     *
+     * Glossaries ships in Free's code but is Pro-licensed, so unlike API Docs there
+     * is no separate Pro class to detect — the gate is simply Pro being active. Kept
+     * behind a filter so Pro/add-ons can flip it explicitly, mirroring
+     * `betterdocs_pro_has_api_docs`.
+     *
+     * @return bool
+     */
+    public function has_glossaries() {
+        return (bool) apply_filters( 'betterdocs_pro_has_glossaries', $this->is_pro_active() );
+    }
+
+    /**
+     * Whether Free should show its locked Glossaries teaser.
+     *
+     * Only without Pro — an active Pro either has the feature or has simply left it
+     * disabled in settings; neither case wants an upsell. Mirrors
+     * show_api_docs_teaser().
+     *
+     * @return bool
+     */
+    public function show_glossary_teaser() {
+        return ! $this->is_pro_active() && ! $this->has_glossaries();
     }
 
     public function pro_version() {

@@ -65,7 +65,12 @@ class CategoryBoxThree extends CategoryBox {
 		$parent_params = parent::view_params();
 		$query_arg     = $parent_params['terms_query_args'];
 
-		$term_count = count( get_terms( $query_arg ) );
+		// get_terms() returns a WP_Error for an invalid taxonomy, and the taxonomy
+		// is a shortcode attribute the author controls — [betterdocs_category_box_3
+		// taxonomy=nope] reached count(WP_Error), which is a TypeError on PHP 8 and
+		// takes the whole page down with a 500 for anonymous visitors.
+		$_terms     = get_terms( $query_arg );
+		$term_count = is_wp_error( $_terms ) ? 0 : count( $_terms );
 		$styles     = '';
 
 		if ( $this->isset( 'column' ) ) {

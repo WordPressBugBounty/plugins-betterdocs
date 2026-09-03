@@ -22,6 +22,10 @@ if ( isset( $archive_layout ) && $archive_layout == 'layout-1' ) {
 			'docs_list_title_tag' => isset( $_params['docs_list_title_tag'] ) ? $_params['docs_list_title_tag'] : 'h2'
 		]
 	);
+	// Nested subcategories — emitted here (not inside the shared leaf template,
+	// which the block and Customizer archive layouts also use) so it stays
+	// scoped to this widget. Sibling after the grid, so it is not a grid cell.
+	$view_object->get( 'template-parts/archive-nested-categories', $_params );
 } elseif ( isset( $_params['query_args'] ) ) {
 	$post_query = new WP_Query( $_params['query_args'] );
 	$view_object->get(
@@ -31,6 +35,8 @@ if ( isset( $archive_layout ) && $archive_layout == 'layout-1' ) {
 			'docs_list_title_tag' => isset( $_params['docs_list_title_tag'] ) ? $_params['docs_list_title_tag'] : 'h2'
 		]
 	);
+	// Nested subcategories for Layout 2 (scoped to this widget — see above).
+	$view_object->get( 'template-parts/archive-nested-categories', $_params );
 }
 
 if ( isset( $pagination ) && $pagination ) {

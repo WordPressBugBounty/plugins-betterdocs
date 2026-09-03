@@ -153,6 +153,13 @@ class Request extends Base {
 		 * Priority 0 to run before WordPress canonical redirect (priority 10)
 		 */
 		add_action( 'template_redirect', [ $this, 'validate_single_docs_category_redirect' ], 0 );
+
+		/**
+		 * Hook into template_redirect to 301 non-canonical single doc URLs.
+		 * Priority 5: after the validation above (0) so requests already headed for
+		 * a 404 are left alone, and before WordPress canonical redirect (10).
+		 */
+		add_action( 'template_redirect', [ $this, 'redirect_to_canonical_docs_url' ], 5 );
 	}
 
 	public function provide_compatibility( $element_id, $uri_parts, $request_url ) {
@@ -393,6 +400,223 @@ class Request extends Base {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 301 redirect a single doc to its canonical permalink.
+	 *
+	 * With `enable_category_hierarchy_slugs` enabled the single doc rewrite rule
+	 * captures every segment between the base and the doc slug into `doc_category`
+	 * (see Rewrite::rules), and the category validation above only requires ONE of
+	 * those segments to match. That looseness is deliberate — a strict match would
+	 * 404 legitimate Multiple KB and WPML URLs, where the KB slug and translated
+	 * segments share the same capture group — but it also means a doc resolves on an
+	 * unlimited number of URLs, e.g. /docs/anything/real-category/doc-slug/.
+	 *
+	 * Rather than tightening the match, this compares the requested category path
+	 * against every path the doc legitimately has and redirects the rest. Every URL
+	 * that resolves today keeps resolving; only the extra ones collapse.
+	 */
+	public function redirect_to_canonical_docs_url() {
+		global $wp_query;
+
+		/**
+		 * Allow the canonical redirect to be disabled.
+		 *
+		 * @param bool $enabled Whether non-canonical single doc URLs should 301.
+		 */
+		if ( ! apply_filters( 'betterdocs_enable_canonical_redirect', true ) ) {
+			return;
+		}
+
+		if ( is_admin() || wp_doing_ajax() || is_feed() || is_embed() || is_preview() || is_customize_preview() ) {
+			return;
+		}
+
+		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+		if ( $request_method !== 'GET' ) {
+			return;
+		}
+
+		if ( ! is_singular( 'docs' ) || is_404() ) {
+			return;
+		}
+
+		/**
+		 * The request is already headed for a 404 — leave it alone. Note that
+		 * prevent_any_redirect_for_invalid_docs() cancels every wp_redirect() while
+		 * this flag is set, so the redirect below would be swallowed anyway.
+		 */
+		if ( $this->invalid_request_query_vars !== null ) {
+			return;
+		}
+
+		$requested_category = isset( $wp_query->query_vars['doc_category'] ) ? $wp_query->query_vars['doc_category'] : '';
+		if ( ! is_string( $requested_category ) || $requested_category === '' ) {
+			return;
+		}
+
+		$post_id = get_queried_object_id();
+		if ( ! $post_id ) {
+			return;
+		}
+
+		$valid_paths = $this->get_valid_category_paths( $post_id );
+		if ( empty( $valid_paths ) ) {
+			return;
+		}
+
+		$requested_category = urldecode( trim( $requested_category, '/' ) );
+
+		/**
+		 * Under Multiple KB the knowledge base segment is parsed into its own query
+		 * var, so put it back in front of the category chain before comparing —
+		 * otherwise a crossed `/kb-a/category-of-kb-b/doc/` would look canonical.
+		 */
+		$requested_kb = isset( $wp_query->query_vars['knowledge_base'] ) ? $wp_query->query_vars['knowledge_base'] : '';
+		if ( is_string( $requested_kb ) && $requested_kb !== '' ) {
+			$requested_category = urldecode( trim( $requested_kb, '/' ) ) . '/' . $requested_category;
+		}
+
+		if ( in_array( $requested_category, $valid_paths, true ) ) {
+			return; // Already canonical (or another legitimate category of this doc).
+		}
+
+		$canonical = get_permalink( $post_id );
+		if ( ! $canonical ) {
+			return;
+		}
+
+		// Keep the multipage segment the rewrite rule captured.
+		$page = isset( $wp_query->query_vars['page'] ) ? absint( $wp_query->query_vars['page'] ) : 0;
+		if ( $page > 1 ) {
+			$canonical = trailingslashit( $canonical ) . user_trailingslashit( $page, 'single_paged' );
+		}
+
+		/**
+		 * Belt and braces: never redirect a URL onto itself. The allowed set is built
+		 * from the same term chains get_permalink() uses, so this should be
+		 * unreachable, but a third party filtering the permalink could otherwise turn
+		 * a redirect into a loop.
+		 */
+		$requested_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : '';
+		$canonical_path = wp_parse_url( $canonical, PHP_URL_PATH );
+		if ( untrailingslashit( urldecode( (string) $requested_path ) ) === untrailingslashit( urldecode( (string) $canonical_path ) ) ) {
+			return;
+		}
+
+		$query_string = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : '';
+		if ( $query_string !== '' ) {
+			$canonical .= ( strpos( $canonical, '?' ) === false ? '?' : '&' ) . $query_string;
+		}
+
+		if ( wp_safe_redirect( $canonical, 301 ) ) {
+			exit;
+		}
+	}
+
+	/**
+	 * Every category path a doc can legitimately be reached at.
+	 *
+	 * Includes the full parent/child chain of each assigned category, and — because
+	 * the hierarchy rewrite rule folds the knowledge base slug into `doc_category`
+	 * for the `docs/%knowledge_base%/%doc_category%` structure — the KB-prefixed
+	 * variants too.
+	 *
+	 * @param int $post_id The doc id.
+	 * @return string[] Normalised (urldecoded, unslashed) category paths.
+	 */
+	protected function get_valid_category_paths( $post_id ) {
+		$cat_terms = wp_get_object_terms( $post_id, 'doc_category' );
+
+		if ( is_wp_error( $cat_terms ) ) {
+			return [];
+		}
+
+		$paths     = [];
+		$cat_paths = [];
+
+		if ( empty( $cat_terms ) ) {
+			$paths[] = 'uncategorized';
+		} else {
+			foreach ( $cat_terms as $cat_term ) {
+				$path = PostType::build_category_path( $cat_term );
+
+				if ( $path !== '' ) {
+					$paths[]                         = $path;
+					$cat_paths[ $cat_term->term_id ] = $path;
+				}
+			}
+		}
+
+		if ( taxonomy_exists( 'knowledge_base' ) ) {
+			$kb_terms = wp_get_object_terms( $post_id, 'knowledge_base', [ 'fields' => 'slugs' ] );
+
+			if ( ! is_wp_error( $kb_terms ) && ! empty( $kb_terms ) ) {
+				$kb_paths = [];
+
+				/**
+				 * Read the KB association once per category rather than once per
+				 * KB/category pair. The wp_get_object_terms() call above primes the
+				 * term meta cache for these terms (`update_term_meta_cache` defaults
+				 * to true), so these reads are cache hits and add no queries.
+				 *
+				 * The association mirrors how PostType::post_link() picks the
+				 * category via `doc_category_knowledge_base`. Without it a doc in
+				 * KB A / category A and KB B / category B would treat the crossed
+				 * `/kb-a/category-b/doc/` as canonical. A term with no association
+				 * meta is unassigned rather than KB specific, so it stays valid
+				 * under every KB — post_link() falls back the same way.
+				 */
+				$term_kbs = [];
+
+				if ( ! empty( $cat_paths ) ) {
+					foreach ( array_keys( $cat_paths ) as $term_id ) {
+						$meta                 = get_term_meta( $term_id, 'doc_category_knowledge_base', true );
+						$term_kbs[ $term_id ] = ( ! empty( $meta ) && is_array( $meta ) ) ? $meta : null;
+					}
+				}
+
+				foreach ( $kb_terms as $kb_slug ) {
+					if ( empty( $cat_paths ) ) {
+						// Uncategorised doc: the KB slug is the only prefix there is.
+						foreach ( $paths as $path ) {
+							$kb_paths[] = $kb_slug . '/' . $path;
+						}
+						continue;
+					}
+
+					foreach ( $cat_paths as $term_id => $path ) {
+						if ( $term_kbs[ $term_id ] !== null && ! in_array( $kb_slug, $term_kbs[ $term_id ], true ) ) {
+							continue;
+						}
+
+						$kb_paths[] = $kb_slug . '/' . $path;
+					}
+				}
+
+				$paths = array_merge( $paths, $kb_paths );
+			}
+		}
+
+		/**
+		 * Non-Latin slugs are stored URL encoded while the requested path arrives
+		 * decoded, so normalise both sides before comparing.
+		 */
+		$paths = array_map(
+			function ( $path ) {
+				return urldecode( trim( $path, '/' ) );
+			},
+			$paths
+		);
+
+		/**
+		 * Filter the category paths a doc is allowed to be reached at.
+		 *
+		 * @param string[] $paths   Valid category paths.
+		 * @param int      $post_id The doc id.
+		 */
+		return array_values( array_unique( apply_filters( 'betterdocs_valid_docs_category_paths', $paths, $post_id ) ) );
 	}
 
 	/**

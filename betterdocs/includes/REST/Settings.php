@@ -157,7 +157,11 @@ class Settings extends BaseAPI {
 			'fetch_attachments' => true,
 			'existing_slug'     => $existing_slug,
 			'action'            => $action,
-			'file_type'         => $files['file']['type']
+			'file_type'         => $files['file']['type'],
+			// The original upload name (with its extension) is the reliable
+			// signal for choosing the parser; the browser-reported MIME on
+			// $files['file']['type'] is not.
+			'file_name'         => isset( $files['file']['name'] ) ? $files['file']['name'] : ''
 		];
 
 		$wp_importer = new WPImport( $file, $args );

@@ -776,7 +776,14 @@ class Elementor extends BaseEditor {
          * Localize This In Order To Know If This Block Is Arriving From Betterdocs Templates Or Not
          */
         betterdocs()->assets->localize( 'betterdocs-el-category-grid', 'betterdocsCategoryGridConfig', [
-            'is_betterdocs_templates' => betterdocs()->helper->is_templates() ? true : false
+            'is_betterdocs_templates' => betterdocs()->helper->is_templates() ? true : false,
+            // Must also carry the lazy-load endpoint. wp_localize_script concatenates
+            // every `var betterdocsCategoryGridConfig = …` for this object name and the
+            // last assignment wins; shipping only is_betterdocs_templates here clobbered
+            // Scripts.php's full config on Elementor pages, leaving ajax_url undefined so
+            // loadLazyBody() bailed and sidebar lazy-load never fired.
+            'ajax_url'                => admin_url( 'admin-ajax.php' ),
+            'lazy_load_action'        => 'betterdocs_lazy_category_body',
         ] );
 
         if ( betterdocs()->helper->is_el_templates() == true ) {

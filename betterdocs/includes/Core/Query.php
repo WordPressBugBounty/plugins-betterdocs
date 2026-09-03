@@ -27,6 +27,9 @@ class Query extends Base {
         // add_action( 'parse_query', [$this, 'parse_query'], 1 );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 1 );
         add_filter( 'betterdocs_base_terms_args', array( $this, 'modify_terms_args_for_private_docs' ), 10, 1 );
+        // Drops terms whose private-inclusive count is 0 after `hide_empty` was
+        // turned off by modify_terms_args_for_private_docs().
+        add_filter( 'get_terms', array( $this, 'filter_terms_for_private_docs' ), 10, 3 );
 
         // Invalidate cached doc-category counts on any write that could change them.
         add_action( 'save_post_docs', array( $this, 'flush_term_counts_cache' ) );
@@ -86,21 +89,48 @@ class Query extends Base {
     }
 
     /**
-     * Modify terms args to include terms with only private docs for users with read_private_docs capability
+     * Modify terms args to include terms whose only docs are private, for users allowed to read them.
+     *
+     * Gated on being logged in rather than on `read_private_docs`, because a doc's own
+     * author may read their private doc without holding that capability. Which docs
+     * actually count is decided per post by can_read_doc().
      *
      * @param array $args
      * @return array
      */
     public function modify_terms_args_for_private_docs( $args ) {
-        // Only modify for users with read_private_docs capability and supported taxonomies
-        if ( ! current_user_can( 'read_private_docs' ) || ! isset( $args[ 'taxonomy' ] ) ) {
+        // Logged-out visitors always get WordPress' stock `hide_empty` behaviour.
+        if ( ! is_user_logged_in() || ! isset( $args[ 'taxonomy' ] ) ) {
             return $args;
         }
 
-        // Only support doc_category taxonomy for private docs filtering
-        // knowledge_base terms don't have docs directly assigned to them
-        $supported_taxonomies = array( 'doc_category' );
-        if ( ! in_array( $args[ 'taxonomy' ], $supported_taxonomies ) ) {
+        /**
+         * Let add-ons opt their own taxonomies into the private-docs rescue path.
+         *
+         * BetterDocs Pro hooks this for `knowledge_base` (Multiple KB), where docs
+         * ARE assigned to the KB term directly.
+         *
+         * @param array $args Term query args.
+         */
+        $_filtered = apply_filters( 'betterdocs_modify_terms_args_for_private_docs', $args );
+        if ( is_array( $_filtered ) ) {
+            $args = $_filtered;
+        }
+
+        // Already handled by an add-on (e.g. Pro's Multiple KB).
+        if ( ! empty( $args[ '_betterdocs_filter_private' ] ) ) {
+            return $args;
+        }
+
+        /**
+         * Taxonomies whose terms have docs assigned directly, so a private-inclusive
+         * object count can rescue a term WordPress dropped for `hide_empty`.
+         *
+         * `knowledge_base` is included so a KB whose only docs are private still shows
+         * up for privileged users even on older Pro builds that predate the filter above.
+         */
+        $supported_taxonomies = array( 'doc_category', 'knowledge_base' );
+        if ( ! in_array( $args[ 'taxonomy' ], $supported_taxonomies, true ) ) {
             return $args;
         }
 
@@ -318,12 +348,16 @@ class Query extends Base {
         if ( empty( $_docs_order ) ) {
             $statuses = array( 'publish' );
 
-            if ( current_user_can( 'read_private_docs' ) ) {
+            if ( is_user_logged_in() ) {
                 $statuses[  ] = 'private';
             }
 
             $_args = array(
                 'post_status' => $statuses,
+                // Required: with an explicit `post_status` WordPress only narrows private
+                // docs to the ones the user may read when `perm` is `readable`. Without it,
+                // listing `private` would expose every private doc to any logged-in user.
+                'perm' => 'readable',
                 'term_id' => $_terms[ 0 ]->term_id
             );
             if ( isset( $wp_query->query_vars[ 'doc_category' ] ) ) {
@@ -466,16 +500,131 @@ class Query extends Base {
         $parsed_args = $this->parse_terms_args( $args );
         $terms       = get_terms( $parsed_args );
 
-        // Filter terms manually if we need to consider private docs for users with read_private_docs capability
-        if ( isset( $parsed_args[ '_betterdocs_filter_private' ] ) && $parsed_args[ '_betterdocs_filter_private' ] && current_user_can( 'read_private_docs' ) ) {
+        // Filter terms manually if we need to consider private docs the current user may read
+        if ( isset( $parsed_args[ '_betterdocs_filter_private' ] ) && $parsed_args[ '_betterdocs_filter_private' ] && is_user_logged_in() ) {
             $terms = array_filter( $terms, function ( $term ) {
                 // Get the actual count including private docs for users with read_private_docs capability
-                $actual_count = $this->get_docs_count( $term, false );
-                return $actual_count > 0;
+                return $this->get_private_inclusive_docs_count( $term ) > 0;
             } );
         }
 
         return $terms;
+    }
+
+    /**
+     * Drop terms with no visible docs after `hide_empty` was disabled for private docs.
+     *
+     * modify_terms_args_for_private_docs() turns `hide_empty` off so WordPress stops
+     * dropping terms whose only docs are private. Without this counterpart, every
+     * genuinely empty term would leak into the listing for privileged users. Runs only
+     * for queries carrying the `_betterdocs_filter_private` flag, so anonymous and
+     * unflagged queries are untouched.
+     *
+     * @param array|WP_Error $terms
+     * @param array|null     $taxonomies
+     * @param array          $args
+     * @return array|WP_Error
+     */
+    public function filter_terms_for_private_docs( $terms, $taxonomies, $args ) {
+        if ( empty( $args[ '_betterdocs_filter_private' ] ) || empty( $terms ) || is_wp_error( $terms ) ) {
+            return $terms;
+        }
+
+        if ( ! is_user_logged_in() ) {
+            return $terms;
+        }
+
+        // Only term objects can be counted; `ids`, `names`, `count`, ... pass through.
+        $_fields = isset( $args[ 'fields' ] ) ? $args[ 'fields' ] : 'all';
+        if ( ! in_array( $_fields, array( 'all', 'all_with_object_id' ), true ) ) {
+            return $terms;
+        }
+
+        $_filtered = array_filter( $terms, function ( $term ) {
+            if ( ! is_object( $term ) ) {
+                return true;
+            }
+
+            return $this->get_private_inclusive_docs_count( $term ) > 0;
+        } );
+
+        return array_values( $_filtered );
+    }
+
+    /**
+     * Docs count for a term, including private docs when the user may read them.
+     *
+     * KB terms need object-in-term counting rather than the doc_category count path,
+     * which BetterDocs Pro provides through the filter below; get_docs_count() is the
+     * fallback and already counts via get_objects_in_term() for the term's own taxonomy.
+     *
+     * @param WP_Term $term
+     * @return int
+     */
+    /**
+     * Whether the current user may see a doc in a listing.
+     *
+     * Public docs are visible to everyone. A private doc is visible to whoever may read
+     * it — `read_post` maps to the base `read` capability for the doc's own author and
+     * to `read_private_docs` for everyone else, so owners see their own private docs
+     * without needing the capability. Other non-public statuses (draft, pending) stay
+     * out of listings for everyone, as before.
+     *
+     * @param int $post_id
+     * @return bool
+     */
+    /**
+     * Cache-key fragment identifying whose visibility a cached count reflects.
+     *
+     * Everyone who can read every private doc sees the same numbers, so they share one
+     * `priv` bucket; authors differ from each other and get their own. Logged-out
+     * visitors all share bucket `0`, keeping the anonymous cache as hot as before.
+     *
+     * @return string
+     */
+    protected function count_cache_viewer_key() {
+        if ( ! is_user_logged_in() ) {
+            return '0';
+        }
+
+        if ( current_user_can( 'read_private_docs' ) ) {
+            return 'priv';
+        }
+
+        return 'u' . get_current_user_id();
+    }
+
+    public function can_read_doc( $post_id ) {
+        if ( is_post_publicly_viewable( $post_id ) ) {
+            return true;
+        }
+
+        return 'private' === get_post_status( $post_id ) && current_user_can( 'read_post', $post_id );
+    }
+
+    protected function get_private_inclusive_docs_count( $term ) {
+        /**
+         * Let add-ons supply their own private-inclusive count for a term.
+         *
+         * Passing `null` means "not handled" — implementations that don't recognise the
+         * term's taxonomy return the value untouched, and we fall back to get_docs_count().
+         *
+         * @param int|null $count
+         * @param WP_Term  $term
+         */
+        $_count = apply_filters( 'betterdocs_get_term_docs_count_for_private_filter', null, $term );
+
+        if ( null !== $_count ) {
+            return (int) $_count;
+        }
+
+        // Count nested sub-category docs too, so a parent whose docs live only in its
+        // children stays visible to logged-in users exactly as it does for anonymous
+        // visitors (whose grid is descendant-aware). get_docs_count( …, true ) already
+        // filters each descendant doc through can_read_doc() via get_doc_ids_by_term(),
+        // so private/unreadable docs never resurrect a term. A non-nested count here
+        // hid those parents from logged-in users only.
+        return (int) $this->get_docs_count( $term, true );
     }
 
     public function get_child_terms( $args ) {
@@ -1143,11 +1292,13 @@ class Query extends Base {
         }
 
         $version  = $this->database->get_cache_version( 'betterdocs_term_counts' );
-        $can_priv = current_user_can( 'read_private_docs' ) ? 1 : 0;
+        // Counts depend on who is asking: an author sees their own private docs, so the
+        // key carries the user id. Logged-out visitors all share user 0.
+        $viewer   = $this->count_cache_viewer_key();
         $kb_slug  = isset( $args['kb_slug'] ) ? $args['kb_slug'] : '';
         $multi    = ! empty( $args['multiple_knowledge_base'] ) ? 1 : 0;
         $nested   = $nested_subcategory ? 1 : 0;
-        $cache_key = "bd_term_counts_v{$version}_docs_count_{$term->term_id}_{$nested}_{$can_priv}_{$kb_slug}_{$multi}";
+        $cache_key = "bd_term_counts_v{$version}_docs_count_{$term->term_id}_{$nested}_{$viewer}_{$kb_slug}_{$multi}";
 
         $cached = wp_cache_get( $cache_key, 'betterdocs' );
         if ( false !== $cached ) {
@@ -1164,18 +1315,11 @@ class Query extends Base {
                 if ( ! empty( $post_ids ) ) {
                     _prime_post_caches( $post_ids, false, false );
 
-                    if ( current_user_can( 'read_private_docs' ) ) {
-                        // For users with read_private_docs capability, include both private and public posts
-                        $filtered_post_ids = array_filter( $post_ids, function ( $post_id ) {
-                            $post_status = get_post_status( $post_id );
-                            return 'private' === $post_status || is_post_publicly_viewable( $post_id );
-                        } );
-                    } else {
-                        // For users without read_private_docs capability, only include public posts
-                        $filtered_post_ids = array_filter( $post_ids, function ( $post_id ) {
-                            return is_post_publicly_viewable( $post_id );
-                        } );
-                    }
+                    // Public docs for everyone, plus any private doc this user may read
+                    // (its own author, or a `read_private_docs` holder).
+                    $filtered_post_ids = array_filter( $post_ids, function ( $post_id ) {
+                        return $this->can_read_doc( $post_id );
+                    } );
 
                     $counts = count( $filtered_post_ids );
                 } else {
@@ -1201,10 +1345,10 @@ class Query extends Base {
         }
 
         $version     = $this->database->get_cache_version( 'betterdocs_term_counts' );
-        $can_priv    = current_user_can( 'read_private_docs' ) ? 1 : 0;
+        $viewer      = $this->count_cache_viewer_key();
         $nested      = $nested_subcategory ? 1 : 0;
         $optional_id = is_object( $optional ) && isset( $optional->term_id ) ? (int) $optional->term_id : 0;
-        $cache_key   = "bd_term_counts_v{$version}_doc_ids_{$term->term_id}_{$nested}_{$optional_id}_{$can_priv}";
+        $cache_key   = "bd_term_counts_v{$version}_doc_ids_{$term->term_id}_{$nested}_{$optional_id}_{$viewer}";
 
         $cached = wp_cache_get( $cache_key, 'betterdocs' );
         if ( false !== $cached ) {
@@ -1241,12 +1385,7 @@ class Query extends Base {
         }
 
         $filtered = array_filter( $_child_terms_docs_ids, function ( $doc_id ) {
-            if ( ! current_user_can( 'read_private_docs' ) ) {
-                return is_post_publicly_viewable( $doc_id );
-            }
-
-            $_status = get_post_status( $doc_id );
-            return 'private' == $_status || is_post_publicly_viewable( $doc_id );
+            return $this->can_read_doc( $doc_id );
         } );
 
         wp_cache_set( $cache_key, $filtered, 'betterdocs', HOUR_IN_SECONDS * 6 );

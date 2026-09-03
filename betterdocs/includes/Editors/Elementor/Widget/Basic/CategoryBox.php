@@ -1619,7 +1619,11 @@ class CategoryBox extends BaseWidget {
 
 		$kb_slug = isset( $meta_value ) ? $meta_value : ( isset( $settings['selected_knowledge_base'] ) ? $settings['selected_knowledge_base'] : '' );
 
-		$term_count = count( get_terms( $terms_query ) );
+		// Same WP_Error guard as CategoryBoxThree::view_params() — an invalid
+		// taxonomy makes get_terms() return WP_Error, and count(WP_Error) is a
+		// PHP 8 TypeError.
+		$_terms     = get_terms( $terms_query );
+		$term_count = is_wp_error( $_terms ) ? 0 : count( $_terms );
 
 		$terms_query_args = $this->betterdocs( 'query' )->terms_query( $terms_query );
 

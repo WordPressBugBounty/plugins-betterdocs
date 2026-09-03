@@ -174,7 +174,13 @@ final class MCPSelfTest {
 			return $result;
 		}
 
-		foreach ( [ $pretty, $rest, $discovery, $challenge, $user_agent ] as $check ) {
+		// `$user_agent` is deliberately not in this list. It is the one check that
+		// does not measure this server: it probes what a *generic* HTTP client
+		// sees, and a host that refuses those may still answer the AI client's own
+		// User-Agent — which cannot be known from here. Letting that proxy signal
+		// overrule four checks that completed a real round trip reported working
+		// sites as broken (ADR-067). It is still reported, as its own warning row.
+		foreach ( [ $pretty, $rest, $discovery, $challenge ] as $check ) {
 			if ( null === $check || 'ok' === $check['stage'] ) {
 				continue;
 			}
@@ -694,12 +700,14 @@ final class MCPSelfTest {
 	}
 
 	/**
-	 * Detect a host that answers WordPress but refuses AI clients by User-Agent.
+	 * Detect a host that answers WordPress but refuses generic clients by User-Agent.
 	 *
-	 * A blind spot worth stating plainly: this runs from the server's own IP,
-	 * which host firewalls usually trust, so it catches User-Agent filtering but
-	 * **not** an IP-range block of the AI vendor. A green result here does not
-	 * prove an external client can connect.
+	 * Two blind spots, both worth stating plainly. This runs from the server's own
+	 * IP, which host firewalls usually trust, so it catches User-Agent filtering
+	 * but **not** an IP-range block of the AI vendor: a green result does not prove
+	 * an external client can connect. And the User-Agents below are representative,
+	 * not the ones any particular vendor sends, so a red result does not prove one
+	 * cannot — which is why this never sets the overall verdict (ADR-067).
 	 *
 	 * @since 4.9.0
 	 *
@@ -730,7 +738,7 @@ final class MCPSelfTest {
 				'stage'  => 'ua_filter',
 				'detail' => sprintf(
 					/* translators: 1: the User-Agent string tried, 2: the HTTP status it received, 3: the HTTP status WordPress' own User-Agent received. */
-					__( 'The endpoint answered %3$d for WordPress but %2$d for an AI client\'s User-Agent (%1$s). A security plugin, firewall or "block bad bots" rule is refusing non-browser clients — exempt the MCP and /.well-known/ paths, or no AI client will ever reach this site.', 'betterdocs' ),
+					__( 'The endpoint answered %3$d for WordPress but %2$d for a generic HTTP client\'s User-Agent (%1$s). A security plugin, firewall or "block bad bots" rule is refusing non-browser clients. Whether that affects your assistant depends on the User-Agent it sends, which this test cannot see — connect it and check that tools load. If they do not, exempt the MCP and /.well-known/ paths.', 'betterdocs' ),
 					$agent,
 					$status,
 					$baseline
@@ -740,7 +748,7 @@ final class MCPSelfTest {
 
 		return [
 			'stage'  => 'ok',
-			'detail' => __( 'The endpoint answers AI-client User-Agents the same way it answers WordPress, so no bot filter is blocking them. This cannot see an IP-level block of the AI vendor.', 'betterdocs' )
+			'detail' => __( 'The endpoint answers generic HTTP clients the same way it answers WordPress, so no bot filter is refusing them. This cannot see an IP-level block of the AI vendor.', 'betterdocs' )
 		];
 	}
 

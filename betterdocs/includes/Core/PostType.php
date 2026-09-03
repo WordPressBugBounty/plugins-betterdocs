@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use WP_Post;
+use WP_Term;
 use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
@@ -297,22 +298,9 @@ class PostType extends Base {
 		}
 	}
 
-	if( is_array( $cat_terms ) && ! empty( $cat_terms ) && $this->settings->get( 'enable_category_hierarchy_slugs' ) ) { //if nested slug is enabled, render this
-		$doccat_terms = [];
-		
+	if( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
 		// Only use the first category to build the hierarchy
-		$term = $cat_terms[0];
-		$process_term = $term;
-		array_unshift( $doccat_terms, $term->slug );
-		while( $process_term->parent != 0 ) {
-			$parent_term = get_term($process_term->parent);
-			array_unshift($doccat_terms, $parent_term->slug);
-			$process_term = $parent_term;
-		}
-
-		$doccat_terms = implode('/', $doccat_terms);
-	} else if ( is_array( $cat_terms ) && ! empty( $cat_terms ) ) {
-		$doccat_terms = $cat_terms[0]->slug;
+		$doccat_terms = self::build_category_path( $cat_terms[0] );
 	} else {
 		$doccat_terms = 'uncategorized';
 	}
@@ -320,6 +308,48 @@ class PostType extends Base {
 	$url = str_replace( '%doc_category%', $doccat_terms, $url );
 	return apply_filters( 'betterdocs_post_type_link', $url, $post, $leavename );
 }
+
+	/**
+	 * Build the URL path for a doc category term.
+	 *
+	 * When `enable_category_hierarchy_slugs` is on this returns the full
+	 * parent/child chain (e.g. `handbook/articles`), otherwise just the term slug.
+	 *
+	 * @param \WP_Term|int $term The doc_category term (or term id).
+	 * @return string The category path, without leading/trailing slashes.
+	 */
+	public static function build_category_path( $term ) {
+		if ( ! $term instanceof WP_Term ) {
+			$term = get_term( $term, 'doc_category' );
+		}
+
+		if ( ! $term instanceof WP_Term ) {
+			return '';
+		}
+
+		if ( ! betterdocs()->settings->get( 'enable_category_hierarchy_slugs' ) ) {
+			return $term->slug;
+		}
+
+		$path         = [ $term->slug ];
+		$process_term = $term;
+		// Guard against a corrupted parent chain looping forever.
+		$seen = [ (int) $term->term_id => true ];
+
+		while ( $process_term->parent != 0 && ! isset( $seen[ (int) $process_term->parent ] ) ) {
+			$parent_term = get_term( $process_term->parent, 'doc_category' );
+
+			if ( ! $parent_term instanceof WP_Term ) {
+				break;
+			}
+
+			$seen[ (int) $parent_term->term_id ] = true;
+			array_unshift( $path, $parent_term->slug );
+			$process_term = $parent_term;
+		}
+
+		return implode( '/', $path );
+	}
 	public function ajax() {
 		/**
 		 * All kind of ajax related to post type: docs

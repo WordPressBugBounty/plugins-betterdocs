@@ -72,7 +72,10 @@ class CategoryGrid extends Block {
 			'postsOrderBy'            => 'betterdocs_order',
 			'postsOrder'              => 'asc',
 			'enableNestedSubcategory' => false,
-			'enableLazyLoad'          => false,
+			// Default follows the global "Lazy Load Sidebar Docs & Subcategories"
+			// setting, mirroring the Elementor sidebar widget's control default, so
+			// enabling the setting lazy-loads the block too unless overridden.
+			'enableLazyLoad'          => (bool) betterdocs()->settings->get( 'archive_lazy_load_descendants' ),
 			'postPerSubcategory'      => 3,
 			'buttonIconPosition'      => 'after',
 			'buttonIcon'              => 'fas fa-angle-right',

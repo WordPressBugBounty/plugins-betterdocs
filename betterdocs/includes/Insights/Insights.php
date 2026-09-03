@@ -510,11 +510,38 @@
          * Send Initial Data to API
          */
         if ( false == $site_id && false !== $this->item_id && ( false === $original_site_url || $original_site_url != $site_url ) ) {
-            if ( isset( $_SERVER[ 'REMOTE_ADDR' ] ) && ! empty( $_SERVER[ 'REMOTE_ADDR' ] && '127.0.0.1' != $_SERVER[ 'REMOTE_ADDR' ] ) ) { //phpcs:ignore
-                $country_request = wp_remote_get( 'http://ip-api.com/json/' . $_SERVER[ 'REMOTE_ADDR' ] . '?fields=country' ); //phpcs:ignore
-                if ( ! is_wp_error( $country_request ) && 200 == $country_request[ 'response' ][ 'code' ] ) {
-                    $ip_data           = json_decode( $country_request[ 'body' ] );
-                    $body[ 'country' ] = isset( $ip_data->country ) ? $ip_data->country : 'NOT SET';
+            // Validate before interpolating: REMOTE_ADDR went into the URL raw, so
+            // anything the host put there (some proxy setups write a comma-joined
+            // list, or a value taken from a client header) became URL path/query.
+            // FILTER_VALIDATE_IP also drops private, loopback and reserved
+            // addresses — a LAN address tells the geolocator nothing and sending
+            // it is a needless disclosure.
+            $remote_addr = isset( $_SERVER[ 'REMOTE_ADDR' ] ) ? wp_unslash( $_SERVER[ 'REMOTE_ADDR' ] ) : ''; //phpcs:ignore
+            $public_ip   = filter_var(
+                $remote_addr,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+            );
+
+            if ( false !== $public_ip ) {
+                // NOTE: http, not https, is deliberate — ip-api.com serves TLS only
+                // on its paid plans and answers 403 over https on the free tier, so
+                // switching the scheme would silently disable country detection
+                // rather than secure it. The response is therefore untrusted input:
+                // it is read for a single string field, length-bounded, and
+                // sanitised below. The residual exposure is that the site's own
+                // outbound IP travels in cleartext to a third party.
+                $country_request = wp_remote_get(
+                    'http://ip-api.com/json/' . rawurlencode( $public_ip ) . '?fields=country',
+                    [ 'timeout' => 5 ]
+                ); //phpcs:ignore
+
+                if ( ! is_wp_error( $country_request ) && 200 == wp_remote_retrieve_response_code( $country_request ) ) {
+                    $ip_data = json_decode( wp_remote_retrieve_body( $country_request ) );
+                    $country = ( is_object( $ip_data ) && isset( $ip_data->country ) && is_string( $ip_data->country ) )
+                        ? sanitize_text_field( $ip_data->country )
+                        : '';
+                    $body[ 'country' ] = ( '' !== $country ) ? substr( $country, 0, 64 ) : 'NOT SET';
                 }
             }
 

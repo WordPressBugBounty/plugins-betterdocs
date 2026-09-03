@@ -284,6 +284,10 @@ class Settings extends Base {
             'enable_breadcrumb_title' => true,
             'enable_sidebar_cat_list' => true,
             'enable_print_icon' => true,
+            'print_enable_logo' => false,
+            'print_logo' => array(),
+            'print_enable_footer' => false,
+            'print_footer_text' => '',
             'enable_tags' => true,
             'email_feedback' => true,
             'feedback_link_text' => __( 'Still stuck? How can we help?', 'betterdocs' ),
@@ -1397,13 +1401,49 @@ class Settings extends Base {
                                                                     'default' => 1,
                                                                     'priority' => 3
                                                                 ),
+                                                                'print_enable_logo' => array(
+                                                                    'name' => 'print_enable_logo',
+                                                                    'type' => 'toggle',
+                                                                    'label' => __( 'Logo on Printed Doc', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Show a logo at the top of the printed / PDF page', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => 0,
+                                                                    'priority' => 4
+                                                                ),
+                                                                'print_logo' => array(
+                                                                    'name' => 'print_logo',
+                                                                    'type' => 'media',
+                                                                    'value' => '',
+                                                                    'label' => __( 'Print Logo', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Leave empty to use your site logo, or the site icon when no site logo is set', 'betterdocs' ),
+                                                                    'priority' => 5,
+                                                                    'rules' => Rules::is( 'print_enable_logo', true )
+                                                                ),
+                                                                'print_enable_footer' => array(
+                                                                    'name' => 'print_enable_footer',
+                                                                    'type' => 'toggle',
+                                                                    'label' => __( 'Footer on Printed Doc', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Show a footer on every page of the printed / PDF document', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => 0,
+                                                                    'priority' => 6
+                                                                ),
+                                                                'print_footer_text' => array(
+                                                                    'name' => 'print_footer_text',
+                                                                    'type' => 'textarea',
+                                                                    'label' => __( 'Print Footer Text', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Leave empty to use the site name and current year', 'betterdocs' ),
+                                                                    'default' => '',
+                                                                    'priority' => 7,
+                                                                    'rules' => Rules::is( 'print_enable_footer', true )
+                                                                ),
                                                                 'enable_tags' => array(
                                                                     'name' => 'enable_tags',
                                                                     'type' => 'toggle',
                                                                     'label' => __( 'Tags', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => 1,
-                                                                    'priority' => 4
+                                                                    'priority' => 8
                                                                 ),
                                                                 'show_last_update_time' => array(
                                                                     'name' => 'show_last_update_time',
@@ -1411,7 +1451,7 @@ class Settings extends Base {
                                                                     'label' => __( 'Last Update Time', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => 1,
-                                                                    'priority' => 5
+                                                                    'priority' => 9
                                                                 ),
                                                                 'enable_navigation' => array(
                                                                     'name' => 'enable_navigation',
@@ -1419,7 +1459,7 @@ class Settings extends Base {
                                                                     'label' => __( 'Navigation', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => 1,
-                                                                    'priority' => 6
+                                                                    'priority' => 10
                                                                 ),
                                                                 'enable_comment' => array(
                                                                     'name' => 'enable_comment',
@@ -1427,7 +1467,7 @@ class Settings extends Base {
                                                                     'label' => __( 'Comment', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => '',
-                                                                    'priority' => 7
+                                                                    'priority' => 11
                                                                 ),
                                                                 'enable_credit' => array(
                                                                     'name' => 'enable_credit',
@@ -1435,14 +1475,14 @@ class Settings extends Base {
                                                                     'label' => __( 'Show Powered by BetterDocs', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => '',
-                                                                    'priority' => 8
+                                                                    'priority' => 12
                                                                 ),
                                                                 'reaction_feedback_text' => array(
                                                                     'name' => 'reaction_feedback_text',
                                                                     'type' => 'text',
                                                                     'label' => __( 'Reaction Feedback Text', 'betterdocs' ),
                                                                     'default' => __( 'Thanks for your feedback.', 'betterdocs' ),
-                                                                    'priority' => 9
+                                                                    'priority' => 13
                                                                 ),
                                                                 'enable_estimated_reading_time' => array(
                                                                     'name' => 'enable_estimated_reading_time',
@@ -1450,14 +1490,14 @@ class Settings extends Base {
                                                                     'label' => __( 'Estimated Reading Time', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => 0,
-                                                                    'priority' => 10
+                                                                    'priority' => 14
                                                                 ),
                                                                 'estimated_reading_time_title' => array(
                                                                     'name' => 'estimated_reading_time_title',
                                                                     'type' => 'text',
                                                                     'label' => __( 'Estimated Reading Time Title', 'betterdocs' ),
                                                                     'default' => '',
-                                                                    'priority' => 11,
+                                                                    'priority' => 15,
                                                                     'rules' => Rules::is( 'enable_estimated_reading_time', true )
                                                                 ),
                                                                 'estimated_reading_time_text' => array(
@@ -1465,7 +1505,7 @@ class Settings extends Base {
                                                                     'type' => 'text',
                                                                     'label' => __( 'Estimated Reading Time Text', 'betterdocs' ),
                                                                     'default' => __( 'min read', 'betterdocs' ),
-                                                                    'priority' => 12,
+                                                                    'priority' => 16,
                                                                     'rules' => Rules::is( 'enable_estimated_reading_time', true )
                                                                 ),
                                                                 'singular_estimated_reading_time_text' => array(
@@ -1473,7 +1513,7 @@ class Settings extends Base {
                                                                     'type' => 'text',
                                                                     'label' => __( 'Estimated Reading Time Text Singular', 'betterdocs' ),
                                                                     'default' => __( 'min read', 'betterdocs' ),
-                                                                    'priority' => 13,
+                                                                    'priority' => 17,
                                                                     'rules' => Rules::is( 'enable_estimated_reading_time', true )
                                                                 )
                                                             )

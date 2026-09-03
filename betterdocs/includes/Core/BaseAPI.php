@@ -46,8 +46,28 @@ abstract class BaseAPI extends Base {
 		return $this->register_endpoint( $endpoint, $callback, $args );
 	}
 
+	/**
+	 * Default permission callback for every route registered via
+	 * register_endpoint().
+	 *
+	 * This used to `return true`, which made the *default* for a new REST class
+	 * "world-readable and world-writable". Forgetting to override it was silent —
+	 * nothing failed, the endpoint simply shipped open — and that is exactly how
+	 * /knowledge_base and /plugin_info ended up anonymous.
+	 *
+	 * It now fails closed. A genuinely public endpoint must say so explicitly by
+	 * overriding this method (see REST\InstantAnswer and REST\PopularKeywords) or
+	 * by passing its own permission_callback to register_rest_route(). Making
+	 * "public" a deliberate, greppable act is the whole point.
+	 *
+	 * Note this governs routes only; register_field() does not use it, so classes
+	 * that only register REST fields are unaffected — their access is governed by
+	 * the parent controller.
+	 *
+	 * @return bool
+	 */
 	public function permission_check() {
-		return true;
+		return current_user_can( 'edit_posts' );
 	}
 
 	protected function register_endpoint( $endpoint, $callback, $args = [], $methods = WP_REST_Server::CREATABLE ) {

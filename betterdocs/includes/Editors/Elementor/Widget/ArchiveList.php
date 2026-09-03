@@ -1361,16 +1361,17 @@ class ArchiveList extends BaseWidget {
 		if ( $this->attributes['section_betterdocs_archive_list_layout'] == 'layout-2' || $this->attributes['section_betterdocs_archive_list_layout'] == 'layout-3' ) {
 			$docs_list_title_tag = $this->attributes['list_title_tag_layout_2'];
 
-			$term_params = [
-				'current_category' => $term,
-				'term'             => $term,
-				'orderby'          => $orderby,
-				'order'            => $this->attributes['order'],
-				'posts_per_page'   => -1,
-				'archive_layout'   => $this->attributes['section_betterdocs_archive_list_layout'],
-				'query_args'       => betterdocs()->query->docs_query_args( $_docs_query ),
-				'docs_list_title_tag' => $docs_list_title_tag,
-			];
+			// Extend the base params rather than replacing them, so the nesting
+			// keys built above (nested_subcategory, nested_terms_query,
+			// nested_docs_query_args, list_icon_name, list_icon_url, layout_type)
+			// survive for Layout 2/3 and their templates can render nested
+			// subcategories the way Layout 1 does. Previously this branch
+			// overwrote $term_params wholesale, dropping every nesting key.
+			$term_params['current_category']    = $term;
+			$term_params['orderby']             = $orderby;
+			$term_params['order']               = $this->attributes['order'];
+			$term_params['posts_per_page']      = -1;
+			$term_params['docs_list_title_tag'] = $docs_list_title_tag;
 		}
 
 		if ( $this->attributes['enable_pagination'] ) { //pass page variable in query args if pagination is enabled

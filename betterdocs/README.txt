@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.0
+Stable tag: 4.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -253,6 +253,20 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 
 == Changelog ==
+
+= 4.9.1 - 03/09/2026 =
+
+- New: Print template — add your logo and a custom footer to printed / PDF pages, from Settings → Layout → Single Doc
+- Improvement: Glossaries now show a preview in Free, so you can see what the Pro feature does before upgrading
+- Improvement: MCP catalogue now surfaces Pro's API Docs, insights, Git Sync and related-docs abilities; connection self-test no longer flags healthy endpoints as broken
+- Fixed: The Documentation grid hid knowledge bases containing only private docs from admins and editors
+- Fixed: Doc Category Archive layouts 2 and 3 never rendered nested subcategories
+- Fixed: "Lazy Load Sidebar Docs & Subcategories" now works for nested categories across both Elementor and block layouts
+- Fixed: Single doc URLs with arbitrary category segments returned 200 instead of redirecting to the real permalink
+- Fixed: Importing docs failed with a critical error on exported XML files and on docs with existing slugs
+- Fixed: The AI Content Suite showed "undefined" / "[object Object]" instead of a readable message when the API key is invalid
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.9.0 - 27/08/2026 =
 

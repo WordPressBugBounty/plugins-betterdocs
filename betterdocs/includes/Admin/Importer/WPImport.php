@@ -300,11 +300,10 @@ class WPImport extends WP_Importer {
 
 		$import_data = $this->parse( $file );
 
-		if ( isset( $import_data['type'] ) && $import_data['type'] === 'sample/csv' ) {
-			$this->import_sample_data( $import_data['posts'], $action );
-			return true;
-		}
-
+		// Check for a parser error first: on an invalid/unsupported file the
+		// parser returns a WP_Error, and reading $import_data['type'] on it
+		// would fatal ("Cannot use object of type WP_Error as array"). Report
+		// it cleanly instead.
 		if ( is_wp_error( $import_data ) ) {
 			/**
 			 * @var WP_Error $import_data ;
@@ -314,13 +313,18 @@ class WPImport extends WP_Importer {
 			return false;
 		}
 
+		if ( isset( $import_data['type'] ) && $import_data['type'] === 'sample/csv' ) {
+			$this->import_sample_data( $import_data['posts'], $action );
+			return true;
+		}
+
 		$posts = $import_data['posts'];
 		// Use array_map to apply the callback function to each item in the array
 		$posts = array_map( [ $this, 'modify_post_type' ], $posts );
 
 		if ( ! empty( $action ) ) {
 			$existing_posts       = $this->args['existing_slug'];
-			$existing_posts_array = explode( ',', $existing_posts );
+			$existing_posts_array = is_array( $existing_posts ) ? $existing_posts : explode( ',', (string) $existing_posts );
 
 			if ( $existing_posts && $action == 'ignore' ) {
 				// Filter out posts with slugs in $existing_slugs_array
@@ -648,7 +652,7 @@ class WPImport extends WP_Importer {
 
 	public function existing_slug_action( $posts, $action ) {
 		$existing_posts       = $this->args['existing_slug'];
-		$existing_posts_array = explode( ',', $existing_posts );
+		$existing_posts_array = is_array( $existing_posts ) ? $existing_posts : explode( ',', (string) $existing_posts );
 
 		if ( $existing_posts && $action == 'ignore' ) {
 			// Filter out posts with slugs in $existing_slugs_array
@@ -1591,12 +1595,27 @@ class WPImport extends WP_Importer {
 	 *
 	 * @return array Information gathered from the WXR file
 	 */
-	private function parse( $file ): array {
-		if ( $this->file_type == 'text/xml' ) {
-			$parser = new WXR_Parser();
-		} elseif ( $this->file_type == 'text/csv' ) {
+	private function parse( $file ) {
+		$type = strtolower( (string) $this->file_type );
+
+		// The uploaded temp file has no extension, and browsers report a .xml
+		// upload inconsistently (text/xml, application/xml, text/plain, or
+		// nothing) — so prefer the original file name's extension when it was
+		// passed through, fall back to the MIME, and default anything that is
+		// not clearly CSV to the WordPress export parser. WXR_Parser validates
+		// the file and returns a WP_Error for a non-WXR file, which
+		// import_start() already reports cleanly; previously an unrecognised
+		// MIME left $parser null and fataled with "Call to a member function
+		// parse() on null".
+		$name = isset( $this->args['file_name'] ) ? (string) $this->args['file_name'] : (string) $this->requested_file_path;
+		$ext  = strtolower( pathinfo( $name, PATHINFO_EXTENSION ) );
+
+		if ( 'csv' === $ext || ( '' === $ext && strpos( $type, 'csv' ) !== false ) ) {
 			$parser = new CSV_Parser();
+		} else {
+			$parser = new WXR_Parser();
 		}
+
 		return $parser->parse( $file );
 	}
 

@@ -271,7 +271,11 @@ class CategoryBox extends Block {
 			$current_category_id = get_queried_object() != null ? get_queried_object()->term_id : '';
 			$count               = count( betterdocs()->query->get_all_child_term_ids( 'doc_category', $current_category_id ) );
 		} else {
-			$count = count( get_terms( $term_params ) );
+			// Same WP_Error guard as CategoryBoxThree::view_params() — an invalid
+			// taxonomy makes get_terms() return WP_Error, and count(WP_Error) is a
+			// PHP 8 TypeError.
+			$_terms = get_terms( $term_params );
+			$count  = is_wp_error( $_terms ) ? 0 : count( $_terms );
 		}
 
 		return $count;

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterDocs 4.9.0\n"
+"Project-Id-Version: BetterDocs 4.9.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterdocs\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-27T06:55:07+00:00\n"
+"POT-Creation-Date: 2026-09-02T11:59:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: betterdocs.php
 #: includes/Abilities/AbilitiesRegistrar.php:133
 #: includes/Admin/Customizer/Customizer.php:66
-#: includes/Core/PostType.php:1254
+#: includes/Core/PostType.php:1284
 #: includes/Core/UnifiedMetabox.php:71
 #: includes/Editors/BlockEditor.php:43
 #: includes/Editors/Elementor.php:711
@@ -731,6 +731,7 @@ msgid "New name."
 msgstr ""
 
 #: includes/Abilities/ProStubs.php:95
+#: includes/Abilities/ProStubs.php:316
 msgid "New URL slug."
 msgstr ""
 
@@ -790,7 +791,188 @@ msgstr ""
 msgid "How many rows each leading-items list returns, up to 100."
 msgstr ""
 
-#: includes/Abilities/ProStubs.php:245
+#: includes/Abilities/ProStubs.php:220
+msgid "List API references"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:221
+msgid "List the API references on this site, each with its title, slug, status, source and whether its spec has been materialized into docs."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:222
+#: includes/Abilities/ProStubs.php:244
+#: includes/Abilities/ProStubs.php:272
+#: includes/Abilities/ProStubs.php:300
+#: includes/Abilities/ProStubs.php:346
+#: includes/Abilities/ProStubs.php:373
+#: includes/Abilities/ProStubs.php:414
+msgid "API documentation"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:242
+msgid "Get API reference"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:243
+msgid "Read one API reference by id: its settings and, when a spec has been ingested, a summary of the operations it documents."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:252
+#: includes/Abilities/ProStubs.php:308
+#: includes/Abilities/ProStubs.php:354
+#: includes/Abilities/ProStubs.php:422
+msgid "API reference id."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:256
+msgid "Include a summarized list of the spec operations (method, path, summary)."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:260
+msgid "Cap the number of operations returned when include_operations is true."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:270
+msgid "Create API reference"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:271
+msgid "Create an API reference. Title, slug and status are optional; the title is filled from the spec's info.title when a spec is later ingested and none was set."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:280
+msgid "Reference title. Optional — filled from the spec when omitted."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:284
+msgid "URL slug. Derived from the title when omitted."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:289
+msgid "Publish state. Defaults to draft."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:298
+msgid "Update API reference"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:299
+msgid "Update an API reference: rename it, change its slug or status, or adjust display settings such as the Try-it panel and code-sample theme."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:312
+msgid "New title."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:321
+msgid "New publish state."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:325
+msgid "Show the interactive Try-it panel."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:329
+msgid "Label for the Try-it button."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:334
+msgid "Code-sample theme."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:344
+msgid "Delete API reference"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:345
+msgid "Delete an API reference and its stored spec. Docs already materialized from it are left in place, never deleted."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:371
+msgid "Ingest API spec"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:372
+msgid "Ingest an OpenAPI or Postman spec into an API reference. Pass the raw spec text, or a source_url to fetch it from; this replaces any previously ingested spec."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:381
+msgid "API reference id to ingest into."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:385
+msgid "Raw spec document (JSON or YAML). Provide this or source_url."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:389
+msgid "URL to fetch the spec from. Provide this or spec."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:394
+msgid "Serialization of the spec text. Sniffed when omitted."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:412
+msgid "Materialize API reference"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:413
+msgid "Turn an ingested API spec into BetterDocs docs, one per operation. Starts a background run and returns its state; call again with action \"status\" to check progress."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:427
+msgid "run starts materialization; status reports an in-flight or finished run. Defaults to run."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:445
+msgid "Get search insights"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:446
+msgid "Read what visitors search for in the knowledge base: the most-used search terms and how often each was searched."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:447
+msgid "Search insights"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:455
+msgid "How many top search terms to return (default 20, max 100)."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:471
+msgid "Get Git sync status"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:472
+msgid "Report the Git integration configuration and whether it is connected: provider, repository, branch, folder, file naming and auto-sync. Pass a doc id to also get that doc's last sync time and status."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:473
+msgid "Git sync"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:481
+msgid "Optional doc id to report per-document sync state for."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:503
+msgid "Get related docs"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:504
+msgid "Read the saved related-doc suggestions for a doc — the persisted list shown under the article. Reads the cache only; it does not run the AI engine."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:505
+msgid "Related docs"
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:513
+msgid "Doc id to read related suggestions for."
+msgstr ""
+
+#: includes/Abilities/ProStubs.php:555
 msgid "Doc categories to file under this knowledge base, by term id or by name."
 msgstr ""
 
@@ -993,7 +1175,7 @@ msgid "No BetterDocs tools are registered: the Abilities API may be owned by ano
 msgstr ""
 
 #: includes/Abilities/StubAbility.php:180
-#: includes/Core/Settings.php:831
+#: includes/Core/Settings.php:835
 #: assets/build/admin/js/dashboard.js:5
 msgid "Multiple Knowledge Base"
 msgstr ""
@@ -1164,9 +1346,9 @@ msgid "create the %1$s \"%2$s\""
 msgstr ""
 
 #: includes/Abilities/Traits/ResolvesTerms.php:208
-#: includes/Core/Admin.php:1407
-#: includes/Core/PostType.php:1367
-#: includes/Core/Settings.php:2921
+#: includes/Core/Admin.php:1411
+#: includes/Core/PostType.php:1397
+#: includes/Core/Settings.php:2961
 msgid "Glossaries"
 msgstr ""
 
@@ -1298,7 +1480,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Defaults.php:543
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4715
-#: includes/Core/Settings.php:1145
+#: includes/Core/Settings.php:1149
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:208
 #: includes/Editors/Elementor/Widget/Sidebar.php:137
 #: assets/build/blocks/editor.js:1
@@ -1424,8 +1606,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:640
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:667
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:962
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2279
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2434
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2283
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2438
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:623
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:878
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1323
@@ -2129,8 +2311,8 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:543
 #: includes/Admin/Customizer/Sections/SingleDoc.php:1019
-#: includes/Core/Settings.php:1163
-#: includes/Core/Settings.php:1220
+#: includes/Core/Settings.php:1167
+#: includes/Core/Settings.php:1224
 #: includes/Core/SetupWizard.php:167
 #: includes/Editors/BlockEditor/Blocks/SearchForm.php:35
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:320
@@ -2176,12 +2358,12 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:349
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:431
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:316
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1727
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1807
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1910
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1990
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2094
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2185
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1731
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1811
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1914
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1994
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2098
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2189
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:361
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:654
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:839
@@ -2239,16 +2421,16 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:304
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:729
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1333
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1739
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1819
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1922
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2002
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2106
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2197
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2316
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2375
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2471
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2530
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1743
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1823
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1926
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2006
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2110
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2201
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2320
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2379
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2475
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2534
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:349
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:642
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:825
@@ -2373,8 +2555,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArchiveList.php:649
 #: includes/Editors/Elementor/Widget/ArchiveList.php:776
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:140
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2127
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2218
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2131
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2222
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:486
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1285
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:249
@@ -2612,10 +2794,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1255
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1362
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1410
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2606
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2640
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2705
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2739
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2610
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2644
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2709
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2743
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:700
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:774
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1231
@@ -2740,8 +2922,8 @@ msgid "List Excerpt Margin"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/ArchivePage.php:3552
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2815
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2874
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2819
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2878
 #: assets/build/blocks/editor.js:1
 msgid "Description Color"
 msgstr ""
@@ -2894,8 +3076,8 @@ msgid "Active Border Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/BreadCrumb.php:17
-#: includes/Core/Settings.php:1598
-#: includes/Core/Settings.php:1604
+#: includes/Core/Settings.php:1638
+#: includes/Core/Settings.php:1644
 msgid "Breadcrumb"
 msgstr ""
 
@@ -2937,7 +3119,7 @@ msgid "Active Item Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:46
-#: includes/Core/Settings.php:872
+#: includes/Core/Settings.php:876
 #: includes/Core/SetupWizard.php:125
 #: includes/Core/SetupWizard.php:352
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:14
@@ -3095,11 +3277,11 @@ msgid "Image"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2773
-#: includes/Core/Settings.php:1308
+#: includes/Core/Settings.php:1312
 #: includes/Editors/Elementor/Widget/ArchiveList.php:112
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:839
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2577
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2676
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2581
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2680
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:673
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1373
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:521
@@ -3123,7 +3305,7 @@ msgid "Title"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:2801
-#: includes/Core/Settings.php:1281
+#: includes/Core/Settings.php:1285
 #: includes/Editors/Elementor.php:241
 #: includes/Editors/Elementor.php:304
 #: includes/Editors/Elementor.php:528
@@ -3182,7 +3364,7 @@ msgid "Docs List Item Padding"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/DocsPage.php:3724
-#: includes/Core/Settings.php:1128
+#: includes/Core/Settings.php:1132
 msgid "Explore More Button"
 msgstr ""
 
@@ -3538,7 +3720,7 @@ msgid "Group Active Title Color"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:37
-#: includes/Core/Settings.php:1169
+#: includes/Core/Settings.php:1173
 msgid "Live Search"
 msgstr ""
 
@@ -3691,8 +3873,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1284
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1382
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1439
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2340
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2495
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2344
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2499
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:432
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:479
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:566
@@ -3869,22 +4051,22 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1276
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1374
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1431
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1769
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1779
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1849
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1859
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1952
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1962
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2032
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2042
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2147
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2157
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2229
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2239
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2332
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2391
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2487
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2546
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1773
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1783
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1853
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1863
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1956
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1966
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2036
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2046
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2151
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2161
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2233
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2243
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2336
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2395
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2491
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2550
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:424
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:471
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:558
@@ -3989,7 +4171,7 @@ msgid "Search Modal Query"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/LiveSearch.php:4710
-#: includes/Core/Settings.php:2912
+#: includes/Core/Settings.php:2952
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:204
 #: includes/Editors/Elementor/Widget/Sidebar.php:133
 #: assets/build/blocks/editor.js:1
@@ -4206,8 +4388,8 @@ msgid "List Item Padding (PX)"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:37
-#: includes/Core/Settings.php:1342
-#: includes/Core/Settings.php:1348
+#: includes/Core/Settings.php:1346
+#: includes/Core/Settings.php:1352
 #: includes/Core/SetupWizard.php:153
 #: includes/Editors/Elementor/SingleDocs.php:40
 msgid "Single Doc"
@@ -4302,8 +4484,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2829
 #: includes/blocks.php:137
 #: includes/Core/Settings.php:269
-#: includes/Core/Settings.php:1491
-#: includes/Core/Settings.php:1500
+#: includes/Core/Settings.php:1531
+#: includes/Core/Settings.php:1540
 #: views/shortcodes/toc.php:31
 msgid "Table of Contents"
 msgstr ""
@@ -4361,7 +4543,7 @@ msgid "Updated Date"
 msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:3822
-#: includes/Core/Settings.php:1450
+#: includes/Core/Settings.php:1490
 #: includes/Core/UnifiedMetabox.php:97
 msgid "Estimated Reading Time"
 msgstr ""
@@ -4619,7 +4801,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:7652
 #: includes/Admin/Customizer/Sections/SingleDoc.php:8785
-#: includes/Core/Settings.php:1714
+#: includes/Core/Settings.php:1754
 #: includes/Core/UnifiedMetabox.php:107
 msgid "Attachments"
 msgstr ""
@@ -4727,7 +4909,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:9919
 #: includes/Admin/Customizer/Sections/SingleDoc.php:10959
-#: includes/Core/Settings.php:1732
+#: includes/Core/Settings.php:1772
 #: includes/Core/UnifiedMetabox.php:117
 msgid "Related Docs"
 msgstr ""
@@ -4749,72 +4931,72 @@ msgid "The file does not exist, please try again."
 msgstr ""
 
 #. translators: %s: Post author.
-#: includes/Admin/Importer/WPImport.php:414
+#: includes/Admin/Importer/WPImport.php:418
 msgid "Failed to import author %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: %s: Author display name.
-#: includes/Admin/Importer/WPImport.php:476
+#: includes/Admin/Importer/WPImport.php:480
 msgid "Failed to create new user for %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: 1: Term taxonomy, 2: Term name.
 #. translators: 1: Post type singular label, 2: Post title.
 #. translators: 1: Taxonomy name, 2: Term name.
-#: includes/Admin/Importer/WPImport.php:574
-#: includes/Admin/Importer/WPImport.php:1083
-#: includes/Admin/Importer/WPImport.php:1138
+#: includes/Admin/Importer/WPImport.php:578
+#: includes/Admin/Importer/WPImport.php:1087
+#: includes/Admin/Importer/WPImport.php:1142
 msgid "Failed to import %1$s %2$s"
 msgstr ""
 
 #. translators: 1: Post title, 2: Post type.
-#: includes/Admin/Importer/WPImport.php:996
+#: includes/Admin/Importer/WPImport.php:1000
 msgid "Failed to import %1$s: Invalid post type %2$s"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1307
+#: includes/Admin/Importer/WPImport.php:1311
 msgid "Fetching attachments is not enabled"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1324
+#: includes/Admin/Importer/WPImport.php:1328
 msgid "Invalid file type"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1369
+#: includes/Admin/Importer/WPImport.php:1373
 msgid "Could not create temporary file."
 msgstr ""
 
 #. translators: 1: WordPress error message, 2: WordPress error code.
-#: includes/Admin/Importer/WPImport.php:1388
+#: includes/Admin/Importer/WPImport.php:1392
 msgid "Request failed due to an error: %1$s (%2$s)"
 msgstr ""
 
 #. translators: 1: HTTP error message, 2: HTTP error code.
-#: includes/Admin/Importer/WPImport.php:1397
+#: includes/Admin/Importer/WPImport.php:1401
 msgid "Remote server returned the following unexpected result: %1$s (%2$s)"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1406
+#: includes/Admin/Importer/WPImport.php:1410
 msgid "Remote server did not respond"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1414
+#: includes/Admin/Importer/WPImport.php:1418
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1420
+#: includes/Admin/Importer/WPImport.php:1424
 msgid "Downloaded file has incorrect size"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1429
+#: includes/Admin/Importer/WPImport.php:1433
 msgid "Remote file is too large, limit is %s"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1461
+#: includes/Admin/Importer/WPImport.php:1465
 msgid "Sorry, this file type is not permitted for security reasons."
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1477
+#: includes/Admin/Importer/WPImport.php:1481
 msgid "The uploaded file could not be moved"
 msgstr ""
 
@@ -4847,24 +5029,24 @@ msgid "You have to enable Reporting first."
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:309
-#: includes/Core/Settings.php:2165
+#: includes/Core/Settings.php:2205
 msgid "Once Weekly"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:313
-#: includes/Core/Settings.php:2164
+#: includes/Core/Settings.php:2204
 msgid "Once Daily"
 msgstr ""
 
 #: includes/Admin/ReportEmail.php:317
-#: includes/Core/Settings.php:2166
+#: includes/Core/Settings.php:2206
 msgid "Once Monthly"
 msgstr ""
 
 #. Translators: %s is replaced with the website name.
 #. translators: %s is the website name.
 #: includes/Admin/ReportEmail.php:355
-#: includes/Core/Settings.php:2219
+#: includes/Core/Settings.php:2259
 #: views/admin/email/body.php:46
 msgid "Your Documentation Performance of %s Website"
 msgstr ""
@@ -4990,8 +5172,8 @@ msgid "Doc Navigation"
 msgstr ""
 
 #: includes/blocks.php:145
-#: includes/Core/Settings.php:697
-#: includes/Core/Settings.php:2575
+#: includes/Core/Settings.php:701
+#: includes/Core/Settings.php:2615
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:36
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:510
 #: views/templates/parts/article-summary.php:107
@@ -5000,7 +5182,7 @@ msgid "AI Doc Summarizer"
 msgstr ""
 
 #: includes/blocks.php:153
-#: includes/Core/Settings.php:1832
+#: includes/Core/Settings.php:1872
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form"
 msgstr ""
@@ -5052,12 +5234,12 @@ msgid "Deactivate BetterDocs Pro First"
 msgstr ""
 
 #: includes/Core/Admin.php:274
-#: includes/Core/PostType.php:1255
+#: includes/Core/PostType.php:1285
 #: includes/Core/Settings.php:235
 #: includes/Core/Settings.php:263
-#: includes/Core/Settings.php:858
-#: includes/Core/Settings.php:1115
-#: includes/Core/Settings.php:2919
+#: includes/Core/Settings.php:862
+#: includes/Core/Settings.php:1119
+#: includes/Core/Settings.php:2959
 #: includes/Core/SetupWizard.php:365
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:53
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:228
@@ -5149,47 +5331,47 @@ msgstr ""
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:982
+#: includes/Core/Admin.php:983
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:984
+#: includes/Core/Admin.php:985
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:1160
+#: includes/Core/Admin.php:1161
 msgid "New"
 msgstr ""
 
-#: includes/Core/Admin.php:1255
-#: includes/Core/Admin.php:1339
-#: includes/Core/PostType.php:1261
+#: includes/Core/Admin.php:1256
+#: includes/Core/Admin.php:1340
+#: includes/Core/PostType.php:1291
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/quick-setup.js:1
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1330
+#: includes/Core/Admin.php:1331
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Core/Admin.php:1346
+#: includes/Core/Admin.php:1347
 #: includes/Core/FAQBuilder.php:297
-#: includes/Core/PostType.php:1256
+#: includes/Core/PostType.php:1286
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:1350
+#: includes/Core/Admin.php:1351
 #: includes/Core/FAQBuilder.php:208
-#: includes/Core/PostType.php:1322
+#: includes/Core/PostType.php:1352
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:1357
-#: includes/Core/PostType.php:1528
-#: includes/Core/Settings.php:1403
+#: includes/Core/Admin.php:1358
+#: includes/Core/PostType.php:1558
+#: includes/Core/Settings.php:1443
 #: includes/Editors/Elementor/Widget/Tags.php:82
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
@@ -5197,69 +5379,69 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:1364
-#: includes/Core/Admin.php:1510
+#: includes/Core/Admin.php:1365
+#: includes/Core/Admin.php:1514
 #: views/admin/template-parts/settings-header-2.php:7
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:1374
+#: includes/Core/Admin.php:1375
 #: assets/build/admin/js/dashboard.js:20
 msgid "MCP"
 msgstr ""
 
-#: includes/Core/Admin.php:1384
+#: includes/Core/Admin.php:1385
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:1394
+#: includes/Core/Admin.php:1395
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:1423
+#: includes/Core/Admin.php:1427
 msgid "API Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1436
-#: includes/Core/Settings.php:2613
-#: includes/Core/Settings.php:2623
-#: includes/Core/Settings.php:2637
+#: includes/Core/Admin.php:1440
+#: includes/Core/Settings.php:2653
+#: includes/Core/Settings.php:2663
+#: includes/Core/Settings.php:2677
 #: assets/build/admin/js/dashboard.js:5
 msgid "AI Chatbot"
 msgstr ""
 
-#: includes/Core/Admin.php:1496
+#: includes/Core/Admin.php:1500
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:1513
+#: includes/Core/Admin.php:1517
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/Core/Admin.php:1555
+#: includes/Core/Admin.php:1559
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:1567
+#: includes/Core/Admin.php:1571
 msgid "Visit Encyclopedia"
 msgstr ""
 
-#: includes/Core/Admin.php:1660
+#: includes/Core/Admin.php:1664
 #: includes/Core/ArticleQualityScore.php:358
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/Core/Admin.php:1665
+#: includes/Core/Admin.php:1669
 msgid "Permission denied"
 msgstr ""
 
-#: includes/Core/Admin.php:1672
+#: includes/Core/Admin.php:1676
 msgid "Invalid introduction key"
 msgstr ""
 
-#: includes/Core/Admin.php:1681
+#: includes/Core/Admin.php:1685
 msgid "Pointer dismissed successfully"
 msgstr ""
 
@@ -5273,7 +5455,7 @@ msgid "Error"
 msgstr ""
 
 #: includes/Core/ArticleQualityScore.php:67
-#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/dashboard.js:1
 #: assets/build/blocks/ai-edit.js:1
 #: assets/build/blocks/write-with-ai.js:1
 #: assets/build/blocks/write-with-ai.js:2
@@ -5438,6 +5620,11 @@ msgid "No suggestions found for this doc."
 msgstr ""
 
 #: includes/Core/DocsAISuite.php:69
+#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/faq.js:4
+#: assets/build/admin/js/glossaries.js:1
+#: assets/build/blocks/ai-edit.js:1
+#: assets/build/blocks/write-with-ai.js:1
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -5464,13 +5651,13 @@ msgid "Parent FAQ Category:"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:204
-#: includes/Core/PostType.php:1318
+#: includes/Core/PostType.php:1348
 #: assets/build/admin/js/dashboard.js:5
 msgid "Edit Category"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:205
-#: includes/Core/PostType.php:1319
+#: includes/Core/PostType.php:1349
 #: assets/build/admin/js/dashboard.js:5
 msgid "Update Category"
 msgstr ""
@@ -5555,9 +5742,9 @@ msgid "Add new faq from here"
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:493
-#: includes/Core/PostType.php:993
-#: includes/Core/PostType.php:1053
-#: includes/Core/PostType.php:1116
+#: includes/Core/PostType.php:1023
+#: includes/Core/PostType.php:1083
+#: includes/Core/PostType.php:1146
 msgid "Nonce Failed"
 msgstr ""
 
@@ -5566,10 +5753,10 @@ msgid "You don't have permission to manage FAQ groups."
 msgstr ""
 
 #: includes/Core/FAQBuilder.php:525
-#: includes/Core/PostType.php:1045
-#: includes/Core/PostType.php:1097
-#: includes/Core/PostType.php:1105
-#: includes/Core/PostType.php:1172
+#: includes/Core/PostType.php:1075
+#: includes/Core/PostType.php:1127
+#: includes/Core/PostType.php:1135
+#: includes/Core/PostType.php:1202
 msgid "Successfully updated."
 msgstr ""
 
@@ -5580,10 +5767,10 @@ msgid "Invalid FAQ ID."
 msgstr ""
 
 #: includes/Core/Glossaries.php:565
-#: includes/Core/PostType.php:1406
-#: includes/Core/PostType.php:1425
-#: includes/Core/PostType.php:1477
-#: assets/build/admin/js/dashboard.js:4
+#: includes/Core/PostType.php:1436
+#: includes/Core/PostType.php:1455
+#: includes/Core/PostType.php:1507
+#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/glossaries.js:1
 msgid "Glossary Term Description"
 msgstr ""
@@ -5642,7 +5829,7 @@ msgid "Migrating..."
 msgstr ""
 
 #: includes/Core/KBMigration.php:159
-#: includes/REST/Settings.php:256
+#: includes/REST/Settings.php:260
 msgid "Migration process has started in the background."
 msgstr ""
 
@@ -5704,216 +5891,216 @@ msgstr ""
 msgid "Plugin is deactivated successfully!"
 msgstr ""
 
-#: includes/Core/PostType.php:131
+#: includes/Core/PostType.php:132
 msgid "Knowledge Bases this doc category belongs to, by slug."
 msgstr ""
 
-#: includes/Core/PostType.php:431
+#: includes/Core/PostType.php:461
 msgid "BetterDocs Multilingual Migration Required"
 msgstr ""
 
-#: includes/Core/PostType.php:432
+#: includes/Core/PostType.php:462
 msgid "Your site uses a multilingual plugin and has existing ordering data that needs to be migrated:"
 msgstr ""
 
 #. translators: %d: number of categories
-#: includes/Core/PostType.php:435
+#: includes/Core/PostType.php:465
 msgid "• Category ordering (%d categories)"
 msgstr ""
 
 #. translators: %d: number of categories
-#: includes/Core/PostType.php:438
+#: includes/Core/PostType.php:468
 msgid "• Document ordering (%d categories with custom doc orders)"
 msgstr ""
 
-#: includes/Core/PostType.php:441
+#: includes/Core/PostType.php:471
 msgid "Run Migration Now"
 msgstr ""
 
-#: includes/Core/PostType.php:997
+#: includes/Core/PostType.php:1027
 msgid "You don't have permission to manage docs term."
 msgstr ""
 
-#: includes/Core/PostType.php:1057
-#: includes/Core/PostType.php:1120
+#: includes/Core/PostType.php:1087
+#: includes/Core/PostType.php:1150
 msgid "You don't have permission to update docs term."
 msgstr ""
 
-#: includes/Core/PostType.php:1076
+#: includes/Core/PostType.php:1106
 msgid "Invalid term ID."
 msgstr ""
 
-#: includes/Core/PostType.php:1082
-#: includes/Core/PostType.php:1145
+#: includes/Core/PostType.php:1112
+#: includes/Core/PostType.php:1175
 msgid "Invalid category."
 msgstr ""
 
-#: includes/Core/PostType.php:1108
-#: includes/Core/PostType.php:1175
+#: includes/Core/PostType.php:1138
+#: includes/Core/PostType.php:1205
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Something went wrong."
 msgstr ""
 
-#: includes/Core/PostType.php:1133
+#: includes/Core/PostType.php:1163
 msgid "Invalid object or term ID."
 msgstr ""
 
-#: includes/Core/PostType.php:1139
+#: includes/Core/PostType.php:1169
 msgid "Invalid document."
 msgstr ""
 
-#: includes/Core/PostType.php:1257
+#: includes/Core/PostType.php:1287
 #: assets/build/admin/js/dashboard.js:20
 msgid "Add New Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1258
+#: includes/Core/PostType.php:1288
 msgid "New Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1259
+#: includes/Core/PostType.php:1289
 msgid "Edit Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1260
+#: includes/Core/PostType.php:1290
 msgid "View Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1262
+#: includes/Core/PostType.php:1292
 msgid "Search Docs"
 msgstr ""
 
-#: includes/Core/PostType.php:1264
+#: includes/Core/PostType.php:1294
 msgid "No docs found"
 msgstr ""
 
-#: includes/Core/PostType.php:1265
+#: includes/Core/PostType.php:1295
 msgid "No docs found in trash"
 msgstr ""
 
-#: includes/Core/PostType.php:1272
+#: includes/Core/PostType.php:1302
 msgid "Add new doc from here"
 msgstr ""
 
-#: includes/Core/PostType.php:1313
-#: includes/Core/PostType.php:1315
+#: includes/Core/PostType.php:1343
+#: includes/Core/PostType.php:1345
 msgid "Docs Categories"
 msgstr ""
 
-#: includes/Core/PostType.php:1314
-#: includes/Core/Settings.php:2920
+#: includes/Core/PostType.php:1344
+#: includes/Core/Settings.php:2960
 #: includes/Editors/BlockEditor/Patterns/BasePattern.php:18
 #: includes/Utils/BlockTemplate.php:406
 msgid "Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1316
+#: includes/Core/PostType.php:1346
 msgid "Parent Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1317
+#: includes/Core/PostType.php:1347
 msgid "Parent Docs Category:"
 msgstr ""
 
-#: includes/Core/PostType.php:1320
+#: includes/Core/PostType.php:1350
 msgid "Add New Docs Category"
 msgstr ""
 
-#: includes/Core/PostType.php:1321
+#: includes/Core/PostType.php:1351
 msgid "New Docs Category Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1358
-#: includes/Core/PostType.php:1360
+#: includes/Core/PostType.php:1388
+#: includes/Core/PostType.php:1390
 msgid "Glossaries Terms"
 msgstr ""
 
-#: includes/Core/PostType.php:1359
+#: includes/Core/PostType.php:1389
 msgid "Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1361
+#: includes/Core/PostType.php:1391
 msgid "Parent Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1362
+#: includes/Core/PostType.php:1392
 msgid "Parent Glossaries Term:"
 msgstr ""
 
-#: includes/Core/PostType.php:1363
+#: includes/Core/PostType.php:1393
 msgid "Edit Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1364
+#: includes/Core/PostType.php:1394
 msgid "Update Glossary"
 msgstr ""
 
-#: includes/Core/PostType.php:1365
+#: includes/Core/PostType.php:1395
 msgid "Add New Glossaries Term"
 msgstr ""
 
-#: includes/Core/PostType.php:1366
+#: includes/Core/PostType.php:1396
 msgid "New Glossaries Term Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1413
-#: includes/Core/PostType.php:1415
-#: includes/Core/PostType.php:1441
+#: includes/Core/PostType.php:1443
+#: includes/Core/PostType.php:1445
+#: includes/Core/PostType.php:1471
 msgid "Enter a description for the glossary term"
 msgstr ""
 
-#: includes/Core/PostType.php:1514
+#: includes/Core/PostType.php:1544
 msgid "Docs Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1515
+#: includes/Core/PostType.php:1545
 msgid "Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1516
+#: includes/Core/PostType.php:1546
 #: assets/build/admin/js/dashboard.js:5
 msgid "Search Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1517
+#: includes/Core/PostType.php:1547
 msgid "Popular Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1518
+#: includes/Core/PostType.php:1548
 msgid "All Tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1521
+#: includes/Core/PostType.php:1551
 #: assets/build/admin/js/dashboard.js:5
 msgid "Edit Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1522
+#: includes/Core/PostType.php:1552
 #: assets/build/admin/js/dashboard.js:5
 msgid "Update Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1523
+#: includes/Core/PostType.php:1553
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Tag"
 msgstr ""
 
-#: includes/Core/PostType.php:1524
+#: includes/Core/PostType.php:1554
 msgid "New Tag Name"
 msgstr ""
 
-#: includes/Core/PostType.php:1525
+#: includes/Core/PostType.php:1555
 msgid "Separate tags with commas"
 msgstr ""
 
-#: includes/Core/PostType.php:1526
+#: includes/Core/PostType.php:1556
 msgid "Add or remove tags"
 msgstr ""
 
-#: includes/Core/PostType.php:1527
+#: includes/Core/PostType.php:1557
 msgid "Choose from the most used tags"
 msgstr ""
 
@@ -5925,12 +6112,12 @@ msgstr ""
 msgid "No categories to create."
 msgstr ""
 
-#: includes/Core/Scripts.php:85
+#: includes/Core/Scripts.php:103
 #: assets/build/admin/js/dashboard.js:12
 msgid "Copied"
 msgstr ""
 
-#: includes/Core/Scripts.php:88
+#: includes/Core/Scripts.php:106
 msgid "Failed to generate doc summary. Please try again."
 msgstr ""
 
@@ -5945,7 +6132,7 @@ msgid "Sorry, no docs were found."
 msgstr ""
 
 #: includes/Core/Settings.php:264
-#: includes/Core/Settings.php:1122
+#: includes/Core/Settings.php:1126
 #: includes/Editors/BlockEditor/Blocks/CategoryBox.php:54
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:242
 #: assets/build/admin/js/dashboard.js:5
@@ -5954,21 +6141,21 @@ msgid "Doc"
 msgstr ""
 
 #: includes/Core/Settings.php:266
-#: includes/Core/Settings.php:1137
-#: includes/Editors/BlockEditor/Blocks/CategoryGrid.php:87
+#: includes/Core/Settings.php:1141
+#: includes/Editors/BlockEditor/Blocks/CategoryGrid.php:90
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:324
 #: assets/build/blocks/editor.js:1
 msgid "Explore More"
 msgstr ""
 
 #: includes/Core/Settings.php:280
-#: includes/Core/Settings.php:1622
+#: includes/Core/Settings.php:1662
 msgid "Home"
 msgstr ""
 
-#: includes/Core/Settings.php:289
-#: includes/Core/Settings.php:1679
-#: includes/Core/Settings.php:1687
+#: includes/Core/Settings.php:293
+#: includes/Core/Settings.php:1719
+#: includes/Core/Settings.php:1727
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:30
 #: includes/Editors/Elementor/Widget/Feedback.php:91
 #: views/templates/feedback-parts/form.php:97
@@ -5976,12 +6163,12 @@ msgstr ""
 msgid "Still stuck? How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:290
+#: includes/Core/Settings.php:294
 #: includes/FrontEnd/FrontEnd.php:330
 msgid "Thanks for your feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:292
+#: includes/Core/Settings.php:296
 #: includes/Editors/BlockEditor/Blocks/FeedbackForm.php:31
 #: includes/Editors/Elementor/Widget/Feedback.php:99
 #: views/templates/feedback-parts/form.php:108
@@ -5990,16 +6177,16 @@ msgstr ""
 msgid "How can we help?"
 msgstr ""
 
-#: includes/Core/Settings.php:317
-#: includes/Core/Settings.php:2543
+#: includes/Core/Settings.php:321
+#: includes/Core/Settings.php:2583
 #: includes/Core/WriteWithAI.php:241
 msgid "Default/Core"
 msgstr ""
 
-#: includes/Core/Settings.php:342
-#: includes/Core/Settings.php:343
-#: includes/Core/Settings.php:1467
-#: includes/Core/Settings.php:1475
+#: includes/Core/Settings.php:346
+#: includes/Core/Settings.php:347
+#: includes/Core/Settings.php:1507
+#: includes/Core/Settings.php:1515
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:25
 #: includes/Editors/BlockEditor/Blocks/ReadingTime.php:26
 #: includes/Editors/Elementor/Widget/ReadingTime.php:68
@@ -6009,169 +6196,170 @@ msgstr ""
 msgid "min read"
 msgstr ""
 
-#: includes/Core/Settings.php:437
+#: includes/Core/Settings.php:441
 #: includes/Core/SetupWizard.php:62
 msgid "Design with Gutenberg"
 msgstr ""
 
-#: includes/Core/Settings.php:437
-#: includes/Core/Settings.php:447
+#: includes/Core/Settings.php:441
+#: includes/Core/Settings.php:451
 #: assets/build/admin/js/dashboard.js:5
 msgid "Learn More"
 msgstr ""
 
-#: includes/Core/Settings.php:447
+#: includes/Core/Settings.php:451
 msgid "Design with Elementor"
 msgstr ""
 
-#: includes/Core/Settings.php:458
+#: includes/Core/Settings.php:462
 msgid "Customize in BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:627
+#: includes/Core/Settings.php:631
 msgid "You don't have any rights for saving settings."
 msgstr ""
 
-#: includes/Core/Settings.php:690
-#: includes/Core/Settings.php:2441
-#: includes/Core/Settings.php:2447
+#: includes/Core/Settings.php:694
+#: includes/Core/Settings.php:2481
+#: includes/Core/Settings.php:2487
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Write with AI"
 msgstr ""
 
 #. translators: 1: feature label, 2: minimum tokens, 3: model id
-#: includes/Core/Settings.php:717
+#: includes/Core/Settings.php:721
 msgid "%1$s max tokens must be at least %2$d for %3$s."
 msgstr ""
 
-#: includes/Core/Settings.php:769
+#: includes/Core/Settings.php:773
 #: includes/Core/SetupWizard.php:195
 msgid "Select a Page"
 msgstr ""
 
-#: includes/Core/Settings.php:781
+#: includes/Core/Settings.php:785
 msgid "All logged in users"
 msgstr ""
 
-#: includes/Core/Settings.php:787
+#: includes/Core/Settings.php:791
 #: assets/build/blocks/editor.js:1
 msgid "betterdocs"
 msgstr ""
 
-#: includes/Core/Settings.php:803
+#: includes/Core/Settings.php:807
+#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 msgid "Save"
 msgstr ""
 
-#: includes/Core/Settings.php:804
+#: includes/Core/Settings.php:808
 msgid "Saving..."
 msgstr ""
 
-#: includes/Core/Settings.php:818
-#: includes/Core/Settings.php:1042
-#: includes/Core/Settings.php:1373
+#: includes/Core/Settings.php:822
+#: includes/Core/Settings.php:1046
+#: includes/Core/Settings.php:1377
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:51
 #: includes/Editors/Elementor/Widget/DocDate.php:44
 #: assets/build/blocks/editor.js:1
 msgid "General"
 msgstr ""
 
-#: includes/Core/Settings.php:825
+#: includes/Core/Settings.php:829
 msgid "General Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:840
+#: includes/Core/Settings.php:844
 #: includes/Core/SetupWizard.php:340
 msgid "Built-in Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:848
+#: includes/Core/Settings.php:852
 msgid "Enable Category Hierarchy Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:852
+#: includes/Core/Settings.php:856
 msgid "Shows Hierarchy Based Permalink Slugs For Doc Categories & Single Doc Page"
 msgstr ""
 
-#: includes/Core/Settings.php:857
+#: includes/Core/Settings.php:861
 #: includes/Core/SetupWizard.php:364
 msgid "Documentation Page Title"
 msgstr ""
 
-#: includes/Core/Settings.php:865
+#: includes/Core/Settings.php:869
 #: includes/Core/SetupWizard.php:372
 msgid "BetterDocs Root Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:878
+#: includes/Core/Settings.php:882
 #: includes/Core/SetupWizard.php:358
 msgid "You will need to insert BetterDocs Shortcode inside the page. This page will be used as docs permalink."
 msgstr ""
 
-#: includes/Core/Settings.php:885
+#: includes/Core/Settings.php:889
 msgid "Custom Category Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:892
+#: includes/Core/Settings.php:896
 msgid "Custom Tag Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:899
+#: includes/Core/Settings.php:903
 #: includes/Core/SetupWizard.php:380
 msgid "Single Docs Permalink"
 msgstr ""
 
-#: includes/Core/Settings.php:906
+#: includes/Core/Settings.php:910
 #: includes/Core/SetupWizard.php:389
 msgid "Make sure to keep Docs Root Slug in the Single Docs Permalink. You are not able to keep it blank. You can use the available tags from below."
 msgstr ""
 
-#: includes/Core/Settings.php:911
+#: includes/Core/Settings.php:915
 #: includes/Core/SetupWizard.php:395
 msgid "Show Glossary"
 msgstr ""
 
-#: includes/Core/Settings.php:912
+#: includes/Core/Settings.php:916
 #: includes/Core/SetupWizard.php:396
 msgid "Enable the glossary feature to allow users to look up definitions for terms used within your encyclopedia or glossaries themselves."
 msgstr ""
 
-#: includes/Core/Settings.php:921
+#: includes/Core/Settings.php:925
 #: includes/Core/SetupWizard.php:405
 msgid "Built-in Encyclopedia Page"
 msgstr ""
 
-#: includes/Core/Settings.php:930
+#: includes/Core/Settings.php:934
 #: includes/Core/SetupWizard.php:422
 msgid "FAQ Schema"
 msgstr ""
 
-#: includes/Core/Settings.php:938
+#: includes/Core/Settings.php:942
 msgid "Analytics From"
 msgstr ""
 
-#: includes/Core/Settings.php:940
+#: includes/Core/Settings.php:944
 msgid "Everyone"
 msgstr ""
 
-#: includes/Core/Settings.php:941
+#: includes/Core/Settings.php:945
 msgid "Guests Only"
 msgstr ""
 
-#: includes/Core/Settings.php:942
+#: includes/Core/Settings.php:946
 msgid "Registered Users Only"
 msgstr ""
 
-#: includes/Core/Settings.php:951
+#: includes/Core/Settings.php:955
 msgid "Unique Visitor Count"
 msgstr ""
 
-#: includes/Core/Settings.php:960
+#: includes/Core/Settings.php:964
 msgid "Exclude Bot Analytics"
 msgstr ""
 
-#: includes/Core/Settings.php:973
+#: includes/Core/Settings.php:977
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:47
 #: includes/Editors/Elementor/Widget/Sidebar.php:242
 #: assets/build/admin/js/dashboard.js:1
@@ -6179,156 +6367,156 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
-#: includes/Core/Settings.php:980
-#: includes/Core/Settings.php:986
+#: includes/Core/Settings.php:984
+#: includes/Core/Settings.php:990
 msgid "Layout Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:1011
-#: includes/Core/Settings.php:1017
+#: includes/Core/Settings.php:1015
+#: includes/Core/Settings.php:1021
 msgid "Documentation Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1049
+#: includes/Core/Settings.php:1053
 msgid "Docs List Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1050
+#: includes/Core/Settings.php:1054
 msgid "Upload your own preferred document list icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1056
+#: includes/Core/Settings.php:1060
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:307
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:167
 #: assets/build/blocks/editor.js:1
 msgid "Category Title Link"
 msgstr ""
 
-#: includes/Core/Settings.php:1057
+#: includes/Core/Settings.php:1061
 msgid "This setting is applicable for category grid layout"
 msgstr ""
 
-#: includes/Core/Settings.php:1065
+#: includes/Core/Settings.php:1069
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:107
 #: assets/build/blocks/editor.js:1
 msgid "Masonry"
 msgstr ""
 
-#: includes/Core/Settings.php:1073
+#: includes/Core/Settings.php:1077
 msgid "Lazy Load Sidebar Docs & Subcategories"
 msgstr ""
 
-#: includes/Core/Settings.php:1074
+#: includes/Core/Settings.php:1078
 msgid "Applies to the Sidebar layout wherever it appears — single docs, category archives, and the Sidebar widget/block. Off by default: enable to render only the active category upfront and fetch the rest on click (or on scroll for the Memphis layout), cutting initial HTML size on large knowledge bases."
 msgstr ""
 
-#: includes/Core/Settings.php:1082
+#: includes/Core/Settings.php:1086
 #: assets/build/blocks/editor.js:1
 msgid "Nested Sub Category"
 msgstr ""
 
-#: includes/Core/Settings.php:1090
+#: includes/Core/Settings.php:1094
 msgid "Number Of Columns"
 msgstr ""
 
-#: includes/Core/Settings.php:1091
+#: includes/Core/Settings.php:1095
 msgid "This setting is not applicable for sleek layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1098
+#: includes/Core/Settings.php:1102
 msgid "Number Of Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1099
+#: includes/Core/Settings.php:1103
 msgid "This setting is not applicable for handbook layout."
 msgstr ""
 
-#: includes/Core/Settings.php:1106
+#: includes/Core/Settings.php:1110
 msgid "Doc Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1114
+#: includes/Core/Settings.php:1118
 msgid "Count Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1121
+#: includes/Core/Settings.php:1125
 msgid "Count Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1136
+#: includes/Core/Settings.php:1140
 msgid "Explore More Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1144
+#: includes/Core/Settings.php:1148
 msgid "Popular Docs Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1152
+#: includes/Core/Settings.php:1156
 msgid "Popular Docs Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1177
+#: includes/Core/Settings.php:1181
 #: includes/Core/SetupWizard.php:432
 msgid "Advanced Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1187
+#: includes/Core/Settings.php:1191
 msgid "Exclude Child Terms In Category Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1196
+#: includes/Core/Settings.php:1200
 msgid "Minimum amount of Keywords Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1204
+#: includes/Core/Settings.php:1208
 msgid "Minimum Character Limit For Search Result"
 msgstr ""
 
-#: includes/Core/Settings.php:1211
+#: includes/Core/Settings.php:1215
 msgid "Search Placeholder"
 msgstr ""
 
-#: includes/Core/Settings.php:1212
+#: includes/Core/Settings.php:1216
 msgid "Search.."
 msgstr ""
 
-#: includes/Core/Settings.php:1218
+#: includes/Core/Settings.php:1222
 msgid "Search Button Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1225
+#: includes/Core/Settings.php:1229
 msgid "Search Not Found Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1232
+#: includes/Core/Settings.php:1236
 msgid "Search Result Image"
 msgstr ""
 
-#: includes/Core/Settings.php:1240
+#: includes/Core/Settings.php:1244
 msgid "KB Based Search"
 msgstr ""
 
-#: includes/Core/Settings.php:1250
+#: includes/Core/Settings.php:1254
 msgid "Search Modal Source"
 msgstr ""
 
-#: includes/Core/Settings.php:1251
+#: includes/Core/Settings.php:1255
 msgid "Choose the content type to be shown in the search modal. <br> <b>Note:</b> This is only applicable on Modal Search."
 msgstr ""
 
-#: includes/Core/Settings.php:1254
+#: includes/Core/Settings.php:1258
 msgid "Both (Docs + FAQs)"
 msgstr ""
 
-#: includes/Core/Settings.php:1255
+#: includes/Core/Settings.php:1259
 msgid "Docs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1256
+#: includes/Core/Settings.php:1260
 msgid "FAQs only"
 msgstr ""
 
-#: includes/Core/Settings.php:1266
+#: includes/Core/Settings.php:1270
 #: includes/Editors/Elementor.php:295
 #: includes/Editors/Elementor.php:352
 #: includes/Editors/Elementor/Widget/ArchiveList.php:108
@@ -6336,14 +6524,14 @@ msgstr ""
 msgid "Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1272
+#: includes/Core/Settings.php:1276
 #: includes/Editors/Elementor.php:232
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1275
-#: includes/Core/Settings.php:1305
+#: includes/Core/Settings.php:1279
+#: includes/Core/Settings.php:1309
 #: includes/Editors/Elementor.php:235
 #: includes/Editors/Elementor.php:298
 #: includes/Editors/Elementor.php:596
@@ -6352,7 +6540,7 @@ msgstr ""
 msgid "No order"
 msgstr ""
 
-#: includes/Core/Settings.php:1276
+#: includes/Core/Settings.php:1280
 #: includes/Editors/Elementor.php:236
 #: includes/Editors/Elementor.php:299
 #: includes/Editors/Elementor.php:523
@@ -6363,7 +6551,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/Core/Settings.php:1277
+#: includes/Core/Settings.php:1281
 #: includes/Editors/Elementor.php:237
 #: includes/Editors/Elementor.php:300
 #: includes/Editors/Elementor.php:524
@@ -6374,7 +6562,7 @@ msgstr ""
 msgid "Slug"
 msgstr ""
 
-#: includes/Core/Settings.php:1278
+#: includes/Core/Settings.php:1282
 #: includes/Editors/Elementor.php:238
 #: includes/Editors/Elementor.php:301
 #: includes/Editors/Elementor.php:525
@@ -6384,7 +6572,7 @@ msgstr ""
 msgid "Term Group"
 msgstr ""
 
-#: includes/Core/Settings.php:1279
+#: includes/Core/Settings.php:1283
 #: includes/Editors/Elementor.php:239
 #: includes/Editors/Elementor.php:302
 #: includes/Editors/Elementor.php:526
@@ -6393,7 +6581,7 @@ msgstr ""
 msgid "Term ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1280
+#: includes/Core/Settings.php:1284
 #: includes/Editors/Elementor.php:240
 #: includes/Editors/Elementor.php:303
 #: includes/Editors/Elementor.php:527
@@ -6403,7 +6591,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1282
+#: includes/Core/Settings.php:1286
 #: includes/Editors/Elementor.php:242
 #: includes/Editors/Elementor.php:305
 #: includes/Editors/Elementor.php:529
@@ -6412,8 +6600,8 @@ msgstr ""
 msgid "Parent"
 msgstr ""
 
-#: includes/Core/Settings.php:1283
-#: includes/Core/Settings.php:1315
+#: includes/Core/Settings.php:1287
+#: includes/Core/Settings.php:1319
 #: includes/Editors/Elementor.php:243
 #: includes/Editors/Elementor.php:306
 #: includes/Editors/Elementor.php:530
@@ -6423,223 +6611,255 @@ msgstr ""
 msgid "BetterDocs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1290
+#: includes/Core/Settings.php:1294
 #: includes/Editors/Elementor.php:252
 #: assets/build/blocks/editor.js:1
 msgid "Terms Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1302
+#: includes/Core/Settings.php:1306
 #: includes/Editors/Elementor.php:269
 msgid "Docs Order By"
 msgstr ""
 
-#: includes/Core/Settings.php:1306
+#: includes/Core/Settings.php:1310
 msgid "Docs ID"
 msgstr ""
 
-#: includes/Core/Settings.php:1307
+#: includes/Core/Settings.php:1311
 msgid "Docs Author"
 msgstr ""
 
-#: includes/Core/Settings.php:1309
+#: includes/Core/Settings.php:1313
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1310
+#: includes/Core/Settings.php:1314
 #: assets/build/blocks/editor.js:1
 msgid "Last Modified Date"
 msgstr ""
 
-#: includes/Core/Settings.php:1311
+#: includes/Core/Settings.php:1315
 #: assets/build/blocks/editor.js:1
 msgid "Parent Id"
 msgstr ""
 
-#: includes/Core/Settings.php:1312
+#: includes/Core/Settings.php:1316
 #: assets/build/blocks/editor.js:1
 msgid "Random"
 msgstr ""
 
-#: includes/Core/Settings.php:1313
+#: includes/Core/Settings.php:1317
 #: assets/build/blocks/editor.js:1
 msgid "Comment Count"
 msgstr ""
 
-#: includes/Core/Settings.php:1314
+#: includes/Core/Settings.php:1318
 #: assets/build/blocks/editor.js:1
 msgid "Menu Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1322
+#: includes/Core/Settings.php:1326
 #: includes/Editors/Elementor.php:279
 msgid "Docs Order"
 msgstr ""
 
-#: includes/Core/Settings.php:1379
+#: includes/Core/Settings.php:1383
 #: includes/Editors/Elementor/Tags/TitleTag.php:17
 #: includes/Editors/Elementor/Widget/Title.php:26
 #: views/admin/email/analytics/leading-docs.php:24
 msgid "Doc Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1387
-#: includes/Core/Settings.php:1760
+#: includes/Core/Settings.php:1391
+#: includes/Core/Settings.php:1800
 msgid "Sidebar Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1395
+#: includes/Core/Settings.php:1399
 msgid "Print Icon"
 msgstr ""
 
-#: includes/Core/Settings.php:1411
+#: includes/Core/Settings.php:1407
+msgid "Logo on Printed Doc"
+msgstr ""
+
+#: includes/Core/Settings.php:1408
+msgid "Show a logo at the top of the printed / PDF page"
+msgstr ""
+
+#: includes/Core/Settings.php:1417
+msgid "Print Logo"
+msgstr ""
+
+#: includes/Core/Settings.php:1418
+msgid "Leave empty to use your site logo, or the site icon when no site logo is set"
+msgstr ""
+
+#: includes/Core/Settings.php:1425
+msgid "Footer on Printed Doc"
+msgstr ""
+
+#: includes/Core/Settings.php:1426
+msgid "Show a footer on every page of the printed / PDF document"
+msgstr ""
+
+#: includes/Core/Settings.php:1434
+msgid "Print Footer Text"
+msgstr ""
+
+#: includes/Core/Settings.php:1435
+msgid "Leave empty to use the site name and current year"
+msgstr ""
+
+#: includes/Core/Settings.php:1451
 msgid "Last Update Time"
 msgstr ""
 
-#: includes/Core/Settings.php:1419
+#: includes/Core/Settings.php:1459
 #: assets/build/blocks/editor.js:1
 msgid "Navigation"
 msgstr ""
 
-#: includes/Core/Settings.php:1427
+#: includes/Core/Settings.php:1467
 msgid "Comment"
 msgstr ""
 
-#: includes/Core/Settings.php:1435
+#: includes/Core/Settings.php:1475
 #: includes/Core/SetupWizard.php:414
 msgid "Show Powered by BetterDocs"
 msgstr ""
 
-#: includes/Core/Settings.php:1443
+#: includes/Core/Settings.php:1483
 msgid "Reaction Feedback Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1444
+#: includes/Core/Settings.php:1484
 msgid "Thanks for your feedback."
 msgstr ""
 
-#: includes/Core/Settings.php:1458
+#: includes/Core/Settings.php:1498
 msgid "Estimated Reading Time Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1466
+#: includes/Core/Settings.php:1506
 msgid "Estimated Reading Time Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1474
+#: includes/Core/Settings.php:1514
 msgid "Estimated Reading Time Text Singular"
 msgstr ""
 
-#: includes/Core/Settings.php:1485
+#: includes/Core/Settings.php:1525
 msgid "TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1499
+#: includes/Core/Settings.php:1539
 #: includes/Editors/Elementor/Widget/ToC.php:67
 #: assets/build/blocks/editor.js:1
 msgid "TOC Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1508
+#: includes/Core/Settings.php:1548
 msgid "TOC Hierarchy"
 msgstr ""
 
-#: includes/Core/Settings.php:1517
+#: includes/Core/Settings.php:1557
 msgid "TOC List Number"
 msgstr ""
 
-#: includes/Core/Settings.php:1526
+#: includes/Core/Settings.php:1566
 msgid "Show TOC Title in Anchor Links"
 msgstr ""
 
-#: includes/Core/Settings.php:1535
+#: includes/Core/Settings.php:1575
 #: includes/Editors/Elementor/Widget/Sidebar.php:352
 #: assets/build/blocks/editor.js:1
 msgid "Sticky TOC"
 msgstr ""
 
-#: includes/Core/Settings.php:1544
+#: includes/Core/Settings.php:1584
 msgid "Collapsible TOC on small devices"
 msgstr ""
 
-#: includes/Core/Settings.php:1553
+#: includes/Core/Settings.php:1593
 msgid "Title Link Copy To Clipboard"
 msgstr ""
 
-#: includes/Core/Settings.php:1560
+#: includes/Core/Settings.php:1600
 msgid "TOC Supported Heading Tag"
 msgstr ""
 
-#: includes/Core/Settings.php:1586
+#: includes/Core/Settings.php:1626
 msgid "Content Offset"
 msgstr ""
 
-#: includes/Core/Settings.php:1589
+#: includes/Core/Settings.php:1629
 msgid "content offset from top on scroll."
 msgstr ""
 
-#: includes/Core/Settings.php:1612
+#: includes/Core/Settings.php:1652
 msgid "Enable Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1621
+#: includes/Core/Settings.php:1661
 msgid "Breadcrumb Home Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1635
+#: includes/Core/Settings.php:1675
 msgid "Breadcrumb Home URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1643
+#: includes/Core/Settings.php:1683
 msgid "Category on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1652
+#: includes/Core/Settings.php:1692
 msgid "Title on Breadcrumb"
 msgstr ""
 
-#: includes/Core/Settings.php:1664
-#: includes/Core/Settings.php:1670
+#: includes/Core/Settings.php:1704
+#: includes/Core/Settings.php:1710
 msgid "Email Feedback"
 msgstr ""
 
-#: includes/Core/Settings.php:1678
+#: includes/Core/Settings.php:1718
 msgid "Feedback Link Text"
 msgstr ""
 
-#: includes/Core/Settings.php:1686
+#: includes/Core/Settings.php:1726
 #: includes/Editors/Elementor/Widget/Feedback.php:97
 #: assets/build/blocks/editor.js:1
 msgid "Feedback Form Title"
 msgstr ""
 
-#: includes/Core/Settings.php:1694
+#: includes/Core/Settings.php:1734
 msgid "Email Address"
 msgstr ""
 
-#: includes/Core/Settings.php:1697
+#: includes/Core/Settings.php:1737
 msgid "The email address where the Feedback form will be sent"
 msgstr ""
 
-#: includes/Core/Settings.php:1703
+#: includes/Core/Settings.php:1743
 msgid "Feedback URL"
 msgstr ""
 
-#: includes/Core/Settings.php:1722
+#: includes/Core/Settings.php:1762
 msgid "Show Attachment"
 msgstr ""
 
-#: includes/Core/Settings.php:1740
+#: includes/Core/Settings.php:1780
 msgid "Show Related Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:1754
+#: includes/Core/Settings.php:1794
 msgid "Archive Page"
 msgstr ""
 
-#: includes/Core/Settings.php:1768
+#: includes/Core/Settings.php:1808
 #: includes/Editors/Elementor.php:431
 #: includes/Editors/Elementor.php:466
 #: includes/Editors/Elementor.php:553
@@ -6648,72 +6868,72 @@ msgstr ""
 msgid "Nested Subcategory"
 msgstr ""
 
-#: includes/Core/Settings.php:1776
+#: includes/Core/Settings.php:1816
 #: includes/Editors/Elementor/Widget/ArchiveList.php:154
 #: assets/build/blocks/editor.js:1
 msgid "Enable Pagination"
 msgstr ""
 
-#: includes/Core/Settings.php:1791
-#: includes/Core/Settings.php:1797
+#: includes/Core/Settings.php:1831
+#: includes/Core/Settings.php:1837
 #: includes/Core/SetupWizard.php:489
 msgid "Design"
 msgstr ""
 
-#: includes/Core/Settings.php:1804
-#: includes/Core/Settings.php:1812
+#: includes/Core/Settings.php:1844
+#: includes/Core/Settings.php:1852
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/Core/Settings.php:1815
+#: includes/Core/Settings.php:1855
 msgid "Search for shortcode"
 msgstr ""
 
-#: includes/Core/Settings.php:1816
+#: includes/Core/Settings.php:1856
 msgid "No Shortcodes Found with these keywords"
 msgstr ""
 
-#: includes/Core/Settings.php:1821
+#: includes/Core/Settings.php:1861
 msgid "Search Form"
 msgstr ""
 
-#: includes/Core/Settings.php:1825
+#: includes/Core/Settings.php:1865
 msgid "[betterdocs_search_form placeholder=\"Search...\" heading=\"Heading\" subheading=\"Subheading\" category_search=\"true\" search_button=\"true\" popular_search=\"true\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1826
-#: includes/Core/Settings.php:1837
-#: includes/Core/Settings.php:1848
-#: includes/Core/Settings.php:1859
-#: includes/Core/Settings.php:1870
-#: includes/Core/Settings.php:1881
-#: includes/Core/Settings.php:1892
-#: includes/Core/Settings.php:1903
-#: includes/Core/Settings.php:1914
+#: includes/Core/Settings.php:1866
+#: includes/Core/Settings.php:1877
+#: includes/Core/Settings.php:1888
+#: includes/Core/Settings.php:1899
+#: includes/Core/Settings.php:1910
+#: includes/Core/Settings.php:1921
+#: includes/Core/Settings.php:1932
+#: includes/Core/Settings.php:1943
+#: includes/Core/Settings.php:1954
 msgid "Example with parameters:"
 msgstr ""
 
-#: includes/Core/Settings.php:1836
+#: includes/Core/Settings.php:1876
 msgid "[betterdocs_feedback_form button_text=\"Send\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1843
+#: includes/Core/Settings.php:1883
 msgid "Category Grid- Layout 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1847
+#: includes/Core/Settings.php:1887
 msgid "[betterdocs_category_grid show_count=\"true\" show_icon=\"true\" masonry=\"true\" column=\"3\" posts_per_page=\"5\" nested_subcategory=\"true\" terms=\"term_ID, term_ID\" terms_orderby=\"\" terms_order=\"\" multiple_knowledge_base=\"\" kb_slug=\"\" title_tag=\"h2\" orderby=\"\" order=\"\" ]"
 msgstr ""
 
-#: includes/Core/Settings.php:1854
+#: includes/Core/Settings.php:1894
 msgid "Category Box- Layout 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1858
+#: includes/Core/Settings.php:1898
 msgid "[betterdocs_category_box orderby=\"\" column=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" show_icon=\"\" kb_slug=\"\" title_tag=\"h2\" multiple_knowledge_base=\"false\" border_bottom=\"false\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1865
+#: includes/Core/Settings.php:1905
 #: includes/Editors/Elementor/Widget/ArchiveList.php:281
 #: includes/Editors/Elementor/Widget/ArchiveList.php:439
 #: includes/Editors/Elementor/Widget/ArchiveList.php:1077
@@ -6722,251 +6942,250 @@ msgstr ""
 msgid "Category List"
 msgstr ""
 
-#: includes/Core/Settings.php:1869
+#: includes/Core/Settings.php:1909
 msgid "[betterdocs_category_list orderby=\"\" order=\"\" posts_per_page=\"\" nested_subcategory=\"\" terms=\"\" terms_orderby=\"\" terms_order=\"\" kb_slug=\"\" multiple_knowledge_base=\"false\" title_tag=\"h2\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1876
+#: includes/Core/Settings.php:1916
 msgid "FAQ Layout - 1"
 msgstr ""
 
-#: includes/Core/Settings.php:1880
+#: includes/Core/Settings.php:1920
 msgid "[betterdocs_faq_list_modern groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1887
+#: includes/Core/Settings.php:1927
 msgid "FAQ Layout - 2"
 msgstr ""
 
-#: includes/Core/Settings.php:1891
+#: includes/Core/Settings.php:1931
 msgid "[betterdocs_faq_list_classic groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1898
+#: includes/Core/Settings.php:1938
 msgid "FAQ Layout - 3"
 msgstr ""
 
-#: includes/Core/Settings.php:1902
+#: includes/Core/Settings.php:1942
 msgid "[betterdocs_faq_list_layout_3 class=\"faq-doc betterdocs-faq-layout-3\" groups=\"group_id\" class=\"\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1909
+#: includes/Core/Settings.php:1949
 msgid "FAQ Layout - 4"
 msgstr ""
 
-#: includes/Core/Settings.php:1913
+#: includes/Core/Settings.php:1953
 msgid "[betterdocs_faq_tab class=\"faq-doc betterdocs-faq-layout-4\" groups=\"group_id\" group_exclude=\"group_id\" faq_heading=\"Frequently Asked Questions\"]"
 msgstr ""
 
-#: includes/Core/Settings.php:1923
-#: includes/Core/Settings.php:1930
-#: includes/Core/Settings.php:1936
+#: includes/Core/Settings.php:1963
+#: includes/Core/Settings.php:1970
+#: includes/Core/Settings.php:1976
 msgid "Access & Restrictions"
 msgstr ""
 
-#: includes/Core/Settings.php:1961
+#: includes/Core/Settings.php:2001
 msgid "Global Role Management"
 msgstr ""
 
-#: includes/Core/Settings.php:1967
+#: includes/Core/Settings.php:2007
 msgid "Who Can Write Docs?"
 msgstr ""
 
-#: includes/Core/Settings.php:1978
+#: includes/Core/Settings.php:2018
 msgid "Who Can Edit Settings?"
 msgstr ""
 
-#: includes/Core/Settings.php:1989
+#: includes/Core/Settings.php:2029
 msgid "Who Can Check Analytics?"
 msgstr ""
 
-#: includes/Core/Settings.php:2000
+#: includes/Core/Settings.php:2040
 msgid "Who Can Check FAQ Builder?"
 msgstr ""
 
-#: includes/Core/Settings.php:2015
-#: includes/Core/Settings.php:2023
+#: includes/Core/Settings.php:2055
+#: includes/Core/Settings.php:2063
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Internal Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2030
+#: includes/Core/Settings.php:2070
 msgid "Choose a Rule Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2031
+#: includes/Core/Settings.php:2071
 msgid "Choose a rule type: apply access globally (Basic), or configure detailed restrictions (Advanced) for docs, categories, and KBs."
 msgstr ""
 
-#: includes/Core/Settings.php:2036
-#: includes/Core/Settings.php:2060
-#: includes/Core/Settings.php:2081
-#: includes/Core/Settings.php:2102
-#: includes/Core/Settings.php:2933
-#: includes/Core/Settings.php:2952
-#: includes/Core/Settings.php:2966
+#: includes/Core/Settings.php:2076
+#: includes/Core/Settings.php:2100
+#: includes/Core/Settings.php:2121
+#: includes/Core/Settings.php:2142
+#: includes/Core/Settings.php:2973
+#: includes/Core/Settings.php:2992
+#: includes/Core/Settings.php:3006
 msgid "Select any"
 msgstr ""
 
-#: includes/Core/Settings.php:2053
+#: includes/Core/Settings.php:2093
 msgid "Restrict Access to"
 msgstr ""
 
-#: includes/Core/Settings.php:2054
+#: includes/Core/Settings.php:2094
 msgid "Only selected User Roles will be able to view your Knowledge Base"
 msgstr ""
 
-#: includes/Core/Settings.php:2074
+#: includes/Core/Settings.php:2114
 msgid "Restriction on Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2075
+#: includes/Core/Settings.php:2115
 msgid "Selected Docs pages will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2095
+#: includes/Core/Settings.php:2135
 msgid "Restriction on Docs Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2096
+#: includes/Core/Settings.php:2136
 msgid "Selected Docs categories will be restricted"
 msgstr ""
 
-#: includes/Core/Settings.php:2116
+#: includes/Core/Settings.php:2156
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/Core/Settings.php:2117
+#: includes/Core/Settings.php:2157
 msgid "Set a custom URL to redirect users without permissions when they try to access internal knowledge base. By default, restricted content will redirect to the \"404 not found\" page"
 msgstr ""
 
-#: includes/Core/Settings.php:2139
-#: includes/Core/Settings.php:2145
-#: includes/Core/Settings.php:2150
+#: includes/Core/Settings.php:2179
+#: includes/Core/Settings.php:2185
+#: includes/Core/Settings.php:2190
 #: views/admin/email/pro.php:22
 msgid "Email Reporting"
 msgstr ""
 
-#: includes/Core/Settings.php:2159
+#: includes/Core/Settings.php:2199
 msgid "Reporting Frequency"
 msgstr ""
 
-#: includes/Core/Settings.php:2173
+#: includes/Core/Settings.php:2213
 msgid "Reporting Day"
 msgstr ""
 
-#: includes/Core/Settings.php:2181
+#: includes/Core/Settings.php:2221
 msgid "Sunday"
 msgstr ""
 
-#: includes/Core/Settings.php:2182
+#: includes/Core/Settings.php:2222
 msgid "Monday"
 msgstr ""
 
-#: includes/Core/Settings.php:2183
+#: includes/Core/Settings.php:2223
 msgid "Tuesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2184
+#: includes/Core/Settings.php:2224
 msgid "Wednesday"
 msgstr ""
 
-#: includes/Core/Settings.php:2185
+#: includes/Core/Settings.php:2225
 msgid "Thursday"
 msgstr ""
 
-#: includes/Core/Settings.php:2186
+#: includes/Core/Settings.php:2226
 msgid "Friday"
 msgstr ""
 
-#: includes/Core/Settings.php:2187
+#: includes/Core/Settings.php:2227
 msgid "Saturday"
 msgstr ""
 
-#: includes/Core/Settings.php:2189
+#: includes/Core/Settings.php:2229
 msgid "This is only applicable for the “Weekly” report"
 msgstr ""
 
-#: includes/Core/Settings.php:2194
+#: includes/Core/Settings.php:2234
 msgid "Select Reporting Data"
 msgstr ""
 
-#: includes/Core/Settings.php:2209
+#: includes/Core/Settings.php:2249
 msgid "Reporting Email"
 msgstr ""
 
-#: includes/Core/Settings.php:2217
+#: includes/Core/Settings.php:2257
 msgid "Reporting Email Subject"
 msgstr ""
 
-#: includes/Core/Settings.php:2226
+#: includes/Core/Settings.php:2266
 msgid "Reporting Test"
 msgstr ""
 
-#: includes/Core/Settings.php:2227
+#: includes/Core/Settings.php:2267
 msgid "Test Report"
 msgstr ""
 
-#: includes/Core/Settings.php:2243
+#: includes/Core/Settings.php:2283
 msgid "Successfully Sent a Test Report in Your Email."
 msgstr ""
 
-#: includes/Core/Settings.php:2255
+#: includes/Core/Settings.php:2295
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2261
+#: includes/Core/Settings.php:2301
 msgid "Git Sync Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2267
+#: includes/Core/Settings.php:2307
 msgid "Enable Git Sync"
 msgstr ""
 
-#: includes/Core/Settings.php:2272
+#: includes/Core/Settings.php:2312
 msgid "Enable bidirectional synchronization between BetterDocs and Git repositories"
 msgstr ""
 
-#: includes/Core/Settings.php:2282
-#: includes/Core/Settings.php:2289
+#: includes/Core/Settings.php:2322
+#: includes/Core/Settings.php:2329
 #: includes/Core/SetupWizard.php:445
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/quick-setup.js:1
 msgid "Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2304
-#: includes/Core/Settings.php:2653
+#: includes/Core/Settings.php:2344
+#: includes/Core/Settings.php:2693
 msgid "Enable Instant Answer"
 msgstr ""
 
-#: includes/Core/Settings.php:2319
-#: includes/Core/Settings.php:2325
+#: includes/Core/Settings.php:2359
+#: includes/Core/Settings.php:2365
 msgid "AI Content Suite"
 msgstr ""
 
-#: includes/Core/Settings.php:2331
+#: includes/Core/Settings.php:2371
 msgid "AI Content Suite Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2358
+#: includes/Core/Settings.php:2398
 msgid "AI Platform & API"
 msgstr ""
 
-#: includes/Core/Settings.php:2364
+#: includes/Core/Settings.php:2404
 msgid "AI Platform"
 msgstr ""
 
-#: includes/Core/Settings.php:2365
+#: includes/Core/Settings.php:2405
 msgid "Choose which AI platform powers Write with AI, AI Edit, the Doc Summarizer and Quality Score. The model list and API key field below adapt to your choice."
 msgstr ""
 
-#: includes/Core/Settings.php:2383
+#: includes/Core/Settings.php:2423
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/faq.js:1
 #: assets/build/admin/js/glossaries.js:1
 #: assets/build/blocks/write-with-ai.js:2
@@ -6974,292 +7193,292 @@ msgid "OpenAI API Key"
 msgstr ""
 
 #. translators: %s: documentation URL
-#: includes/Core/Settings.php:2384
+#: includes/Core/Settings.php:2424
 msgid "Check out this <a target=\"_blank\" href=\"%s\">documentation</a> to generate your OpenAI API key."
 msgstr ""
 
-#: includes/Core/Settings.php:2392
+#: includes/Core/Settings.php:2432
 msgid "Google Gemini API Key"
 msgstr ""
 
 #. translators: %s: Google AI Studio URL
-#: includes/Core/Settings.php:2393
+#: includes/Core/Settings.php:2433
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">Google AI Studio</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2401
+#: includes/Core/Settings.php:2441
 msgid "Anthropic Claude API Key"
 msgstr ""
 
 #. translators: %s: Anthropic Console URL
-#: includes/Core/Settings.php:2402
+#: includes/Core/Settings.php:2442
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">Anthropic Console</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2410
+#: includes/Core/Settings.php:2450
 msgid "DeepSeek API Key"
 msgstr ""
 
 #. translators: %s: DeepSeek platform URL
-#: includes/Core/Settings.php:2411
+#: includes/Core/Settings.php:2451
 msgid "Generate a key from the <a target=\"_blank\" href=\"%s\">DeepSeek platform</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2419
+#: includes/Core/Settings.php:2459
 msgid "OpenRouter API Key"
 msgstr ""
 
 #. translators: %s: OpenRouter keys URL
-#: includes/Core/Settings.php:2420
+#: includes/Core/Settings.php:2460
 msgid "Generate a key from <a target=\"_blank\" href=\"%s\">OpenRouter</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2428
+#: includes/Core/Settings.php:2468
 msgid "Model"
 msgstr ""
 
-#: includes/Core/Settings.php:2429
+#: includes/Core/Settings.php:2469
 msgid "Available models depend on the selected platform."
 msgstr ""
 
-#: includes/Core/Settings.php:2472
+#: includes/Core/Settings.php:2512
 msgid "Configuration"
 msgstr ""
 
-#: includes/Core/Settings.php:2479
+#: includes/Core/Settings.php:2519
 msgid "Write Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2480
+#: includes/Core/Settings.php:2520
 msgid "Generate AI based Documentation in your Gutenberg Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2488
+#: includes/Core/Settings.php:2528
 msgid "Write FAQ with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2489
+#: includes/Core/Settings.php:2529
 msgid "Generate AI based FAQ in your Editor"
 msgstr ""
 
-#: includes/Core/Settings.php:2497
+#: includes/Core/Settings.php:2537
 msgid "Write Glossaries with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2498
+#: includes/Core/Settings.php:2538
 msgid "Generate AI based Glossary definitions from the Glossaries admin page"
 msgstr ""
 
-#: includes/Core/Settings.php:2507
+#: includes/Core/Settings.php:2547
 msgid "Enhance Docs with AI"
 msgstr ""
 
-#: includes/Core/Settings.php:2508
+#: includes/Core/Settings.php:2548
 msgid "Add BetterDocs AI actions for suggesting categories, tags and excerpts inside the native Docs editor panels."
 msgstr ""
 
-#: includes/Core/Settings.php:2515
-#: includes/Core/Settings.php:2590
+#: includes/Core/Settings.php:2555
+#: includes/Core/Settings.php:2630
 msgid "Set Max Tokens"
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2517
+#: includes/Core/Settings.php:2557
 msgid "Documentation will be generated based on the Token Limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2531
+#: includes/Core/Settings.php:2571
 msgid "Write AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2537
+#: includes/Core/Settings.php:2577
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/ai-edit.js:1
 #: assets/build/blocks/write-with-ai.js:1
 msgid "Instructions"
 msgstr ""
 
-#: includes/Core/Settings.php:2538
+#: includes/Core/Settings.php:2578
 msgid "Add reusable instruction sets to steer how BetterDocs AI writes. The \"Default/Core\" set is always applied; extra sets can be picked in the Write with AI popup."
 msgstr ""
 
-#: includes/Core/Settings.php:2554
+#: includes/Core/Settings.php:2594
 msgid "Edit AI Personalize"
 msgstr ""
 
-#: includes/Core/Settings.php:2560
+#: includes/Core/Settings.php:2600
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/dashboard.js:9
 msgid "Actions"
 msgstr ""
 
-#: includes/Core/Settings.php:2561
+#: includes/Core/Settings.php:2601
 msgid "Choose which Edit with AI actions appear in the editor. Toggle actions on or off, edit each action's instruction, or add your own custom actions. All predefined actions are enabled by default."
 msgstr ""
 
-#: includes/Core/Settings.php:2582
+#: includes/Core/Settings.php:2622
 msgid "AI Powered Doc Summarizer"
 msgstr ""
 
-#: includes/Core/Settings.php:2583
+#: includes/Core/Settings.php:2623
 msgid "Enable AI-powered article summaries on single doc pages. Requires OpenAI API key."
 msgstr ""
 
 #. translators: %s is a link to more information about token limits.
-#: includes/Core/Settings.php:2592
+#: includes/Core/Settings.php:2632
 msgid "Single Doc summarizer will be generated based on the token limits you have set. For more information on Token Limits, you can check out this <a target=\"_blank\" href=\"%s\">link</a>."
 msgstr ""
 
-#: includes/Core/Settings.php:2638
+#: includes/Core/Settings.php:2678
 msgid "Enable AI Chatbot"
 msgstr ""
 
-#: includes/Core/Settings.php:2652
+#: includes/Core/Settings.php:2692
 msgid "Instant Answer is currently disabled. The AI Chatbot won't appear on your site until Instant Answer is enabled."
 msgstr ""
 
-#: includes/Core/Settings.php:2729
-#: includes/Core/Settings.php:2735
+#: includes/Core/Settings.php:2769
+#: includes/Core/Settings.php:2775
 msgid "Import / Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2741
+#: includes/Core/Settings.php:2781
 msgid "Import Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2766
-#: includes/Core/Settings.php:2772
+#: includes/Core/Settings.php:2806
+#: includes/Core/Settings.php:2812
 msgid "Import"
 msgstr ""
 
-#: includes/Core/Settings.php:2797
-#: includes/Core/Settings.php:2803
+#: includes/Core/Settings.php:2837
+#: includes/Core/Settings.php:2843
 msgid "Import Docs"
 msgstr ""
 
 #. Translators: %1$s is a link to download a sample CSV file.
-#: includes/Core/Settings.php:2805
+#: includes/Core/Settings.php:2845
 msgid "To import your Docs, please upload the .xml / .csv file here. <a href=\"%1$s\">Download sample csv file</a>"
 msgstr ""
 
-#: includes/Core/Settings.php:2807
-#: includes/Core/Settings.php:2808
 #: includes/Core/Settings.php:2847
 #: includes/Core/Settings.php:2848
-#: includes/Core/Settings.php:2997
-#: includes/Core/Settings.php:2998
+#: includes/Core/Settings.php:2887
+#: includes/Core/Settings.php:2888
+#: includes/Core/Settings.php:3037
+#: includes/Core/Settings.php:3038
 msgid "Proceed"
 msgstr ""
 
-#: includes/Core/Settings.php:2809
 #: includes/Core/Settings.php:2849
+#: includes/Core/Settings.php:2889
 msgid "Importing..."
 msgstr ""
 
-#: includes/Core/Settings.php:2810
+#: includes/Core/Settings.php:2850
 msgid "It seems like documentations with same slugs already exist on your website. What would you like to do?"
 msgstr ""
 
-#: includes/Core/Settings.php:2816
-#: includes/Core/Settings.php:2858
+#: includes/Core/Settings.php:2856
+#: includes/Core/Settings.php:2898
 msgid "Import completed successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:2831
-#: includes/Core/Settings.php:2837
+#: includes/Core/Settings.php:2871
+#: includes/Core/Settings.php:2877
 msgid "Import Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:2838
+#: includes/Core/Settings.php:2878
 msgid "To import BetterDocs Settings, please upload BetterDocs settings you have exported from another website in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:2839
+#: includes/Core/Settings.php:2879
 msgid "Change"
 msgstr ""
 
-#: includes/Core/Settings.php:2876
-#: includes/Core/Settings.php:2882
+#: includes/Core/Settings.php:2916
+#: includes/Core/Settings.php:2922
 msgid "Export"
 msgstr ""
 
-#: includes/Core/Settings.php:2907
+#: includes/Core/Settings.php:2947
 msgid "Export Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2913
+#: includes/Core/Settings.php:2953
 msgid "Choose an export type: All Docs, a specific Knowledge Base, or a Doc Category"
 msgstr ""
 
-#: includes/Core/Settings.php:2927
+#: includes/Core/Settings.php:2967
 msgid "Select Docs"
 msgstr ""
 
-#: includes/Core/Settings.php:2928
+#: includes/Core/Settings.php:2968
 msgid "Selected docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2946
+#: includes/Core/Settings.php:2986
 msgid "Select Categories"
 msgstr ""
 
-#: includes/Core/Settings.php:2947
+#: includes/Core/Settings.php:2987
 msgid "Selected categories and its docs will be included in the export."
 msgstr ""
 
-#: includes/Core/Settings.php:2960
+#: includes/Core/Settings.php:3000
 msgid "Select Glossaries"
 msgstr ""
 
-#: includes/Core/Settings.php:2961
+#: includes/Core/Settings.php:3001
 msgid "Selected glossary terms will be exported."
 msgstr ""
 
-#: includes/Core/Settings.php:2973
+#: includes/Core/Settings.php:3013
 msgid "Select File Type"
 msgstr ""
 
-#: includes/Core/Settings.php:2974
+#: includes/Core/Settings.php:3014
 msgid "Choose a file type"
 msgstr ""
 
-#: includes/Core/Settings.php:2980
+#: includes/Core/Settings.php:3020
 msgid ".xml"
 msgstr ""
 
-#: includes/Core/Settings.php:2981
+#: includes/Core/Settings.php:3021
 msgid ".csv"
 msgstr ""
 
-#: includes/Core/Settings.php:2988
+#: includes/Core/Settings.php:3028
 msgid "Export FAQ"
 msgstr ""
 
-#: includes/Core/Settings.php:2989
+#: includes/Core/Settings.php:3029
 msgid "Export FAQ Related Terms & Posts"
 msgstr ""
 
-#: includes/Core/Settings.php:2999
 #: includes/Core/Settings.php:3039
+#: includes/Core/Settings.php:3079
 msgid "Exporting..."
 msgstr ""
 
-#: includes/Core/Settings.php:3016
+#: includes/Core/Settings.php:3056
 msgid "Exported Successfully."
 msgstr ""
 
-#: includes/Core/Settings.php:3029
-#: includes/Core/Settings.php:3034
-#: includes/Core/Settings.php:3037
-#: includes/Core/Settings.php:3038
+#: includes/Core/Settings.php:3069
+#: includes/Core/Settings.php:3074
+#: includes/Core/Settings.php:3077
+#: includes/Core/Settings.php:3078
 msgid "Export Settings"
 msgstr ""
 
-#: includes/Core/Settings.php:3035
+#: includes/Core/Settings.php:3075
 msgid "Simply click on “Export Settings” button to download your BetterDocs settings in .json format"
 msgstr ""
 
-#: includes/Core/Settings.php:3050
+#: includes/Core/Settings.php:3090
 msgid "File downloaded successfully."
 msgstr ""
 
@@ -8339,10 +8558,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:880
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:979
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1156
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2617
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2651
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2716
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2750
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2621
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2655
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2720
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2754
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1342
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:1421
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:442
@@ -8453,7 +8672,7 @@ msgid "Date Padding"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:95
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2775
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2779
 #: includes/Editors/Elementor/Widget/Feedback.php:89
 #: includes/Editors/Elementor/Widget/ReadingTime.php:48
 #: assets/build/blocks/editor.js:1
@@ -8536,12 +8755,12 @@ msgid "Box Style"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:373
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1751
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1831
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1934
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2014
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2118
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2209
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1755
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1835
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1938
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2018
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2122
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2213
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:468
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:494
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:580
@@ -8554,12 +8773,12 @@ msgid "Background"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:404
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1788
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1868
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1971
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2051
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2166
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2248
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1792
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1872
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1975
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2055
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2170
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2252
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:415
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:462
 #: assets/build/blocks/editor.js:1
@@ -8801,14 +9020,14 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1002
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1179
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1356
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1720
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1903
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2087
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2298
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2453
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2599
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2698
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2789
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1724
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1907
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2091
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2302
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2457
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2603
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2702
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2793
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:399
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:539
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:694
@@ -8849,14 +9068,14 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1050
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1227
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1404
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1800
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1983
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2178
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2356
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2511
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2633
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2732
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2848
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1804
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1987
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2182
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2360
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2515
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2637
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2736
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2852
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:446
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:580
 #: includes/Editors/Elementor/Widget/Basic/CategoryGrid.php:768
@@ -8924,8 +9143,8 @@ msgstr ""
 msgid "Count"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1706
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1889
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1710
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:1893
 #: includes/Editors/Elementor/Widget/CodeSnippet.php:307
 #: includes/Editors/Elementor/Widget/CodeSnippetTab.php:186
 #: includes/Editors/Elementor/Widget/Sidebar.php:416
@@ -8934,28 +9153,28 @@ msgstr ""
 msgid "Wrapper"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2073
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2077
 msgid "Taxonomy"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2268
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2423
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2272
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2427
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:364
 #: views/admin/taxonomy/add.php:16
 #: views/admin/taxonomy/edit.php:31
 msgid "Category Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2399
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2554
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2403
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2558
 msgid "Icon Border Radius"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2796
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2800
 msgid "Article Count Color"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2855
+#: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2859
 msgid "Article Count Hover Color"
 msgstr ""
 
@@ -10323,63 +10542,63 @@ msgstr ""
 msgid "We can't detect any plugin information. This is most probably because you have not included the code in the plugin main file."
 msgstr ""
 
-#: includes/Insights/Insights.php:732
+#: includes/Insights/Insights.php:759
 msgid "What we collect."
 msgstr ""
 
-#: includes/Insights/Insights.php:733
+#: includes/Insights/Insights.php:760
 msgid "Sure, I'd like to help"
 msgstr ""
 
-#: includes/Insights/Insights.php:734
+#: includes/Insights/Insights.php:761
 msgid "No Thanks."
 msgstr ""
 
-#: includes/Insights/Insights.php:847
+#: includes/Insights/Insights.php:874
 msgid "We Value Your Feedback"
 msgstr ""
 
-#: includes/Insights/Insights.php:848
+#: includes/Insights/Insights.php:875
 msgid "Could you please tell us why you're deactivating our plugin? Your insights will help us to improve."
 msgstr ""
 
-#: includes/Insights/Insights.php:851
+#: includes/Insights/Insights.php:878
 msgid "I no longer need the plugin"
 msgstr ""
 
-#: includes/Insights/Insights.php:853
+#: includes/Insights/Insights.php:880
 msgid "I found a better plugin"
 msgstr ""
 
-#: includes/Insights/Insights.php:854
+#: includes/Insights/Insights.php:881
 msgid "Please share which plugin"
 msgstr ""
 
-#: includes/Insights/Insights.php:856
+#: includes/Insights/Insights.php:883
 msgid "I couldn't get the plugin to work"
 msgstr ""
 
-#: includes/Insights/Insights.php:857
+#: includes/Insights/Insights.php:884
 msgid "It's a temporary deactivation"
 msgstr ""
 
-#: includes/Insights/Insights.php:859
+#: includes/Insights/Insights.php:886
 msgid "Other"
 msgstr ""
 
-#: includes/Insights/Insights.php:860
+#: includes/Insights/Insights.php:887
 msgid "Please share the reason"
 msgstr ""
 
-#: includes/Insights/Insights.php:904
+#: includes/Insights/Insights.php:931
 msgid "Submitting form"
 msgstr ""
 
-#: includes/Insights/Insights.php:1146
+#: includes/Insights/Insights.php:1173
 msgid "Submit and Deactivate"
 msgstr ""
 
-#: includes/Insights/Insights.php:1146
+#: includes/Insights/Insights.php:1173
 msgid "Just Deactivate"
 msgstr ""
 
@@ -10439,122 +10658,122 @@ msgid "Connect an AI client to BetterDocs"
 msgstr ""
 
 #. translators: 1: the AI client's name, escaped and wrapped in <strong>. 2: this site's host, escaped and wrapped in <strong>.
-#: includes/Mcp/MCPManager.php:673
+#: includes/Mcp/MCPManager.php:669
 msgid "%1$s wants to work with the documentation on %2$s."
 msgstr ""
 
 #. translators: 1: the login of the person approving, escaped and wrapped in <strong>. 2: their role.
-#: includes/Mcp/MCPManager.php:688
+#: includes/Mcp/MCPManager.php:684
 msgid "Signed in as %1$s &middot; %2$s"
 msgstr ""
 
 #. translators: %s: the login of the person approving, escaped and wrapped in <strong>.
-#: includes/Mcp/MCPManager.php:695
+#: includes/Mcp/MCPManager.php:691
 msgid "Signed in as %s"
 msgstr ""
 
 #. translators: 1: the AI client's name. 2: how many things it will be able to do.
-#: includes/Mcp/MCPManager.php:712
+#: includes/Mcp/MCPManager.php:708
 msgid "What %1$s will be able to do (%2$d)"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:724
+#: includes/Mcp/MCPManager.php:720
 msgid "Secured with OAuth. You can revoke this app at any time under BetterDocs → MCP."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:729
+#: includes/Mcp/MCPManager.php:725
 msgid "Deny"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:730
+#: includes/Mcp/MCPManager.php:726
 msgid "Approve"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:754
+#: includes/Mcp/MCPManager.php:750
 msgid "Authorization error"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:802
+#: includes/Mcp/MCPManager.php:798
 msgid "Read docs, categories, tags and knowledge bases"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:802
+#: includes/Mcp/MCPManager.php:798
 msgid "Create and edit docs"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:803
+#: includes/Mcp/MCPManager.php:799
 msgid "Trash and delete docs"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:804
+#: includes/Mcp/MCPManager.php:800
 msgid "Create and manage doc categories and tags"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:805
+#: includes/Mcp/MCPManager.php:801
 msgid "Create and manage knowledge bases (BetterDocs Pro)"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:806
+#: includes/Mcp/MCPManager.php:802
 msgid "Read FAQs and FAQ groups"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:806
+#: includes/Mcp/MCPManager.php:802
 msgid "Create and manage FAQs and FAQ groups"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:807
+#: includes/Mcp/MCPManager.php:803
 msgid "Read BetterDocs settings (API keys stay hidden)"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:807
+#: includes/Mcp/MCPManager.php:803
 #: assets/build/admin/js/dashboard.js:20
 msgid "Read and change BetterDocs settings"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:808
+#: includes/Mcp/MCPManager.php:804
 #: assets/build/admin/js/dashboard.js:20
 msgid "Read documentation analytics"
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1346
+#: includes/Mcp/MCPManager.php:1347
 msgid "Grant read-only access: no doc, term, FAQ or settings changes."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1363
+#: includes/Mcp/MCPManager.php:1364
 msgid "Optionally set read-only on the new token; omit to keep the current scopes."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1398
+#: includes/Mcp/MCPManager.php:1399
 msgid "The OAuth client_id to revoke."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1426
+#: includes/Mcp/MCPManager.php:1427
 msgid "Report this user's capabilities instead of the caller's."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1467
+#: includes/Mcp/MCPManager.php:1468
 msgid "The BetterDocs MCP endpoint accepts POST only."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1513
-#: includes/Mcp/MCPManager.php:1538
-#: includes/Mcp/MCPManager.php:1575
+#: includes/Mcp/MCPManager.php:1514
+#: includes/Mcp/MCPManager.php:1539
+#: includes/Mcp/MCPManager.php:1576
 msgid "MCP is disabled on this site."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1775
+#: includes/Mcp/MCPManager.php:1776
 msgid "A client_id is required to revoke an OAuth app."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1823
+#: includes/Mcp/MCPManager.php:1824
 msgid "No user with that id exists on this site."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1857
+#: includes/Mcp/MCPManager.php:1858
 msgid "BetterDocs MCP: AI assistants will connect but see no tools."
 msgstr ""
 
-#: includes/Mcp/MCPManager.php:1858
+#: includes/Mcp/MCPManager.php:1859
 msgid "MCP access is enabled, but the bundled Abilities runtime (dependencies/vendor/autoload_packages.php) is missing from this installation — usually a plugin package built without it. Reinstall BetterDocs from wordpress.org or an official build; until then, connected AI clients get an empty tool list."
 msgstr ""
 
@@ -10650,149 +10869,149 @@ msgid "The connection URL %1$s did not answer correctly, but the REST fallback %
 msgstr ""
 
 #. translators: %d: number of MCP tools returned.
-#: includes/Mcp/MCPSelfTest.php:192
+#: includes/Mcp/MCPSelfTest.php:198
 msgid "Connection healthy: the endpoint authenticated, offered OAuth, and returned %d tool."
 msgid_plural "Connection healthy: the endpoint authenticated, offered OAuth, and returned %d tools."
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: endpoint URL, 2: the transport error PHP reported.
-#: includes/Mcp/MCPSelfTest.php:255
+#: includes/Mcp/MCPSelfTest.php:261
 msgid "PHP could not verify this site's TLS certificate (common on local sites with self-signed certificates). %1$s reported: %2$s. Add `add_filter( 'https_local_ssl_verify', '__return_false' );` in a mu-plugin for local testing."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: the transport error PHP reported.
-#: includes/Mcp/MCPSelfTest.php:266
+#: includes/Mcp/MCPSelfTest.php:272
 msgid "%1$s could not be reached: %2$s."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: the URL it redirected to.
-#: includes/Mcp/MCPSelfTest.php:284
+#: includes/Mcp/MCPSelfTest.php:290
 msgid "%1$s redirected to %2$s instead of answering. A redirect between HTTP and HTTPS usually means the Site Address and WordPress Address schemes disagree."
 msgstr ""
 
 #. translators: %s: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:290
+#: includes/Mcp/MCPSelfTest.php:296
 msgid "%s redirected instead of answering, which usually means the Site Address and WordPress Address schemes disagree."
 msgstr ""
 
 #. translators: %s: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:301
+#: includes/Mcp/MCPSelfTest.php:307
 msgid "%s returned 404 — WordPress does not know this URL. Re-save Settings → Permalinks to rebuild the rewrite rules."
 msgstr ""
 
 #. translators: %s: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:312
+#: includes/Mcp/MCPSelfTest.php:318
 msgid "%s rejected the connection token (authentication failed). Rotate the token and reconnect your AI client."
 msgstr ""
 
 #. translators: %s: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:323
+#: includes/Mcp/MCPSelfTest.php:329
 msgid "%s is rate-limiting this server after repeated failed tokens. Wait for the lockout to lapse, then rotate the token and reconnect."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: HTTP status code, 3: the Content-Type header received.
-#: includes/Mcp/MCPSelfTest.php:343
+#: includes/Mcp/MCPSelfTest.php:349
 msgid "%1$s answered %2$d with %3$s instead of JSON — WordPress is serving an ordinary page at this URL, not the MCP endpoint. Under plain permalinks the pretty URL silently returns the front page; re-save Settings → Permalinks, or give your AI client the REST fallback URL."
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:346
+#: includes/Mcp/MCPSelfTest.php:352
 msgid "no content type"
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: HTTP status code.
-#: includes/Mcp/MCPSelfTest.php:356
+#: includes/Mcp/MCPSelfTest.php:362
 msgid "%1$s answered %2$d with JSON that is not a JSON-RPC response, so something other than the MCP endpoint is serving this URL. Re-save Settings → Permalinks, or use the REST fallback URL."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: abilities-registry diagnostic summary.
-#: includes/Mcp/MCPSelfTest.php:380
+#: includes/Mcp/MCPSelfTest.php:386
 msgid "%1$s answered but returned no tool catalog. Confirm the MCP runtime shipped with this build and that abilities registered. Diagnostics — %2$s"
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: number of tools returned.
-#: includes/Mcp/MCPSelfTest.php:391
+#: includes/Mcp/MCPSelfTest.php:397
 msgid "%1$s authenticated and returned %2$d tools."
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:450
+#: includes/Mcp/MCPSelfTest.php:456
 msgid "The REST discovery aliases are served and identify this site exactly. The /.well-known/ documents are not — see the caveat below."
 msgstr ""
 
 #. translators: %s: the reason the /.well-known/ document could not be read.
-#: includes/Mcp/MCPSelfTest.php:454
+#: includes/Mcp/MCPSelfTest.php:460
 msgid "This site does not serve the /.well-known/ OAuth documents, usually because the web server handles that path itself before WordPress sees it. Every client we have tested finds the metadata through the 401 challenge instead, which points at the REST alias, so this is not fatal — but a client that only tries /.well-known/ will not connect. Details: %s"
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:476
+#: includes/Mcp/MCPSelfTest.php:482
 msgid "All four OAuth discovery documents are served and advertise this site's MCP endpoint exactly."
 msgstr ""
 
 #. translators: 1: discovery document URL, 2: transport error.
-#: includes/Mcp/MCPSelfTest.php:512
+#: includes/Mcp/MCPSelfTest.php:518
 msgid "The OAuth discovery document %1$s could not be fetched: %2$s. Clients that connect by URL alone cannot authenticate without it."
 msgstr ""
 
 #. translators: 1: discovery document URL, 2: HTTP status code.
-#: includes/Mcp/MCPSelfTest.php:527
+#: includes/Mcp/MCPSelfTest.php:533
 msgid "The OAuth discovery document %1$s returned %2$d instead of valid metadata. Re-save Settings → Permalinks; if it persists, the web server or another plugin is claiming that URL."
 msgstr ""
 
 #. translators: 1: metadata field name, 2: value found in the document, 3: the value it should carry, 4: discovery document URL.
-#: includes/Mcp/MCPSelfTest.php:538
+#: includes/Mcp/MCPSelfTest.php:544
 msgid "The discovery document %4$s advertises %1$s \"%2$s\" but this site's MCP endpoint is \"%3$s\". RFC 9728 requires an exact match, so clients reject the metadata and report that the server does not implement OAuth. If the two differ only by scheme, a reverse proxy is terminating TLS without passing X-Forwarded-Proto; otherwise something else is serving this URL."
 msgstr ""
 
 #. translators: 1: the http:// endpoint the documents advertise, 2: the https:// endpoint that also answers.
-#: includes/Mcp/MCPSelfTest.php:580
+#: includes/Mcp/MCPSelfTest.php:586
 msgid "The discovery documents advertise %1$s, but %2$s answers as well — WordPress is storing an http:// Site Address behind a proxy that terminates TLS. AI clients connect over https and reject the http identifier as a mismatch. Fix the Site Address in Settings → General, or have the proxy send X-Forwarded-Proto."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: HTTP status code.
-#: includes/Mcp/MCPSelfTest.php:619
+#: includes/Mcp/MCPSelfTest.php:625
 msgid "An unauthenticated call to %1$s answered %2$d instead of 401. Clients that connect by URL alone need the 401 challenge to start the OAuth flow."
 msgstr ""
 
 #. translators: %s: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:631
+#: includes/Mcp/MCPSelfTest.php:637
 msgid "%s answered 401 but sent no WWW-Authenticate header — a security plugin or proxy is most likely stripping it. Clients that connect by URL alone will report that this server does not implement OAuth."
 msgstr ""
 
 #. translators: 1: endpoint URL, 2: the WWW-Authenticate header value received.
-#: includes/Mcp/MCPSelfTest.php:644
+#: includes/Mcp/MCPSelfTest.php:650
 msgid "%1$s sent a WWW-Authenticate header with no resource_metadata URL (%2$s). Clients have nowhere to look up this site's OAuth metadata."
 msgstr ""
 
 #. translators: 1: the resource_metadata URL from the challenge header, 2: endpoint URL.
-#: includes/Mcp/MCPSelfTest.php:671
+#: includes/Mcp/MCPSelfTest.php:677
 msgid "The challenge from %2$s points at %1$s, but that URL does not return OAuth metadata. It is the first thing a client fetches, so the connection fails there."
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:686
+#: includes/Mcp/MCPSelfTest.php:692
 msgid "The OAuth challenge could not be checked because the endpoint did not answer. Fix the connection error above and run the test again."
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:692
+#: includes/Mcp/MCPSelfTest.php:698
 msgid "Unauthenticated calls answer with the OAuth challenge, so clients that have only the URL can authenticate."
 msgstr ""
 
 #. translators: 1: the User-Agent string tried, 2: the HTTP status it received, 3: the HTTP status WordPress' own User-Agent received.
-#: includes/Mcp/MCPSelfTest.php:733
-msgid "The endpoint answered %3$d for WordPress but %2$d for an AI client's User-Agent (%1$s). A security plugin, firewall or \"block bad bots\" rule is refusing non-browser clients — exempt the MCP and /.well-known/ paths, or no AI client will ever reach this site."
+#: includes/Mcp/MCPSelfTest.php:741
+msgid "The endpoint answered %3$d for WordPress but %2$d for a generic HTTP client's User-Agent (%1$s). A security plugin, firewall or \"block bad bots\" rule is refusing non-browser clients. Whether that affects your assistant depends on the User-Agent it sends, which this test cannot see — connect it and check that tools load. If they do not, exempt the MCP and /.well-known/ paths."
 msgstr ""
 
-#: includes/Mcp/MCPSelfTest.php:743
-msgid "The endpoint answers AI-client User-Agents the same way it answers WordPress, so no bot filter is blocking them. This cannot see an IP-level block of the AI vendor."
+#: includes/Mcp/MCPSelfTest.php:751
+msgid "The endpoint answers generic HTTP clients the same way it answers WordPress, so no bot filter is refusing them. This cannot see an IP-level block of the AI vendor."
 msgstr ""
 
 #. translators: 1: number of locked-out clients, 2: the filter name that overrides client identification.
-#: includes/Mcp/MCPSelfTest.php:773
+#: includes/Mcp/MCPSelfTest.php:781
 msgid "%1$d client address is locked out after repeated failed authentications — usually a connector still holding a rotated-away token. While a lockout holds, that address is refused even when it presents a valid token, so behind a reverse proxy (where every client shares one address) one stale connector can wall off everyone; the `%2$s` filter is how you teach the limiter to read the real client address. Lockouts clear within 15 minutes of the retries stopping."
 msgid_plural "%1$d client addresses are locked out after repeated failed authentications — usually connectors still holding rotated-away tokens. While a lockout holds, that address is refused even when it presents a valid token, so behind a reverse proxy (where every client shares one address) one stale connector can wall off everyone; the `%2$s` filter is how you teach the limiter to read the real client address. Lockouts clear within 15 minutes of the retries stopping."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Mcp/MCPSelfTest.php:783
+#: includes/Mcp/MCPSelfTest.php:791
 #: assets/build/admin/js/dashboard.js:19
 msgid "Client lockouts"
 msgstr ""
@@ -10976,7 +11195,7 @@ msgid "You are a helpful assistant that writes concise, accurate glossary defini
 msgstr ""
 
 #: includes/REST/AIGlossary.php:102
-#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/glossaries.js:1
 msgid "The AI returned no definition. Try again."
 msgstr ""
@@ -11063,19 +11282,19 @@ msgstr ""
 msgid "You have used your free AI generation for this site."
 msgstr ""
 
-#: includes/REST/Settings.php:221
+#: includes/REST/Settings.php:225
 msgid "Please provide both API Key and Collection ID"
 msgstr ""
 
-#: includes/REST/Settings.php:237
+#: includes/REST/Settings.php:241
 msgid "Unauthorized API Key or Collection ID"
 msgstr ""
 
-#: includes/REST/Settings.php:328
+#: includes/REST/Settings.php:332
 msgid "Settings Saved!"
 msgstr ""
 
-#: includes/REST/Settings.php:331
+#: includes/REST/Settings.php:335
 msgid "There are no changes to be saved."
 msgstr ""
 
@@ -11777,7 +11996,6 @@ msgid "Could not save display settings."
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/admin/js/dashboard.js:20
 msgid "Saving…"
@@ -11794,6 +12012,299 @@ msgstr ""
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:4
 msgid "Product FAQ Groups"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "No Glossary Found!"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Please Create a New Glossary to get started."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:4
+msgid "Define with AI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:4
+msgid "Create a New Glossary"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Write Glossary Term with BetterDocs AI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Generate glossaries effortlessly with BetterDocs AI. Input your glossary term and let the system generate a definition tailored to your needs."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+#: assets/build/blocks/write-with-ai.js:2
+msgid "Please insert your"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "to use this \"Write with AI\" feature."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary Term"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Insert your term to generate a relevant response."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Generated Glossary"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+#: assets/build/blocks/ai-edit.js:2
+msgid "Generating…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Regenerate Glossary"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Generate Glossary"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+#: assets/build/blocks/ai-edit.js:1
+#: assets/build/blocks/write-with-ai.js:1
+msgid "Keep"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Please Insert Glossary Term is Title."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary updated."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary created."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Something went wrong!"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Write your Glossary Term here."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Write your Glossary Term description here."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:11
+#: assets/build/admin/js/dashboard.js:13
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/faq.js:4
+#: assets/build/admin/js/glossaries.js:1
+#: assets/build/admin/js/quick-setup.js:1
+msgid "Cancel"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Create"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Total used in %d doc."
+msgid_plural "Total used in %d docs."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Write With AI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/faq.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Update"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/glossaries.js:1
+msgid "Available in %d doc"
+msgid_plural "Available in %d docs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Delete this Glossary?"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary deleted."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary deleted with all glossaries."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary Disabled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+#: assets/build/admin/js/glossaries.js:1
+msgid "Glossary Enabled."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "You can add up to %d terms per batch."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "The AI returned no definition."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Please enter at least one term."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Could not validate existing glossaries."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Could not create this glossary term."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Failed to create glossary."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "%d glossary term(s) created."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Checking…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Generate Again"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Generate Definitions"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Define Glossaries with AI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Enter multiple terms separated by commas. AI generates a definition for each — edit, refine, or regenerate entries before saving."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "to use the Define with AI feature."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "%d term already exists. Remove it to continue."
+msgid_plural "%d terms already exist. Remove them to continue."
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Glossary Terms"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Already exists in your glossaries — remove to continue."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Remove %s"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "e.g. API, Webhook, OAuth, JWT"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Type a term and press comma to add it. Up to %d per batch."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Term"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Remove term"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Definition"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Regenerating…"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Tell AI what to change (optional) — e.g. make it shorter, more technical"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Save All"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "Current Language:"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:1
+msgid "(Showing glossaries for this language only)"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
@@ -11822,12 +12333,6 @@ msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
 msgid "Name already exists. Try a different one!"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Something went wrong!"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
@@ -12284,21 +12789,6 @@ msgid "Generate FAQs effortlessly with BetterDocs AI. Input your question and re
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-#: assets/build/blocks/write-with-ai.js:2
-msgid "Please insert your"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-msgid "to use this \"Write with AI\" feature."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Question"
 msgstr ""
@@ -12324,14 +12814,6 @@ msgid "Generated FAQ"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-#: assets/build/blocks/ai-edit.js:2
-msgid "Generating…"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Regenerate FAQ"
 msgstr ""
@@ -12339,15 +12821,6 @@ msgstr ""
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Generate FAQ"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-#: assets/build/blocks/ai-edit.js:1
-#: assets/build/blocks/write-with-ai.js:1
-msgid "Keep"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
@@ -12389,13 +12862,6 @@ msgid "Add New Question"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-msgid "Write With AI"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Answer"
 msgstr ""
@@ -12406,27 +12872,8 @@ msgid "Write your Answer here."
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/dashboard.js:5
-#: assets/build/admin/js/dashboard.js:11
-#: assets/build/admin/js/dashboard.js:13
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/faq.js:4
-#: assets/build/admin/js/glossaries.js:1
-#: assets/build/admin/js/quick-setup.js:1
-msgid "Cancel"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Creating…"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-msgid "Create"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
@@ -12442,14 +12889,6 @@ msgstr ""
 #: assets/build/admin/js/dashboard.js:1
 #: assets/build/admin/js/faq.js:1
 msgid "Updating…"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:1
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/dashboard.js:5
-#: assets/build/admin/js/faq.js:1
-#: assets/build/admin/js/glossaries.js:1
-msgid "Update"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:1
@@ -12798,228 +13237,11 @@ msgid "Try again"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:4
-msgid "No Glossary Found!"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Please Create a New Glossary to get started."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Define with AI"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Create a New Glossary"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
+#: assets/build/admin/js/faq.js:4
 #: assets/build/admin/js/glossaries.js:1
-msgid "Write Glossary Term with BetterDocs AI"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Generate glossaries effortlessly with BetterDocs AI. Input your glossary term and let the system generate a definition tailored to your needs."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary Term"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Insert your term to generate a relevant response."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Generated Glossary"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Regenerate Glossary"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Generate Glossary"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Please Insert Glossary Term is Title."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary updated."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary created."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Write your Glossary Term here."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Write your Glossary Term description here."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Total used in %d doc."
-msgid_plural "Total used in %d docs."
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Available in %d doc"
-msgid_plural "Available in %d docs"
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Delete this Glossary?"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary deleted."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary deleted with all glossaries."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary Disabled."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-#: assets/build/admin/js/glossaries.js:1
-msgid "Glossary Enabled."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "You can add up to %d terms per batch."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "The AI returned no definition."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Please enter at least one term."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Could not validate existing glossaries."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Could not create this glossary term."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Failed to create glossary."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "%d glossary term(s) created."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Checking…"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Generate Again"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Generate Definitions"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Define Glossaries with AI"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Enter multiple terms separated by commas. AI generates a definition for each — edit, refine, or regenerate entries before saving."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "to use the Define with AI feature."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "%d term already exists. Remove it to continue."
-msgid_plural "%d terms already exist. Remove them to continue."
-msgstr[0] ""
-msgstr[1] ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Glossary Terms"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Already exists in your glossaries — remove to continue."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Remove %s"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "e.g. API, Webhook, OAuth, JWT"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Type a term and press comma to add it. Up to %d per batch."
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Term"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Remove term"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Definition"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Regenerating…"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Tell AI what to change (optional) — e.g. make it shorter, more technical"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Save All"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "Current Language:"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:4
-msgid "(Showing glossaries for this language only)"
+#: assets/build/blocks/ai-edit.js:1
+#: assets/build/blocks/write-with-ai.js:1
+msgid "Incorrect or missing API key. Check your key in Settings → AI Content Suite."
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:4
@@ -14500,6 +14722,59 @@ msgid "Re-sync from a URL to keep docs matching your API"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:5
+msgid "API"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Endpoint"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Knowledge Base"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+#: assets/build/admin/js/dashboard.js:13
+msgid "OAuth"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Rate Limit"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "SLA"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Webhook"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Glossaries is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Build an A–Z glossary of your product's terms and auto-link them across every doc, so readers get an instant definition on hover — no more explaining the same jargon twice."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "A–Z glossary index, styled like the rest of your docs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Auto-link terms across every doc with hover tooltips"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Write definitions with AI, then edit them inline"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Drag-to-reorder, plus CSV import & export"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
 msgid "Drag to reorder"
 msgstr ""
 
@@ -15033,10 +15308,6 @@ msgstr ""
 
 #: assets/build/admin/js/dashboard.js:13
 msgid "How to"
-msgstr ""
-
-#: assets/build/admin/js/dashboard.js:13
-msgid "OAuth"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:13

@@ -61,7 +61,10 @@ class Sidebar extends Block {
             'postsOrderBy'                  => 'title',
             'postsOrder'                    => 'asc',
             'enableNestedSubcategory'       => false,
-            'enableLazyLoad'                => false,
+            // Default follows the global "Lazy Load Sidebar Docs & Subcategories"
+            // setting, mirroring the Elementor sidebar widget's control default, so
+            // enabling the setting lazy-loads the block too unless overridden.
+            'enableLazyLoad'                => (bool) betterdocs()->settings->get( 'archive_lazy_load_descendants' ),
             'docs_per_subcategory'          => 10,
             'titleTag'                      => 'h1',
             'show_count'                    => false,

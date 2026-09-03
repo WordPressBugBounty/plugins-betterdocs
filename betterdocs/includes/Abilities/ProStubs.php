@@ -214,6 +214,316 @@ final class ProStubs {
 					]
 				],
 				'annotations'   => self::annotations( true, false, true, 1.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/list-api-references',
+				'label'         => __( 'List API references', 'betterdocs' ),
+				'description'   => __( 'List the API references on this site, each with its title, slug, status, source and whether its spec has been materialized into docs.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [],
+					'default'    => []
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'references'     => [ 'type' => 'array' ],
+						'total'          => [ 'type' => 'integer' ],
+						'max_references' => [ 'type' => [ 'integer', 'null' ] ]
+					]
+				],
+				'annotations'   => self::annotations( true, false, true, 1.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/get-api-reference',
+				'label'         => __( 'Get API reference', 'betterdocs' ),
+				'description'   => __( 'Read one API reference by id: its settings and, when a spec has been ingested, a summary of the operations it documents.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'id'                 => [
+							'type'        => 'integer',
+							'description' => __( 'API reference id.', 'betterdocs' )
+						],
+						'include_operations' => [
+							'type'        => 'boolean',
+							'description' => __( 'Include a summarized list of the spec operations (method, path, summary).', 'betterdocs' )
+						],
+						'max_operations'     => [
+							'type'        => 'integer',
+							'description' => __( 'Cap the number of operations returned when include_operations is true.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'id' ]
+				],
+				'output_schema' => self::api_reference_schema(),
+				'annotations'   => self::annotations( true, false, true, 1.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/create-api-reference',
+				'label'         => __( 'Create API reference', 'betterdocs' ),
+				'description'   => __( 'Create an API reference. Title, slug and status are optional; the title is filled from the spec\'s info.title when a spec is later ingested and none was set.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'title'  => [
+							'type'        => 'string',
+							'description' => __( 'Reference title. Optional — filled from the spec when omitted.', 'betterdocs' )
+						],
+						'slug'   => [
+							'type'        => 'string',
+							'description' => __( 'URL slug. Derived from the title when omitted.', 'betterdocs' )
+						],
+						'status' => [
+							'type'        => 'string',
+							'enum'        => [ 'draft', 'publish' ],
+							'description' => __( 'Publish state. Defaults to draft.', 'betterdocs' )
+						]
+					]
+				],
+				'output_schema' => self::api_reference_schema(),
+				'annotations'   => self::annotations( false, false, false, 2.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/update-api-reference',
+				'label'         => __( 'Update API reference', 'betterdocs' ),
+				'description'   => __( 'Update an API reference: rename it, change its slug or status, or adjust display settings such as the Try-it panel and code-sample theme.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'id'            => [
+							'type'        => 'integer',
+							'description' => __( 'API reference id.', 'betterdocs' )
+						],
+						'title'         => [
+							'type'        => 'string',
+							'description' => __( 'New title.', 'betterdocs' )
+						],
+						'slug'          => [
+							'type'        => 'string',
+							'description' => __( 'New URL slug.', 'betterdocs' )
+						],
+						'status'        => [
+							'type'        => 'string',
+							'enum'        => [ 'draft', 'publish' ],
+							'description' => __( 'New publish state.', 'betterdocs' )
+						],
+						'tryit_enabled' => [
+							'type'        => 'boolean',
+							'description' => __( 'Show the interactive Try-it panel.', 'betterdocs' )
+						],
+						'tryit_label'   => [
+							'type'        => 'string',
+							'description' => __( 'Label for the Try-it button.', 'betterdocs' )
+						],
+						'code_theme'    => [
+							'type'        => 'string',
+							'enum'        => [ 'light', 'dark' ],
+							'description' => __( 'Code-sample theme.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'id' ]
+				],
+				'output_schema' => self::api_reference_schema(),
+				'annotations'   => self::annotations( false, false, true, 2.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/delete-api-reference',
+				'label'         => __( 'Delete API reference', 'betterdocs' ),
+				'description'   => __( 'Delete an API reference and its stored spec. Docs already materialized from it are left in place, never deleted.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'id' => [
+							'type'        => 'integer',
+							'description' => __( 'API reference id.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'id' ]
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'id'      => [ 'type' => 'integer' ],
+						'title'   => [ 'type' => 'string' ],
+						'deleted' => [ 'type' => 'boolean' ]
+					]
+				],
+				'annotations'   => self::annotations( false, true, false, 2.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/ingest-api-spec',
+				'label'         => __( 'Ingest API spec', 'betterdocs' ),
+				'description'   => __( 'Ingest an OpenAPI or Postman spec into an API reference. Pass the raw spec text, or a source_url to fetch it from; this replaces any previously ingested spec.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'id'         => [
+							'type'        => 'integer',
+							'description' => __( 'API reference id to ingest into.', 'betterdocs' )
+						],
+						'spec'       => [
+							'type'        => 'string',
+							'description' => __( 'Raw spec document (JSON or YAML). Provide this or source_url.', 'betterdocs' )
+						],
+						'source_url' => [
+							'type'        => 'string',
+							'description' => __( 'URL to fetch the spec from. Provide this or spec.', 'betterdocs' )
+						],
+						'format'     => [
+							'type'        => 'string',
+							'enum'        => [ 'json', 'yaml' ],
+							'description' => __( 'Serialization of the spec text. Sniffed when omitted.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'id' ]
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'id'          => [ 'type' => 'integer' ],
+						'result'      => [ 'type' => 'string' ],
+						'source_kind' => [ 'type' => 'string' ],
+						'summary'     => [ 'type' => [ 'object', 'null' ] ]
+					]
+				],
+				'annotations'   => self::annotations( false, false, false, 2.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/materialize-api-reference',
+				'label'         => __( 'Materialize API reference', 'betterdocs' ),
+				'description'   => __( 'Turn an ingested API spec into BetterDocs docs, one per operation. Starts a background run and returns its state; call again with action "status" to check progress.', 'betterdocs' ),
+				'feature'       => __( 'API documentation', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'id'     => [
+							'type'        => 'integer',
+							'description' => __( 'API reference id.', 'betterdocs' )
+						],
+						'action' => [
+							'type'        => 'string',
+							'enum'        => [ 'run', 'status' ],
+							'description' => __( 'run starts materialization; status reports an in-flight or finished run. Defaults to run.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'id' ]
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'id'           => [ 'type' => 'integer' ],
+						'state'        => [ 'type' => 'string' ],
+						'materialized' => [ 'type' => 'boolean' ],
+						'progress'     => [ 'type' => [ 'object', 'null' ] ]
+					]
+				],
+				'annotations'   => self::annotations( false, false, true, 2.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/get-search-insights',
+				'label'         => __( 'Get search insights', 'betterdocs' ),
+				'description'   => __( 'Read what visitors search for in the knowledge base: the most-used search terms and how often each was searched.', 'betterdocs' ),
+				'feature'       => __( 'Search insights', 'betterdocs' ),
+				'capability'    => 'read_docs_analytics',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'limit' => [
+							'type'        => 'integer',
+							'description' => __( 'How many top search terms to return (default 20, max 100).', 'betterdocs' )
+						]
+					],
+					'default'    => []
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'keywords' => [ 'type' => 'array' ],
+						'total'    => [ 'type' => 'integer' ]
+					]
+				],
+				'annotations'   => self::annotations( true, false, true, 1.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/get-git-sync-status',
+				'label'         => __( 'Get Git sync status', 'betterdocs' ),
+				'description'   => __( 'Report the Git integration configuration and whether it is connected: provider, repository, branch, folder, file naming and auto-sync. Pass a doc id to also get that doc\'s last sync time and status.', 'betterdocs' ),
+				'feature'       => __( 'Git sync', 'betterdocs' ),
+				'capability'    => 'manage_options',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'doc_id' => [
+							'type'        => 'integer',
+							'description' => __( 'Optional doc id to report per-document sync state for.', 'betterdocs' )
+						]
+					]
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'enabled'        => [ 'type' => 'boolean' ],
+						'connected'      => [ 'type' => 'boolean' ],
+						'provider'       => [ 'type' => 'string' ],
+						'repository_url' => [ 'type' => 'string' ],
+						'branch'         => [ 'type' => 'string' ],
+						'docs_directory' => [ 'type' => 'string' ],
+						'file_naming'    => [ 'type' => 'string' ],
+						'auto_sync'      => [ 'type' => 'boolean' ],
+						'doc'            => [ 'type' => [ 'object', 'null' ] ]
+					]
+				],
+				'annotations'   => self::annotations( true, false, true, 1.0 )
+			],
+			[
+				'id'            => 'betterdocs-pro/get-related-docs',
+				'label'         => __( 'Get related docs', 'betterdocs' ),
+				'description'   => __( 'Read the saved related-doc suggestions for a doc — the persisted list shown under the article. Reads the cache only; it does not run the AI engine.', 'betterdocs' ),
+				'feature'       => __( 'Related docs', 'betterdocs' ),
+				'capability'    => 'edit_docs',
+				'kb_feature'    => false,
+				'input_schema'  => [
+					'type'       => 'object',
+					'properties' => [
+						'doc_id' => [
+							'type'        => 'integer',
+							'description' => __( 'Doc id to read related suggestions for.', 'betterdocs' )
+						]
+					],
+					'required'   => [ 'doc_id' ]
+				],
+				'output_schema' => [
+					'type'       => 'object',
+					'properties' => [
+						'doc_id'       => [ 'type' => 'integer' ],
+						'related'      => [ 'type' => 'array' ],
+						'generated_at' => [ 'type' => [ 'string', 'integer', 'null' ] ]
+					]
+				],
+				'annotations'   => self::annotations( true, false, true, 1.0 )
 			]
 		];
 	}
@@ -302,6 +612,35 @@ final class ProStubs {
 	 * @param float $priority    Ordering hint; 1.0 for reads, 2.0 for writes.
 	 * @return array
 	 */
+	/**
+	 * The shape one API reference comes back as.
+	 *
+	 * Permissive on purpose, like {@see self::knowledge_base_schema()}: the
+	 * Abilities API validates output against this, so nothing is `required` and
+	 * a Pro build that adds a field must not fail an otherwise-good call.
+	 *
+	 * @since 4.9.1
+	 *
+	 * @return array
+	 */
+	private static function api_reference_schema(): array {
+		return [
+			'type'       => 'object',
+			'properties' => [
+				'id'           => [ 'type' => 'integer' ],
+				'title'        => [ 'type' => 'string' ],
+				'slug'         => [ 'type' => 'string' ],
+				'status'       => [ 'type' => 'string' ],
+				'permalink'    => [ 'type' => 'string' ],
+				'source'       => [ 'type' => 'string' ],
+				'source_kind'  => [ 'type' => 'string' ],
+				'materialized' => [ 'type' => 'boolean' ],
+				'summary'      => [ 'type' => [ 'object', 'null' ] ],
+				'operations'   => [ 'type' => 'array' ]
+			]
+		];
+	}
+
 	private static function annotations( bool $read_only, bool $destructive, bool $idempotent, float $priority ): array {
 		return [
 			'readonly'      => $read_only,

@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Helper;
+use WPDeveloper\BetterDocs\FrontEnd\PrintTemplate;
 
 class Scripts extends Base {
 	protected $settings;
@@ -77,6 +78,23 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-search', 'shortcodes/js/search.js', [ 'jquery' ] );
 		$assets->register( 'betterdocs-search-modal', 'shortcodes/js/search-modal.js', [ 'jquery' ] );
 
+		/**
+		 * Print template config for the single-doc Print / Save-as-PDF button.
+		 *
+		 * These values feed the print *popup* opened by the BetterDocs print
+		 * icon. The browser's own Ctrl/Cmd+P route is handled separately by
+		 * {@see PrintTemplate}, which resolves the same two values — see that
+		 * class for why the two routes use different layout mechanisms.
+		 *
+		 * Both toggles live in `betterdocs_settings` (BetterDocs → Settings →
+		 * Layout → Single Doc → General) rather than theme mods, so they stay
+		 * reachable on block/FSE themes, which have no Customizer. Both default
+		 * to OFF; while a toggle is off the value resolves empty and the print
+		 * script renders nothing for it.
+		 */
+		$print_logo   = PrintTemplate::get_logo();
+		$print_footer = PrintTemplate::get_footer();
+
 		$assets->localize(
 			'betterdocs',
 			'betterdocsConfig',
@@ -85,7 +103,11 @@ class Scripts extends Base {
 				'copy_text'         => __( 'Copied', 'betterdocs' ),
 				'sticky_toc_offset' => $this->settings->get( 'sticky_toc_offset' ),
 				'summary_nonce'     => wp_create_nonce( 'betterdocs_article_summary_nonce' ),
-				'summary_error'     => __( 'Failed to generate doc summary. Please try again.', 'betterdocs' )
+				'summary_error'     => __( 'Failed to generate doc summary. Please try again.', 'betterdocs' ),
+				'print'             => [
+					'logo'   => $print_logo ? esc_url( $print_logo ) : '',
+					'footer' => $print_footer ? wp_kses_post( $print_footer ) : ''
+				]
 			]
 		);
 
