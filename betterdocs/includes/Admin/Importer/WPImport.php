@@ -373,6 +373,14 @@ class WPImport extends WP_Importer {
 		wp_defer_term_counting( true );
 		wp_defer_comment_counting( true );
 
+		// Safety net for an aborted run: a PHP timeout, memory limit, fatal, or a
+		// cut-off request can end the import before import_end() runs, which would
+		// strand wp_defer_term_counting(true) and a stale {taxonomy}_children cache
+		// and silently drop nested-category counts site-wide. A shutdown handler
+		// guarantees the restore runs on the way out; it is idempotent, so the normal
+		// import_end() path (which also calls it) makes this a no-op. (#167)
+		register_shutdown_function( array( $this, 'restore_counting_and_hierarchy' ) );
+
 		do_action( 'import_start', $this );
 
 		return true;
@@ -386,6 +394,27 @@ class WPImport extends WP_Importer {
 
 		wp_cache_flush();
 
+		$this->restore_counting_and_hierarchy();
+
+		do_action( 'import_end' );
+	}
+
+	/**
+	 * Turn term/comment counting back on and rebuild the term hierarchy.
+	 *
+	 * import_start() registers this as a shutdown handler so an aborted run (timeout,
+	 * memory, fatal, cut-off request) that never reaches import_end() cannot strand
+	 * wp_defer_term_counting(true) or a stale {taxonomy}_children cache. Idempotent,
+	 * so it is safe to call from both import_end() and the shutdown handler. (#167)
+	 */
+	public function restore_counting_and_hierarchy() {
+		static $restored = false;
+
+		if ( $restored ) {
+			return;
+		}
+		$restored = true;
+
 		foreach ( get_taxonomies() as $tax ) {
 			delete_option( "{$tax}_children" );
 			_get_term_hierarchy( $tax );
@@ -393,8 +422,6 @@ class WPImport extends WP_Importer {
 
 		wp_defer_term_counting( false );
 		wp_defer_comment_counting( false );
-
-		do_action( 'import_end' );
 	}
 
 	/**

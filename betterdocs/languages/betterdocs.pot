@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-3.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: BetterDocs 4.9.1\n"
+"Project-Id-Version: BetterDocs 4.9.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/betterdocs\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-02T11:59:32+00:00\n"
+"POT-Creation-Date: 2026-09-14T04:58:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1346,7 +1346,7 @@ msgid "create the %1$s \"%2$s\""
 msgstr ""
 
 #: includes/Abilities/Traits/ResolvesTerms.php:208
-#: includes/Core/Admin.php:1411
+#: includes/Core/Admin.php:1434
 #: includes/Core/PostType.php:1397
 #: includes/Core/Settings.php:2961
 msgid "Glossaries"
@@ -2373,10 +2373,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:616
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:748
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:255
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:419
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:531
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:643
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:708
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:477
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:589
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:701
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:766
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:514
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:799
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:865
@@ -2442,10 +2442,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:603
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:735
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:243
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:407
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:519
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:631
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:696
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:465
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:577
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:689
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:754
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:529
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:781
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:847
@@ -2557,6 +2557,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/ArticleSummary.php:140
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2131
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2222
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:342
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:408
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:486
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1285
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:249
@@ -2588,6 +2590,8 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/DocsPage.php:2395
 #: includes/Admin/Customizer/Sections/LiveSearch.php:2749
 #: includes/Editors/Elementor/Widget/ArchiveList.php:660
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:353
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:420
 #: includes/Editors/Elementor/Widget/Breadcrumbs.php:260
 #: includes/Editors/Elementor/Widget/CategoryArchiveHeader.php:131
 #: includes/Editors/Elementor/Widget/DocAuthor.php:73
@@ -2623,7 +2627,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/SingleDoc.php:2433
 #: includes/Admin/Customizer/Sections/SingleDoc.php:3232
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:320
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:363
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:385
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:568
 #: assets/build/blocks/editor.js:1
 msgid "Title Color"
@@ -2810,10 +2814,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:576
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:677
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:708
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:439
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:551
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:672
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:737
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:497
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:609
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:730
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:795
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1026
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1063
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1237
@@ -2881,7 +2885,7 @@ msgstr ""
 #: includes/Admin/Customizer/Sections/Sidebar.php:535
 #: includes/Admin/Customizer/Sections/Sidebar.php:2334
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:331
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:374
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:396
 #: assets/build/blocks/editor.js:1
 msgid "Title Hover Color"
 msgstr ""
@@ -4084,10 +4088,10 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:472
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:629
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:761
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:459
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:485
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:571
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:597
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:517
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:543
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:629
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:655
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1472
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1532
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1665
@@ -4707,7 +4711,7 @@ msgstr ""
 
 #: includes/Admin/Customizer/Sections/SingleDoc.php:6371
 #: includes/blocks.php:113
-#: includes/Core/Admin.php:646
+#: includes/Core/Admin.php:649
 #: views/admin/analytics.php:16
 #: views/admin/email/analytics/leading-docs.php:34
 #: assets/build/admin/js/dashboard.js:5
@@ -4931,72 +4935,72 @@ msgid "The file does not exist, please try again."
 msgstr ""
 
 #. translators: %s: Post author.
-#: includes/Admin/Importer/WPImport.php:418
+#: includes/Admin/Importer/WPImport.php:445
 msgid "Failed to import author %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: %s: Author display name.
-#: includes/Admin/Importer/WPImport.php:480
+#: includes/Admin/Importer/WPImport.php:507
 msgid "Failed to create new user for %s. Their posts will be attributed to the current user."
 msgstr ""
 
 #. translators: 1: Term taxonomy, 2: Term name.
 #. translators: 1: Post type singular label, 2: Post title.
 #. translators: 1: Taxonomy name, 2: Term name.
-#: includes/Admin/Importer/WPImport.php:578
-#: includes/Admin/Importer/WPImport.php:1087
-#: includes/Admin/Importer/WPImport.php:1142
+#: includes/Admin/Importer/WPImport.php:605
+#: includes/Admin/Importer/WPImport.php:1114
+#: includes/Admin/Importer/WPImport.php:1169
 msgid "Failed to import %1$s %2$s"
 msgstr ""
 
 #. translators: 1: Post title, 2: Post type.
-#: includes/Admin/Importer/WPImport.php:1000
+#: includes/Admin/Importer/WPImport.php:1027
 msgid "Failed to import %1$s: Invalid post type %2$s"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1311
+#: includes/Admin/Importer/WPImport.php:1338
 msgid "Fetching attachments is not enabled"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1328
+#: includes/Admin/Importer/WPImport.php:1355
 msgid "Invalid file type"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1373
+#: includes/Admin/Importer/WPImport.php:1400
 msgid "Could not create temporary file."
 msgstr ""
 
 #. translators: 1: WordPress error message, 2: WordPress error code.
-#: includes/Admin/Importer/WPImport.php:1392
+#: includes/Admin/Importer/WPImport.php:1419
 msgid "Request failed due to an error: %1$s (%2$s)"
 msgstr ""
 
 #. translators: 1: HTTP error message, 2: HTTP error code.
-#: includes/Admin/Importer/WPImport.php:1401
+#: includes/Admin/Importer/WPImport.php:1428
 msgid "Remote server returned the following unexpected result: %1$s (%2$s)"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1410
+#: includes/Admin/Importer/WPImport.php:1437
 msgid "Remote server did not respond"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1418
+#: includes/Admin/Importer/WPImport.php:1445
 msgid "Zero size file downloaded"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1424
+#: includes/Admin/Importer/WPImport.php:1451
 msgid "Downloaded file has incorrect size"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1433
+#: includes/Admin/Importer/WPImport.php:1460
 msgid "Remote file is too large, limit is %s"
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1465
+#: includes/Admin/Importer/WPImport.php:1492
 msgid "Sorry, this file type is not permitted for security reasons."
 msgstr ""
 
-#: includes/Admin/Importer/WPImport.php:1481
+#: includes/Admin/Importer/WPImport.php:1508
 msgid "The uploaded file could not be moved"
 msgstr ""
 
@@ -5229,11 +5233,11 @@ msgstr ""
 msgid "BetterDocs Code Snippet Tab"
 msgstr ""
 
-#: includes/Core/Admin.php:228
+#: includes/Core/Admin.php:230
 msgid "Deactivate BetterDocs Pro First"
 msgstr ""
 
-#: includes/Core/Admin.php:274
+#: includes/Core/Admin.php:276
 #: includes/Core/PostType.php:1285
 #: includes/Core/Settings.php:235
 #: includes/Core/Settings.php:263
@@ -5253,123 +5257,123 @@ msgstr ""
 msgid "Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:319
+#: includes/Core/Admin.php:321
 msgid "Want to help make <strong>BetterDocs</strong> even more awesome? You can get a <strong>10% discount coupon</strong> for Premium extensions if you allow us to track the usage."
 msgstr ""
 
-#: includes/Core/Admin.php:320
+#: includes/Core/Admin.php:322
 msgid "We collect non-sensitive diagnostic data and plugin usage information. Your site URL, WordPress & PHP version, plugins & themes and email address to send you the discount coupon. This data lets us make sure this plugin always stays compatible with the most popular plugins and themes. No spam, I promise."
 msgstr ""
 
-#: includes/Core/Admin.php:355
+#: includes/Core/Admin.php:357
 msgid "We hope you're enjoying BetterDocs! Could you please do us a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?"
 msgstr ""
 
-#: includes/Core/Admin.php:364
+#: includes/Core/Admin.php:366
 msgid "Sure, you deserve it!"
 msgstr ""
 
-#: includes/Core/Admin.php:368
+#: includes/Core/Admin.php:370
 msgid "I already did"
 msgstr ""
 
-#: includes/Core/Admin.php:375
-#: includes/Core/Admin.php:431
+#: includes/Core/Admin.php:377
+#: includes/Core/Admin.php:433
 #: includes/Core/KBMigration.php:55
 msgid "Maybe Later"
 msgstr ""
 
-#: includes/Core/Admin.php:387
+#: includes/Core/Admin.php:389
 msgid "I need help"
 msgstr ""
 
-#: includes/Core/Admin.php:391
-#: includes/Core/Admin.php:439
+#: includes/Core/Admin.php:393
+#: includes/Core/Admin.php:441
 msgid "Never show again"
 msgstr ""
 
 #. translators: %s is the name of the existing knowledge base plugin.
-#: includes/Core/Admin.php:415
+#: includes/Core/Admin.php:417
 msgid "Already using %s? Power up your Knowledge Base by migrating all your docs and settings to BetterDocs with just 1 click."
 msgstr ""
 
-#: includes/Core/Admin.php:423
+#: includes/Core/Admin.php:425
 #: includes/Core/KBMigration.php:54
 #: includes/Core/KBMigration.php:218
 msgid "Start Migration"
 msgstr ""
 
-#: includes/Core/Admin.php:491
+#: includes/Core/Admin.php:493
 msgid "Upgrade To PRO Now"
 msgstr ""
 
-#: includes/Core/Admin.php:494
+#: includes/Core/Admin.php:496
 msgid "I’ll Grab It Later"
 msgstr ""
 
-#: includes/Core/Admin.php:645
+#: includes/Core/Admin.php:648
 #: assets/build/admin/js/dashboard.js:5
 msgid "Word Count"
 msgstr ""
 
-#: includes/Core/Admin.php:814
-#: includes/Core/Admin.php:849
+#: includes/Core/Admin.php:817
+#: includes/Core/Admin.php:852
 msgid "Switch to BetterDocs UI"
 msgstr ""
 
-#: includes/Core/Admin.php:852
+#: includes/Core/Admin.php:855
 #: includes/Utils/Helper.php:1543
 #: assets/build/blocks/editor.js:1
 msgid "Copied!"
 msgstr ""
 
-#: includes/Core/Admin.php:853
+#: includes/Core/Admin.php:856
 msgid "Test Report!"
 msgstr ""
 
-#: includes/Core/Admin.php:854
+#: includes/Core/Admin.php:857
 msgid "Sending..."
 msgstr ""
 
-#: includes/Core/Admin.php:983
+#: includes/Core/Admin.php:987
 msgid "Switch to Classic UI"
 msgstr ""
 
-#: includes/Core/Admin.php:985
+#: includes/Core/Admin.php:989
 #: assets/build/admin/js/dashboard.js:5
 msgid "Add New Doc"
 msgstr ""
 
-#: includes/Core/Admin.php:1161
+#: includes/Core/Admin.php:1165
 msgid "New"
 msgstr ""
 
-#: includes/Core/Admin.php:1256
-#: includes/Core/Admin.php:1340
+#: includes/Core/Admin.php:1260
+#: includes/Core/Admin.php:1344
 #: includes/Core/PostType.php:1291
 #: assets/build/admin/js/dashboard.js:4
 #: assets/build/admin/js/quick-setup.js:1
 msgid "All Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1331
+#: includes/Core/Admin.php:1335
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Core/Admin.php:1347
+#: includes/Core/Admin.php:1351
 #: includes/Core/FAQBuilder.php:297
 #: includes/Core/PostType.php:1286
 msgid "Add New"
 msgstr ""
 
-#: includes/Core/Admin.php:1351
+#: includes/Core/Admin.php:1355
 #: includes/Core/FAQBuilder.php:208
 #: includes/Core/PostType.php:1352
 #: assets/build/blocks/write-with-ai.js:2
 msgid "Categories"
 msgstr ""
 
-#: includes/Core/Admin.php:1358
+#: includes/Core/Admin.php:1362
 #: includes/Core/PostType.php:1558
 #: includes/Core/Settings.php:1443
 #: includes/Editors/Elementor/Widget/Tags.php:82
@@ -5379,32 +5383,36 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/Core/Admin.php:1365
-#: includes/Core/Admin.php:1514
+#: includes/Core/Admin.php:1369
+#: includes/Core/Admin.php:1600
 #: views/admin/template-parts/settings-header-2.php:7
 #: assets/build/admin/js/dashboard.js:5
 #: assets/build/blocks/editor.js:1
 msgid "Settings"
 msgstr ""
 
-#: includes/Core/Admin.php:1375
+#: includes/Core/Admin.php:1379
 #: assets/build/admin/js/dashboard.js:20
 msgid "MCP"
 msgstr ""
 
-#: includes/Core/Admin.php:1385
+#: includes/Core/Admin.php:1389
 msgid "Analytics"
 msgstr ""
 
-#: includes/Core/Admin.php:1395
+#: includes/Core/Admin.php:1399
+msgid "Content IQ"
+msgstr ""
+
+#: includes/Core/Admin.php:1409
 msgid "FAQ Builder"
 msgstr ""
 
-#: includes/Core/Admin.php:1427
+#: includes/Core/Admin.php:1450
 msgid "API Docs"
 msgstr ""
 
-#: includes/Core/Admin.php:1440
+#: includes/Core/Admin.php:1463
 #: includes/Core/Settings.php:2653
 #: includes/Core/Settings.php:2663
 #: includes/Core/Settings.php:2677
@@ -5412,36 +5420,36 @@ msgstr ""
 msgid "AI Chatbot"
 msgstr ""
 
-#: includes/Core/Admin.php:1500
+#: includes/Core/Admin.php:1586
 msgid "Quick Setup"
 msgstr ""
 
-#: includes/Core/Admin.php:1517
+#: includes/Core/Admin.php:1603
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/Core/Admin.php:1559
+#: includes/Core/Admin.php:1645
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/Core/Admin.php:1571
+#: includes/Core/Admin.php:1657
 msgid "Visit Encyclopedia"
 msgstr ""
 
-#: includes/Core/Admin.php:1664
+#: includes/Core/Admin.php:1750
 #: includes/Core/ArticleQualityScore.php:358
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/Core/Admin.php:1669
+#: includes/Core/Admin.php:1755
 msgid "Permission denied"
 msgstr ""
 
-#: includes/Core/Admin.php:1676
+#: includes/Core/Admin.php:1762
 msgid "Invalid introduction key"
 msgstr ""
 
-#: includes/Core/Admin.php:1685
+#: includes/Core/Admin.php:1771
 msgid "Pointer dismissed successfully"
 msgstr ""
 
@@ -8622,8 +8630,8 @@ msgid "Center"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/ArchiveList.php:879
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:797
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:860
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:855
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:918
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1460
 #: assets/build/blocks/editor.js:1
 msgid "Icon Color"
@@ -8761,12 +8769,12 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2018
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2122
 #: includes/Editors/Elementor/Widget/Basic/CategoryBox.php:2213
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:468
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:494
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:580
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:606
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:656
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:721
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:526
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:552
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:638
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:664
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:714
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:779
 #: includes/Editors/Elementor/Widget/Feedback.php:363
 #: assets/build/blocks/editor.js:1
 msgid "Background"
@@ -9036,8 +9044,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:391
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:539
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:671
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:452
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:564
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:510
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:622
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1695
 #: includes/Editors/Elementor/Widget/Reactions.php:103
 #: includes/Editors/Elementor/Widget/Sidebar.php:528
@@ -9084,8 +9092,8 @@ msgstr ""
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:456
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:570
 #: includes/Editors/Elementor/Widget/Basic/CategorySlateLayout.php:702
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:478
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:590
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:536
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:648
 #: includes/Editors/Elementor/Widget/Basic/SearchForm.php:1779
 #: includes/Editors/Elementor/Widget/Sidebar.php:575
 #: includes/Editors/Elementor/Widget/Sidebar.php:845
@@ -9371,38 +9379,43 @@ msgid "FAQ Section Title"
 msgstr ""
 
 #: includes/Editors/Elementor/Widget/Basic/FAQ.php:309
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:352
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:374
 #: assets/build/admin/js/dashboard.js:1
 msgid "FAQ Group Title"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:396
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:508
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:432
+#: assets/build/blocks/editor.js:1
+msgid "Active Background Color"
+msgstr ""
+
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:454
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:566
 msgid "FAQ List"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:620
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:685
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:678
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:743
 msgid "FAQ Content"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:750
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:808
 msgid "FAQ List Icon"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:761
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:824
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:819
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:882
 #: assets/build/blocks/editor.js:1
 msgid "Icon Height"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:779
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:842
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:837
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:900
 #: assets/build/blocks/editor.js:1
 msgid "Icon Width"
 msgstr ""
 
-#: includes/Editors/Elementor/Widget/Basic/FAQ.php:813
+#: includes/Editors/Elementor/Widget/Basic/FAQ.php:871
 #: assets/build/admin/js/dashboard.js:1
 msgid "FAQ Group Icon"
 msgstr ""
@@ -14722,6 +14735,486 @@ msgid "Re-sync from a URL to keep docs matching your API"
 msgstr ""
 
 #: assets/build/admin/js/dashboard.js:5
+msgid "zero-result searches"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "high-bounce exits"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "feedback mentions"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "High confidence"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Medium confidence"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "AI-detected"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Search analytics"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "unanswered searches"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "phrasings"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Sample reader queries"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Suggested doc"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Draft title with AI"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Uses your API key"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Not updated 8+ months"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Not updated 6+ months"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Declining views"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Contradicts newer doc"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Outdated version"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Broken link"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Engagement"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Freshness"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Findability"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Accuracy"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "similar"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Merge"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Keep both"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Open doc"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Gaps Detected"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "3 new this week"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Stale Docs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "5 critical"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Health Score"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "+4 pts"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "site-wide"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "AI Suggestions Applied"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "accepted"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "This week's top action"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Write the missing"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "guide"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "128 reader signals point to this missing topic. It's your highest-demand gap, and no doc covers it yet."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Review this gap"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "See all gaps"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Intelligence modules"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "topics"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Gaps"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Demand your docs don't answer yet."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "docs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Stale Content"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs losing freshness and accuracy."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "pairs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Duplicates & Overlaps"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs covering the same ground."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "score"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Health"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "How healthy your KB is overall."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Intelligence"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "What to fix next — gaps, freshness, and health across your knowledge base."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Intelligence is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "One screen that answers \"what should I fix next?\" — a health grade for the whole knowledge base, the single highest-impact action this week, and a live count for every intelligence module. It runs on the analytics BetterDocs already collects."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Gaps, stale docs, health score and applied suggestions at a glance"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "\"This week's top action\", ranked by real reader demand"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "The evidence behind it: empty searches, bounced visits, feedback"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Module tiles that jump straight to the fix"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Topics readers want that your docs don't cover"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Clustered from searches that came back empty, visits that bounced, and what readers said in feedback. Every topic is re-checked against your existing docs before it is listed."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Analyze now"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Gap Detection"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Topics your readers want that your docs don't cover yet."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Gap Detection is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Finds the topics your readers keep asking for and your docs never answer. BetterDocs clusters searches that came back empty, visits that bounced, and feedback mentions into topics, then re-checks each one against your existing docs before listing it."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Missing topics ranked by demand, with the queries that evidence them"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Confidence scoring so you can act on the strongest signals first"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Accept, dismiss, or draft the doc title with your own AI key"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Grouped by meaning — not just matching words — with the AI Chatbot add-on"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs losing freshness"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Scored on age, declining engagement, version references, and broken links. Runs nightly — no API key required."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Critical"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Avg. Staleness"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs by staleness"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Staleness"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Last updated"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Trend"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Reason"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Mark current"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs losing accuracy, freshness, or engagement — ranked by staleness."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Stale Content detection is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Scores every doc on age, declining views and reactions, outdated version mentions, and broken links — so you refresh the docs that are actually decaying rather than simply the oldest ones."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "A 0–100 staleness score with the reason flags behind it"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Per-doc view trend, ranked worst first"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Nightly rule-based scan — no API key required"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Mark as current, dismiss, or open the doc to fix it"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Health Score"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Grade"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "vs last month · site-wide"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Score components"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Weakest area: Freshness · 61"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "How recently updated"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Fix stale content"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Score distribution"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Lowest-scoring docs"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Health"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Weakest area"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Improve"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "A single, composite measure of how healthy your knowledge base is."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Content Health Score is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "A single composite grade for your knowledge base, built from five measured components, tracked month over month, and broken down to the individual docs pulling it down."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Site-wide score and A–F grade, trended over time"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Engagement, Helpfulness, Freshness, Findability & Accuracy"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Score distribution across every published doc"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Lowest-scoring docs with their weakest component named"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs covering near-identical ground"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Detected by comparing what your docs mean, not the words they use. Merge the pairs worth collapsing, or keep both and differentiate them."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Sync now"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Docs covering near-identical ground, detected by content similarity."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Duplicates & Overlaps is a Pro feature"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Two docs can cover the same ground without sharing a single phrase — one written for beginners, one for admins. BetterDocs compares what your docs mean rather than the words they use, and lists the near-identical pairs with a similarity score."
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Near-duplicate doc pairs, scored by content similarity"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Catches overlaps that share no wording at all"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Merge, keep both, or dismiss each pair as you review it"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
+msgid "Semantic detection runs on the BetterDocs AI Chatbot add-on's index"
+msgstr ""
+
+#: assets/build/admin/js/dashboard.js:5
 msgid "API"
 msgstr ""
 
@@ -16281,10 +16774,6 @@ msgstr ""
 
 #: assets/build/blocks/editor.js:1
 msgid "Arrow Hover Color"
-msgstr ""
-
-#: assets/build/blocks/editor.js:1
-msgid "Active Background Color"
 msgstr ""
 
 #: assets/build/blocks/editor.js:1

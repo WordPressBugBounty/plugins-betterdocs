@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.1
+Stable tag: 4.9.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -253,6 +253,15 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 
 == Changelog ==
+
+= 4.9.2 - 16/09/2026 =
+
+- Fixed: Customizer layout migration seeded the wrong defaults, so saved layouts reverted to Layout 1
+- Fixed: Nested subcategories could be cached while empty and stay empty until the cache expired
+- Fixed: Term counts were not refreshed after a recount, and an aborted import left counts stale
+- Fixed: Category grids now collapse to a single column below 500px
+- Fixed: FAQ group titles can now have their own background color
+- Few minor bug fixes and improvements
 
 = 4.9.1 - 03/09/2026 =
 

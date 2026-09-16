@@ -235,6 +235,14 @@ $bd_nested_depth--;
 
 if ( $bd_is_outermost ) {
 	$bd_html = ob_get_clean();
-	set_transient( $bd_cache_key, $bd_html, HOUR_IN_SECONDS * 6 );
+	// Never cache an empty render. An empty buffer means every child term was
+	// skipped ( $_counts <= 0 ), which is usually a transient data state — stale
+	// counts mid-import, docs not yet published. The read guard treats '' as a hit
+	// ( '' !== false ), so caching it would pin a blank nested block for 6 hours
+	// after the data is already correct. Re-rendering once per request while empty
+	// is what lets it self-heal. (#165)
+	if ( '' !== $bd_html ) {
+		set_transient( $bd_cache_key, $bd_html, HOUR_IN_SECONDS * 6 );
+	}
 	echo $bd_html; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

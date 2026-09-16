@@ -704,7 +704,25 @@ class Docs extends BaseAPI {
 		$search_input = sanitize_text_field( $request->get_param( 's' ) );
 		$no_result    = sanitize_text_field( $request->get_param( 'no_result' ) );
 
-		return betterdocs()->query->insert_search_keyword( $search_input, $no_result );
+		$result = betterdocs()->query->insert_search_keyword( $search_input, $no_result );
+
+		if ( ! empty( $search_input ) ) {
+			/**
+			 * Fires after a front-end docs search is logged.
+			 *
+			 * Pro hooks this to record a 'search' event into the raw events
+			 * table, which the Advanced Analytics aggregator rolls up into
+			 * betterdocs_analytics_search (search volume + zero-result rate —
+			 * the primary content-gap signal).
+			 *
+			 * @param string          $search_input The search term.
+			 * @param bool            $no_result    True when the search returned no results.
+			 * @param WP_REST_Request $request      The ingest request.
+			 */
+			do_action( 'betterdocs_analytics_search_recorded', $search_input, ! empty( $no_result ), $request );
+		}
+
+		return $result;
 	}
 
 

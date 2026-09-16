@@ -20,17 +20,24 @@ use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class Admin extends Base {
 	/**
-	 * Per-user flag recording that this administrator has opened the MCP screen.
+	 * Per-user flag recording that this administrator has opened the Content IQ
+	 * screen — the discovery badge (ADR-063) now flags Content Intelligence, the
+	 * headline feature, rather than MCP.
 	 *
 	 * Stores the timestamp of the first visit, but only its **presence** is read:
-	 * absent means "this user has not seen MCP yet", which is what puts the
-	 * one-time discovery badge on the menu (ADR-063). Per user on purpose — two
-	 * administrators each get their own first look, and neither clears the other's.
+	 * absent means "this user has not seen Content IQ yet", which is what puts the
+	 * one-time discovery badge on the menu. Per user on purpose — two administrators
+	 * each get their own first look, and neither clears the other's. A deliberately
+	 * fresh meta key (not the old `betterdocs_mcp_seen`) so a user who already
+	 * dismissed the MCP badge still gets this one for the new feature.
+	 *
+	 * The private `*_mcp_*` helper names below are kept as-is to hold the diff to
+	 * the target slug + this key; they now paint the Content IQ item.
 	 *
 	 * @var string
 	 * @since 4.9.0
 	 */
-	const MCP_SEEN_META = 'betterdocs_mcp_seen';
+	const MCP_SEEN_META = 'betterdocs_content_iq_seen';
 
 	/**
 	 * Whether this request painted the MCP discovery badge onto the menu.
@@ -171,6 +178,8 @@ class Admin extends Base {
 		add_filter( 'parent_file', array( $type, 'highlight_admin_menu' ) );
 		add_filter( 'submenu_file', array( $type, 'highlight_admin_submenu' ), 10, 2 );
 		add_filter( 'betterdocs_admin_menu', array( $this, 'quick_setup_menu' ), 10, 1 );
+		// Runs last so it also orders items Pro/add-ons append through this filter.
+		add_filter( 'betterdocs_admin_menu', array( $this, 'order_admin_menu' ), 999, 1 );
 
 		/**
 		 * Remove Comments Column from List Table.
@@ -598,6 +607,7 @@ class Admin extends Base {
 			'betterdocs-admin',
 			'betterdocs-dashboard',
 			'betterdocs-analytics',
+			'betterdocs-content-iq',
 			'betterdocs-glossaries',
 			'betterdocs-faq',
 			'betterdocs-doc-categories',
@@ -877,6 +887,7 @@ class Admin extends Base {
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
                 'api_docs_teaser'                => betterdocs()->show_api_docs_teaser(),
                 'glossaries_teaser'              => betterdocs()->show_glossary_teaser(),
+                'content_intelligence_teaser'    => betterdocs()->show_content_intelligence_teaser(),
                 'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
                 'current_admin_language'         => Helper::get_current_admin_language(),
@@ -1097,7 +1108,7 @@ class Admin extends Base {
 
 		if ( isset( $submenu[ $this->slug ] ) && is_array( $submenu[ $this->slug ] ) ) {
 			foreach ( $submenu[ $this->slug ] as &$sub_item ) {
-				if ( isset( $sub_item[2] ) && 'betterdocs-mcp' === $sub_item[2] ) {
+				if ( isset( $sub_item[2] ) && 'betterdocs-content-iq' === $sub_item[2] ) {
 					$sub_item[0] .= self::mcp_submenu_pill();
 					break;
 				}
@@ -1184,7 +1195,7 @@ class Admin extends Base {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen detection; see mark_mcp_seen().
 		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
-		if ( 'betterdocs-mcp' !== $page ) {
+		if ( 'betterdocs-content-iq' !== $page ) {
 			return false;
 		}
 
@@ -1391,6 +1402,16 @@ class Admin extends Base {
 				),
 				$parent_slug
 			),
+			'content_intelligence' => $this->normalize_menu(
+				__( 'Content IQ', 'betterdocs' ),
+				'betterdocs-content-iq',
+				'read_docs_analytics',
+				array(
+					$this,
+					'output',
+				),
+				$parent_slug
+			),
 			'faq'        => $this->normalize_menu(
 				__( 'FAQ Builder', 'betterdocs' ),
 				'betterdocs-faq',
@@ -1402,6 +1423,15 @@ class Admin extends Base {
 				$parent_slug
 			),
 		);
+
+		// Content Intelligence ships in Pro, which overwrites that same key in place.
+		// Unlike API Docs it has to sit directly after Analytics, and `menus()` walks
+		// this array in insertion order — so the slot is declared inside the literal
+		// above and only withdrawn here. Appending it after the fact, api_docs-style,
+		// would park it at the bottom of the menu.
+		if ( ! ( betterdocs()->show_content_intelligence_teaser() || betterdocs()->has_content_intelligence() ) ) {
+			unset( $betterdocs_admin_pages['content_intelligence'] );
+		}
 
 		// Glossaries is Pro. Reserve this same 'glossaries' slot for Free's locked
 		// teaser so the item keeps this position; once Pro is active the real
@@ -1451,6 +1481,68 @@ class Admin extends Base {
 		return apply_filters( 'betterdocs_admin_menu', $betterdocs_admin_pages, array( $this, 'output' ), $parent_slug );
 	}
 
+	/**
+	 * Put the BetterDocs submenu in a deliberate order.
+	 *
+	 * Order used to be an accident of *when* each item was added: Free declares
+	 * most of them inline, and reserves in-place slots for `glossaries` /
+	 * `api_docs` so Pro can overwrite the key without moving it. Anything added
+	 * purely through this filter, though, could only land at the end — which is
+	 * why Multiple KB (Pro, priority 100) and AI Chatbot Logs sat after
+	 * everything else regardless of where they belong.
+	 *
+	 * Sorting here, at priority 999, fixes that for every source at once: Free's
+	 * own entries, Pro's, and any add-on's. Knowledge Base now follows Tags (it
+	 * is the third taxonomy-ish thing, so it belongs with Categories and Tags
+	 * rather than past Analytics), and API Docs follows Knowledge Base.
+	 *
+	 * Keys not listed keep their relative order and are appended, so an add-on
+	 * that registers something unknown to this list is never dropped.
+	 *
+	 * @param array $pages Menu pages keyed by slug id.
+	 * @return array
+	 */
+	public function order_admin_menu( $pages ) {
+		if ( ! is_array( $pages ) ) {
+			return $pages;
+		}
+
+		$order = array(
+			'betterdocs',
+			'dashboard',
+			'all_docs',
+			'add_new',
+			'categories',
+			'tags',
+			'multiple_kb',
+			'api_docs',
+			'settings',
+			'mcp',
+			'analytics',
+			// Content IQ reads as a second Analytics screen, so it has to stay
+			// pinned directly behind it. Without this entry it would fall into
+			// the unknown-key bucket below and be appended to the bottom of the
+			// menu — the exact placement the menu literal avoids by declaring
+			// the slot inline rather than filtering it in api_docs-style.
+			'content_intelligence',
+			'faq',
+			'glossaries',
+			'ai_chatbot',
+			'ai_chatbot_logs',
+		);
+
+		$ordered = array();
+		foreach ( $order as $key ) {
+			if ( array_key_exists( $key, $pages ) ) {
+				$ordered[ $key ] = $pages[ $key ];
+				unset( $pages[ $key ] );
+			}
+		}
+
+		// `$pages` now holds only unknown keys, still in their original order.
+		return array_merge( $ordered, $pages );
+	}
+
 	public function add_custom_classes_to_menu_items() {
 		global $menu, $submenu;
 
@@ -1463,6 +1555,7 @@ class Admin extends Base {
 			'betterdocs-settings'      => 'betterdocs-settings',
 			'betterdocs-mcp'           => 'betterdocs-mcp',
 			'betterdocs-analytics'     => 'betterdocs-analytics',
+			'betterdocs-content-iq'    => 'betterdocs-content-iq',
 			'betterdocs-faq'           => 'betterdocs-faq',
 			'betterdocs-glossaries'    => 'betterdocs-glossaries',
 			'betterdocs-ai-chatbot'    => 'betterdocs-ai-chatbot',

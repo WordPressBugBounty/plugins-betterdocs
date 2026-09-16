@@ -133,7 +133,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.9.1';
+    public $version = '4.9.2';
 
     /**
      * WriteWithAI Class
@@ -152,7 +152,7 @@ final class Plugin {
      * Plugin DB Version
      * @var string
      */
-    public $db_version = '1.0.2';
+    public $db_version = '1.0.3';
 
     public function __construct() {
         $this->define_constants();
@@ -512,6 +512,34 @@ final class Plugin {
         return ! $this->is_pro_active() && ! $this->has_glossaries();
     }
 
+    /**
+     * Whether Pro provides the real Content Intelligence screen.
+     *
+     * Pro flips this via `betterdocs_pro_has_content_intelligence`; the
+     * class_exists() default keeps the gate correct against a Pro build that
+     * predates that filter.
+     *
+     * @return bool
+     */
+    public function has_content_intelligence() {
+        return (bool) apply_filters(
+            'betterdocs_pro_has_content_intelligence',
+            class_exists( '\\WPDeveloper\\BetterDocsPro\\Core\\ContentIntelligenceService' )
+        );
+    }
+
+    /**
+     * Whether Free should show its locked Content Intelligence teaser.
+     *
+     * Only without Pro. An older Pro has already paid, so they get nothing here —
+     * they need a plugin update, not an upsell.
+     *
+     * @return bool
+     */
+    public function show_content_intelligence_teaser() {
+        return ! $this->is_pro_active() && ! $this->has_content_intelligence();
+    }
+
     public function pro_version() {
         if ( ! $this->is_pro_active() ) {
             return false;
@@ -565,6 +593,7 @@ final class Plugin {
             'admin_page_betterdocs-admin',
             'betterdocs_page_betterdocs-admin',
             'betterdocs_page_betterdocs-analytics',
+            'betterdocs_page_betterdocs-content-iq',
             'betterdocs_page_betterdocs-settings',
             'betterdocs_page_betterdocs-mcp',
             'betterdocs_page_betterdocs-faq',

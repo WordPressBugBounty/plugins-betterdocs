@@ -336,6 +336,28 @@ class FAQ extends BaseWidget {
 			]
 		);
 
+		$this->add_control(
+			'faq_box_title_background_color',
+			[
+				'label'     => esc_html__( 'Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title' => 'background-color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_background_color_hover',
+			[
+				'label'     => esc_html__( 'Background Hover Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper .betterdocs-faq-inner-wrapper .betterdocs-faq-title:hover' => 'background-color:{{VALUE}};'
+				]
+			]
+		);
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
@@ -376,6 +398,42 @@ class FAQ extends BaseWidget {
 				'selectors' => [
 					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab .faq-tab-title:hover' => 'color:{{VALUE}};',
 					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab .faq-tab-title:hover' => 'color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_background_color_layout_4',
+			[
+				'label'     => esc_html__( 'Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab' => 'background-color:{{VALUE}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab' => 'background-color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_background_color_hover_layout_4',
+			[
+				'label'     => esc_html__( 'Background Hover Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab:hover' => 'background-color:{{VALUE}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab:hover' => 'background-color:{{VALUE}};'
+				]
+			]
+		);
+
+		$this->add_control(
+			'faq_box_title_background_color_active_layout_4',
+			[
+				'label'     => esc_html__( 'Active Background Color', 'betterdocs' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-tab-wrapper .betterdocs-faq-tab.active' => 'background-color:{{VALUE}};',
+					'{{WRAPPER}} .betterdocs-faq-wrapper.betterdocs-faq-layout-4 .betterdocs-faq-inner-wrapper .betterdocs-faq-list-wrapper .betterdocs-faq-tab.active' => 'background-color:{{VALUE}};'
 				]
 			]
 		);

@@ -37,6 +37,7 @@ class Migration extends Base {
 
 		$this->search_migration();
 		$this->fix_search_table_collation();
+		$this->backfill_search_keyword_hash();
 
 		/**
 		 * Settings Migration
@@ -83,10 +84,11 @@ class Migration extends Base {
 						$insert = $wpdb->query(
 							$wpdb->prepare(
 								"INSERT INTO {$wpdb->prefix}betterdocs_search_keyword
-                                ( keyword )
-                                VALUES ( %s )",
+                                ( keyword, keyword_hash )
+                                VALUES ( %s, %s )",
 								[
-									$key
+									$key,
+									md5( $key )
 								]
 							)
 						);
@@ -155,5 +157,54 @@ class Migration extends Base {
 
 		// Mark migration as complete
 		$this->database->save( 'betterdocs_search_collation_fixed', '1.0' );
+	}
+
+	/**
+	 * Populate keyword_hash for rows that predate the column.
+	 *
+	 * The column is added by dbDelta with an empty default; until it holds the
+	 * hash, insert_search_keyword() cannot find those rows by index and would
+	 * insert duplicates. Runs in bounded batches so a large keyword table does
+	 * not stall the request that triggers the upgrade — anything left over is
+	 * picked up on the next admin load.
+	 *
+	 * @since 1.0.3
+	 * @return void
+	 */
+	public function backfill_search_keyword_hash() {
+		global $wpdb;
+
+		if ( $this->database->get( 'betterdocs_search_keyword_hash_filled', false ) ) {
+			return;
+		}
+
+		$table = $wpdb->prefix . 'betterdocs_search_keyword';
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-shot schema backfill; identifier comes from $wpdb.
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+			return;
+		}
+
+		// Bail if the column never made it (dbDelta failed) — retry next load.
+		if ( ! $wpdb->get_results( "SHOW COLUMNS FROM `{$table}` LIKE 'keyword_hash'" ) ) {
+			return;
+		}
+
+		$batches = 0;
+		do {
+			$updated = $wpdb->query(
+				"UPDATE `{$table}` SET keyword_hash = MD5( keyword ) WHERE keyword_hash = '' LIMIT 2000"
+			);
+			$batches++;
+		} while ( $updated > 0 && $batches < 25 );
+
+		// Only finish once nothing is left, so a table larger than 50k keywords
+		// resumes instead of being marked done half-filled.
+		$remaining = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$table}` WHERE keyword_hash = ''" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		if ( 0 === $remaining ) {
+			$this->database->save( 'betterdocs_search_keyword_hash_filled', '1.0.3' );
+		}
 	}
 }

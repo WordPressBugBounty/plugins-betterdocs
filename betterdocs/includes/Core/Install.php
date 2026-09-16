@@ -153,11 +153,18 @@ class Install extends Base {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
+		// keyword_hash exists purely to make the lookup indexable: `keyword` is
+		// TEXT and is matched with BINARY (for collation safety), which no index
+		// can serve — so every front-end search used to full-scan this table.
+		// The hash narrows to a single row via the index; the BINARY comparison
+		// still decides the match, so behaviour is unchanged.
 		$search_keyword_table = $wpdb->prefix . 'betterdocs_search_keyword';
 		$search_keyword       = "CREATE TABLE $search_keyword_table (
             id bigint NOT NULL AUTO_INCREMENT,
             keyword text NOT NULL,
-            PRIMARY KEY (id)
+            keyword_hash char(32) NOT NULL DEFAULT '',
+            PRIMARY KEY (id),
+            KEY keyword_hash (keyword_hash)
         ) {$charset_collate};";
 
 		$search_log_table = $wpdb->prefix . 'betterdocs_search_log';
@@ -205,9 +212,44 @@ class Install extends Base {
 	}
 
 	public function migrate_customizer() {
-		$search_layout = get_theme_mod( 'betterdocs_search_layout_select' );
-		if ( empty( $search_layout ) ) {
-			set_theme_mod( 'betterdocs_search_layout_select', 'layout-1' );
+		/**
+		 * Seed the layout Customizer settings for installs that never explicitly
+		 * picked a layout. Some consumers read the raw theme_mod without a fallback
+		 * (e.g. FrontEnd::article_reactions()), so an unseeded mod can render
+		 * differently from the layout the front-end otherwise defaults to.
+		 *
+		 * Two rules keep this safe and correct:
+		 *   1. Only seed a mod that has never been set ( get_theme_mod() === false ).
+		 *      An explicit choice — including an explicit 'layout-1' — is never
+		 *      overwritten, so existing sites cannot change layout on update.
+		 *   2. Pull the value from Customizer\Defaults (the single source of truth
+		 *      the front-end already renders from) instead of a hardcoded string, so
+		 *      it can never drift from the real default again. Pro defaults are merged
+		 *      in automatically when BetterDocs Pro is active.
+		 */
+		$defaults    = betterdocs()->customizer->defaults->defaults();
+		$layout_mods = [
+			'betterdocs_search_layout_select',
+			'betterdocs_docs_layout_select',
+			'betterdocs_single_layout_select',
+			'betterdocs_archive_layout_select',
+			'betterdocs_select_faq_template',
+			'betterdocs_multikb_layout_select',   // BetterDocs Pro.
+			'betterdocs_select_faq_template_mkb', // BetterDocs Pro.
+		];
+
+		foreach ( $layout_mods as $mod ) {
+			// Respect an explicit user choice (including an explicit 'layout-1').
+			if ( get_theme_mod( $mod, false ) !== false ) {
+				continue;
+			}
+
+			// Only seed when a real default is registered (skips inactive add-ons).
+			if ( empty( $defaults[ $mod ] ) ) {
+				continue;
+			}
+
+			set_theme_mod( $mod, $defaults[ $mod ] );
 		}
 
 		$search_heading = get_theme_mod( 'betterdocs_live_search_heading_switch' );
@@ -215,44 +257,8 @@ class Install extends Base {
 			set_theme_mod( 'betterdocs_live_search_heading_switch', false );
 		}
 
-		$docs_layout = get_theme_mod( 'betterdocs_docs_layout_select' );
-		if ( empty( $docs_layout ) ) {
-			set_theme_mod( 'betterdocs_docs_layout_select', 'layout-1' );
-		}
-
-		$single_layout = get_theme_mod( 'betterdocs_single_layout_select' );
-		if ( empty( $single_layout ) ) {
-			set_theme_mod( 'betterdocs_single_layout_select', 'layout-1' );
-		}
-
-		$category_archive_layout = get_theme_mod( 'betterdocs_archive_layout_select' );
-		if ( empty( $category_archive_layout ) ) {
-			set_theme_mod( 'betterdocs_archive_layout_select', 'layout-1' );
-		}
-
-		$search_layout_select = get_theme_mod( 'betterdocs_search_layout_select' );
-		if ( empty( $search_layout_select ) ) {
-			set_theme_mod( 'betterdocs_search_layout_select', 'layout-1' );
-		}
-
-		$docs_faq = get_theme_mod( 'betterdocs_select_faq_template' );
-		if ( empty( $docs_faq ) ) {
-			set_theme_mod( 'betterdocs_select_faq_template', 'layout-1' );
-		}
-
 		if ( get_option( 'betterdocs_settings' ) && betterdocs()->settings->get( 'enable_estimated_reading_time' ) == false ) {
 			betterdocs()->settings->save( 'enable_estimated_reading_time', false );
-		}
-
-		if ( function_exists( 'betterdocs_pro' ) ) {
-			$mkb_layout = get_theme_mod( 'betterdocs_multikb_layout_select' );
-			if ( empty( $mkb_layout ) ) {
-				set_theme_mod( 'betterdocs_multikb_layout_select', 'layout-1' );
-			}
-			$mkb_faq = get_theme_mod( 'betterdocs_select_faq_template_mkb' );
-			if ( empty( $mkb_faq ) ) {
-				set_theme_mod( 'betterdocs_select_faq_template_mkb', 'layout-1' );
-			}
 		}
 	}
 }

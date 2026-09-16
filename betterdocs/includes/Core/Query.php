@@ -38,6 +38,10 @@ class Query extends Base {
         add_action( 'created_doc_category', array( $this, 'flush_term_counts_cache' ) );
         add_action( 'delete_doc_category', array( $this, 'flush_term_counts_cache' ) );
         add_action( 'set_object_terms', array( $this, 'flush_term_counts_cache_on_set' ), 10, 4 );
+        // wp_update_term_count_now() — the `wp term recount` repair path, and any core
+        // count update — fires edited_term_taxonomy, not any of the above. Without this
+        // the recount fixes the DB while we keep serving the cached counts (#166).
+        add_action( 'edited_term_taxonomy', array( $this, 'flush_term_counts_cache_on_term_taxonomy' ), 10, 2 );
 
         /**
          * These below filters are hooked for navigation only.
@@ -1279,6 +1283,29 @@ class Query extends Base {
         }
     }
 
+    /**
+     * Invalidate the count cache when a term count is recalculated.
+     *
+     * wp_update_term_count_now() (a recount, `wp term recount`, or any core count
+     * update) fires edited_term_taxonomy for each affected term. The version bump is
+     * a single update_option, so it is debounced to once per request with a static
+     * flag: one bump already invalidates every cached count, and a bulk recount would
+     * otherwise write the option once per term. (#166)
+     *
+     * @param int    $tt_id    Term taxonomy id.
+     * @param string $taxonomy Taxonomy name.
+     */
+    public function flush_term_counts_cache_on_term_taxonomy( $tt_id, $taxonomy ) {
+        static $flushed = false;
+
+        if ( $flushed || ! in_array( $taxonomy, array( 'doc_category', 'knowledge_base' ), true ) ) {
+            return;
+        }
+
+        $this->flush_term_counts_cache();
+        $flushed = true;
+    }
+
     public function get_docs_count( $term, $nested_subcategory = false, $args = array() ) {
         // Validate term object
         if ( ! is_object( $term ) ) {
@@ -1490,14 +1517,20 @@ class Query extends Base {
 
         global $wpdb;
 
+        $keyword_hash = md5( $search_input );
+
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- live search-keyword analytics; cache would defeat the purpose.
-        // Use BINARY comparison to avoid collation mismatch errors
-        // This works across all character sets (latin1, utf8, utf8mb4, etc.)
+        // Matched on keyword_hash first so the index can serve the lookup — the
+        // BINARY comparison that follows is what actually decides equality (it
+        // avoids collation mismatch errors across latin1/utf8/utf8mb4), but no
+        // index can serve it, so on its own it full-scanned the table on every
+        // single front-end search.
         $search = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT *
                 FROM {$wpdb->prefix}betterdocs_search_keyword
-                WHERE BINARY keyword = %s",
+                WHERE keyword_hash = %s AND BINARY keyword = %s",
+                $keyword_hash,
                 $search_input
             )
         );
@@ -1558,10 +1591,11 @@ class Query extends Base {
             $insert = $wpdb->query(
                 $wpdb->prepare(
                     "INSERT INTO {$wpdb->prefix}betterdocs_search_keyword
-                    ( keyword )
-                    VALUES ( %s )",
+                    ( keyword, keyword_hash )
+                    VALUES ( %s, %s )",
                     array(
-                        $search_input
+                        $search_input,
+                        $keyword_hash
                     )
                 )
             );
