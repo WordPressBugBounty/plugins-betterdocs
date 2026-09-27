@@ -344,7 +344,7 @@ class CreateTerm extends AbilityBase {
 	 * The glossary-only term metas, validated against the taxonomy in play.
 	 *
 	 * `status` is the string `'1'` / `'0'` the feature stores — that is what
-	 * `Core\Glossaries::update_glossary_status()` writes and what the admin
+	 * `BetterDocsPro\Core\Glossaries::update_glossary_status()` writes and what the admin
 	 * screen and the A–Z front end read — so the tools take the readable
 	 * `publish` / `draft` and map it. `order` is stored as a string too, and
 	 * lowest sorts first.

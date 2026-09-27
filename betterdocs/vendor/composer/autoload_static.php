@@ -420,7 +420,6 @@ class ComposerStaticInit3ce4b42d4553d2813f3c2fc3abece7bf
         'WPDeveloper\\BetterDocs\\Core\\ArticleSummary' => __DIR__ . '/../..' . '/includes/Core/ArticleSummary.php',
         'WPDeveloper\\BetterDocs\\Core\\BaseAPI' => __DIR__ . '/../..' . '/includes/Core/BaseAPI.php',
         'WPDeveloper\\BetterDocs\\Core\\FAQBuilder' => __DIR__ . '/../..' . '/includes/Core/FAQBuilder.php',
-        'WPDeveloper\\BetterDocs\\Core\\Glossaries' => __DIR__ . '/../..' . '/includes/Core/Glossaries.php',
         'WPDeveloper\\BetterDocs\\Core\\Install' => __DIR__ . '/../..' . '/includes/Core/Install.php',
         'WPDeveloper\\BetterDocs\\Core\\KBMigration' => __DIR__ . '/../..' . '/includes/Core/KBMigration.php',
         'WPDeveloper\\BetterDocs\\Core\\Migration' => __DIR__ . '/../..' . '/includes/Core/Migration.php',

@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.2
+Stable tag: 4.9.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -253,6 +253,15 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 
 == Changelog ==
+
+= 4.9.3 - 27/09/2026 =
+
+- Fixed: Doc URLs that do not exist now return a proper 404 instead of an empty page, on sites using category-in-path permalinks
+- Fixed: Live search returned no results when the knowledge base is served from a subdomain or a domain alias
+- Fixed: Single Doc Layout 5 no longer shows Table of Contents Background, Hover and Padding controls that had no effect on the page
+- Fixed: Encyclopedia entries are now listed alphabetically within each letter, instead of newest first
+- Fixed: MCP OAuth discovery could answer for — or be answered by — another MCP-enabled plugin on the same site, so connecting clients were handed metadata for the wrong plugin
+- Few minor bug fixes and improvements
 
 = 4.9.2 - 16/09/2026 =
 

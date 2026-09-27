@@ -14,16 +14,17 @@ use WPDeveloper\BetterDocs\Utils\Database;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class PostType extends Base {
-	public $post_type  = 'docs';
-	public $position   = 5;
-	public $category   = 'doc_category';
+	public $post_type = 'docs';
+	public $position  = 5;
+	public $category  = 'doc_category';
+	public $tag       = 'doc_tag';
+	// Owned by Pro (BetterDocsPro\Core\GlossaryTaxonomy) as of Pro 4.3.1. Free
+	// only registers it as a backward-compat shim for older Pro — see register().
 	public $glossaries = 'glossaries';
-	public $tag        = 'doc_tag';
 
 	public $docs_archive;
 	public $docs_slug;
 	public $cat_slug;
-	public $glossaries_slug;
 	/**
 	 * Database
 	 * @var Database
@@ -53,20 +54,9 @@ class PostType extends Base {
 		$this->settings = $container->get( Settings::class );
 		$this->rewrite  = $container->get( Rewrite::class );
 
-		$this->docs_archive    = $this->docs_slug();
-		$this->docs_slug       = $this->docs_slug();
-		$this->cat_slug        = $this->category_slug();
-		$this->glossaries_slug = $this->glossaries_slug();
-
-		add_action( "{$this->glossaries}_add_form_fields", [ $this, 'add_glossary_term_fields' ] );
-		add_action( "{$this->glossaries}_edit_form_fields", [ $this, 'edit_glossary_term_fields' ] );
-		add_action( "created_{$this->glossaries}", [ $this, 'save_glossary_term_fields' ] );
-		add_action( "edited_{$this->glossaries}", [ $this, 'save_glossary_term_fields' ] );
-		add_filter( "manage_edit-{$this->glossaries}_columns", [ $this, 'add_glossary_custom_column' ] );
-		add_filter( "manage_{$this->glossaries}_custom_column", [ $this, 'manage_glossary_custom_column' ], 10, 3 );
-
-		// Hide default description field for glossaries taxonomy
-		add_action( 'admin_head', [ $this, 'hide_glossaries_default_description' ] );
+		$this->docs_archive = $this->docs_slug();
+		$this->docs_slug    = $this->docs_slug();
+		$this->cat_slug     = $this->category_slug();
 	}
 
 	public static function permalink_structure() {
@@ -1261,8 +1251,16 @@ class PostType extends Base {
 		$this->register_post_type();
 		$this->register_category_taxonomy();
 
-		$is_enable_glossary = betterdocs()->settings->get( 'enable_glossaries', false );
-		if ( $is_enable_glossary && betterdocs()->is_pro_active() ) {
+		// The `glossaries` taxonomy is normally registered by Pro
+		// (BetterDocsPro\Core\GlossaryTaxonomy) as of Pro 4.3.1 — Glossaries is a
+		// Pro feature. But an OLDER Pro (< 4.3.1) still expects Free to own it (it
+		// was a Free feature before the move) and does not register it itself. In
+		// that transition window nobody would register `glossaries`, so its terms
+		// become unqueryable and encyclopedia/glossary permalinks fall back to the
+		// archive page. Register it here as a backward-compat shim ONLY while an
+		// outdated Pro is active; Pro 4.3.1+ (has_glossaries) owns it, so this is
+		// skipped then and never double-registers.
+		if ( betterdocs()->settings->get( 'enable_glossaries', false ) && betterdocs()->glossaries_needs_pro_update() ) {
 			$this->register_glossaries_taxonomy();
 		}
 
@@ -1381,158 +1379,6 @@ class PostType extends Base {
 		register_taxonomy( $this->category, [ $this->post_type ], $category_args );
 	}
 
-	public function register_glossaries_taxonomy() {
-		$encyclopedia_root_slug = betterdocs()->settings->get( 'encyclopedia_root_slug', 'encyclopedia' );
-
-		$labels = [
-			'name'              => __( 'Glossaries Terms', 'betterdocs' ),
-			'singular_name'     => __( 'Glossaries Term', 'betterdocs' ),
-			'all_items'         => __( 'Glossaries Terms', 'betterdocs' ),
-			'parent_item'       => __( 'Parent Glossaries Term', 'betterdocs' ),
-			'parent_item_colon' => __( 'Parent Glossaries Term:', 'betterdocs' ),
-			'edit_item'         => __( 'Edit Term', 'betterdocs' ),
-			'update_item'       => __( 'Update Glossary', 'betterdocs' ),
-			'add_new_item'      => __( 'Add New Glossaries Term', 'betterdocs' ),
-			'new_item_name'     => __( 'New Glossaries Term Name', 'betterdocs' ),
-			'menu_name'         => __( 'Glossaries', 'betterdocs' )
-		];
-
-		$args = [
-			'hierarchical'      => true,
-			'public'            => true,
-			'labels'            => $labels,
-			'show_ui'           => true,
-			'show_in_menu'      => true,
-			'show_admin_column' => true,
-			'query_var'         => true,
-			'show_in_rest'      => true,
-			'has_archive'       => true,
-			'rewrite'           => [
-				'slug'       => $encyclopedia_root_slug,
-				'with_front' => false,
-			],
-			'capabilities'      => [
-				'manage_terms' => 'manage_doc_terms',
-				'edit_terms'   => 'edit_doc_terms',
-				'delete_terms' => 'delete_doc_terms',
-				'assign_terms' => 'edit_docs'
-			]
-		];
-
-		// Register the custom taxonomy
-		register_taxonomy( $this->glossaries, [ $this->post_type ], $args );
-
-		// Customize rewrite rules for the custom taxonomy
-		global $wp_rewrite;
-		$wp_rewrite->extra_permastructs[ $this->glossaries ]['struct'] = '/' . $encyclopedia_root_slug . '/%' . $this->glossaries . '%';
-
-		// Flush rewrite rules to ensure the new structure takes effect
-		add_action( 'init', 'flush_rewrite_rules', 999 );
-	}
-
-	public function add_glossary_term_fields( $taxonomy ) {
-		?>
-		<div class="form-field term-custom-field-wrap">
-			<label for="glossary_term_description"><?php esc_html_e( 'Glossary Term Description', 'betterdocs' ); ?></label>
-			<textarea
-				name="glossary_term_description"
-				id="glossary_term_description"
-				rows="5"
-				cols="50"
-				class="large-text"
-				placeholder="<?php esc_attr_e( 'Enter a description for the glossary term', 'betterdocs' ); ?>"
-			></textarea>
-			<p class="description"><?php echo esc_html_e( 'Enter a description for the glossary term', 'betterdocs' ); ?></p>
-		</div>
-		<?php wp_nonce_field( 'save_glossary_term_description', 'glossary_term_description_nonce' ); ?>
-		<?php
-	}
-
-	public function edit_glossary_term_fields( $term ) {
-		$glossary_term_description = get_term_meta( $term->term_id, 'glossary_term_description', true );
-		?>
-		<tr class="form-field term-custom-field-wrap">
-			<th scope="row"><label for="glossary_term_description"><?php esc_html_e( 'Glossary Term Description', 'betterdocs' ); ?></label></th>
-			<td>
-				<?php
-				wp_editor(
-					$glossary_term_description,
-					'glossary_term_description',
-					[
-						'textarea_name' => 'glossary_term_description',
-						'textarea_rows' => 5,
-						'media_buttons' => false,
-						'tinymce'       => true,
-						'quicktags'     => true,
-					]
-				);
-				wp_nonce_field( 'save_glossary_term_description', 'glossary_term_description_nonce' );
-				?>
-				<p class="description"><?php esc_html_e( 'Enter a description for the glossary term', 'betterdocs' ); ?></p>
-			</td>
-		</tr>
-		<?php
-	}
-
-	public function save_glossary_term_fields($term_id) {
-		// Check if we're in admin and this is a glossaries taxonomy operation
-		if (!is_admin()) {
-			return;
-		}
-
-		// Verify this is for glossaries taxonomy
-		$taxonomy = isset( $_POST['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : '';
-		if ( $taxonomy !== 'glossaries' ) {
-			return;
-		}
-
-		// Verify nonce for security
-		$nonce = isset( $_POST['glossary_term_description_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['glossary_term_description_nonce'] ) ) : '';
-		if ( ! wp_verify_nonce( $nonce, 'save_glossary_term_description' ) ) {
-			return;
-		}
-
-		// Check if 'glossary_term_description' is set in $_POST
-		if (isset($_POST['glossary_term_description'])) {
-			// Sanitize the content using wp_kses_post
-			$description = wp_kses_post(wp_unslash($_POST['glossary_term_description']));
-
-			// Save the sanitized value to term meta
-			update_term_meta($term_id, 'glossary_term_description', $description);
-		}
-	}
-
-
-	public function add_glossary_custom_column( $columns ) {
-		$columns['glossary_term_description'] = __( 'Glossary Term Description', 'betterdocs' );
-		return $columns;
-	}
-
-	public function manage_glossary_custom_column( $content, $column_name, $term_id ) {
-		if ( $column_name === 'glossary_term_description' ) {
-			$content = get_term_meta( $term_id, 'glossary_term_description', true );
-		}
-		return $content;
-	}
-
-	/**
-	 * Hide default description field for glossaries taxonomy
-	 */
-	public function hide_glossaries_default_description() {
-		$screen = get_current_screen();
-		if ( $screen && $screen->taxonomy === 'glossaries' ) {
-			?>
-			<style type="text/css">
-				.term-description-wrap,
-				.form-field.term-description-wrap {
-					display: none !important;
-				}
-			</style>
-			<?php
-		}
-	}
-
-
 	/**
 	 * Register the taxonomy for Tags.
 	 *
@@ -1588,6 +1434,92 @@ class PostType extends Base {
 	}
 
 	/**
+	 * Backward-compatibility registration of the `glossaries` taxonomy.
+	 *
+	 * Glossaries moved from Free to Pro in Pro 4.3.1, which registers the
+	 * taxonomy itself. Free only calls this while an OLDER Pro (< 4.3.1) is
+	 * active — see register() — so that glossary terms stay queryable and their
+	 * encyclopedia permalinks keep resolving during the update window. Mirrors
+	 * the pre-move Free registration, minus the flush-on-every-request it used to
+	 * do: the flush here is one-time, guarded by an option, and only re-runs if
+	 * the encyclopedia base slug changes.
+	 *
+	 * @return void
+	 */
+	public function register_glossaries_taxonomy() {
+		$encyclopedia_root_slug = betterdocs()->settings->get( 'encyclopedia_root_slug', 'encyclopedia' );
+
+		$labels = [
+			'name'              => __( 'Glossaries Terms', 'betterdocs' ),
+			'singular_name'     => __( 'Glossaries Term', 'betterdocs' ),
+			'all_items'         => __( 'Glossaries Terms', 'betterdocs' ),
+			'parent_item'       => __( 'Parent Glossaries Term', 'betterdocs' ),
+			'parent_item_colon' => __( 'Parent Glossaries Term:', 'betterdocs' ),
+			'edit_item'         => __( 'Edit Term', 'betterdocs' ),
+			'update_item'       => __( 'Update Glossary', 'betterdocs' ),
+			'add_new_item'      => __( 'Add New Glossaries Term', 'betterdocs' ),
+			'new_item_name'     => __( 'New Glossaries Term Name', 'betterdocs' ),
+			'menu_name'         => __( 'Glossaries', 'betterdocs' )
+		];
+
+		// Read/routing-only shim. Editing glossary terms is intentionally locked
+		// while Pro is outdated — Free shows the "update Pro to manage Glossaries"
+		// teaser (show_glossary_teaser()). We must NOT expose the classic taxonomy
+		// admin screen: old Free persisted the definition to the `glossary_term_description`
+		// term meta via now-removed save hooks, so the native description field here
+		// would write the wrong field and desync old Pro's block/widget (which read
+		// the meta). Keep the taxonomy public + queryable for front-end permalinks,
+		// but keep every admin/editing surface off so there is no corruption path.
+		$args = [
+			'hierarchical'      => true,
+			'public'            => true,
+			'labels'            => $labels,
+			'show_ui'           => false,
+			'show_in_menu'      => false,
+			'show_admin_column' => false,
+			'query_var'         => true,
+			'show_in_rest'      => false,
+			'has_archive'       => true,
+			'rewrite'           => [
+				'slug'       => $encyclopedia_root_slug,
+				'with_front' => false,
+			],
+			'capabilities'      => [
+				'manage_terms' => 'manage_doc_terms',
+				'edit_terms'   => 'edit_doc_terms',
+				'delete_terms' => 'delete_doc_terms',
+				'assign_terms' => 'edit_docs'
+			]
+		];
+
+		register_taxonomy( $this->glossaries, [ $this->post_type ], $args );
+
+		// Keep the hierarchical term permastruct old Pro relied on: /<root>/<term>.
+		global $wp_rewrite;
+		$wp_rewrite->extra_permastructs[ $this->glossaries ]['struct'] = '/' . $encyclopedia_root_slug . '/%' . $this->glossaries . '%';
+
+		// One-time flush so the taxonomy's rewrite rules exist in the DB when this
+		// compat registration first activates (or the base slug changes). Guarded
+		// by an option so it does NOT flush on every request. register() runs on
+		// `init` priority 9, so the 999 flush fires later in the same request. The
+		// completion marker is written INSIDE the flush callback (after the flush
+		// actually runs), so a request that dies before init:999 does not mark the
+		// job done — it simply retries next request rather than leaving the rewrite
+		// rules permanently unflushed.
+		$flush_marker = 'compat:' . $encyclopedia_root_slug;
+		if ( get_option( 'betterdocs_glossaries_compat_rewrite' ) !== $flush_marker ) {
+			add_action(
+				'init',
+				function () use ( $flush_marker ) {
+					flush_rewrite_rules();
+					update_option( 'betterdocs_glossaries_compat_rewrite', $flush_marker, false );
+				},
+				999
+			);
+		}
+	}
+
+	/**
 	 * Get Docs Slug
 	 *
 	 * @since 1.0.0
@@ -1605,9 +1537,6 @@ class PostType extends Base {
 	 */
 	private function category_slug() {
 		return $this->settings->get( 'category_slug', 'docs-category' );
-	}
-	private function glossaries_slug() {
-		return 'glossaries';
 	}
 
 	public function highlight_admin_menu( $parent_file ) {

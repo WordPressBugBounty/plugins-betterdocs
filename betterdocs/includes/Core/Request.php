@@ -949,12 +949,38 @@ class Request extends Base {
 			// Check if we have 'docs' query var (alternative to 'name')
 			if ( isset( $wp_query->query_vars['docs'] ) && ! empty( $wp_query->query_vars['docs'] ) ) {
 
+				// Verify the requested doc actually exists (and is visible to the
+				// current user) before forcing a single-doc render. Category-in-path
+				// permalinks put the doc slug in the `docs` var alongside a valid
+				// doc_category; without this guard a missing slug under a real
+				// category rendered the single template against a null post — an
+				// HTTP 200 soft-404 plus "read property on null" warnings on every
+				// (often bot) hit. See betterdocs/betterdocs#169.
+				$doc_post    = get_page_by_path( $wp_query->query_vars['docs'], OBJECT, 'docs' );
+				$doc_visible = $doc_post
+					&& ( 'private' !== $doc_post->post_status || current_user_can( 'read_private_docs' ) );
+
+				if ( ! $doc_visible ) {
+					// No such doc (or private and not permitted) — serve a genuine
+					// 404 instead of a single render against a null post.
+					$wp_query->set_404();
+					status_header( 404 );
+					nocache_headers();
+					add_filter( 'template_include', function( $template ) {
+						$not_found = get_404_template();
+						return $not_found ? $not_found : $template;
+					}, 999 );
+					return;
+				}
+
 				// Explicitly set this as a single post
-				$wp_query->is_single = true;
-				$wp_query->is_singular = true;
-				$wp_query->is_404 = false;
-				$wp_query->is_archive = false;
-				$wp_query->is_tax = false;
+				$wp_query->is_single         = true;
+				$wp_query->is_singular       = true;
+				$wp_query->is_404            = false;
+				$wp_query->is_archive        = false;
+				$wp_query->is_tax            = false;
+				$wp_query->queried_object    = $doc_post;
+				$wp_query->queried_object_id = $doc_post->ID;
 				return;
 			}
 			
@@ -1076,6 +1102,22 @@ class Request extends Base {
 			(isset($wp_query->query_vars['doc_category']) && ! empty($wp_query->query_vars['doc_category'])) ||
 			(isset($wp_query->query_vars['doc_tag']) && ! empty($wp_query->query_vars['doc_tag']))
 		) ) {
+			// A single-doc request (category-in-path permalinks carry the doc slug
+			// in the `docs`/`name` var alongside doc_category) must resolve to a real
+			// doc. A valid doc is already served 200 by the queried-object branch
+			// above; if we reach here with a single-doc indicator but no resolvable
+			// post, the doc does not exist — keep the genuine 404 rather than forcing
+			// a soft-404 200 off the category term alone. See betterdocs/betterdocs#169.
+			$single_doc_slug = '';
+			if ( isset( $wp_query->query_vars['docs'] ) && ! empty( $wp_query->query_vars['docs'] ) ) {
+				$single_doc_slug = $wp_query->query_vars['docs'];
+			} elseif ( isset( $wp_query->query_vars['name'] ) && ! empty( $wp_query->query_vars['name'] ) ) {
+				$single_doc_slug = $wp_query->query_vars['name'];
+			}
+			if ( '' !== $single_doc_slug && ! get_page_by_path( $single_doc_slug, OBJECT, 'docs' ) ) {
+				return $status_header;
+			}
+
 			// Validate existence before forcing 200
 			// Use encoded fallback so Bengali/Arabic/CJK slugs are found correctly.
 			if ( isset($wp_query->query_vars['doc_category']) && ! empty($wp_query->query_vars['doc_category']) ) {

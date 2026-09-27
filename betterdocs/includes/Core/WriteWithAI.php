@@ -65,9 +65,9 @@ if ( ! defined( 'ABSPATH' ) ) {
         $model_labels    = ModelRegistry::models( $active_platform );
 
         // Glossary suggestions are existing-terms-only, and the glossaries taxonomy is only
-        // registered for Pro (see Core\PostType::register_glossaries_taxonomy). So the "Suggest
-        // glossaries" control must require, on top of the two settings, that Pro is active AND at
-        // least one glossary term exists — otherwise the modal advertises an offer that can never
+        // registered by Pro (see BetterDocsPro\Core\GlossaryTaxonomy::register_glossaries_taxonomy).
+        // So the "Suggest glossaries" control must require, on top of the two settings, that Pro is
+        // active AND at least one glossary term exists — otherwise the modal advertises an offer that can never
         // return anything. Mirrors the Docs-AI-suite availability check in Core\DocsAISuite.
         $glossary_count               = wp_count_terms( array( 'taxonomy' => 'glossaries', 'hide_empty' => false ) );
         $has_glossary_terms           = ! is_wp_error( $glossary_count ) && (int) $glossary_count > 0;

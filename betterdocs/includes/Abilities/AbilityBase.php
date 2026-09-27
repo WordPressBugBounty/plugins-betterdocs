@@ -67,7 +67,7 @@ abstract class AbilityBase {
 	 * The glossary taxonomy's own description meta.
 	 *
 	 * BetterDocs drains the term's native `description` into this key and blanks
-	 * the column (`Core\Glossaries::update_glossary_term()`), and both the admin
+	 * the column (`BetterDocsPro\Core\Glossaries::update_glossary_term()`), and both the admin
 	 * screen and the A–Z front end read this first, so for `glossaries` the
 	 * tools' `description` field is this meta (ADR-061).
 	 *

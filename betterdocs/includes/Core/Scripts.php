@@ -115,7 +115,10 @@ class Scripts extends Base {
 			'betterdocs-search',
 			'betterdocsSearchConfig',
 			[
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
+				// Root-relative so live search stays same-origin when the KB is
+				// served on a different host than the Site Address (subdomain /
+				// domain alias / reverse proxy). See Helper::frontend_ajax_url().
+				'ajax_url'            => Helper::frontend_ajax_url(),
 				'search_letter_limit' => $this->settings->get( 'search_letter_limit' )
 			]
 		);
@@ -124,7 +127,8 @@ class Scripts extends Base {
 			'betterdocs-search-modal',
 			'betterdocsSearchModalConfig',
 			[
-				'ajax_url'               => admin_url( 'admin-ajax.php' ),
+				// Same-origin (see betterdocsSearchConfig above).
+				'ajax_url'               => Helper::frontend_ajax_url(),
 				'rest_url' 			     => esc_url_raw(rest_url()),
 				'advance_search'         => $this->settings->get( 'advance_search' ),
 				'child_category_exclude' => $this->settings->get( 'child_category_exclude' ),

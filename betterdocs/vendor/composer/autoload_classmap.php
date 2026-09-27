@@ -358,7 +358,6 @@ return array(
     'WPDeveloper\\BetterDocs\\Core\\ArticleSummary' => $baseDir . '/includes/Core/ArticleSummary.php',
     'WPDeveloper\\BetterDocs\\Core\\BaseAPI' => $baseDir . '/includes/Core/BaseAPI.php',
     'WPDeveloper\\BetterDocs\\Core\\FAQBuilder' => $baseDir . '/includes/Core/FAQBuilder.php',
-    'WPDeveloper\\BetterDocs\\Core\\Glossaries' => $baseDir . '/includes/Core/Glossaries.php',
     'WPDeveloper\\BetterDocs\\Core\\Install' => $baseDir . '/includes/Core/Install.php',
     'WPDeveloper\\BetterDocs\\Core\\KBMigration' => $baseDir . '/includes/Core/KBMigration.php',
     'WPDeveloper\\BetterDocs\\Core\\Migration' => $baseDir . '/includes/Core/Migration.php',

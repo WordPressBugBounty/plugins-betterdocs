@@ -92,6 +92,15 @@ final class MCPManager {
 	const AUTHORIZE_QUERY_VAR = 'betterdocs_mcp_authorize';
 
 	/**
+	 * Bumped whenever the rewrite rule *set* changes shape, to force a single
+	 * flush that evicts rules retired in an earlier version. Stored against
+	 * `betterdocs_mcp_rewrite_ver`; see {@see self::maybe_flush()}.
+	 *
+	 * @since 4.9.3
+	 */
+	const REWRITE_VER = '2';
+
+	/**
 	 * Whether a rewrite flush has already been triggered this request.
 	 *
 	 * @since 4.9.0
@@ -134,6 +143,13 @@ final class MCPManager {
 
 		add_action( 'init', [ $this, 'add_rewrite' ] );
 		add_filter( 'query_vars', [ $this, 'register_query_vars' ] );
+		// Claim our own discovery URLs on `do_parse_request`, which runs before
+		// the rewrite table is even consulted, so another plugin's broad
+		// `.well-known/oauth-*` catch-all rewrite cannot answer BetterDocs' own
+		// discovery URL with its `resource`. Scoped to `betterdocs/mcp` only —
+		// this never intercepts anyone else's path. Priority 0 so it wins over a
+		// rival that also hooks here late.
+		add_filter( 'do_parse_request', [ $this, 'serve_own_discovery' ], 0 );
 		add_action( 'parse_request', [ $this, 'maybe_handle_pretty_endpoint' ] );
 		add_action( 'rest_api_init', [ $this, 'register_rest' ] );
 		add_action( 'admin_notices', [ $this, 'warn_when_runtime_missing' ] );
@@ -183,17 +199,16 @@ final class MCPManager {
 			add_rewrite_rule( $regex, $query, 'top' );
 		}
 
-		// Root-form fallback, for clients that only ever try the bare
-		// well-known URL. Harmless when another plugin registers the same
-		// regex — last registrant wins, and our own clients use the
-		// path-suffixed form above. Deliberately outside self::rules(), so a
-		// plugin that took it from us does not make us flush on every request.
-		add_rewrite_rule(
-			'^\.well-known/oauth-(protected-resource|authorization-server)(?:/.*)?/?$',
-			'index.php?' . self::WELLKNOWN_QUERY_VAR . '=$matches[1]',
-			'top'
-		);
-
+		// No broad `(?:/.*)?` catch-all: that regex is identical across every
+		// plugin built on this transport, so it becomes a single shared rewrite
+		// key whose winner answers *every* plugin's `/.well-known/oauth-*/*`
+		// discovery URL — returning its own `resource` for a path it does not
+		// own, which RFC 9728 clients reject on the exact-match check. Each rule
+		// in self::rules() is scoped to `betterdocs/mcp`, so only our own
+		// discovery URLs route here. The bare-root form is intentionally not
+		// served: RFC 9728 clients derive the path-suffixed URL from the MCP
+		// endpoint, and a suffix-less URL cannot disambiguate two MCP plugins on
+		// one site anyway.
 		self::maybe_flush();
 	}
 
@@ -232,6 +247,19 @@ final class MCPManager {
 			return;
 		}
 
+		// One-time flush when the rule set changes shape between versions. The
+		// missing-rule check below only *adds* rules; it never evicts one that
+		// was removed — such as the retired `(?:/.*)?` catch-all, which would
+		// otherwise linger in the stored table and keep answering other plugins'
+		// discovery URLs until permalinks were re-saved by hand.
+		if ( self::REWRITE_VER !== (string) get_option( 'betterdocs_mcp_rewrite_ver', '' ) ) {
+			self::$flushed = true;
+			flush_rewrite_rules( false );
+			update_option( 'betterdocs_mcp_rewrite_ver', self::REWRITE_VER, false );
+
+			return;
+		}
+
 		$rules = get_option( 'rewrite_rules' );
 
 		if ( ! is_array( $rules ) ) {
@@ -267,6 +295,50 @@ final class MCPManager {
 		$vars[] = self::AUTHORIZE_QUERY_VAR;
 
 		return $vars;
+	}
+
+	/**
+	 * Serve BetterDocs' own OAuth discovery documents straight from the request
+	 * URI, before WordPress matches any rewrite rule.
+	 *
+	 * This is what makes the discovery URLs hijack-proof: the rewrite table is a
+	 * flat, order-dependent list shared by every plugin, so a plugin whose broad
+	 * `.well-known/oauth-*` catch-all happens to sit above our path-specific rule
+	 * would otherwise answer our own URL with its `resource`. Matching the URI
+	 * here — on `do_parse_request`, before rules are consulted — sidesteps that
+	 * ordering entirely. The patterns are anchored to `betterdocs/mcp`, so this
+	 * only ever claims BetterDocs' own paths and never intercepts another
+	 * plugin's discovery URL. When MCP is off it does nothing and lets the
+	 * request fall through.
+	 *
+	 * @since 4.9.3
+	 *
+	 * @param bool $continue Whether WordPress should continue parsing the request.
+	 * @return bool The unchanged flag when this is not one of our URLs; otherwise
+	 *              the response is emitted and the request exits.
+	 */
+	public function serve_own_discovery( $continue ) {
+		if ( ! self::is_enabled() ) {
+			return $continue;
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path only, matched with a literal-anchored regex, never stored or output.
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+
+		// RFC 9728 path-insert form and the OIDC suffix form both name a document.
+		if (
+			preg_match( '#/\.well-known/oauth-(protected-resource|authorization-server)/betterdocs/mcp/?$#', $path, $m )
+			|| preg_match( '#/betterdocs/mcp/\.well-known/oauth-(protected-resource|authorization-server)/?$#', $path, $m )
+		) {
+			$this->emit_discovery( $m[1] );
+		}
+
+		if ( preg_match( '#/betterdocs/mcp/\.well-known/openid-configuration/?$#', $path ) ) {
+			$this->emit_discovery( 'authorization-server' );
+		}
+
+		return $continue;
 	}
 
 	/**
@@ -350,7 +422,18 @@ final class MCPManager {
 	 * @return void
 	 */
 	private function emit_discovery( $doc ) {
-		if ( ! self::is_enabled() ) {
+		// Only answer BetterDocs' own discovery URLs. Every rule that sets the
+		// well-known query var carries `betterdocs/mcp` in its path, so a request
+		// that lacks it reached here through some other plugin's catch-all
+		// rewrite — 404 rather than hand back BetterDocs metadata for a resource
+		// we do not own (which an RFC 9728 client would reject anyway). This also
+		// guards the window after an upgrade, before a retired catch-all is
+		// flushed out of the stored rewrite table.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- path only, compared with strpos, never stored or output.
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$path = (string) wp_parse_url( $uri, PHP_URL_PATH );
+
+		if ( ! self::is_enabled() || false === strpos( $path, 'betterdocs/mcp' ) ) {
 			status_header( 404 );
 			exit;
 		}

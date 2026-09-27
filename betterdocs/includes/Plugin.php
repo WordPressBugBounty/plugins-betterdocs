@@ -133,7 +133,7 @@ final class Plugin {
      * Plugin Version
      * @var string
      */
-    public $version = '4.9.2';
+    public $version = '4.9.3';
 
     /**
      * WriteWithAI Class
@@ -486,30 +486,62 @@ final class Plugin {
     }
 
     /**
-     * Whether the real Glossaries screen is available (i.e. Pro is licensing it).
+     * Whether the real Glossaries screen is available (i.e. Pro is providing it).
      *
-     * Glossaries ships in Free's code but is Pro-licensed, so unlike API Docs there
-     * is no separate Pro class to detect — the gate is simply Pro being active. Kept
-     * behind a filter so Pro/add-ons can flip it explicitly, mirroring
-     * `betterdocs_pro_has_api_docs`.
+     * Glossaries now lives in Pro (moved out of Free), so — like Content
+     * Intelligence and API Docs — there is a concrete Pro class to detect. The
+     * class_exists() default keeps the gate correct against a Pro build that
+     * predates the move (that Pro is active but does NOT ship the manager, so
+     * this must be false, not simply `is_pro_active()`); the filter lets Pro/add-ons
+     * flip it explicitly.
      *
      * @return bool
      */
     public function has_glossaries() {
-        return (bool) apply_filters( 'betterdocs_pro_has_glossaries', $this->is_pro_active() );
+        return (bool) apply_filters(
+            'betterdocs_pro_has_glossaries',
+            class_exists( '\\WPDeveloper\\BetterDocsPro\\Core\\GlossaryTaxonomy' )
+        );
     }
 
     /**
-     * Whether Free should show its locked Glossaries teaser.
+     * Whether Free should render its locked Glossaries screen instead of the real
+     * manager.
      *
-     * Only without Pro — an active Pro either has the feature or has simply left it
-     * disabled in settings; neither case wants an upsell. Mirrors
-     * show_api_docs_teaser().
+     * True whenever the Pro manager is not available — i.e. Pro is off (a genuine
+     * upsell) OR an older Pro that predates the glossaries move is active (it can no
+     * longer provide the manager, so the slot must not be left blank). Only a Pro new
+     * enough to ship GlossaryTaxonomy hides this and takes over the route.
      *
      * @return bool
      */
     public function show_glossary_teaser() {
-        return ! $this->is_pro_active() && ! $this->has_glossaries();
+        return ! $this->has_glossaries();
+    }
+
+    /**
+     * Whether the locked Glossaries screen is showing because an *outdated* Pro
+     * is active (as opposed to no Pro at all).
+     *
+     * Glossaries moved into Pro, so a Pro that predates the move is active but no
+     * longer provides the manager. That user already owns Pro, so the locked
+     * screen must ask them to UPDATE Pro rather than upsell "get Pro". Mirrors the
+     * has_glossaries() capability check.
+     *
+     * @return bool
+     */
+    public function glossaries_needs_pro_update() {
+        return $this->is_pro_active() && ! $this->has_glossaries();
+    }
+
+    /**
+     * The BetterDocs Pro version that first ships the Glossaries manager, shown in
+     * the "please update Pro" copy. Filterable so the target can move with Pro.
+     *
+     * @return string
+     */
+    public function glossaries_min_pro_version() {
+        return (string) apply_filters( 'betterdocs_glossaries_min_pro_version', '4.3.1' );
     }
 
     /**

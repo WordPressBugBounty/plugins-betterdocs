@@ -107,7 +107,6 @@ class Admin extends Base {
 	 * @var FAQBuilder
 	 */
 	private $faq_builder;
-	private $glossaries;
 
 	public function __construct( Container $container, PostType $type, Enqueue $assets, Settings $settings, KBMigration $kbmigration ) {
 		$this->container   = $container;
@@ -123,7 +122,6 @@ class Admin extends Base {
 		$type->admin_init();
 
 		$this->faq_builder = $this->container->get( FAQBuilder::class );
-		$this->glossaries  = $this->container->get( Glossaries::class );
 
 		/**
 		 * Register usage tracking (including the daily `put_do_weekly_action` cron
@@ -887,6 +885,9 @@ class Admin extends Base {
                 'betterdocs_ChatBot_plugin'      => is_plugin_active( 'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' ),
                 'api_docs_teaser'                => betterdocs()->show_api_docs_teaser(),
                 'glossaries_teaser'              => betterdocs()->show_glossary_teaser(),
+                'glossaries_needs_pro_update'    => betterdocs()->glossaries_needs_pro_update(),
+                'glossaries_min_pro_version'     => betterdocs()->glossaries_min_pro_version(),
+                'glossaries_pro_update_url'      => self_admin_url( 'plugins.php' ),
                 'content_intelligence_teaser'    => betterdocs()->show_content_intelligence_teaser(),
                 'is_woocommerce_active'          => class_exists( 'WooCommerce' ),
                 'total_doc_category_terms'       => wp_count_terms( 'doc_category' ),
@@ -956,22 +957,8 @@ class Admin extends Base {
 			)
 		);
 
-		// Glossaries Related Localization
-		betterdocs()->assets->enqueue( 'betterdocs-admin-glossaries', 'admin/css/faq.css' );
-
-		betterdocs()->assets->enqueue( 'betterdocs-admin-glossaries', 'admin/js/glossaries.js' );
-
-		betterdocs()->assets->localize(
-			'betterdocs-admin-glossaries',
-			'betterdocsGlossary',
-			array(
-				'dir_url'             => BETTERDOCS_ABSURL,
-				'rest_url'            => esc_url_raw( rest_url() ),
-				'free_version'        => betterdocs()->version,
-				'nonce'               => wp_create_nonce( 'wp_rest' ),
-				'betterdocs_settings' => $betterdocs_settings,
-			)
-		);
+		// Glossaries is Pro — Pro's Core\Glossaries::enqueue() owns that bundle
+		// and both of its localized objects (`betterdocs`, `betterdocsGlossary`).
 	}
 
 	/**

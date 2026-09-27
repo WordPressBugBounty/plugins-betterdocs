@@ -734,19 +734,36 @@ class Settings extends Base {
         }
         $_settings = wp_parse_args( $_normalized_settings, $_old_settings );
 
-        // Check if there are actual changes before saving.
-        // update_option returns false when values serialize identically, which can happen
-        // due to object caching or type normalization even when user made changes.
-        $_has_changes = $_settings != $_old_settings;
+        // Detect whether this save actually changes the effective settings.
+        //
+        // The stored option and the submitted payload are normalized differently:
+        // an optional field can be ABSENT from storage yet arrive as '' (e.g.
+        // Feedback URL), and array fields can be stored empty ( [] ) while their
+        // normalized/default form is non-empty (e.g. Instant Answer's
+        // display_ia_texonomy defaults to ['all']). Comparing the raw arrays
+        // ( $_settings != $_old_settings ) therefore reported a phantom change on
+        // every save, leaving the tab perpetually "dirty" and always toasting
+        // "Changes Saved Successfully." instead of "There are no changes to be
+        // saved." — see WPDevelopers/betterdocs-pro#78.
+        //
+        // Compare like-for-like instead: fill defaults on both sides and run both
+        // through the same normalization, so semantically-equal states (absent vs
+        // '', [] vs ['all'], 'on' vs true) collapse to identical values and only a
+        // real edit registers. This is also more reliable than update_option()'s
+        // return, which is false whenever values serialize identically under object
+        // caching or type coercion even when the user did change something (#49).
+        $_defaults       = array_merge( $this->get_default(), $this->get_pro_defaults() );
+        $_old_normalized = $this->get_normalized_values( wp_parse_args( $_old_settings, $_defaults ), $_defaults );
+        $_new_normalized = $this->get_normalized_values( wp_parse_args( $_settings, $_defaults ), $_defaults );
+        $_has_changes    = $_new_normalized != $_old_normalized;
 
         $_saved = $this->database->save( $this->base_key, $_settings );
 
         do_action_ref_array( 'betterdocs::settings::saved', array( $_saved, $_settings, $_old_settings, &$this ) );
 
-        // Return true if save succeeded OR if there were changes to attempt saving.
-        // This handles cases where update_option returns false due to identical serialization
-        // (e.g., object caching, type coercion during serialization).
-        return $_saved || $_has_changes;
+        // The success / no-changes toast reflects whether the user made a real
+        // change, not update_option()'s (unreliable) return value.
+        return $_has_changes;
     }
 
     public function views( $hook ) {

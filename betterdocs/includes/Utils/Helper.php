@@ -55,6 +55,86 @@ class Helper extends Base {
 	}
 
 	/**
+	 * Drop the scheme + host from an absolute URL so it stays same-origin.
+	 *
+	 * Returns the ROOT-RELATIVE form of $url ("/wp-admin/admin-ajax.php",
+	 * "/wp-json/wp/v2/docs?search=foo", "/subdir/..." for a WP install in a
+	 * sub-directory) so the browser resolves it against the CURRENT page's origin
+	 * instead of the host baked into the URL. Path, query and fragment are kept
+	 * verbatim — only scheme+host are dropped — so sub-directory, multisite and
+	 * plain-permalink (?rest_route=) URLs all survive intact. A URL with no usable
+	 * path is returned unchanged.
+	 *
+	 * This is the origin-agnostic primitive behind frontend_ajax_url(); callers
+	 * whose output is embedded on a THIRD-PARTY site (e.g. the Instant Answer
+	 * cross-domain snippet) must keep the absolute URL and simply not call this.
+	 *
+	 * @param string $url Absolute URL.
+	 * @return string Root-relative URL, or $url unchanged when it has no path.
+	 */
+	public static function relative_url( $url ) {
+		if ( ! is_string( $url ) || $url === '' ) {
+			return $url;
+		}
+
+		$parts = wp_parse_url( $url );
+
+		if ( ! is_array( $parts ) || empty( $parts['path'] ) ) {
+			return $url;
+		}
+
+		$relative = $parts['path'];
+
+		if ( isset( $parts['query'] ) && $parts['query'] !== '' ) {
+			$relative .= '?' . $parts['query'];
+		}
+
+		if ( isset( $parts['fragment'] ) && $parts['fragment'] !== '' ) {
+			$relative .= '#' . $parts['fragment'];
+		}
+
+		return $relative;
+	}
+
+	/**
+	 * Same-origin admin-ajax URL for front-end requests (live search, etc.).
+	 *
+	 * admin_url() always resolves to the configured Site Address host, so when a
+	 * knowledge base is served on a HOST different from WP's Site Address — a
+	 * subdomain (e.g. faq.example.com), a domain alias, or a reverse proxy — the
+	 * AJAX request becomes cross-origin and is silently blocked or redirected by
+	 * the browser (the live search then returns no results).
+	 *
+	 * Emitting a ROOT-RELATIVE path ("/wp-admin/admin-ajax.php", or
+	 * "/subdir/wp-admin/admin-ajax.php" for a WP install in a sub-directory) lets
+	 * the browser resolve it against the CURRENT page's origin, so the request
+	 * always stays same-origin regardless of the Site Address. The path component
+	 * is taken verbatim from admin_url(), so sub-directory and multisite install
+	 * paths are preserved; only the scheme+host is dropped. When the parsed path
+	 * is empty, or in the admin area, the absolute URL is returned unchanged so
+	 * nothing else is affected.
+	 *
+	 * Override with the `betterdocs_frontend_ajax_url` filter if a site genuinely
+	 * needs an absolute or a different endpoint.
+	 *
+	 * @return string Root-relative admin-ajax path on the front end, else the absolute URL.
+	 */
+	public static function frontend_ajax_url() {
+		$ajax_url = admin_url( 'admin-ajax.php' );
+
+		if ( ! is_admin() ) {
+			$ajax_url = self::relative_url( $ajax_url );
+		}
+
+		/**
+		 * Filter the front-end admin-ajax URL used by BetterDocs live search.
+		 *
+		 * @param string $ajax_url Root-relative path (front end) or absolute URL.
+		 */
+		return apply_filters( 'betterdocs_frontend_ajax_url', $ajax_url );
+	}
+
+	/**
 	 * Resolve the WPML-translated base slug of a taxonomy for the CURRENT language.
 	 *
 	 * WPML registers each translatable taxonomy's rewrite slug as a string named
@@ -1079,175 +1159,12 @@ class Helper extends Base {
 		}
 	}
 
-	public static function get_current_letter_docs( $current_letter, $limit = 0 ) {
-		global $wpdb;
-
-		$limit     = absint( $limit );
-		$limit_sql = $limit > 0 ? $wpdb->prepare( 'LIMIT %d', $limit ) : '';
-
-		// Check if the encyclopedia_prefix parameter is set
-
-        $encyclopeia_suorce     = betterdocs()->settings->get( 'encyclopedia_source', 'docs' );
-        $enable_glossaries      = betterdocs()->settings->get( 'enable_glossaries', false );
-        $encyclopedia_root_slug = betterdocs()->settings->get( 'encyclopedia_root_slug', 'encyclopdia' );
-        // Sanitize values that may be interpolated into raw SQL fragments below.
-        $encyclopedia_root_slug = sanitize_title( $encyclopedia_root_slug );
-
-		// if($enable_glossaries && $encyclopeia_suorce === 'glossaries'){
-		if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
-			$lang_join = '';
-			$lang_where = '';
-
-			// Add language filtering if multilingual plugin is active and we should apply filtering
-			$current_language = self::get_current_language();
-			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
-				// Restrict language code to a safe character set before SQL interpolation.
-				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
-				// For WPML, use icl_translations table
-				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
-					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
-					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
-				}
-				// For Polylang, use term_relationships with language taxonomy
-				elseif ( function_exists( 'pll_current_language' ) ) {
-					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON t.term_id = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
-					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
-				}
-			}
-
-			$query = "
-                SELECT
-                    t.term_id,
-                    t.name AS post_title,
-                    t.slug as slug,
-                    '' AS post_excerpt,
-                    CONCAT('" . get_home_url() . "/$encyclopedia_root_slug/', t.slug) AS permalink,
-                    tt.description AS post_content,
-                    JSON_OBJECT(
-                        'status', COALESCE(MAX(CASE WHEN m.meta_key = 'status' THEN m.meta_value END), ''),
-                        'glossary_term_description', COALESCE(MAX(CASE WHEN m.meta_key = 'glossary_term_description' THEN m.meta_value END), '')
-                    ) AS meta_data
-                FROM
-                    {$wpdb->terms} t
-                INNER JOIN
-                    {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
-                LEFT JOIN
-                    {$wpdb->termmeta} m ON t.term_id = m.term_id
-                $lang_join
-                WHERE
-                    tt.taxonomy = 'glossaries'
-                AND
-                    SUBSTRING(t.name, 1, 1) = %s
-                $lang_where
-                GROUP BY
-                    t.term_id
-                ORDER BY
-                    t.name ASC
-                $limit_sql
-            ";
-		} else {
-			$lang_join = '';
-			$lang_where = '';
-
-			// Add language filtering for docs if multilingual plugin is active and we should apply filtering
-			$current_language = self::get_current_language();
-			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
-				// Restrict language code to a safe character set before SQL interpolation.
-				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
-				// For WPML, use icl_translations table
-				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
-					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = {$wpdb->posts}.ID AND icl_t.element_type = 'post_docs'";
-					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
-				}
-				// For Polylang, use term_relationships with language taxonomy
-				elseif ( function_exists( 'pll_current_language' ) ) {
-					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
-					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
-				}
-			}
-
-			$query = "
-                SELECT ID, post_title, post_excerpt, guid, post_content
-                FROM {$wpdb->posts}
-                $lang_join
-                WHERE post_type = 'docs'
-                AND post_status = 'publish'
-                AND SUBSTRING(post_title, 1, 1) = %s
-                $lang_where
-                ORDER BY post_date DESC
-                $limit_sql
-            ";
-		}
-
-		$current_letter_docs = $wpdb->get_results( $wpdb->prepare( $query, $current_letter ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-		return $current_letter_docs;
-	}
-
-    public static function docs_sort_by_letter( $limit = 10 ) {
-        global $wpdb;
-        $enable_non_latin = betterdocs()->settings->get( 'encyclopedia_enable_non_latin' );
-        $script           = betterdocs()->settings->get( 'encyclopedia_non_latin_option' );
-        $letters          = Helper::get_character_range( $enable_non_latin, $script );
-
-        $docs_by_letter     = [];
-        $encyclopeia_suorce = betterdocs()->settings->get( 'encyclopedia_source', 'docs' );
-        $enable_glossaries  = betterdocs()->settings->get( 'enable_glossaries', false );
-
-        foreach ( $letters as $letter ) {
-            $posts = self::get_current_letter_docs( $letter, $limit );
-
-            if ( is_array( $posts ) && ! empty( $posts ) ) {
-                foreach ( $posts as $post ) {
-                    $description               = isset($post['meta_data']) ? \json_decode( $post['meta_data'], true ) : '';
-                    $glossary_term_description = $description['glossary_term_description'] ?? '';
-
-                    // Remove any <p> tags or other unwanted HTML tags
-                    $glossary_term_description = wp_strip_all_tags( $glossary_term_description );
-                    $post_excerpt              = wp_strip_all_tags( $post['post_excerpt'] ?? '' );
-
-                    // Prepare post data
-                    if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
-                        // For glossaries
-                        $permalink = '';
-
-                        if ( isset( $post['slug'] ) ) {
-                            $term_link = get_term_link( $post['slug'], 'glossaries' );
-
-                            if ( ! is_wp_error( $term_link ) ) {
-                                $permalink = $term_link;
-                            }
-                        }
-
-                        $post_data = [
-                            'id'           => $post['term_id'] ?? '',
-                            'post_title'   => $post['post_title'] ?? '',
-                            'post_excerpt' => ! empty( $post_excerpt )
-                            ? $post_excerpt
-                            : ( ! empty( $glossary_term_description )
-                                ? self::get_custom_excerpt( $glossary_term_description, 15 )
-                                : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ) ),
-                            'permalink'    => $permalink,
-                        ];
-                    } else {
-                        // For docs
-                        $post_data = [
-                            'id'           => $post['ID'] ?? '',
-                            'post_title'   => $post['post_title'] ?? '',
-                            'post_excerpt' => ! empty( $post_excerpt )
-                            ? $post_excerpt
-                            : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ),
-                            'permalink'    => isset( $post['ID'] ) ? get_the_permalink( $post['ID'] ) : ''
-                        ];
-                    }
-
-                    $docs_by_letter[$letter][] = $post_data;
-                }
-            }
-        }
-
-        return $docs_by_letter;
-    }
+	// NOTE: get_current_letter_docs() and docs_sort_by_letter() used to live here.
+	// Encyclopedia is a Pro-only feature and these had no callers in Free at all,
+	// so they now ship as BetterDocsPro\Utils\EncyclopediaQuery. The generic
+	// helpers they lean on (get_current_language, is_multilingual_active,
+	// should_apply_language_filtering, get_custom_excerpt) stay here and are
+	// called through this class from Pro.
 
     public static function get_glossaries() {
         global $wpdb;
@@ -1327,41 +1244,11 @@ class Helper extends Base {
 
         return $layout;
     }
-    public static function mb_ord_fallback( $char ) {
-        $code = unpack( 'N', mb_convert_encoding( $char, 'UCS-4BE', 'UTF-8' ) );
-        return $code[1];
-    }
 
-    public static function mb_chr_fallback( $code ) {
-        return mb_convert_encoding( pack( 'N', $code ), 'UTF-8', 'UCS-4BE' );
-    }
-
-    public static function unicodeRange( $start, $end ) {
-        $range = [];
-        for ( $i = self::mb_ord_fallback( $start ); $i <= self::mb_ord_fallback( $end ); $i++ ) {
-            $range[] = self::mb_chr_fallback( $i );
-        }
-        return $range;
-    }
-
-    public static function get_character_range( $enable_non_latin, $script ) {
-        if ( $enable_non_latin ) {
-            switch ( $script ) {
-                case 'arabic':
-                    return self::unicodeRange( 'ء', 'ي' );
-                case 'cyrillic':
-                    return self::unicodeRange( 'А', 'Я' );
-                case 'hebrew':
-                    return self::unicodeRange( 'א', 'ת' );
-                case 'greek':
-                    return self::unicodeRange( 'Α', 'Ω' );
-                default:
-                    return range( 'A', 'Z' );
-            }
-        }
-
-        return range( 'A', 'Z' );
-    }
+    // NOTE: the alphabet-range helpers (get_character_range, unicodeRange,
+    // mb_ord_fallback, mb_chr_fallback) moved to BetterDocsPro\Utils\EncyclopediaQuery
+    // along with the two methods above — same reason: Encyclopedia is Pro-only
+    // and nothing in Free ever called them.
 
     public static function get_the_top_most_parent( $term_id ) {
         while ( $term_id != 0 ) {
@@ -1639,4 +1526,224 @@ class Helper extends Base {
 		$result = $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query is prepared above.
 		return $result;
 	}
+
+	/**
+	 * Encyclopedia / glossary query helpers — backward-compatibility shims.
+	 *
+	 * These methods were moved out of Free and into BetterDocs Pro's own
+	 * `EncyclopediaQuery` class as of Pro 4.3.1 (the "move glossaries to Pro"
+	 * release). BetterDocs Pro 4.3.0 and earlier, however, still call
+	 * `Helper::get_character_range()` / `get_current_letter_docs()` /
+	 * `docs_sort_by_letter()` from their encyclopedia blocks, widgets,
+	 * shortcodes, templates and AJAX callbacks. When a site runs new Free with
+	 * an older Pro (< 4.3.1) still active, those calls would fatal with
+	 * "Call to undefined method". Keeping these shims here lets that older Pro
+	 * keep rendering until it is updated. Pro 4.3.1+ uses its own copy and never
+	 * touches these, so there is no double-execution or conflict.
+	 *
+	 * @deprecated Retained only for BetterDocs Pro < 4.3.1 compatibility.
+	 */
+	public static function get_current_letter_docs( $current_letter, $limit = 0 ) {
+		global $wpdb;
+
+		$limit     = absint( $limit );
+		$limit_sql = $limit > 0 ? $wpdb->prepare( 'LIMIT %d', $limit ) : '';
+
+		// Check if the encyclopedia_prefix parameter is set
+
+        $encyclopeia_suorce     = betterdocs()->settings->get( 'encyclopedia_source', 'docs' );
+        $enable_glossaries      = betterdocs()->settings->get( 'enable_glossaries', false );
+        $encyclopedia_root_slug = betterdocs()->settings->get( 'encyclopedia_root_slug', 'encyclopdia' );
+        // Sanitize values that may be interpolated into raw SQL fragments below.
+        $encyclopedia_root_slug = sanitize_title( $encyclopedia_root_slug );
+
+		// if($enable_glossaries && $encyclopeia_suorce === 'glossaries'){
+		if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
+			$lang_join = '';
+			$lang_where = '';
+
+			// Add language filtering if multilingual plugin is active and we should apply filtering
+			$current_language = self::get_current_language();
+			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// Restrict language code to a safe character set before SQL interpolation.
+				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
+				// For WPML, use icl_translations table
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = t.term_id AND icl_t.element_type = 'tax_glossaries'";
+					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
+				}
+				// For Polylang, use term_relationships with language taxonomy
+				elseif ( function_exists( 'pll_current_language' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON t.term_id = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
+					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
+				}
+			}
+
+			$query = "
+                SELECT
+                    t.term_id,
+                    t.name AS post_title,
+                    t.slug as slug,
+                    '' AS post_excerpt,
+                    CONCAT('" . get_home_url() . "/$encyclopedia_root_slug/', t.slug) AS permalink,
+                    tt.description AS post_content,
+                    JSON_OBJECT(
+                        'status', COALESCE(MAX(CASE WHEN m.meta_key = 'status' THEN m.meta_value END), ''),
+                        'glossary_term_description', COALESCE(MAX(CASE WHEN m.meta_key = 'glossary_term_description' THEN m.meta_value END), '')
+                    ) AS meta_data
+                FROM
+                    {$wpdb->terms} t
+                INNER JOIN
+                    {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+                LEFT JOIN
+                    {$wpdb->termmeta} m ON t.term_id = m.term_id
+                $lang_join
+                WHERE
+                    tt.taxonomy = 'glossaries'
+                AND
+                    SUBSTRING(t.name, 1, 1) = %s
+                $lang_where
+                GROUP BY
+                    t.term_id
+                ORDER BY
+                    t.name ASC
+                $limit_sql
+            ";
+		} else {
+			$lang_join = '';
+			$lang_where = '';
+
+			// Add language filtering for docs if multilingual plugin is active and we should apply filtering
+			$current_language = self::get_current_language();
+			if ( $current_language && self::is_multilingual_active() && self::should_apply_language_filtering() ) {
+				// Restrict language code to a safe character set before SQL interpolation.
+				$current_language = preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $current_language );
+				// For WPML, use icl_translations table
+				if ( is_plugin_active( 'sitepress-multilingual-cms/sitepress.php' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->prefix}icl_translations icl_t ON icl_t.element_id = {$wpdb->posts}.ID AND icl_t.element_type = 'post_docs'";
+					$lang_where = " AND (icl_t.language_code = '$current_language' OR icl_t.language_code IS NULL)";
+				}
+				// For Polylang, use term_relationships with language taxonomy
+				elseif ( function_exists( 'pll_current_language' ) ) {
+					$lang_join = " LEFT JOIN {$wpdb->term_relationships} tr ON {$wpdb->posts}.ID = tr.object_id LEFT JOIN {$wpdb->term_taxonomy} tt_lang ON tr.term_taxonomy_id = tt_lang.term_taxonomy_id AND tt_lang.taxonomy = 'language' LEFT JOIN {$wpdb->terms} t_lang ON tt_lang.term_id = t_lang.term_id";
+					$lang_where = " AND (t_lang.slug = '$current_language' OR t_lang.slug IS NULL)";
+				}
+			}
+
+			$query = "
+                SELECT ID, post_title, post_excerpt, guid, post_content
+                FROM {$wpdb->posts}
+                $lang_join
+                WHERE post_type = 'docs'
+                AND post_status = 'publish'
+                AND SUBSTRING(post_title, 1, 1) = %s
+                $lang_where
+                ORDER BY post_date DESC
+                $limit_sql
+            ";
+		}
+
+		$current_letter_docs = $wpdb->get_results( $wpdb->prepare( $query, $current_letter ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		return $current_letter_docs;
+	}
+
+    public static function docs_sort_by_letter( $limit = 10 ) {
+        global $wpdb;
+        $enable_non_latin = betterdocs()->settings->get( 'encyclopedia_enable_non_latin' );
+        $script           = betterdocs()->settings->get( 'encyclopedia_non_latin_option' );
+        $letters          = Helper::get_character_range( $enable_non_latin, $script );
+
+        $docs_by_letter     = [];
+        $encyclopeia_suorce = betterdocs()->settings->get( 'encyclopedia_source', 'docs' );
+        $enable_glossaries  = betterdocs()->settings->get( 'enable_glossaries', false );
+
+        foreach ( $letters as $letter ) {
+            $posts = self::get_current_letter_docs( $letter, $limit );
+
+            if ( is_array( $posts ) && ! empty( $posts ) ) {
+                foreach ( $posts as $post ) {
+                    $description               = isset($post['meta_data']) ? \json_decode( $post['meta_data'], true ) : '';
+                    $glossary_term_description = $description['glossary_term_description'] ?? '';
+
+                    // Remove any <p> tags or other unwanted HTML tags
+                    $glossary_term_description = wp_strip_all_tags( $glossary_term_description );
+                    $post_excerpt              = wp_strip_all_tags( $post['post_excerpt'] ?? '' );
+
+                    // Prepare post data
+                    if ( $enable_glossaries && $encyclopeia_suorce === 'glossaries' ) {
+                        // For glossaries
+                        $permalink = '';
+
+                        if ( isset( $post['slug'] ) ) {
+                            $term_link = get_term_link( $post['slug'], 'glossaries' );
+
+                            if ( ! is_wp_error( $term_link ) ) {
+                                $permalink = $term_link;
+                            }
+                        }
+
+                        $post_data = [
+                            'id'           => $post['term_id'] ?? '',
+                            'post_title'   => $post['post_title'] ?? '',
+                            'post_excerpt' => ! empty( $post_excerpt )
+                            ? $post_excerpt
+                            : ( ! empty( $glossary_term_description )
+                                ? self::get_custom_excerpt( $glossary_term_description, 15 )
+                                : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ) ),
+                            'permalink'    => $permalink,
+                        ];
+                    } else {
+                        // For docs
+                        $post_data = [
+                            'id'           => $post['ID'] ?? '',
+                            'post_title'   => $post['post_title'] ?? '',
+                            'post_excerpt' => ! empty( $post_excerpt )
+                            ? $post_excerpt
+                            : self::get_custom_excerpt( wp_strip_all_tags( $post['post_content'] ?? '' ), 15 ),
+                            'permalink'    => isset( $post['ID'] ) ? get_the_permalink( $post['ID'] ) : ''
+                        ];
+                    }
+
+                    $docs_by_letter[$letter][] = $post_data;
+                }
+            }
+        }
+
+        return $docs_by_letter;
+    }
+    public static function mb_ord_fallback( $char ) {
+        $code = unpack( 'N', mb_convert_encoding( $char, 'UCS-4BE', 'UTF-8' ) );
+        return $code[1];
+    }
+
+    public static function mb_chr_fallback( $code ) {
+        return mb_convert_encoding( pack( 'N', $code ), 'UTF-8', 'UCS-4BE' );
+    }
+    public static function unicodeRange( $start, $end ) {
+        $range = [];
+        for ( $i = self::mb_ord_fallback( $start ); $i <= self::mb_ord_fallback( $end ); $i++ ) {
+            $range[] = self::mb_chr_fallback( $i );
+        }
+        return $range;
+    }
+
+    public static function get_character_range( $enable_non_latin, $script ) {
+        if ( $enable_non_latin ) {
+            switch ( $script ) {
+                case 'arabic':
+                    return self::unicodeRange( 'ء', 'ي' );
+                case 'cyrillic':
+                    return self::unicodeRange( 'А', 'Я' );
+                case 'hebrew':
+                    return self::unicodeRange( 'א', 'ת' );
+                case 'greek':
+                    return self::unicodeRange( 'Α', 'Ω' );
+                default:
+                    return range( 'A', 'Z' );
+            }
+        }
+
+        return range( 'A', 'Z' );
+    }
 }
