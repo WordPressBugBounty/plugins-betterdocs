@@ -5,6 +5,7 @@ namespace WPDeveloper\BetterDocs\REST;
 use WP_REST_Request;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Utils\AIUsage;
+use WPDeveloper\BetterDocs\AI\ProviderFactory;
 
 /**
  * REST surface for the redesigned "Write with AI" modal.
@@ -25,6 +26,18 @@ class WriteWithAI extends BaseAPI {
     // 5 MB is generous for text/markdown/DOCX while capping abuse; the extracted
     // text is still clipped to MAX_SOURCE_LENGTH before it reaches the model.
     const MAX_UPLOAD_BYTES = 5242880; // 5 MB
+
+    // Recordings get their own, larger cap: 25 MB is OpenAI's transcription
+    // limit — roughly 25 minutes of mono MP3 — and there is no point accepting
+    // a file the provider will refuse. Gemini is capped lower still (see
+    // media_cap_for_platform): its media rides inline as base64, which inflates
+    // the payload by about a third.
+    //
+    // The cap sits 1 MB under that limit, not on it: the limit applies to the
+    // whole request, and a file of exactly 25 MB plus the multipart fields and
+    // boundaries would be refused after the full upload.
+    const MAX_MEDIA_BYTES = 25165824; // 24 MB
+    const MAX_MEDIA_BYTES_INLINE = 15728640; // 15 MB — inline-data platforms
 
     public function register() {
         $this->post(
@@ -145,7 +158,7 @@ class WriteWithAI extends BaseAPI {
         if ( empty( $write_ai->get_api_key() ) ) {
             return $this->error(
                 'missing_key',
-                __( 'OpenAI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
+                __( 'AI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
                 400
             );
         }
@@ -204,6 +217,7 @@ class WriteWithAI extends BaseAPI {
                     'transcript' => __( 'support transcript', 'betterdocs' ),
                     'forum'      => __( 'forum thread', 'betterdocs' ),
                     'notes'      => __( 'raw notes', 'betterdocs' ),
+                    'recording'  => __( 'recording transcript', 'betterdocs' ),
                 );
                 $src_label = isset( $src_labels[ $src_type ] ) ? $src_labels[ $src_type ] : __( 'source material', 'betterdocs' );
 
@@ -213,6 +227,10 @@ class WriteWithAI extends BaseAPI {
                     'transcript' => __( 'The source below is a customer-support conversation. Focus on the user\'s problem and its resolution; ignore greetings and small talk.', 'betterdocs' ),
                     'forum'      => __( 'The source below is a forum discussion among multiple people. Treat the accepted or most-supported answer as authoritative and skip off-topic replies.', 'betterdocs' ),
                     'notes'      => __( 'The source below is rough notes. Expand them into clear, complete prose.', 'betterdocs' ),
+                    // Speech-to-text output reads nothing like written source: it
+                    // has no punctuation discipline, keeps every "um", and may
+                    // label speakers. Say so, or the model documents the filler.
+                    'recording'  => __( 'The source below is a machine transcript of an audio or video recording. It may contain filler words, false starts, repetition and speaker labels — ignore those and document only the substance. The author has already reviewed it, so keep their spelling of names and product terms exactly as written.', 'betterdocs' ),
                 );
                 if ( isset( $src_frames[ $src_type ] ) ) {
                     array_unshift( $extra_system, array( 'role' => 'system', 'content' => $src_frames[ $src_type ] ) );
@@ -226,7 +244,70 @@ class WriteWithAI extends BaseAPI {
                     )
                     . "\n---\n" . $source . "\n---" )
                     . $this->build_directives( $tone, $doc_size, $generate_title );
-                return $this->handle_doc( $write_ai, $post_id, $source_prompt, $keywords, $action, $doc_size, $extra_system );
+                // A doc written from a recording's transcript counts as a recording
+                // in the insights, once — the transcribe step records nothing.
+                $usage_action = 'recording' === $src_type ? 'from-recording' : null;
+                return $this->handle_doc( $write_ai, $post_id, $source_prompt, $keywords, $action, $doc_size, $extra_system, null, $usage_action );
+
+            case 'transcribe-attachment':
+                // Step one of the recording flow: upload → transcript. No doc is
+                // written here. The transcript goes back to the modal so the
+                // author can fix mis-heard product names, and generation then
+                // runs through the ordinary `from-source` path with that text —
+                // which is why there is no media-shaped generation path at all.
+                $media = $this->read_uploaded_attachment( $request );
+                if ( is_wp_error( $media ) ) {
+                    return $this->error( $media->get_error_code() ?: 'ai_attachment_failed', $media->get_error_message(), 400 );
+                }
+
+                if ( ! isset( $media['kind'] ) || 'media' !== $media['kind'] ) {
+                    return $this->error( 'ai_not_media', __( 'That file is not an audio or video recording.', 'betterdocs' ), 400 );
+                }
+
+                $transcript = $write_ai->transcribe( array(
+                    'path'     => $media['path'],
+                    'filename' => $media['name'],
+                    'mime'     => $media['mime'],
+                ) );
+
+                if ( is_wp_error( $transcript ) ) {
+                    $code = $transcript->get_error_code() ?: 'ai_transcribe_failed';
+                    // A platform that cannot transcribe is the user's setting to
+                    // change, not an upstream fault — 400, like ai_no_vision.
+                    return $this->error( $code, $transcript->get_error_message(), 'ai_no_transcription' === $code ? 400 : 502 );
+                }
+
+                // Clip before returning, not after editing: the author should be
+                // correcting exactly the text the model will receive, rather than
+                // polishing a tail that gets silently cut on the way out.
+                //
+                // A clipped transcript says so in its own text: the author sees
+                // where it stops, and the marker travels with the text to the
+                // model, which would otherwise document half a recording as if it
+                // were the whole of it.
+                $transcript = wp_check_invalid_utf8( (string) $transcript, true );
+                $clipped    = strlen( $transcript ) > self::MAX_SOURCE_LENGTH;
+
+                if ( $clipped ) {
+                    $marker     = "\n\n" . __( '[Transcript cut off here: the recording is longer than BetterDocs AI can use at once.]', 'betterdocs' );
+                    $transcript = rtrim( $this->clip( $transcript, self::MAX_SOURCE_LENGTH - strlen( $marker ) ) ) . $marker;
+                }
+
+                if ( '' === trim( $transcript ) ) {
+                    return $this->error( 'ai_no_speech', __( 'No speech was found in that recording.', 'betterdocs' ), 400 );
+                }
+
+                // No AIUsage::record() here. Nothing has been written yet — the doc
+                // is generated by the `from-source` call that follows, which records
+                // it (as a recording, via source_type). Counting both made every
+                // recording-based doc show up twice in the insights.
+
+                return $this->success( array(
+                    'transcript' => $transcript,
+                    'clipped'    => $clipped,
+                    'name'       => $media['name'],
+                    'action'     => $action,
+                ) );
 
             case 'from-attachment':
                 // Upload a file; extract its text server-side and treat it exactly
@@ -237,6 +318,14 @@ class WriteWithAI extends BaseAPI {
                 $extracted = $this->read_uploaded_attachment( $request );
                 if ( is_wp_error( $extracted ) ) {
                     return $this->error( $extracted->get_error_code() ?: 'ai_attachment_failed', $extracted->get_error_message(), 400 );
+                }
+
+                // A recording has no text to extract; it goes through
+                // `transcribe-attachment` first. Sent here directly (an older modal,
+                // or a hand-made request) it used to fall through to the text path
+                // and read an undefined `text` key.
+                if ( isset( $extracted['kind'] ) && 'media' === $extracted['kind'] ) {
+                    return $this->error( 'ai_needs_transcript', __( 'Recordings are transcribed first. Use "Transcribe recording", then generate from the transcript.', 'betterdocs' ), 400 );
                 }
 
                 // Image attachment → send the picture to a vision-capable model
@@ -375,7 +464,7 @@ class WriteWithAI extends BaseAPI {
     /**
      * Full-doc generation (generate-doc, expand-outline, from-source all land here).
      */
-    protected function handle_doc( $write_ai, $post_id, $prompt, $keywords, $action, $doc_size = 'any', $extra_system = array(), $image = null ) {
+    protected function handle_doc( $write_ai, $post_id, $prompt, $keywords, $action, $doc_size = 'any', $extra_system = array(), $image = null, $usage_action = null ) {
         if ( '' === trim( $prompt ) ) {
             return $this->error( 'ai_empty_prompt', __( 'Please provide a prompt for the AI.', 'betterdocs' ), 400 );
         }
@@ -411,7 +500,9 @@ class WriteWithAI extends BaseAPI {
         // is the enforcement (a prompt-injected source/Git payload can't inject XSS).
         $content = wp_kses_post( $content );
 
-        AIUsage::record( 'write_with_ai', $post_id, $action );
+        // `$usage_action` lets a caller count the generation under a different
+        // mode than the action it answers to (a recording arrives as from-source).
+        AIUsage::record( 'write_with_ai', $post_id, null !== $usage_action ? $usage_action : $action );
 
         return $this->success( array( 'content' => $content, 'action' => $action ) );
     }
@@ -493,36 +584,60 @@ class WriteWithAI extends BaseAPI {
             return new \WP_Error( 'ai_upload_failed', __( 'The upload did not complete — please try again.', 'betterdocs' ) );
         }
 
-        if ( (int) $file['size'] > self::MAX_UPLOAD_BYTES ) {
-            return new \WP_Error(
-                'ai_file_too_large',
-                sprintf(
-                    /* translators: %s: maximum allowed size, e.g. "5 MB". */
-                    __( 'The file exceeds the %s limit.', 'betterdocs' ),
-                    size_format( self::MAX_UPLOAD_BYTES )
-                )
-            );
-        }
-
         // Strict extension + MIME allow-list. wp_check_filetype() validates the
         // name against exactly these types; anything else yields an empty ext.
-        $allowed = array(
-            'txt'         => 'text/plain',
-            'md|markdown' => 'text/markdown',
-            'docx'        => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'pdf'         => 'application/pdf',
-            'png'         => 'image/png',
-            'jpg|jpeg'    => 'image/jpeg',
-            'webp'        => 'image/webp',
+        $allowed = array_merge(
+            array(
+                'txt'         => 'text/plain',
+                'md|markdown' => 'text/markdown',
+                'docx'        => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'pdf'         => 'application/pdf',
+                'png'         => 'image/png',
+                'jpg|jpeg'    => 'image/jpeg',
+                'webp'        => 'image/webp',
+            ),
+            self::media_mimes()
         );
         $check = wp_check_filetype( (string) $file['name'], $allowed );
         $ext   = strtolower( (string) $check['ext'] );
 
         $image_exts = array( 'png', 'jpg', 'jpeg', 'webp' );
         $text_exts  = array( 'txt', 'md', 'markdown', 'docx', 'pdf' );
+        $media_exts = self::media_exts();
 
-        if ( ! in_array( $ext, array_merge( $text_exts, $image_exts ), true ) ) {
-            return new \WP_Error( 'ai_bad_filetype', __( 'Unsupported file type. Upload a .pdf, .docx, .txt, .md, or an image (.png, .jpg, .webp).', 'betterdocs' ) );
+        if ( ! in_array( $ext, array_merge( $text_exts, $image_exts, $media_exts ), true ) ) {
+            // .mov and .avi are the two formats people actually try and that no
+            // provider accepts, so name the fix rather than listing types again.
+            $tried = strtolower( (string) pathinfo( (string) $file['name'], PATHINFO_EXTENSION ) );
+            if ( in_array( $tried, array( 'mov', 'avi', 'wmv', 'mkv' ), true ) ) {
+                return new \WP_Error(
+                    'ai_bad_filetype',
+                    sprintf(
+                        /* translators: %s: the uploaded file's extension, e.g. "mov". */
+                        __( '.%s recordings are not supported. Export or convert it to MP4 and upload that.', 'betterdocs' ),
+                        $tried
+                    )
+                );
+            }
+
+            return new \WP_Error( 'ai_bad_filetype', __( 'Unsupported file type. Upload a .pdf, .docx, .txt, .md, an image (.png, .jpg, .webp), or a recording (.mp3, .m4a, .wav, .flac, .ogg, .mp4, .mpeg, .webm).', 'betterdocs' ) );
+        }
+
+        // Size is capped per kind: a recording is legitimately much larger than a
+        // text file, but the cap can never exceed what the host will actually
+        // accept — PHP truncates a POST over post_max_size before we see it.
+        $is_media = in_array( $ext, $media_exts, true );
+        $cap      = self::upload_cap( $is_media ? 'media' : 'file' );
+
+        if ( (int) $file['size'] > $cap ) {
+            return new \WP_Error(
+                'ai_file_too_large',
+                sprintf(
+                    /* translators: %s: maximum allowed size, e.g. "25 MB". */
+                    __( 'The file exceeds the %s limit.', 'betterdocs' ),
+                    size_format( $cap )
+                )
+            );
         }
 
         // Image → send the picture itself to a vision model (there is no text to
@@ -549,6 +664,39 @@ class WriteWithAI extends BaseAPI {
             );
         }
 
+        // Recording → nothing to extract here; it goes to a speech-to-text model
+        // whole. Verify the bytes really are audio/video before handing a file to
+        // a paid endpoint: wp_check_filetype() above only read the *name*, so a
+        // renamed binary would otherwise sail through.
+        if ( $is_media ) {
+            $real = wp_check_filetype_and_ext( (string) $file['tmp_name'], (string) $file['name'], $allowed );
+            $mime = ! empty( $real['type'] ) ? (string) $real['type'] : '';
+
+            if ( '' === $mime && function_exists( 'finfo_open' ) ) {
+                // wp_check_filetype_and_ext() only sniffs images and a short list
+                // of text formats; for A/V it hands back the name-based guess or
+                // nothing at all. finfo is the actual byte check.
+                $finfo = finfo_open( FILEINFO_MIME_TYPE );
+                if ( $finfo ) {
+                    $sniffed = finfo_file( $finfo, (string) $file['tmp_name'] );
+                    finfo_close( $finfo );
+                    $mime = is_string( $sniffed ) ? $sniffed : '';
+                }
+            }
+
+            if ( 0 !== strpos( $mime, 'audio/' ) && 0 !== strpos( $mime, 'video/' ) ) {
+                return new \WP_Error( 'ai_bad_media', __( 'That file is not a readable audio or video recording.', 'betterdocs' ) );
+            }
+
+            return array(
+                'name' => sanitize_file_name( (string) $file['name'] ),
+                'kind' => 'media',
+                'mime' => $mime,
+                'path' => (string) $file['tmp_name'],
+                'size' => (int) $file['size'],
+            );
+        }
+
         $text = $this->extract_attachment_text( (string) $file['tmp_name'], $ext );
         if ( is_wp_error( $text ) ) {
             return $text;
@@ -559,6 +707,84 @@ class WriteWithAI extends BaseAPI {
             'kind' => 'text',
             'text' => $text,
         );
+    }
+
+    /**
+     * Extension → MIME map for the recording formats OpenAI's transcription
+     * endpoint accepts. The video containers are here on purpose: the endpoint
+     * reads their audio track, which is what lets this feature work without
+     * ffmpeg on the host.
+     *
+     * @since 4.9.4
+     *
+     * @return array<string,string>
+     */
+    public static function media_mimes() {
+        return array(
+            'mp3|mpga' => 'audio/mpeg',
+            'm4a'      => 'audio/mp4',
+            'wav'      => 'audio/wav',
+            'flac'     => 'audio/flac',
+            'ogg|oga'  => 'audio/ogg',
+            'mp4'      => 'video/mp4',
+            'mpeg|mpg' => 'video/mpeg',
+            'webm'     => 'video/webm',
+        );
+    }
+
+    /**
+     * Flat list of accepted recording extensions.
+     *
+     * @since 4.9.4
+     *
+     * @return string[]
+     */
+    public static function media_exts() {
+        $exts = array();
+        foreach ( array_keys( self::media_mimes() ) as $group ) {
+            foreach ( explode( '|', $group ) as $ext ) {
+                $exts[] = $ext;
+            }
+        }
+        return $exts;
+    }
+
+    /**
+     * Effective upload ceiling for a kind of attachment, in bytes.
+     *
+     * Always clamped to what the host will accept. A site with
+     * `upload_max_filesize = 8M` cannot receive 25 MB no matter what we allow —
+     * PHP discards the body and the request arrives empty — so advertising the
+     * higher number would just produce an unexplained failure.
+     *
+     * @since 4.9.4
+     *
+     * @param string $kind `media` | `file`
+     * @return int
+     */
+    public static function upload_cap( $kind = 'file' ) {
+        $cap  = ( 'media' === $kind ) ? self::media_cap_for_platform() : self::MAX_UPLOAD_BYTES;
+        $host = (int) wp_max_upload_size();
+
+        return ( $host > 0 && $host < $cap ) ? $host : $cap;
+    }
+
+    /**
+     * The recording cap for the configured platform, before the host clamp.
+     *
+     * Gemini carries the media inline as base64 inside the JSON request, which
+     * inflates it by roughly a third, so its practical ceiling is lower than
+     * OpenAI's, where the file is a real multipart part.
+     *
+     * @since 4.9.4
+     *
+     * @return int
+     */
+    public static function media_cap_for_platform() {
+        $factory  = new ProviderFactory( betterdocs()->settings );
+        $platform = $factory->active_platform();
+
+        return ( 'gemini' === $platform ) ? self::MAX_MEDIA_BYTES_INLINE : self::MAX_MEDIA_BYTES;
     }
 
     /**
@@ -790,7 +1016,18 @@ class WriteWithAI extends BaseAPI {
     }
 
     protected function clip( $value, $max ) {
-        return strlen( $value ) > $max ? substr( $value, 0, $max ) : $value;
+        if ( strlen( $value ) <= $max ) {
+            return $value;
+        }
+
+        // Byte-limited but never mid-character: a split multi-byte sequence is
+        // invalid UTF-8, which wp_json_encode() refuses — the whole request
+        // body would go out empty.
+        if ( function_exists( 'mb_strcut' ) ) {
+            return mb_strcut( $value, 0, $max, 'UTF-8' );
+        }
+
+        return wp_check_invalid_utf8( substr( $value, 0, $max ), true );
     }
 
     /**

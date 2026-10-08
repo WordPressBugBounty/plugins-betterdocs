@@ -4,7 +4,7 @@
  * Plugin Name:       BetterDocs
  * Plugin URI:        https://betterdocs.co/
  * Description:       Create stunning Knowledge base & FAQs for your WordPress website and reduce support pressure with the help of BetterDocs. Get access to amazing templates and create fully customizable KB with AI Write.
- * Version:           4.9.3
+ * Version:           4.9.4
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            WPDeveloper
@@ -82,13 +82,51 @@ function betterdocs(): Plugin {
 }
 
 /**
+ * Whether an active BetterDocs add-on has not been loaded yet.
+ *
+ * Pro and the AI Chatbot hook `betterdocs_init_before` / `betterdocs_loaded`
+ * and the `betterdocs_container_config` filter, all of which fire while Free
+ * boots. They are meant to load first (alphabetically they do), but a migrated
+ * `active_plugins` order, a plugin-ordering tool or a network-activated Free
+ * can put an add-on after Free. Booting then is too early: the add-on's hooks
+ * are missing, and the Chatbot's config needs Pro's classes, which fatals the
+ * whole site when Pro has not loaded yet.
+ *
+ * @since 4.9.4
+ * @return bool
+ */
+function betterdocs_has_pending_addons() {
+    $addons = [
+        'betterdocs-pro/betterdocs-pro.php'               => 'BETTERDOCS_PRO_FILE',
+        'betterdocs-ai-chatbot/betterdocs-ai-chatbot.php' => 'BETTERDOCS_CHATBOT_FILE',
+    ];
+
+    $active = (array) get_option( 'active_plugins', [] );
+    if ( is_multisite() ) {
+        $active = array_merge( $active, array_keys( (array) get_site_option( 'active_sitewide_plugins', [] ) ) );
+    }
+
+    foreach ( $addons as $plugin => $loaded_constant ) {
+        if ( in_array( $plugin, $active, true ) && ! defined( $loaded_constant ) ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Initialize BetterDocs (Free)
  * Here, begins the execution of the plugin.
  *
- * Returns the main instance of BetterDocs.
+ * Boots right away, as always, unless an active add-on is still to load; then
+ * boots first thing on `plugins_loaded`, once every plugin has registered its
+ * hooks, so any load order behaves like the default one.
  *
- * @return Plugin
  * @since  3.0
  */
-
-betterdocs();
+if ( ! did_action( 'plugins_loaded' ) && betterdocs_has_pending_addons() ) {
+    add_action( 'plugins_loaded', 'betterdocs', PHP_INT_MIN );
+} else {
+    betterdocs();
+}

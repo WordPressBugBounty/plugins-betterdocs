@@ -63,6 +63,9 @@ class Collector extends Base {
 		'enable_sidebar_cat_list',
 		'masonry_layout',
 		'nested_subcategory',
+		'enable_ai_actions',
+		'enable_markdown_endpoint',
+		'enable_listen',
 	];
 
 	public function __construct() {

@@ -47,6 +47,63 @@ class OpenAIProvider extends OpenAICompatibleProvider {
     }
 
     /**
+     * Transcribe audio or video via OpenAI's speech-to-text endpoint.
+     *
+     * The endpoint accepts video containers (mp4, webm, mpeg) as well as audio
+     * and reads the audio track out of them, which is why this feature needs no
+     * ffmpeg on the host — something no WordPress host can be assumed to have.
+     *
+     * `response_format=text` returns the transcript as a bare string rather than
+     * JSON; we ask for `json` instead so a provider error still decodes into the
+     * usual `{ error: { message } }` shape that post_multipart() can report.
+     *
+     * @param array $file    `[ 'path', 'filename', 'mime' ]`
+     * @param array $options `[ 'model', 'timeout' ]`
+     * @return string|\WP_Error
+     */
+    public function transcribe( $file, $options = array() ) {
+        if ( empty( $this->api_key ) ) {
+            return new \WP_Error( 'no_api_key', sprintf(
+                /* translators: %s: provider label */
+                __( '%s API key is not configured.', 'betterdocs' ),
+                $this->label()
+            ) );
+        }
+
+        $model   = ! empty( $options['model'] ) ? (string) $options['model'] : 'gpt-4o-mini-transcribe';
+        $timeout = isset( $options['timeout'] ) ? (int) $options['timeout'] : 120;
+        $status  = null;
+
+        $data = $this->post_multipart(
+            $this->base_url() . '/audio/transcriptions',
+            array( 'Authorization' => 'Bearer ' . $this->api_key ),
+            array(
+                'model'           => $model,
+                'response_format' => 'json',
+            ),
+            array(
+                'name'     => 'file',
+                'filename' => $file['filename'],
+                'type'     => $file['mime'],
+                'path'     => $file['path'],
+            ),
+            $timeout,
+            $status
+        );
+
+        if ( is_wp_error( $data ) ) {
+            return $data;
+        }
+
+        if ( isset( $data['error'] ) ) {
+            $message = isset( $data['error']['message'] ) ? $data['error']['message'] : __( 'Unknown error.', 'betterdocs' );
+            return new \WP_Error( 'provider_error', $this->classify_http_error( $status, $message, $model ) );
+        }
+
+        return isset( $data['text'] ) ? (string) $data['text'] : '';
+    }
+
+    /**
      * Default reasoning_effort for a gpt-5* model.
      *
      * The original GPT-5 generation (gpt-5, gpt-5-mini, gpt-5-nano) accepts

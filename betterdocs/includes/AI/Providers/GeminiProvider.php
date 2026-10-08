@@ -119,6 +119,76 @@ class GeminiProvider extends BaseProvider {
     }
 
     /**
+     * Transcribe audio or video.
+     *
+     * Gemini has no dedicated speech endpoint — the media rides in the ordinary
+     * `generateContent` call as an `inline_data` part beside a text instruction,
+     * and the model returns the transcript as its answer. Inline data is base64,
+     * which inflates the payload by roughly a third; the caller caps media at
+     * 15 MB for this platform so the request stays inside Gemini's inline
+     * ceiling. (Files API upload would lift that, and is the obvious next step
+     * if longer recordings are ever needed.)
+     *
+     * @param array $file    `[ 'path', 'filename', 'mime' ]`
+     * @param array $options `[ 'model', 'timeout', 'max_tokens' ]`
+     * @return string|\WP_Error
+     */
+    public function transcribe( $file, $options = array() ) {
+        if ( empty( $this->api_key ) ) {
+            return new \WP_Error( 'no_api_key', sprintf( __( '%s API key is not configured.', 'betterdocs' ), $this->label() ) );
+        }
+
+        $bytes = @file_get_contents( $file['path'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local temp upload, not a remote fetch.
+        if ( false === $bytes ) {
+            return new \WP_Error( 'api_error', __( 'Could not read the uploaded file.', 'betterdocs' ) );
+        }
+
+        $model   = ! empty( $options['model'] ) ? (string) $options['model'] : 'gemini-flash-latest';
+        $timeout = isset( $options['timeout'] ) ? (int) $options['timeout'] : 120;
+
+        $payload = array(
+            'contents'         => array(
+                array(
+                    'role'  => 'user',
+                    'parts' => array(
+                        array( 'text' => __( 'Transcribe the speech in this recording verbatim as plain text. Do not summarise, translate or add commentary. If there is no speech, reply with nothing at all.', 'betterdocs' ) ),
+                        array( 'inline_data' => array(
+                            'mime_type' => $file['mime'],
+                            'data'      => base64_encode( $bytes ),
+                        ) ),
+                    ),
+                ),
+            ),
+            'generationConfig' => array(
+                'maxOutputTokens' => isset( $options['max_tokens'] ) ? (int) $options['max_tokens'] : 8192,
+            ),
+        );
+
+        unset( $bytes );
+
+        $url    = $this->base_url() . '/models/' . rawurlencode( $model ) . ':generateContent';
+        $status = null;
+        $data   = $this->post_json(
+            $url,
+            array( 'Content-Type' => 'application/json', 'x-goog-api-key' => $this->api_key ),
+            $payload,
+            $timeout,
+            $status
+        );
+
+        if ( is_wp_error( $data ) ) {
+            return $data;
+        }
+
+        if ( ! empty( $data['error'] ) ) {
+            $raw = isset( $data['error']['message'] ) ? $data['error']['message'] : __( 'Unknown API error.', 'betterdocs' );
+            return new \WP_Error( 'provider_error', $this->classify_http_error( $status, $raw, $model ) );
+        }
+
+        return $this->extract_text( $data );
+    }
+
+    /**
      * Concatenate all text parts of the first candidate.
      *
      * @param array $data

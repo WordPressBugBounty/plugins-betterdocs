@@ -39,7 +39,32 @@ class ToC extends Shortcode {
 			return '';
 		}
 
+		if ( '1' == $this->attributes['collapsible_on_mobile'] && false === has_action( 'wp_footer', [ __CLASS__, 'print_collapsible_toggle' ] ) ) {
+			add_action( 'wp_footer', [ __CLASS__, 'print_collapsible_toggle' ], 5 );
+		}
+
 		$this->views( 'shortcodes/toc' );
+	}
+
+	/**
+	 * "Collapsible on small devices" is toggled by betterdocs.js, which only
+	 * docs pages load. On other pages (the shortcode, block or widget placed
+	 * on a page) the title did nothing and the list stayed hidden on phones,
+	 * so add the same toggle there. The CSS limits it to small screens.
+	 */
+	public static function print_collapsible_toggle() {
+		if ( wp_script_is( 'betterdocs', 'enqueued' ) ) {
+			return;
+		}
+
+		$js = <<<'JS'
+document.addEventListener('click',function(e){var t=e.target.closest?e.target.closest('.betterdocs-toc.collapsible-sm .toc-title'):null;if(!t)return;e.preventDefault();
+function s(el){el.style.display=getComputedStyle(el).display==='none'?'block':'none';}
+t.querySelectorAll('.angle-icon').forEach(s);var l=t.nextElementSibling;if(l&&l.classList.contains('toc-list'))s(l);});
+JS;
+		wp_register_script( 'betterdocs-toc-collapsible', false, [], BETTERDOCS_VERSION, true );
+		wp_add_inline_script( 'betterdocs-toc-collapsible', $js );
+		wp_enqueue_script( 'betterdocs-toc-collapsible' );
 	}
 
 	public function view_params() {

@@ -8,7 +8,20 @@ $singular_reading_text = betterdocs()->settings->get( 'singular_estimated_readin
 $reading_title         = betterdocs()->settings->get( 'estimated_reading_time_title' );
 $article_summary 	   = betterdocs()->settings->get( 'enable_article_summary', false );
 ?>
-<?php echo betterdocs()->settings->get( 'enable_estimated_reading_time' ) ? do_shortcode( '[betterdocs_reading_time singular_reading_text="' . $singular_reading_text . '" reading_text="' . $reading_text . '" reading_title="' . $reading_title . '"]' ) : ''; ?>
+<?php
+	/**
+	 * Meta row — reading time on the leading edge, AI Actions on the trailing
+	 * edge. The wrapper renders only when at least one side has something.
+	 */
+	$view_object->get(
+		'templates/parts/doc-meta',
+		[
+			'reading_time' => betterdocs()->settings->get( 'enable_estimated_reading_time' )
+				? do_shortcode( '[betterdocs_reading_time singular_reading_text="' . $singular_reading_text . '" reading_text="' . $reading_text . '" reading_title="' . $reading_title . '"]' )
+				: ''
+		]
+	);
+	?>
 <div class="betterdocs-entry-content">
 	<?php
 		/**

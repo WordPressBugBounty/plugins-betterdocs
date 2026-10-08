@@ -44,7 +44,9 @@ if ( $terms_query_args == false ) {
 
 		if ( is_single() && ! empty( $_current_queried_object_id ) ) {
 			$_category_ids = wp_get_post_terms( get_the_ID(), 'doc_category', [ 'fields' => 'ids' ] );
-			$ancestors     = get_ancestors( $_category_ids[0], 'doc_category' );
+			if ( ! is_wp_error( $_category_ids ) && ! empty( $_category_ids ) ) {
+				$ancestors = get_ancestors( $_category_ids[0], 'doc_category' );
+			}
 		}
 
 		if ( ! is_wp_error( $terms ) ) {

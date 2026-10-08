@@ -4345,6 +4345,959 @@ class SingleDoc extends Section {
 		);
 	}
 
+	/**
+	 * AI Actions split button.
+	 *
+	 * Mirrors the style controls the Gutenberg block and the Elementor widget
+	 * already expose (see Editors/Elementor/Widget/ReadingTime.php:377-471), so the
+	 * three surfaces stay in step. Declared physically after the reading-time group
+	 * and sharing its priority of 155: WP_Customize_Manager::prepare_controls()
+	 * sorts by priority then instance_number, and instance_number follows
+	 * registration order, which Section::register() takes from get_class_methods()
+	 * — i.e. source order. There is no free integer between 155 and the 156 "Entry
+	 * Content" separator, and this is the same mechanism that already keeps the
+	 * Author group above Estimated Reading Time.
+	 */
+	public function doc_ai_actions_section() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_ai_actions_section',
+			[
+				'default'           => $this->defaults['betterdocs_doc_ai_actions_section'],
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SeparatorControl(
+				$this->customizer,
+				'betterdocs_doc_ai_actions_section',
+				[
+					'label'    => __( 'AI Actions', 'betterdocs' ),
+					'priority' => 155,
+					'settings' => 'betterdocs_doc_ai_actions_section',
+					'section'  => 'betterdocs_single_docs_settings'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_bg_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_bg_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_bg_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_bg_color',
+				[
+					'label'    => __( 'Background Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_ai_actions_bg_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_color',
+				[
+					'label'    => __( 'Font Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_ai_actions_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_font_size() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_font_size',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_font_size'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_font_size',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_font_size',
+					'label'       => __( 'Font Size', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'    => 0,
+						'max'    => 40,
+						'step'   => 1,
+						'suffix' => 'px',
+						// The setting defaults to '' so nothing is emitted until the
+						// user opts in, but '' is not representable in an
+						// <input type="range"> — the browser coerces it to the
+						// min/max midpoint. This is the value ai-actions.scss actually
+						// paints, so the thumb starts on the truth. Read by
+						// customizer-range-value-control.js; never written to the setting.
+						'data-unset-val' => 14
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_font_weight() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_font_weight',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_font_weight'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_font_weight',
+				[
+					'label'    => __( 'Font Weight', 'betterdocs' ),
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_ai_actions_font_weight',
+					'type'     => 'select',
+					// The empty option has to be a real choice: Sanitizer::select()
+					// falls back to the setting default unless the input is a key of
+					// $control->choices, and '' is the default that emits nothing.
+					'choices'  => [
+						''       => __( 'Default', 'betterdocs' ),
+						'normal' => 'Normal',
+						'100'    => '100',
+						'200'    => '200',
+						'300'    => '300',
+						'400'    => '400',
+						'500'    => '500',
+						'600'    => '600',
+						'700'    => '700',
+						'800'    => '800',
+						'900'    => '900'
+					],
+					'priority' => 155
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_icon_size() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_icon_size',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_icon_size'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_icon_size',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_icon_size',
+					'label'       => __( 'Icon Size', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'            => 10,
+						'max'            => 40,
+						'step'           => 1,
+						'suffix'         => 'px',
+						// Reset target, so it has to be the shipped default.
+						'data-unset-val' => 14
+					]
+				]
+			)
+		);
+	}
+
+	/**
+	 * Icon colour. Separate from the label colour above: the copy glyph and the
+	 * caret are the only part of the control that can carry a tint without
+	 * turning the label into a link-coloured word, and every icon in the button
+	 * is stroked with `currentColor`, so one `color` declaration does both.
+	 */
+	public function betterdocs_doc_single_content_ai_actions_icon_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_icon_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_icon_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_icon_color',
+				[
+					'label'    => __( 'Icon Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_ai_actions_icon_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_border_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_border_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_border_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_border_color',
+				[
+					'label'    => __( 'Border Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_ai_actions_border_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_border_width() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_border_width',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_border_width'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_border_width',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_border_width',
+					'label'       => __( 'Border Width', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'            => 0,
+						'max'            => 10,
+						'step'           => 1,
+						'suffix'         => 'px',
+						// The button ships borderless, so 0 is both the default and
+						// what "reset" has to return to.
+						'data-unset-val' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_border_radius() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_border_radius',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_border_radius'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_border_radius',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_border_radius',
+					'label'       => __( 'Border Radius', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'            => 0,
+						'max'            => 100,
+						'step'           => 1,
+						'suffix'         => 'px',
+						// The shipped corner, shared with the reading-time pill.
+						'data-unset-val' => 16
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_ai_actions_padding() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_padding',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_padding'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new TitleControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_padding',
+				[
+					'type'        => 'betterdocs-title',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_padding',
+					'label'       => __( 'Padding', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'id'    => 'betterdocs_doc_single_content_ai_actions_padding',
+						'class' => 'betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_padding_top',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_padding_top'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_padding_top',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_padding_top',
+					'label'       => __( 'Top', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_ai_actions_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_padding_right',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_padding_right'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_padding_right',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_padding_right',
+					'label'       => __( 'Right', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_ai_actions_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_padding_bottom',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_padding_bottom'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_padding_bottom',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_padding_bottom',
+					'label'       => __( 'Bottom', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_ai_actions_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_ai_actions_padding_left',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_ai_actions_padding_left'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_ai_actions_padding_left',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_ai_actions_padding_left',
+					'label'       => __( 'Left', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_ai_actions_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+	}
+
+
+	/**
+	 * Listen — the pill that morphs into an audio player.
+	 *
+	 * Mirrors the AI Actions group directly above, control for control, plus one
+	 * of its own: Accent Color, for the player's chrome. Declared physically after
+	 * that group and sharing its priority of 155, which is how
+	 * WP_Customize_Manager::prepare_controls() is made to order them —
+	 * `instance_number` follows registration order, which Section::register() takes
+	 * from get_class_methods(), i.e. source order. There is no free integer between
+	 * 155 and the 156 "Entry Content" separator, and this is the same mechanism that
+	 * already keeps the Author group above Estimated Reading Time.
+	 */
+	public function doc_listen_section() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_listen_section',
+			[
+				'default'           => $this->defaults['betterdocs_doc_listen_section'],
+				'sanitize_callback' => 'esc_html'
+			]
+		);
+
+		$this->customizer->add_control(
+			new SeparatorControl(
+				$this->customizer,
+				'betterdocs_doc_listen_section',
+				[
+					'label'    => __( 'Listen', 'betterdocs' ),
+					'priority' => 155,
+					'settings' => 'betterdocs_doc_listen_section',
+					'section'  => 'betterdocs_single_docs_settings'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_bg_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_bg_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_bg_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_bg_color',
+				[
+					'label'    => __( 'Background Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_listen_bg_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_color',
+				[
+					'label'    => __( 'Font Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_listen_color'
+				]
+			)
+		);
+	}
+
+	/**
+	 * The player's chrome: the play button's fill, the progress bar's fill and the
+	 * scrubber's ring.
+	 *
+	 * One control for all three because listen.scss publishes them as a single
+	 * custom property, `--bd-listen-accent`, on `.betterdocs-listen-player`. Three
+	 * separate controls would be three chances for a site to end up with a play
+	 * button that does not match its own progress bar.
+	 */
+	public function betterdocs_doc_single_content_listen_accent_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_accent_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_accent_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_accent_color',
+				[
+					'label'       => __( 'Player Accent Color', 'betterdocs' ),
+					'description' => __( 'Used for the play button, the progress bar and its handle.', 'betterdocs' ),
+					'priority'    => 155,
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_accent_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_font_size() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_font_size',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_font_size'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_font_size',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_font_size',
+					'label'       => __( 'Font Size', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'    => 0,
+						'max'    => 40,
+						'step'   => 1,
+						'suffix' => 'px',
+						// Reset target, so it has to be the value listen.scss paints.
+						// The player's own readout is sized in `em`, so this scales
+						// that with the label rather than leaving it behind.
+						'data-unset-val' => 14
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_font_weight() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_font_weight',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_font_weight'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'choices' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new WP_Customize_Control(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_font_weight',
+				[
+					'label'    => __( 'Font Weight', 'betterdocs' ),
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_listen_font_weight',
+					'type'     => 'select',
+					// The empty option has to be a real choice: Sanitizer::select()
+					// falls back to the setting default unless the input is a key of
+					// $control->choices, and '' is the default that emits nothing.
+					'choices'  => [
+						''       => __( 'Default', 'betterdocs' ),
+						'normal' => 'Normal',
+						'100'    => '100',
+						'200'    => '200',
+						'300'    => '300',
+						'400'    => '400',
+						'500'    => '500',
+						'600'    => '600',
+						'700'    => '700',
+						'800'    => '800',
+						'900'    => '900'
+					],
+					'priority' => 155
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_icon_size() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_icon_size',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_icon_size'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_icon_size',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_icon_size',
+					'label'       => __( 'Icon Size', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'    => 10,
+						'max'    => 40,
+						'step'   => 1,
+						'suffix' => 'px',
+						// The headset glyph on the collapsed pill only. The player's
+						// own glyphs are 9px and 11px by design and stay that way —
+						// they have to fit inside 20px circles.
+						'data-unset-val' => 14
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_icon_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_icon_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_icon_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_icon_color',
+				[
+					'label'    => __( 'Icon Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_listen_icon_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_border_color() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_border_color',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_border_color'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'rgba' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new AlphaColorControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_border_color',
+				[
+					'label'    => __( 'Border Color', 'betterdocs' ),
+					'priority' => 155,
+					'section'  => 'betterdocs_single_docs_settings',
+					'settings' => 'betterdocs_doc_single_content_listen_border_color'
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_border_width() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_border_width',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_border_width'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_border_width',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_border_width',
+					'label'       => __( 'Border Width', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'            => 0,
+						'max'            => 10,
+						'step'           => 1,
+						'suffix'         => 'px',
+						'data-unset-val' => 0
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_border_radius() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_border_radius',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_border_radius'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new RangeValueControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_border_radius',
+				[
+					'type'        => 'betterdocs-range-value',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_border_radius',
+					'label'       => __( 'Border Radius', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'min'            => 0,
+						'max'            => 100,
+						'step'           => 1,
+						'suffix'         => 'px',
+						'data-unset-val' => 16
+					]
+				]
+			)
+		);
+	}
+
+	public function betterdocs_doc_single_content_listen_padding() {
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_padding',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_padding'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new TitleControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_padding',
+				[
+					'type'        => 'betterdocs-title',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_padding',
+					'label'       => __( 'Padding', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'id'    => 'betterdocs_doc_single_content_listen_padding',
+						'class' => 'betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_padding_top',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_padding_top'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_padding_top',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_padding_top',
+					'label'       => __( 'Top', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_listen_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_padding_right',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_padding_right'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_padding_right',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_padding_right',
+					'label'       => __( 'Right', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_listen_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_padding_bottom',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_padding_bottom'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_padding_bottom',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_padding_bottom',
+					'label'       => __( 'Bottom', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_listen_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+
+		$this->customizer->add_setting(
+			'betterdocs_doc_single_content_listen_padding_left',
+			[
+				'default'           => $this->defaults['betterdocs_doc_single_content_listen_padding_left'],
+				'capability'        => 'edit_theme_options',
+				'transport'         => 'postMessage',
+				'sanitize_callback' => [ $this->sanitizer, 'integer' ]
+			]
+		);
+
+		$this->customizer->add_control(
+			new DimensionControl(
+				$this->customizer,
+				'betterdocs_doc_single_content_listen_padding_left',
+				[
+					'type'        => 'betterdocs-dimension',
+					'section'     => 'betterdocs_single_docs_settings',
+					'settings'    => 'betterdocs_doc_single_content_listen_padding_left',
+					'label'       => __( 'Left', 'betterdocs' ),
+					'priority'    => 155,
+					'input_attrs' => [
+						'class' => 'betterdocs_doc_single_content_listen_padding betterdocs-dimension'
+					]
+				]
+			)
+		);
+	}
+
 	public function doc_single_entry_content() {
 		$this->customizer->add_setting(
 			'betterdocs_doc_single_entry_content',

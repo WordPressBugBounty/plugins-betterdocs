@@ -18,7 +18,8 @@ class CategoryGrid extends Block {
 	];
 
 	protected $frontend_scripts = [
-		'betterdocs-category-grid'
+		'betterdocs-category-grid',
+		'betterdocs-categorygrid'
 	];
 	protected $frontend_styles  = [
 		'betterdocs-fontawesome',
@@ -41,7 +42,10 @@ class CategoryGrid extends Block {
 			return;
 		}
 
-		$this->assets_manager->enqueue(
+		// Registered only: load_scripts() enqueues it (with masonry) when the
+		// block renders. Enqueuing it here put the script, masonry and
+		// imagesloaded on every page of the site, with or without a grid.
+		$this->assets_manager->register(
 			'betterdocs-categorygrid',
 			'blocks/categorygrid/frontend.js',
 			[ 'masonry' ]

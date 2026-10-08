@@ -349,6 +349,25 @@ class Settings extends Base {
             'internal_knowledge_base_type' => 'basic',
             'betterdocs_access_control_repeater_kb' => array(),
             'enable_git_integration' => false,
+            'enable_ai_actions' => true,
+            'enable_markdown_endpoint' => true,
+            'ai_actions_button_label' => __( 'Copy page', 'betterdocs' ),
+            'ai_actions_prompt_template' => __( 'Read from {URL} so I can ask questions about it.', 'betterdocs' ),
+            'ai_actions_copy_page' => true,
+            'ai_actions_view_markdown' => true,
+            'ai_actions_chatgpt' => true,
+            'ai_actions_claude' => true,
+            'ai_actions_gemini' => true,
+            'ai_actions_perplexity' => false,
+            'ai_actions_grok' => false,
+            'enable_listen' => true,
+            'listen_button_label' => __( 'Listen', 'betterdocs' ),
+            'listen_show_speed' => true,
+            // Words a synthetic voice gets through in a minute at rate 1.
+            // Deliberately lower than the 200 the reading-time pill assumes — that
+            // number describes silent reading. Only the player's duration estimate
+            // uses this; see Core\Listen::WORDS_PER_MINUTE.
+            'listen_words_per_minute' => 180,
             /**
              * MCP master switch. Off by default; the toggle lives on the
              * BetterDocs → MCP page, not in the settings tree, and writes
@@ -1797,6 +1816,200 @@ class Settings extends Base {
                                                                     'label' => __( 'Show Related Docs', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
                                                                     'default' => false
+                                                                )
+                                                            ) )
+                                                        ),
+                                                        'layout_single_doc_ai_actions' => array(
+                                                            'id' => 'layout_single_doc_ai_actions',
+                                                            'name' => 'layout_single_doc_ai_actions',
+                                                            'type' => 'section',
+                                                            'label' => __( 'AI Actions', 'betterdocs' ),
+                                                            'priority' => 8,
+                                                            'fields' => apply_filters( 'betterdocs_single_doc_ai_actions', array(
+                                                                'enable_ai_actions' => array(
+                                                                    'name' => 'enable_ai_actions',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 1,
+                                                                    'label' => __( 'Enable AI Actions', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Show a "Copy page" button beside the doc title so readers can copy the page as Markdown or open it in an AI assistant.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true
+                                                                ),
+                                                                'enable_markdown_endpoint' => array(
+                                                                    'name' => 'enable_markdown_endpoint',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 2,
+                                                                    'label' => __( 'Serve Docs as Markdown', 'betterdocs' ),
+                                                                    // Plain text, not `<doc-url>.md`: the subtitle is rendered as HTML, so an
+                                                                    // angle-bracketed placeholder is swallowed as an unknown tag and the
+                                                                    // sentence read "Publish every doc at .md".
+                                                                    'label_subtitle' => __( 'Publish every doc as Markdown at its address plus .md (for example /docs/getting-started.md), so AI assistants can read a clean copy. The Listen player uses it too. Required by "Copy page", "View as Markdown", and the Claude and Google AI Studio actions.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true
+                                                                ),
+                                                                // AI Actions and the Markdown endpoint are deliberately independent: the
+                                                                // `.md` copies also serve AI assistants directly and the Listen player.
+                                                                // So switching AI Actions off leaves Markdown on — say so where the
+                                                                // admin is looking, rather than leaving a lone "Enabled" toggle under a
+                                                                // feature that reads as switched off.
+                                                                'ai_actions_markdown_notice' => array(
+                                                                    'name' => 'ai_actions_markdown_notice',
+                                                                    'type' => 'html',
+                                                                    'priority' => 3,
+                                                                    'html' => sprintf(
+                                                                        '<div class="betterdocs-ai-actions-markdown-notice" style="margin:8px 0 0;padding:12px 16px;background:#f0f6ff;border-left:4px solid #5a6bff;border-radius:4px;font-size:13px;color:#202223;line-height:1.5;">%s</div>',
+                                                                        esc_html__( 'AI Actions is off, but your docs are still published as Markdown (.md) for AI assistants and the Listen player. Turn off "Serve Docs as Markdown" above if you don\'t want that.', 'betterdocs' )
+                                                                    ),
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', false ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_button_label' => array(
+                                                                    'name' => 'ai_actions_button_label',
+                                                                    'type' => 'text',
+                                                                    'priority' => 4,
+                                                                    'label' => __( 'Button Label', 'betterdocs' ),
+                                                                    'default' => __( 'Copy page', 'betterdocs' ),
+                                                                    'rules' => Rules::is( 'enable_ai_actions', true )
+                                                                ),
+                                                                'ai_actions_prompt_template' => array(
+                                                                    'name' => 'ai_actions_prompt_template',
+                                                                    'type' => 'text',
+                                                                    'priority' => 5,
+                                                                    'label' => __( 'AI Prompt Template', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Sent to the AI assistant when a reader opens this doc there. Use {URL} for the doc address.', 'betterdocs' ),
+                                                                    'default' => __( 'Read from {URL} so I can ask questions about it.', 'betterdocs' ),
+                                                                    'rules' => Rules::is( 'enable_ai_actions', true )
+                                                                ),
+                                                                'ai_actions_copy_page' => array(
+                                                                    'name' => 'ai_actions_copy_page',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 6,
+                                                                    'label' => __( 'Copy Page', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_view_markdown' => array(
+                                                                    'name' => 'ai_actions_view_markdown',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 7,
+                                                                    'label' => __( 'View as Markdown', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_chatgpt' => array(
+                                                                    'name' => 'ai_actions_chatgpt',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 8,
+                                                                    'label' => __( 'Open in ChatGPT', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::is( 'enable_ai_actions', true )
+                                                                ),
+                                                                'ai_actions_claude' => array(
+                                                                    'name' => 'ai_actions_claude',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 9,
+                                                                    'label' => __( 'Open in Claude', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_gemini' => array(
+                                                                    'name' => 'ai_actions_gemini',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 10,
+                                                                    'label' => __( 'Open in Google AI Studio', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Gemini has no way to receive a prompt from a link, so this opens Google AI Studio instead. A Google account is required.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_perplexity' => array(
+                                                                    'name' => 'ai_actions_perplexity',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 11,
+                                                                    'label' => __( 'Open in Perplexity', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => false,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                ),
+                                                                'ai_actions_grok' => array(
+                                                                    'name' => 'ai_actions_grok',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 12,
+                                                                    'label' => __( 'Open in Grok', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => false,
+                                                                    'rules' => Rules::logicalRule( array(
+                                                                        Rules::is( 'enable_ai_actions', true ),
+                                                                        Rules::is( 'enable_markdown_endpoint', true )
+                                                                    ), 'and' )
+                                                                )
+                                                            ) )
+                                                        ),
+                                                        'layout_single_doc_listen' => array(
+                                                            'id' => 'layout_single_doc_listen',
+                                                            'name' => 'layout_single_doc_listen',
+                                                            'type' => 'section',
+                                                            'label' => __( 'Listen', 'betterdocs' ),
+                                                            'priority' => 9,
+                                                            'fields' => apply_filters( 'betterdocs_single_doc_listen', array(
+                                                                'enable_listen' => array(
+                                                                    'name' => 'enable_listen',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 1,
+                                                                    'label' => __( 'Enable Listen', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Show a "Listen" button beside the reading time. Pressed, it turns into a small audio player that reads the doc aloud using the visitor\'s browser — no audio files and no third-party service.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true
+                                                                ),
+                                                                'listen_button_label' => array(
+                                                                    'name' => 'listen_button_label',
+                                                                    'type' => 'text',
+                                                                    'priority' => 2,
+                                                                    'label' => __( 'Button Label', 'betterdocs' ),
+                                                                    'default' => __( 'Listen', 'betterdocs' ),
+                                                                    'rules' => Rules::is( 'enable_listen', true )
+                                                                ),
+                                                                'listen_show_speed' => array(
+                                                                    'name' => 'listen_show_speed',
+                                                                    'type' => 'toggle',
+                                                                    'priority' => 3,
+                                                                    'label' => __( 'Speed Control', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Let readers cycle the playback speed between 0.75× and 2×.', 'betterdocs' ),
+                                                                    'enable_disable_text_active' => true,
+                                                                    'default' => true,
+                                                                    'rules' => Rules::is( 'enable_listen', true )
+                                                                ),
+                                                                'listen_words_per_minute' => array(
+                                                                    'name' => 'listen_words_per_minute',
+                                                                    'type' => 'number',
+                                                                    'priority' => 4,
+                                                                    'label' => __( 'Words Per Minute', 'betterdocs' ),
+                                                                    'label_subtitle' => __( 'Used to estimate the total playing time the player shows. Browser voices read at roughly 180 words a minute at normal speed; raise this if the countdown finishes early.', 'betterdocs' ),
+                                                                    'default' => 180,
+                                                                    'min' => 60,
+                                                                    'max' => 400,
+                                                                    'rules' => Rules::is( 'enable_listen', true )
                                                                 )
                                                             ) )
                                                         )

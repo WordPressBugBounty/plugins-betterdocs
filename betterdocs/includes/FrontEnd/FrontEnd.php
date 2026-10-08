@@ -259,11 +259,21 @@ class FrontEnd extends Base {
 		if ( is_singular( 'docs' ) ) {
 			wp_enqueue_style( 'betterdocs-single' );
 			wp_enqueue_style( 'betterdocs-article-summary' );
+			wp_enqueue_style( 'betterdocs-ai-actions' );
+			if ( betterdocs()->listen->is_enabled() ) {
+				wp_enqueue_style( 'betterdocs-listen' );
+			}
 			wp_enqueue_style( 'betterdocs-encyclopedia' );
 			wp_enqueue_style( 'betterdocs-glossaries' );
 			wp_enqueue_script( 'clipboard' );
 			wp_enqueue_script( 'betterdocs-glossaries' );
 		}
+
+		// The shortcode / block / widget can place AI Actions and Listen on any page.
+		// Their own dependency lists run during the_content, i.e. after wp_head has
+		// already printed, which would leave the controls unstyled until the footer
+		// stylesheet parsed — so catch those placements here instead.
+		$this->maybe_enqueue_meta_row();
 
 		if ( is_post_type_archive( 'docs' ) ) {
 			wp_enqueue_style( 'betterdocs-category-grid' ); //category grid shortcode is supposed to enqueue this style, but this is called again to fix flicking of UI on Docs Page
@@ -288,6 +298,44 @@ class FrontEnd extends Base {
 			wp_enqueue_style( 'betterdocs-encyclopedia' );
 			wp_enqueue_style( 'betterdocs-single' );
 			wp_enqueue_style( 'betterdocs-glossaries' );
+		}
+	}
+
+	/**
+	 * Enqueue the meta-row assets in wp_head when the current post embeds one of
+	 * the shortcodes or the block, so an off-doc placement is styled on first
+	 * paint.
+	 *
+	 * @since 4.8.0
+	 * @since 4.9.2 Listen added, and renamed from maybe_enqueue_ai_actions().
+	 */
+	protected function maybe_enqueue_meta_row() {
+		if ( is_singular( 'docs' ) ) {
+			return;
+		}
+
+		$post = get_post();
+		if ( ! $post instanceof \WP_Post ) {
+			return;
+		}
+
+		// `betterdocs/reading-time` is the merged meta-row block: it carries the AI
+		// Actions button and the Listen pill, and the `.betterdocs-doc-meta` wrapper
+		// lives in both stylesheets, so it needs a handle whichever third of it is
+		// switched on. Which is also why the block counts for both features here.
+		$block = has_block( 'betterdocs/reading-time', $post );
+
+		if ( betterdocs()->ai_actions->is_enabled()
+			&& ( $block || has_shortcode( $post->post_content, 'betterdocs_ai_actions' ) ) ) {
+			wp_enqueue_style( 'betterdocs-ai-actions' );
+			wp_enqueue_script( 'clipboard' );
+			wp_enqueue_script( 'betterdocs' );
+		}
+
+		if ( betterdocs()->listen->is_enabled()
+			&& ( $block || has_shortcode( $post->post_content, 'betterdocs_listen' ) ) ) {
+			wp_enqueue_style( 'betterdocs-listen' );
+			wp_enqueue_script( 'betterdocs' );
 		}
 	}
 

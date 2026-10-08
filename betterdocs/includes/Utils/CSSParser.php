@@ -14,12 +14,30 @@ class CSSParser {
 	}
 
 	/**
+	 * Whether a parsed block is one of BetterDocs' own (`betterdocs/*`).
+	 *
+	 * `blockId` / `blockMeta` are the same attribute names Essential Blocks
+	 * uses, so without this check BetterDocs collected every Essential Blocks
+	 * block and wrote a full copy of its generated CSS (909 KB on the
+	 * essential-blocks.com homepage) into betterdocs-style-{id}.min.css.
+	 *
+	 * @param array $item Parsed block.
+	 * @return bool
+	 */
+	public static function is_betterdocs_block( $item ) {
+		return isset( $item['blockName'] ) && is_string( $item['blockName'] ) && 0 === strpos( $item['blockName'], 'betterdocs/' );
+	}
+
+	/**
 	 * Recursive function for parsing blocks
 	 */
 	public static function betterdocs_block_style_recursive( $block, &$betterdocs_blocks ) {
 		if ( count( $block ) > 0 ) {
 			foreach ( $block as $item ) {
 				$attributes = $item['attrs'];
+				// Other plugins' blocks are still walked (below) for nested
+				// BetterDocs blocks, but never contribute styles themselves.
+				$is_own = self::is_betterdocs_block( $item );
 
 				$blockId = '';
 				if ( isset( $attributes['blockId'] ) && ! empty( $attributes['blockId'] ) ) {
@@ -45,14 +63,14 @@ class CSSParser {
 					$betterdocs_blocks['reusableBlocks'][ $attributes['ref'] ] = self::betterdocs_block_style_recursive( $reusable_content, $reusable_blocks );
 				} elseif ( isset( $item['innerBlocks'] ) && count( $item['innerBlocks'] ) > 0 ) {
 						self::betterdocs_block_style_recursive( $item['innerBlocks'], $betterdocs_blocks );
-					if ( isset( $attributes['blockMeta'] ) && ! empty( $attributes['blockMeta'] ) ) {
+					if ( $is_own && isset( $attributes['blockMeta'] ) && ! empty( $attributes['blockMeta'] ) ) {
 						$betterdocs_blocks[ $blockId ] = [
 							'blockMeta'    => $blockMeta,
 							'commonStyles' => $commonStyles,
 							'customCss'    => $customCss
 						];
 					}
-				} elseif ( isset( $attributes['blockMeta'] ) && ! empty( $attributes['blockMeta'] ) ) {
+				} elseif ( $is_own && isset( $attributes['blockMeta'] ) && ! empty( $attributes['blockMeta'] ) ) {
 					$betterdocs_blocks[ $blockId ] = [
 						'blockMeta'    => $blockMeta,
 						'commonStyles' => $commonStyles,

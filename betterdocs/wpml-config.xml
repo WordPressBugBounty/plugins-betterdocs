@@ -33,6 +33,9 @@
             <key name="feedback_form_title" />
             <key name="search_button_text" />
             <key name="breadcrumb_home_url" />
+            <key name="ai_actions_button_label" />
+            <key name="ai_actions_prompt_template" />
+            <key name="listen_button_label" />
         </key>
     </admin-texts>
     <elementor-widgets>
@@ -84,6 +87,9 @@
             </conditions>
             <fields>
                 <field type="BetterDocs Estimated Reading Time: Min Read Text" editor_type="LINE">ert_reading_text</field>
+                <field type="BetterDocs Reading Time and AI Action: Button Label" editor_type="LINE">ai_actions_button_label</field>
+                <field type="BetterDocs Reading Time and AI Action: AI Prompt Template" editor_type="AREA">ai_actions_prompt_template</field>
+                <field type="BetterDocs Reading Time and AI Action: Listen Button Label" editor_type="LINE">listen_button_label</field>
             </fields>
         </widget>
     </elementor-widgets>

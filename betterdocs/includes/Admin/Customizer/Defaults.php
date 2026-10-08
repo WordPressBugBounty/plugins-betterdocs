@@ -221,6 +221,84 @@ class Defaults extends Base {
 			'betterdocs_doc_single_content_est_reading_padding_right' => '10',
 			'betterdocs_doc_single_content_est_reading_padding_bottom' => '5',
 			'betterdocs_doc_single_content_est_reading_padding_left' => '10',
+			// AI Actions. Fill, type and box mirror the reading-time pill directly
+			// above — same #F9FAFB, same #667085 at 14px, same 5/10 padding — because
+			// the two sit side by side in the meta row and any drift between them
+			// reads as a mistake. Only the radius is the button's own: 999px keeps it
+			// a pill at any font size, where the pill's 16px stops being one as soon
+			// as somebody enlarges the text.
+			//
+			// These are real values rather than the '' they used to be, so the
+			// controls open showing what the button actually looks like. That is only
+			// safe because the rules they feed are (0,2,0) — see the AI Actions block
+			// in dynamic.css.php — against (0,3,0) from the block and Elementor, whose
+			// per-instance settings therefore still win. Raising the specificity there
+			// without lowering it here would silently freeze every block and widget
+			// instance inside a classic single-doc template at these values.
+			'betterdocs_doc_ai_actions_section'            => '',
+			'betterdocs_doc_single_content_ai_actions_bg_color' => '#F9FAFB',
+			'betterdocs_doc_single_content_ai_actions_color' => '#667085',
+			'betterdocs_doc_single_content_ai_actions_font_size' => '14',
+			'betterdocs_doc_single_content_ai_actions_font_weight' => 'normal',
+			'betterdocs_doc_single_content_ai_actions_icon_size' => '14',
+			'betterdocs_doc_single_content_ai_actions_icon_color' => '#667085',
+			// #D0D5DD, matching the stylesheet's divider rather than the menu's
+			// border: this setting paints the seam between the two halves as well
+			// as the (off by default) outer border, and the seam is the part that
+			// is actually visible. Anything lighter and it disappears.
+			'betterdocs_doc_single_content_ai_actions_border_color' => '#D0D5DD',
+			// No border by design; the control is here for sites that want one.
+			// The width is also what switches the border on: dynamic.css.php pairs
+			// it with `border-style: solid`, since the stylesheet ships `border: 0`
+			// and a width with no style renders nothing at all.
+			'betterdocs_doc_single_content_ai_actions_border_width' => '0',
+			// 16, the same corner the reading-time pill above uses.
+			'betterdocs_doc_single_content_ai_actions_border_radius' => '16',
+			'betterdocs_doc_single_content_ai_actions_padding' => '',
+			'betterdocs_doc_single_content_ai_actions_padding_top' => '5',
+			'betterdocs_doc_single_content_ai_actions_padding_right' => '10',
+			'betterdocs_doc_single_content_ai_actions_padding_bottom' => '5',
+			'betterdocs_doc_single_content_ai_actions_padding_left' => '10',
+			// Listen. Fill, type and box mirror the reading-time pill it sits beside
+			// and the AI Actions button above — same #F9FAFB, same #667085 at 14px,
+			// same 5/10 padding, same 16px corner. The three are one row and any
+			// drift between them reads as a mistake.
+			//
+			// Real values rather than the '' an untouched section would normally
+			// carry, for the same reason AI Actions ships real ones: the controls
+			// then open showing what the pill actually looks like. That is only safe
+			// because the rules they feed are (0,2,0) — see the Listen block in
+			// dynamic.css.php — against (0,3,0) from the block and Elementor, whose
+			// per-instance settings therefore still win.
+			'betterdocs_doc_listen_section'                => '',
+			'betterdocs_doc_single_content_listen_bg_color' => '#F9FAFB',
+			'betterdocs_doc_single_content_listen_color'    => '#667085',
+			'betterdocs_doc_single_content_listen_font_size' => '14',
+			'betterdocs_doc_single_content_listen_font_weight' => 'normal',
+			'betterdocs_doc_single_content_listen_icon_size' => '14',
+			'betterdocs_doc_single_content_listen_icon_color' => '#667085',
+			// The player's own chrome: the play button's fill, the progress bar's
+			// fill and the scrubber's ring, all three of which take their colour from
+			// one custom property. #1D2939 is the design's near-black — the progress
+			// bar needs to read against the #D0D5DD track behind it, which #667085
+			// does not.
+			'betterdocs_doc_single_content_listen_accent_color' => '#1D2939',
+			// #D0D5DD, matching the stylesheet's progress track rather than anything
+			// darker: this setting paints the (off by default) outer border, and a
+			// heavier grey turns the pill back into the bordered box the design
+			// replaced.
+			'betterdocs_doc_single_content_listen_border_color' => '#D0D5DD',
+			// No border by design; the control is here for sites that want one. The
+			// width is also what switches the border on: dynamic.css.php pairs it
+			// with `border-style: solid`, since the stylesheet ships `border: 0` and
+			// a width with no style renders nothing at all.
+			'betterdocs_doc_single_content_listen_border_width' => '0',
+			'betterdocs_doc_single_content_listen_border_radius' => '16',
+			'betterdocs_doc_single_content_listen_padding' => '',
+			'betterdocs_doc_single_content_listen_padding_top' => '5',
+			'betterdocs_doc_single_content_listen_padding_right' => '10',
+			'betterdocs_doc_single_content_listen_padding_bottom' => '5',
+			'betterdocs_doc_single_content_listen_padding_left' => '10',
 			'betterdocs_doc_single_content_area_bg_color'  => 'rgba(255,255,255,0)',
 			'betterdocs_doc_single_content_area_padding'   => '',
 			'betterdocs_doc_single_content_area_padding_top' => '30',

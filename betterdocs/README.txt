@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.3
+Stable tag: 4.9.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -254,8 +254,29 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 == Changelog ==
 
+= 4.9.4 - 08/10/2026 =
+
+- New: Write with AI now accepts audio and video attachments — drop in a Loom, a Zoom recording or a voice note and BetterDocs transcribes it, lets you correct the transcript, then writes the doc from it. Up to 25 MB, using your own OpenAI or Gemini key
+- New: Listen — a pill beside reading time that reads the article aloud in the reader's browser, with play, pause, seek and speed controls. Enable it under Settings → Layout → Single Doc → Listen; it also ships in the Reading Time block and Elementor widget, and as the [betterdocs_listen] shortcode
+- New: Animated GIFs in docs are served as a looping, muted video instead of a GIF, cutting page weight substantially, with an editor UI to link an MP4 and a poster image to an existing GIF
+- New: AI Actions — a "Copy page" button in the single doc meta row that copies the article as clean Markdown, or opens it in ChatGPT, Claude, Google AI Studio, Perplexity or Grok with the page as context. Every doc is also published as Markdown at <doc-url>.md so AI assistants can read it. Enabled by default; configure under Settings → Layout → Single Doc → AI Actions, with full Customizer styling including Icon Color. On block themes and with Elementor Theme Builder it ships inside the "Reading Time, Listen and AI Action" block and widget, and the [betterdocs_ai_actions] shortcode places it anywhere
+- Improvement: Search now ranks exact title matches above older partial matches, instead of sorting ties oldest-first
+- Improvement: The Category Grid block script now loads only on pages where the block actually renders
+- Fixed: AI features ignored the AI platform you selected and required an OpenAI key regardless
+- Fixed: A site could crash when the AI Chatbot loaded before BetterDocs and Pro loaded after it
+- Fixed: Single doc URLs returned 200 instead of a proper 404 on WPML sites
+- Fixed: Table of contents, search box and search form could overflow the page on phones, scrolling the page sideways
+- Fixed: Single Doc Layout 7 scrolled sideways at 360px, and the reactions box overflowed on phones
+- Fixed: A collapsible table of contents placed on a regular page could not be expanded on phones
+- Fixed: The doc sidebar shifted after page load, and sidebar items could stack incorrectly
+- Fixed: Synced patterns containing BetterDocs blocks lost their styling on most pages, and stale Essential Blocks CSS kept loading in the widget stylesheet on every page
+- Fixed: GIFs served as video ignored the Image block's size and styles, lost "Expand on click", stayed frozen with no controls when the browser blocked autoplay, and rendered as an empty box when linked to a non-video attachment
+- Fixed: The REST API and RSS feed returned video markup for converted GIFs
+- Few minor bug fixes and improvements
+
 = 4.9.3 - 27/09/2026 =
 
+- New: AI Actions — a "Copy page" button in the single doc meta row that copies the article as clean Markdown, or opens it in ChatGPT, Claude, Google AI Studio, Perplexity or Grok with the page as context. Every doc is also published as Markdown at <doc-url>.md so AI assistants can read it. Enabled by default; configure under Settings → Layout → Single Doc → AI Actions. On block themes and with Elementor Theme Builder it ships inside the "Reading Time and AI Action" block and widget, and the [betterdocs_ai_actions] shortcode places it anywhere
 - Fixed: Doc URLs that do not exist now return a proper 404 instead of an empty page, on sites using category-in-path permalinks
 - Fixed: Live search returned no results when the knowledge base is served from a subdomain or a domain alias
 - Fixed: Single Doc Layout 5 no longer shows Table of Contents Background, Hover and Padding controls that had no effect on the page

@@ -54,6 +54,8 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-category-archive-doc-list', 'public/css/archive-doc-list.css' );
 		$assets->register( 'betterdocs-article-summary', 'public/css/article-summary.css' );
 		$assets->register( 'betterdocs-author', 'public/css/author.css' );
+		$assets->register( 'betterdocs-ai-actions', 'public/css/ai-actions.css' );
+		$assets->register( 'betterdocs-listen', 'public/css/listen.css' );
 
 		$assets->register( 'betterdocs-category-grid', 'public/css/category-grid.css', [ 'simplebar' ] );
 		$assets->register( 'betterdocs-category-box', 'public/css/category-box.css' );
@@ -104,6 +106,28 @@ class Scripts extends Base {
 				'sticky_toc_offset' => $this->settings->get( 'sticky_toc_offset' ),
 				'summary_nonce'     => wp_create_nonce( 'betterdocs_article_summary_nonce' ),
 				'summary_error'     => __( 'Failed to generate doc summary. Please try again.', 'betterdocs' ),
+				// Namespaced so the AI Actions strings do not collide as the feature
+				// grows. Nothing URL-shaped belongs here: init() runs with no $post,
+				// so every per-doc URL lives on the rendered data-bd-* attributes.
+				'ai_actions'        => [
+					'i18n' => [
+						'copy'        => __( 'Copy page', 'betterdocs' ),
+						'copying'     => __( 'Copying…', 'betterdocs' ),
+						'copied'      => __( 'Copied', 'betterdocs' ),
+						'copy_failed' => __( 'Copy failed', 'betterdocs' ),
+						'copy_error'  => __( 'Could not copy this page. Please try again.', 'betterdocs' )
+					]
+				],
+				// Same shape and the same reasoning: namespaced, and with nothing
+				// per-doc in it. Core\Listen owns the contents, because the rates and
+				// the two content selectors are filterable and the filters have to
+				// reach the script.
+				//
+				// Guarded: this runs on `init` at 1 and Plugin::initialize() — which
+				// builds the property — is the `init` callback at 0, so the ordering
+				// holds today. It is one priority of slack, and a fatal if it ever
+				// changes.
+				'listen'            => isset( betterdocs()->listen ) ? betterdocs()->listen->localize() : [],
 				'print'             => [
 					'logo'   => $print_logo ? esc_url( $print_logo ) : '',
 					'footer' => $print_footer ? wp_kses_post( $print_footer ) : ''

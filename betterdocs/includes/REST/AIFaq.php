@@ -55,7 +55,7 @@ class AIFaq extends BaseAPI {
         if ( empty( $write_ai ) || empty( $write_ai->get_api_key() ) ) {
             return $this->error(
                 'ai_no_key',
-                __( 'OpenAI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
+                __( 'AI API key is missing. Add one in BetterDocs settings.', 'betterdocs' ),
                 400
             );
         }

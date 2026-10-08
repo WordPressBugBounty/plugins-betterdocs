@@ -1,10 +1,10 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "title": "BetterDocs Reading Time",
+    "title": "Reading Time, Listen and AI Action",
     "name": "betterdocs/reading-time",
     "category": "betterdocs",
-    "description": "Reading Time Block For Single Docs",
+    "description": "Estimated reading time, a Listen button that reads the doc aloud, and the \"Copy page\" AI Actions button, as one meta row. Each part has its own switch.",
     "textdomain": "betterdocs",
     "editorScript": "betterdocs-blocks-editor"
 }

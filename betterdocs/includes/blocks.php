@@ -174,7 +174,7 @@ return [
 		'docs'       => ''
 	],
 	'reading-time'      => [
-		'label'      => __( 'Reading Time', 'betterdocs' ),
+		'label'      => __( 'Reading Time and AI Action', 'betterdocs' ),
 		'value'      => 'reading-time',
 		'visibility' => true,
 		'object'     => ReadingTime::class,

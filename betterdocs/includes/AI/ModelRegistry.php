@@ -121,6 +121,44 @@ class ModelRegistry {
     }
 
     /**
+     * Speech-to-text model per platform, for audio and video attachments.
+     *
+     * Kept apart from the chat catalogue above because it is not a user choice:
+     * the Settings model picker selects the model that *writes the doc*, while
+     * transcription is a fixed preprocessing step. A platform absent from this
+     * map cannot transcribe, which is what Core\WriteWithAI::platform_supports()
+     * reads — so adding a key here is all it takes to light up a new provider.
+     *
+     * @since 4.9.4
+     *
+     * @return array<string,string>
+     */
+    public static function transcription_models() {
+        return apply_filters( 'betterdocs_ai_transcription_models', array(
+            // Cheaper and faster than whisper-1 at comparable accuracy, and it
+            // accepts the same container list — including video, whose audio
+            // track the endpoint extracts server-side.
+            'openai' => 'gpt-4o-mini-transcribe',
+            // Gemini has no speech endpoint; the media rides inline in an
+            // ordinary generateContent call, so this is a normal chat model.
+            'gemini' => 'gemini-flash-latest',
+        ) );
+    }
+
+    /**
+     * The transcription model for a platform, or '' when it cannot transcribe.
+     *
+     * @since 4.9.4
+     *
+     * @param string $platform
+     * @return string
+     */
+    public static function transcription_model( $platform ) {
+        $models = self::transcription_models();
+        return isset( $models[ $platform ] ) ? (string) $models[ $platform ] : '';
+    }
+
+    /**
      * Models for one platform (model_id => label). Empty array if unknown.
      *
      * @param string $platform

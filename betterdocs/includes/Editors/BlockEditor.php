@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+use WPDeveloper\BetterDocs\Core\AIActions;
 use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\FontLoader;
 use WPDeveloper\BetterDocs\Editors\BlockEditor\StyleHandler;
@@ -113,7 +114,9 @@ class BlockEditor extends BaseEditor {
 				'resturl'               => get_rest_url(),
 				'editorType'            => $editor,
 				'betterdocs_glossaries' => Helper::get_glossaries(),
-				'docsIcon'              => isset( betterdocs()->settings->get( 'docs_list_icon' )['url'] ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : ''
+				'docsIcon'              => isset( betterdocs()->settings->get( 'docs_list_icon' )['url'] ) ? betterdocs()->settings->get( 'docs_list_icon' )['url'] : '',
+				'settings'              => $this->block_setting_defaults(),
+				'aiActions'             => $this->ai_actions_catalog()
 			], betterdocs()->settings->chatbot_active_localize())
 		);
 
@@ -121,6 +124,102 @@ class BlockEditor extends BaseEditor {
 			$this->assets->enqueue( 'fontpicker-default-theme', 'vendor/css/fonticonpicker.base-theme.react.css' );
 			$this->assets->enqueue( 'fontpicker-material-theme', 'vendor/css/fonticonpicker.material-theme.react.css' );
 		}
+	}
+
+	/**
+	 * Settings-panel values a block uses as the default for its own controls.
+	 *
+	 * A block control that has never been touched should show — and render — what
+	 * the Settings panel says, so switching a feature on there is enough and the
+	 * per-block control is only for overriding one instance. The editor cannot read
+	 * `betterdocs_settings` (the REST route behind it needs `edit_docs_settings`,
+	 * which an author does not have), so the values are handed over at enqueue time.
+	 *
+	 * Nested deliberately: wp_localize_script casts every *top-level* scalar to a
+	 * string, so a top-level `false` would arrive in JS as `""` and a `true` as
+	 * `"1"`. Inside a sub-array the values are JSON-encoded and keep their types,
+	 * which is what a boolean block attribute needs.
+	 *
+	 * Keys mirror the Settings keys exactly, so the JS side needs no translation
+	 * table and a mismatch is obvious on sight.
+	 *
+	 * @return array
+	 */
+	protected function block_setting_defaults() {
+		$settings = betterdocs()->settings;
+
+		$booleans = [
+			'enable_estimated_reading_time',
+			'enable_ai_actions',
+			'enable_listen',
+			'listen_show_speed',
+			'ai_actions_copy_page',
+			'ai_actions_view_markdown',
+			'ai_actions_chatgpt',
+			'ai_actions_claude',
+			'ai_actions_gemini',
+			'ai_actions_perplexity',
+			'ai_actions_grok'
+		];
+
+		$strings = [
+			'estimated_reading_time_title',
+			'estimated_reading_time_text',
+			'singular_estimated_reading_time_text',
+			'ai_actions_button_label',
+			'ai_actions_prompt_template',
+			'listen_button_label'
+		];
+
+		// Kept apart from the strings above so it arrives as a number: the JS side
+		// divides by it, and "180" would work by coercion while an empty string
+		// would quietly become 0.
+		$numbers = [
+			'listen_words_per_minute'
+		];
+
+		$defaults = [];
+
+		foreach ( $booleans as $key ) {
+			$defaults[ $key ] = (bool) $settings->get( $key );
+		}
+
+		foreach ( $strings as $key ) {
+			$defaults[ $key ] = (string) $settings->get( $key );
+		}
+
+		foreach ( $numbers as $key ) {
+			$defaults[ $key ] = (int) $settings->get( $key );
+		}
+
+		return $defaults;
+	}
+
+	/**
+	 * Everything the editor needs to draw the AI Actions dropdown.
+	 *
+	 * The reading-time block's preview shows the real menu — same order, labels,
+	 * descriptions and icons as the frontend — so an author can see what the action
+	 * toggles do without saving and previewing. There is no post to resolve against
+	 * in the editor, so no hrefs are sent: the preview is deliberately inert.
+	 *
+	 * `caret` rides along because the disclosure arrow is not a registry entry but
+	 * still has to match the button the frontend renders.
+	 *
+	 * @return array
+	 */
+	protected function ai_actions_catalog() {
+		if ( ! isset( betterdocs()->ai_actions ) ) {
+			return [
+				'items' => [],
+				'caret' => ''
+			];
+		}
+
+		return [
+			'items' => betterdocs()->ai_actions->catalog(),
+			'caret' => AIActions::icon( 'caret' )
+		];
 	}
 
 	/**

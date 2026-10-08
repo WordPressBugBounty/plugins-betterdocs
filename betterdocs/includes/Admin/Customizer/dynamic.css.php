@@ -10071,6 +10071,333 @@ $css->add_rule(
 	)
 );
 
+//ai actions background + border
+// Background, border and radius go on the WRAPPER, not on the two halves.
+// scss/template-parts/ai-actions.scss paints the pill on .betterdocs-ai-actions
+// and leaves both halves transparent with `border: 0`; the halves only own the
+// split divider and the :hover fill. Writing a background onto
+// .betterdocs-ai-actions-primary here would beat its own `:hover` rule and kill
+// hover feedback outright.
+//
+// Every selector in this block is deliberately TWO classes. The block editor and
+// Elementor write their per-instance rules at three, so an author who styles one
+// instance still beats these site-wide defaults — which are real values now, not
+// the empty strings that used to make this section emit nothing. Add a third
+// class here and every block and widget instance inside a classic single-doc
+// template silently freezes at the Customizer's values.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_doc_single_content_ai_actions_bg_color',
+			'border-color'     => 'betterdocs_doc_single_content_ai_actions_border_color',
+			// Literal, not a setting: the stylesheet ships `border: 0`, which is
+			// shorthand for `border-style: none`, and a border-width with no style
+			// draws nothing. Without this the Border Width and Border Color
+			// controls both appeared dead — they were writing values the browser
+			// then had no reason to paint. Harmless at the default width of 0.
+			'border-style'     => 'solid'
+		]
+	)
+);
+
+// The divider between the label and the caret is a pseudo-element on the toggle
+// — a centred 14px line rather than a full-height border — so it takes the
+// border colour through `background-color`, not `border-inline-start-color`.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions-toggle::before',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_doc_single_content_ai_actions_border_color'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions',
+	$css->properties(
+		[
+			'border-width'  => 'betterdocs_doc_single_content_ai_actions_border_width',
+			'border-radius' => 'betterdocs_doc_single_content_ai_actions_border_radius'
+		],
+		'px'
+	)
+);
+
+// The wrapper cannot clip its halves — .betterdocs-ai-actions-menu is absolutely
+// positioned and `overflow: hidden` would cut the dropdown off — so each half
+// carries its own outer corners, 16px in the stylesheet. Left alone, a user-set
+// radius leaves the halves square enough that the :hover fill visibly overhangs
+// the wrapper's curve. Re-emit the corners each half actually owns.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions-primary',
+	$css->properties(
+		[
+			'border-start-start-radius' => 'betterdocs_doc_single_content_ai_actions_border_radius',
+			'border-end-start-radius'   => 'betterdocs_doc_single_content_ai_actions_border_radius'
+		],
+		'px'
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions-toggle',
+	$css->properties(
+		[
+			'border-start-end-radius' => 'betterdocs_doc_single_content_ai_actions_border_radius',
+			'border-end-end-radius'   => 'betterdocs_doc_single_content_ai_actions_border_radius'
+		],
+		'px'
+	)
+);
+
+// With "Copy page" switched off there is no primary half and the disclosure owns
+// the whole control, so it needs all four corners rather than just the end pair.
+// Unscoped by `.betterdocs-content-area` on purpose: that would be the third
+// class this block cannot afford, and `-no-primary` is a class only this feature
+// ever emits. Declared after the rule above, at equal specificity, so the
+// shorthand wins.
+$css->add_rule(
+	'.betterdocs-ai-actions-no-primary .betterdocs-ai-actions-toggle',
+	$css->properties(
+		[
+			'border-radius' => 'betterdocs_doc_single_content_ai_actions_border_radius'
+		],
+		'px'
+	)
+);
+
+//ai actions label colour + typography
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions-label',
+	$css->properties(
+		[
+			'color'       => 'betterdocs_doc_single_content_ai_actions_color',
+			'font-weight' => 'betterdocs_doc_single_content_ai_actions_font_weight'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-ai-actions-label',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_doc_single_content_ai_actions_font_size'
+		],
+		'px'
+	)
+);
+
+//ai actions icon colour
+// One declaration covers the copy glyph, the copied tick, the failure mark and
+// the caret: every icon AIActions::icon() draws is stroked with `currentColor`,
+// so setting `color` on the svg itself is enough, and an entry that supplies
+// its own `fill="currentColor"` follows too. Same two selectors as the size
+// rule below — two classes, keeping this section's specificity contract.
+$css->add_rule(
+	[
+		'.betterdocs-content-area .betterdocs-ai-actions-primary svg',
+		'.betterdocs-content-area .betterdocs-ai-actions-toggle svg'
+	],
+	$css->properties(
+		[
+			'color' => 'betterdocs_doc_single_content_ai_actions_icon_color'
+		]
+	)
+);
+
+//ai actions icon size
+// The primary half carries three icons — idle, copied, failed — and CSS shows
+// one at a time, so sizing every svg in the half keeps the button from changing
+// width when the state flips.
+$css->add_rule(
+	[
+		'.betterdocs-content-area .betterdocs-ai-actions-primary svg',
+		'.betterdocs-content-area .betterdocs-ai-actions-toggle svg'
+	],
+	$css->properties(
+		[
+			'width'  => 'betterdocs_doc_single_content_ai_actions_icon_size',
+			'height' => 'betterdocs_doc_single_content_ai_actions_icon_size'
+		],
+		'px'
+	)
+);
+
+//ai actions padding top, right, bottom, left
+// Applied to both halves, matching the block and the Elementor widget. The
+// stylesheet ships 5px 10px on the primary and 5px 8px on the toggle, so a
+// single control makes the caret half as wide as the label half.
+$css->add_rule(
+	[
+		'.betterdocs-content-area .betterdocs-ai-actions-primary',
+		'.betterdocs-content-area .betterdocs-ai-actions-toggle'
+	],
+	$css->properties(
+		[
+			'padding-top'    => 'betterdocs_doc_single_content_ai_actions_padding_top',
+			'padding-right'  => 'betterdocs_doc_single_content_ai_actions_padding_right',
+			'padding-bottom' => 'betterdocs_doc_single_content_ai_actions_padding_bottom',
+			'padding-left'   => 'betterdocs_doc_single_content_ai_actions_padding_left'
+		],
+		'px'
+	)
+);
+
+//listen background + border
+// The pill is one element — `.betterdocs-listen` — so unlike AI Actions there are
+// no halves to keep symmetrical and the background, border and radius all go in
+// one place. The `overflow: hidden` that clips the morph lives there too, which is
+// also why the radius needs no second rule: nothing sticks out of it to round.
+//
+// Every selector in this block is deliberately TWO classes. The block editor and
+// Elementor write their per-instance rules at three, so an author who styles one
+// instance still beats these site-wide defaults — which are real values, not the
+// empty strings an untouched section would carry. Add a third class here and every
+// block and widget instance inside a classic single-doc template silently freezes
+// at the Customizer's values.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen',
+	$css->properties(
+		[
+			'background-color' => 'betterdocs_doc_single_content_listen_bg_color',
+			'border-color'     => 'betterdocs_doc_single_content_listen_border_color',
+			// Literal, not a setting: the stylesheet ships `border: 0`, which is
+			// shorthand for `border-style: none`, and a border-width with no style
+			// draws nothing. Without this the Border Width and Border Color
+			// controls both appear dead. Harmless at the default width of 0.
+			'border-style'     => 'solid'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen',
+	$css->properties(
+		[
+			'border-width'  => 'betterdocs_doc_single_content_listen_border_width',
+			'border-radius' => 'betterdocs_doc_single_content_listen_border_radius'
+		],
+		'px'
+	)
+);
+
+// The collapsed pill's own corner. It fills the wrapper, so with `overflow:
+// hidden` above this is belt and braces — but the trigger is the element a theme's
+// `button { border-radius }` would hit, and listen.scss states the corner there
+// for that reason. A Customizer radius that stopped at the wrapper would leave a
+// theme's square button showing through the moment somebody changed it.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-trigger',
+	$css->properties(
+		[
+			'border-radius' => 'betterdocs_doc_single_content_listen_border_radius'
+		],
+		'px'
+	)
+);
+
+//listen label colour
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-label',
+	$css->properties(
+		[
+			'color' => 'betterdocs_doc_single_content_listen_color'
+		]
+	)
+);
+
+//listen typography
+// Both on the WRAPPER, not on the label, and that placement is load-bearing twice
+// over:
+//
+//  - The player's readout is sized in `em`, so a font-size here scales the pill and
+//    the player together. On the label alone the clock would stay at 12.6px however
+//    large the label grew.
+//  - The block and Elementor both write their Listen typography on the wrapper too.
+//    A `font-weight` declared directly on `.betterdocs-listen-label` would beat one
+//    the label merely INHERITS from the wrapper no matter how specific that rule is
+//    — specificity never enters into it — so this section would silently kill the
+//    per-instance Font Weight control on every classic single-doc template. It did,
+//    from the moment Defaults.php started shipping a real `normal` instead of ''.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen',
+	$css->properties(
+		[
+			'font-weight' => 'betterdocs_doc_single_content_listen_font_weight'
+		]
+	)
+);
+
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen',
+	$css->properties(
+		[
+			'font-size' => 'betterdocs_doc_single_content_listen_font_size'
+		],
+		'px'
+	)
+);
+
+//listen player accent — play button fill, progress fill, scrubber ring
+// One custom property, declared on the player, inherited by all three. Written as
+// its own rule with nothing else in it so the value is unambiguous; see
+// scss/template-parts/listen.scss, which publishes the same property with the
+// default as its fallback.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-player',
+	$css->properties(
+		[
+			'--bd-listen-accent' => 'betterdocs_doc_single_content_listen_accent_color'
+		]
+	)
+);
+
+//listen icon colour
+// The headset glyph on the collapsed pill. Stroked with `currentColor`, so a
+// `color` on the svg is the whole job. The player's own glyphs are deliberately
+// left out: the play triangle is white on the accent fill and the close cross
+// belongs to the player's muted chrome, and neither reads as "the icon colour" the
+// way the pill's headset does.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-trigger svg',
+	$css->properties(
+		[
+			'color' => 'betterdocs_doc_single_content_listen_icon_color'
+		]
+	)
+);
+
+//listen icon size
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-trigger svg',
+	$css->properties(
+		[
+			'width'  => 'betterdocs_doc_single_content_listen_icon_size',
+			'height' => 'betterdocs_doc_single_content_listen_icon_size'
+		],
+		'px'
+	)
+);
+
+//listen padding top, right, bottom, left
+// On the trigger, which is the only element in flow and therefore the one that
+// gives the pill its size. The player is absolutely positioned with `inset-block:
+// 0`, so it inherits that height without being told — which is what keeps the
+// design's promise that nothing below the pill moves when it opens.
+$css->add_rule(
+	'.betterdocs-content-area .betterdocs-listen-trigger',
+	$css->properties(
+		[
+			'padding-top'    => 'betterdocs_doc_single_content_listen_padding_top',
+			'padding-right'  => 'betterdocs_doc_single_content_listen_padding_right',
+			'padding-bottom' => 'betterdocs_doc_single_content_listen_padding_bottom',
+			'padding-left'   => 'betterdocs_doc_single_content_listen_padding_left'
+		],
+		'px'
+	)
+);
+
 //search modal customizer styles start
 $css->add_rule(
 	'#betterdocs-search-modal .betterdocs-search-wrapper .betterdocs-search-details, .betterdocs-search-wrapper .betterdocs-search-details .betterdocs-search-content .betterdocs-search-items-wrapper .betterdocs-search-item-content .betterdocs-search-item-list',

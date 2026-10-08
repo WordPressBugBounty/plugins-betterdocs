@@ -11,6 +11,7 @@ use WPDeveloper\BetterDocs\Admin\Customizer\Customizer;
 use WPDeveloper\BetterDocs\Admin\HelpScoutMigration;
 use WPDeveloper\BetterDocs\Admin\ReportEmail;
 use WPDeveloper\BetterDocs\Core\Admin;
+use WPDeveloper\BetterDocs\Core\AIActions;
 use WPDeveloper\BetterDocs\Core\AnalyticsTracker;
 use WPDeveloper\BetterDocs\Core\AnalyticsRetention;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
@@ -28,6 +29,9 @@ use WPDeveloper\BetterDocs\Core\ArticleSummary;
 use WPDeveloper\BetterDocs\Core\ArticleQualityScore;
 use WPDeveloper\BetterDocs\Core\UnifiedMetabox;
 use WPDeveloper\BetterDocs\Core\DocsAISuite;
+use WPDeveloper\BetterDocs\Core\Listen;
+use WPDeveloper\BetterDocs\Core\MarkdownEndpoint;
+use WPDeveloper\BetterDocs\Core\MarkdownRenderer;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 use WPDeveloper\BetterDocs\Dependencies\DI\ContainerBuilder;
 use WPDeveloper\BetterDocs\Editors\Editor;
@@ -130,10 +134,30 @@ final class Plugin {
      */
     public $analytics;
     /**
+     * Markdown renderer (HTML -> Markdown for docs)
+     * @var MarkdownRenderer
+     */
+    public $markdown;
+    /**
+     * `<doc-url>.md` endpoint
+     * @var MarkdownEndpoint
+     */
+    public $markdown_endpoint;
+    /**
+     * AI Actions registry ("Copy page" split button)
+     * @var AIActions
+     */
+    public $ai_actions;
+    /**
+     * Listen ("text to audio" player in the doc meta row)
+     * @var Listen
+     */
+    public $listen;
+    /**
      * Plugin Version
      * @var string
      */
-    public $version = '4.9.3';
+    public $version = '4.9.4';
 
     /**
      * WriteWithAI Class
@@ -154,12 +178,32 @@ final class Plugin {
      */
     public $db_version = '1.0.3';
 
+    /**
+     * Listeners attached to each load-time hook when it fired, keyed by hook.
+     * @var array
+     */
+    private $fired_hook_callbacks = [];
+
     public function __construct() {
         $this->define_constants();
 
         do_action( 'betterdocs_init_before' );
+        $this->fired_hook_callbacks['betterdocs_init_before'] = $this->get_hook_callbacks( 'betterdocs_init_before' );
 
         $this->setup_container();
+
+        /**
+         * Add-ons (Pro, AI Chatbot) hook `betterdocs_init_before` to register
+         * their container definitions and `betterdocs_loaded` to boot, and both
+         * fire while this file is loading. When the site's plugin load order puts
+         * an add-on after Free (e.g. after a migration rewrote `active_plugins`),
+         * the add-on hooks in too late — Pro then fatals resolving its own
+         * Utils\Enqueue. Catch those late listeners up once every plugin has
+         * loaded, before anything is resolved on `init`.
+         */
+        if ( ! did_action( 'plugins_loaded' ) ) {
+            add_action( 'plugins_loaded', [ $this, 'run_late_addon_listeners' ], PHP_INT_MIN );
+        }
         /**
          * Register activation and deactivation hooks
          * and version updates check
@@ -200,6 +244,11 @@ final class Plugin {
          * Style Handler For Parsing and Saving Styles as file.
          */
         ModulesStyleHandler::init();
+
+        /**
+         * Serve converted GIFs in docs as video.
+         */
+        \WPDeveloper\BetterDocs\Modules\GifVideo::init();
     }
 
     private function define_constants() {
@@ -250,6 +299,82 @@ final class Plugin {
         $this->container = $builder->build();
     }
 
+    /**
+     * Run the `betterdocs_init_before` and `betterdocs_loaded` listeners that
+     * missed those hooks because their plugin loaded after Free, and add the
+     * definitions they contribute through `betterdocs_container_config` to the
+     * already-built container.
+     *
+     * Only listeners attached after the original fire are run, and only the
+     * config filters they add are applied, so plugins that loaded before Free
+     * are not processed twice. Container::set() also drops any entry already
+     * resolved under the same id, so the add-on's override wins.
+     *
+     * @since 4.9.4
+     * @return void
+     */
+    public function run_late_addon_listeners() {
+        $config_filters = $this->get_hook_callbacks( 'betterdocs_container_config' );
+
+        if ( $this->run_late_listeners( 'betterdocs_init_before' ) ) {
+            $late_filters = array_diff_key( $this->get_hook_callbacks( 'betterdocs_container_config' ), $config_filters );
+
+            $config = [];
+            foreach ( $late_filters as $filter ) {
+                $config = call_user_func( $filter['function'], $config );
+            }
+
+            if ( is_array( $config ) ) {
+                foreach ( $config as $id => $definition ) {
+                    $this->container->set( $id, $definition );
+                }
+            }
+        }
+
+        $this->run_late_listeners( 'betterdocs_loaded' );
+    }
+
+    /**
+     * Call the listeners attached to an already-fired hook after it fired.
+     *
+     * @param string $hook Hook name.
+     * @return bool Whether any listener ran.
+     */
+    private function run_late_listeners( $hook ) {
+        $fired     = isset( $this->fired_hook_callbacks[ $hook ] ) ? $this->fired_hook_callbacks[ $hook ] : [];
+        $listeners = array_diff_key( $this->get_hook_callbacks( $hook ), $fired );
+
+        foreach ( $listeners as $listener ) {
+            // do_action() with no arguments passes a single empty string.
+            call_user_func_array( $listener['function'], array_slice( [ '' ], 0, (int) $listener['accepted_args'] ) );
+        }
+
+        return ! empty( $listeners );
+    }
+
+    /**
+     * Callbacks attached to a hook, in run order, keyed by priority and id.
+     *
+     * @param string $hook Hook name.
+     * @return array
+     */
+    private function get_hook_callbacks( $hook ) {
+        global $wp_filter;
+
+        $callbacks = [];
+        if ( empty( $wp_filter[ $hook ] ) || ! $wp_filter[ $hook ] instanceof \WP_Hook ) {
+            return $callbacks;
+        }
+
+        foreach ( $wp_filter[ $hook ]->callbacks as $priority => $items ) {
+            foreach ( $items as $id => $callback ) {
+                $callbacks[ $priority . '|' . $id ] = $callback;
+            }
+        }
+
+        return $callbacks;
+    }
+
     public function initialize() {
 
         /**
@@ -276,6 +401,17 @@ final class Plugin {
         $this->database    = $this->container->get( Database::class );
         $this->settings    = $this->container->get( Settings::class );
         $this->analytics   = $this->container->get( Analytics::class );
+
+        // AI Actions and the Markdown endpoint. MarkdownEndpoint's constructor
+        // strips a trailing `.md` from REQUEST_URI, so it has to be built before
+        // WP::parse_request() — which this is, since initialize() IS the `init`
+        // priority-0 callback. It also has to be built AFTER $this->settings above,
+        // because that strip consults the setting.
+        $this->markdown          = $this->container->get( MarkdownRenderer::class );
+        $this->markdown_endpoint = $this->container->get( MarkdownEndpoint::class );
+        $this->ai_actions        = $this->container->get( AIActions::class );
+        $this->listen            = $this->container->get( Listen::class );
+
         // Free analytics collectors: the frontend view/scroll tracker and the
         // daily retention purge. Each self-registers its hooks on construct.
         $this->container->get( AnalyticsTracker::class );
@@ -378,6 +514,7 @@ final class Plugin {
             self::$_instance = new self();
 
             do_action( 'betterdocs_loaded' );
+            self::$_instance->fired_hook_callbacks['betterdocs_loaded'] = self::$_instance->get_hook_callbacks( 'betterdocs_loaded' );
         }
 
         return self::$_instance;

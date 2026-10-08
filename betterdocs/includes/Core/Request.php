@@ -913,6 +913,15 @@ class Request extends Base {
 			return;
 		}
 
+		// A single-doc request whose main query returned nothing (private or
+		// draft doc for a visitor who can't read it, a doc in another/inactive
+		// WPML language) must stay a 404. Marking it singular here would render
+		// the single template against a null post and expose the doc's title
+		// through the queried object. See betterdocs/betterdocs#173.
+		if ( $this->is_singular_docs_request() && ! $this->main_query_has_posts() ) {
+			return;
+		}
+
 		// Check if we have doc_category or knowledge_base in query vars
 		if ( isset( $wp_query->query_vars['doc_category'] ) && ! empty( $wp_query->query_vars['doc_category'] ) ) {
 			// If this is already identified as singular, don't override it
@@ -1081,6 +1090,14 @@ class Request extends Base {
 			return $status_header;
 		}
 
+		// A single-doc request whose main query returned nothing is a genuine
+		// 404 — whatever the slug/term lookups below would find. Checked before
+		// both overrides, so neither can turn it into a soft-404 200.
+		// See betterdocs/betterdocs#173.
+		if ( 404 === (int) $code && $this->is_singular_docs_request() && ! $this->main_query_has_posts() ) {
+			return $status_header;
+		}
+
 		// If a 404 is being sent but the queried object is a valid single docs post,
 		// override with 200. This guards against false 404s on single docs pages.
 		if ( $code == 404 &&
@@ -1143,6 +1160,39 @@ class Request extends Base {
 		}
 
 		return $status_header;
+	}
+
+	/**
+	 * Whether the main query targets a single doc (`name`, `docs` or `p`),
+	 * as opposed to an archive.
+	 *
+	 * @return bool
+	 */
+	protected function is_singular_docs_request() {
+		global $wp_query;
+
+		if ( ! $wp_query instanceof \WP_Query ) {
+			return false;
+		}
+
+		$query_vars = $wp_query->query_vars;
+
+		return ! empty( $query_vars['name'] )
+			|| ! empty( $query_vars['docs'] )
+			|| ( isset( $query_vars['p'] ) && (int) $query_vars['p'] > 0 );
+	}
+
+	/**
+	 * Whether the main query actually returned posts. Slug and term lookups
+	 * only prove something exists; this is what the visitor can see — it
+	 * already honours post status, capabilities and WPML's language filter.
+	 *
+	 * @return bool
+	 */
+	protected function main_query_has_posts() {
+		global $wp_query;
+
+		return $wp_query instanceof \WP_Query && ! empty( $wp_query->posts );
 	}
 
 	/**

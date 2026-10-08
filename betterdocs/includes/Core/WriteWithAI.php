@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     use WPDeveloper\BetterDocs\AI\ModelRegistry;
     use WPDeveloper\BetterDocs\Utils\AIUsage;
     use WPDeveloper\BetterDocs\REST\AIEdit;
+    use WPDeveloper\BetterDocs\REST\WriteWithAI as RESTWriteWithAI;
 
     class WriteWithAI extends Base {
 
@@ -101,6 +102,13 @@ if ( ! defined( 'ABSPATH' ) ) {
                 'model'                  => $active_model,
                 'model_label'            => isset( $model_labels[ $active_model ] ) ? $model_labels[ $active_model ] : $active_model,
                 'max_token'              => (int) $this->settings->get( 'ai_autowrite_max_token', 2500 ),
+                // Attachment limits, resolved server-side so the modal can refuse
+                // an oversize file before uploading it — and so it advertises the
+                // host's real ceiling rather than ours when the host is smaller.
+                'max_upload_bytes'       => RESTWriteWithAI::upload_cap( 'file' ),
+                'max_media_bytes'        => RESTWriteWithAI::upload_cap( 'media' ),
+                'media_exts'             => RESTWriteWithAI::media_exts(),
+                'supports_transcription' => $this->platform_supports( 'transcription', $active_platform ),
                 'settings_url'           => esc_url( admin_url( 'admin.php?page=betterdocs-settings#betterdocs-ai' ) ),
                 'woo_active'             => class_exists( 'WooCommerce' ),
                 'is_multilingual_active' => Helper::is_multilingual_active(),
@@ -461,7 +469,7 @@ PROMPT;
         $platform = $factory->active_platform();
         $model    = $factory->active_model( $platform );
 
-        if ( ! $this->platform_supports_vision( $platform, $model ) ) {
+        if ( ! $this->platform_supports( 'vision', $platform, $model ) ) {
             return new \WP_Error(
                 'ai_no_vision',
                 sprintf(
@@ -498,6 +506,76 @@ PROMPT;
         } catch ( \Exception $error ) {
             return new \WP_Error( 'ai_vision_failed', 'Error: ' . $error->getMessage() );
         }
+    }
+
+    /**
+     * Transcribe an uploaded recording to plain text.
+     *
+     * Deliberately not a doc-generation call: this returns the raw transcript so
+     * the author can correct it, and generation then runs through the ordinary
+     * grounded from-source path. That keeps one generation path in the plugin
+     * instead of a second, media-shaped one.
+     *
+     * @since 4.9.4
+     *
+     * @param array $file `[ 'path', 'filename', 'mime' ]` — a PHP temp upload.
+     * @return string|\WP_Error Transcript text.
+     */
+    public function transcribe( $file ) {
+        $factory  = new ProviderFactory( $this->settings );
+        $platform = $factory->active_platform();
+
+        if ( ! $this->platform_supports( 'transcription', $platform ) ) {
+            return new \WP_Error(
+                'ai_no_transcription',
+                sprintf(
+                    /* translators: %s: AI platform id, e.g. "claude". */
+                    __( 'The configured AI platform (%s) can\'t read audio or video. Switch to OpenAI or Google Gemini in BetterDocs → Settings → AI Content Suite, or upload a text file instead.', 'betterdocs' ),
+                    $platform
+                )
+            );
+        }
+
+        // 300s, matching every other AI call here: a 25 MB recording can take a
+        // minute or more to come back, well past the 50s provider default.
+        $options          = $this->ai_chat_options();
+        $options['model'] = ModelRegistry::transcription_model( $platform );
+
+        try {
+            return $factory->make()->transcribe( $file, $options );
+        } catch ( \Exception $error ) {
+            return new \WP_Error( 'ai_transcribe_failed', 'Error: ' . $error->getMessage() );
+        }
+    }
+
+    /**
+     * Whether a platform + model can handle a given input capability.
+     *
+     * One entry point for every "can this provider read that file?" question, so
+     * a new capability is a case here rather than another bespoke check beside
+     * the call site.
+     *
+     * @since 4.9.4
+     *
+     * @param string $capability `vision` | `transcription`
+     * @param string $platform
+     * @param string $model      Chat model. Ignored for transcription, which uses
+     *                           its own model (see ModelRegistry).
+     * @return bool
+     */
+    public function platform_supports( $capability, $platform, $model = '' ) {
+        switch ( $capability ) {
+            case 'vision':
+                return $this->platform_supports_vision( $platform, $model );
+
+            case 'transcription':
+                // Presence in the transcription map is the whole test — the chat
+                // model is irrelevant, since transcription runs as its own call
+                // with its own model before any doc is written.
+                return '' !== ModelRegistry::transcription_model( $platform );
+        }
+
+        return false;
     }
 
     /**

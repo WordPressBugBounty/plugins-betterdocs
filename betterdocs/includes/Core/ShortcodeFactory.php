@@ -3,6 +3,8 @@
 namespace WPDeveloper\BetterDocs\Core;
 
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Shortcodes\AIActions;
+use WPDeveloper\BetterDocs\Shortcodes\Listen;
 use WPDeveloper\BetterDocs\Shortcodes\ToC;
 use WPDeveloper\BetterDocs\Shortcodes\FaqList;
 use WPDeveloper\BetterDocs\Shortcodes\FaqTab;
@@ -58,7 +60,9 @@ class ShortcodeFactory extends Base {
 				FaqList::class,
 				FaqTab::class,
 				Reactions::class,
-				ReadingTime::class
+				ReadingTime::class,
+				AIActions::class,
+				Listen::class
 			]
 		);
 	}

@@ -149,17 +149,27 @@ class AIUsage {
 	 *    action)                                         → prompt
 	 *
 	 * @param array<string,int> $actions
-	 * @return array{prompt:int,source:int,git:int}
+	 * @return array{prompt:int,source:int,git:int,attachment:int,recording:int}
 	 */
 	protected static function write_with_ai_modes( $actions ) {
-		$modes = [ 'prompt' => 0, 'source' => 0, 'git' => 0 ];
+		$modes = [ 'prompt' => 0, 'source' => 0, 'git' => 0, 'attachment' => 0, 'recording' => 0 ];
 
+		// Anything unrecognised lands in `prompt`, which is why `attachment` and
+		// `recording` need explicit arms: without them every file-based
+		// generation was reported as a plain prompt, making the attachment tab
+		// look unused in the insights snapshot.
 		foreach ( (array) $actions as $action => $count ) {
 			$count = (int) $count;
 			if ( 'from-source' === $action ) {
 				$modes['source'] += $count;
 			} elseif ( 'from-git' === $action ) {
 				$modes['git'] += $count;
+			} elseif ( 'from-attachment' === $action ) {
+				$modes['attachment'] += $count;
+			} elseif ( 'from-recording' === $action || 'transcribe-attachment' === $action ) {
+				// `from-recording` is the generation. `transcribe-attachment` is
+				// only kept so counts recorded before that split still land here.
+				$modes['recording'] += $count;
 			} else {
 				$modes['prompt'] += $count;
 			}
