@@ -1,0 +1,107 @@
+// Multi-select where chosen items render as removable chips below the field
+// (placeholder stays inside the control). Shared by the WooCommerce tab and the
+// portaled Create/Update FAQ Group modal so both look identical.
+.bd-faq-multiselect {
+	// Animated viewport around the chip row. We transition its height between
+	// states (empty → skeleton → resolved chips, and across chip counts that
+	// wrap to different row counts) so it eases instead of snapping. `overflow:
+	// hidden` clips during the transition and isolates it from the measured
+	// inner height — see GroupMultiSelect.js.
+	.bd-faq-chips-anim {
+		overflow: hidden;
+		transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+
+	.bd-faq-selected-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		// Padding (not margin) so the 10px gap is part of the measured content
+		// height the viewport animates to, and so it collapses to 0 cleanly when
+		// there are no chips.
+		padding-top: 10px;
+	}
+
+	.bd-faq-chip {
+		min-height: 22px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
+		margin: 0;
+		padding: 1px 8px 1px 10px;
+		border-radius: 4px;
+		text-align: center;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 1.5;
+
+		&__remove {
+			width: 12px;
+			height: 12px;
+			appearance: none;
+			border: none;
+			margin: 0;
+			padding: 0;
+			background-color: transparent;
+			color: inherit;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.4;
+			}
+		}
+
+		// Rotating palette echoing the design-system role chips
+		// (.wprf-selected-option-1..6 in settings).
+		&--1 {
+			background: #fcfaff;
+			color: #6941c6;
+		}
+		&--2 {
+			background: #fffaeb;
+			color: #b54708;
+		}
+		&--3 {
+			background: #f6fef9;
+			color: #027a48;
+		}
+		&--4 {
+			background: #eff8ff;
+			color: #175cd3;
+		}
+		&--5 {
+			background: #f7fefc;
+			color: #00b884;
+		}
+		&--6 {
+			background: #fffcf5;
+			color: #fdb022;
+		}
+
+		// Placeholder chip shown while the saved selection resolves — same height
+		// as a real chip (reuses the FAQ skeleton shimmer) so the chip row keeps
+		// its space and the modal doesn't jump on load.
+		&--skeleton {
+			min-width: 96px;
+			pointer-events: none;
+			background: linear-gradient(
+				90deg,
+				var(--text-color-200) 25%,
+				var(--text-color-100) 37%,
+				var(--text-color-200) 63%
+			);
+			background-size: 400% 100%;
+			animation: bd-faq-skeleton-shimmer 1.4s ease infinite;
+		}
+	}
+}

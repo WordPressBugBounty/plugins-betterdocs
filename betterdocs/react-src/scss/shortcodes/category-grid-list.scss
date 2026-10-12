@@ -1,0 +1,46 @@
+// CHECKED:
+
+.betterdocs-category-grid-list-wrapper {
+    .betterdocs-category-grid-list-inner-wrapper {
+        .betterdocs-single-category-wrapper {
+            width: 100%;
+            @include responsive-below("tablet") {
+                @include if(
+                    ".betterdocs-category-grid-list-inner-wrapper",
+                    ".layout-6"
+                ) {
+                    flex-direction: column;
+                    justify-content: flex-start !important;
+                }
+            }
+        }
+    }
+}
+
+.betterdocs-category-list-wrapper {
+    .betterdocs-category-list-inner-wrapper {
+        .betterdocs-category-header-inner {
+            border-bottom: 2px solid #528ffe;
+            padding-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .betterdocs-category-title {
+                a {
+                    color: #528ffe;
+                    font-size: 20px;
+                    padding-left: 30px;
+                    position: relative;
+                    margin: 0;
+                }
+            }
+        }
+        .betterdocs-articles-list {
+            li:not(.betterdocs-nested-category-wrapper) {
+                svg {
+                    display: none;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+// CHECKED:
+
+body.single-docs .site-content > .ast-container,
+body.single-betterdocs_api_ref .site-content > .ast-container,
+.archive.post-type-archive-docs .site-content > .ast-container,
+.archive.tax-doc_category .site-content > .ast-container,
+.archive.tax-knowledge_base .site-content > .ast-container,
+.archive.tax-doc_tag .site-content > .ast-container {
+    max-width: none;
+    padding: 0;
+}
+
+.entry-content .betterdocs-articles-list {
+    padding: 0;
+}
+.ast-single-post .entry-content .betterdocs-footer button,
+.ast-single-post .entry-content .betterdocs-footer a {
+    text-decoration: none;
+}

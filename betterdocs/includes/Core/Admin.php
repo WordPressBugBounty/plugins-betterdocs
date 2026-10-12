@@ -484,6 +484,24 @@ class Admin extends Base {
 			);
 		}
 
+		// BetterDocs' own admin screens. Promotional notices are limited to these
+		// (WP.org guideline 11), never the whole of wp-admin.
+		$betterdocs_screens = array(
+			'toplevel_page_betterdocs-dashboard',
+			'admin_page_betterdocs-admin',
+			'betterdocs_page_betterdocs-admin',
+			'betterdocs_page_betterdocs-settings',
+			'betterdocs_page_betterdocs-faq',
+			'betterdocs_page_betterdocs-analytics',
+			'betterdocs_page_betterdocs-glossaries',
+			'betterdocs_page_betterdocs-ai-chatbot',
+			'betterdocs_page_betterdocs-api-docs',
+			'betterdocs_page_betterdocs-doc-categories',
+			'betterdocs_page_betterdocs-doc-tags',
+			'edit-doc_category',
+			'edit-doc_tag',
+		);
+
 		$summer_campaign_message = '<div class="betterdocs-summer-notice-body"><p style="margin-top: 0; margin-bottom: 0;">🏖️ <strong>Summer Savings:</strong> Build AI-powered Knowledge Bases & FAQs to cut support tickets and improve user experience – now <strong>up to $100 OFF!</strong></p></div>';
 		$_summer_campaign_notice = array(
 			'thumbnail' => $this->assets->icon( 'betterdocs-logo.svg', true ),
@@ -500,8 +518,9 @@ class Admin extends Base {
 				'maybe_later' => array(
 					'label'      => __( 'I’ll Grab It Later', 'betterdocs' ),
 					'attributes' => array(
-						'target'     => '_blank',
-						'data-later' => true,
+						'target'       => '_blank',
+						// A promo dismissal is permanent: no 15-day re-show.
+						'data-dismiss' => true,
 						'class'      => 'dismiss-btn',
 					),
 				),
@@ -515,9 +534,9 @@ class Admin extends Base {
 				'start'       => $notices->time(),
 				'recurrence'  => false,
 				'dismissible' => true,
-				'refresh'     => BETTERDOCS_VERSION,
 				'expire'      => strtotime( '11:59:59pm June 25, 2026' ),
 				'display_if'  => ! is_plugin_active( 'betterdocs-pro/betterdocs-pro.php' ),
+				'screens'     => $betterdocs_screens,
 			)
 		);
 
@@ -525,21 +544,7 @@ class Admin extends Base {
 		self::$cache_bank->calculate_deposits( $notices );
 		if ( method_exists( self::$cache_bank, 'clear_notices_in_' ) ) {
 			self::$cache_bank->clear_notices_in_(
-				array(
-					'toplevel_page_betterdocs-dashboard',
-					'admin_page_betterdocs-admin',
-					'betterdocs_page_betterdocs-admin',
-					'betterdocs_page_betterdocs-settings',
-					'betterdocs_page_betterdocs-faq',
-					'betterdocs_page_betterdocs-analytics',
-					'betterdocs_page_betterdocs-glossaries',
-					'betterdocs_page_betterdocs-ai-chatbot',
-					'betterdocs_page_betterdocs-api-docs',
-					'betterdocs_page_betterdocs-doc-categories',
-					'betterdocs_page_betterdocs-doc-tags',
-					'edit-doc_category',
-					'edit-doc_tag',
-				),
+				$betterdocs_screens,
 				$notices,
 				true
 			);

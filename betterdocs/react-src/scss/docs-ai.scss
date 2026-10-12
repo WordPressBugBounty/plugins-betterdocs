@@ -1,0 +1,121 @@
+// Styles for the "Enhance Docs with AI" Suggest actions injected into the native
+// Gutenberg taxonomy panels (Categories / Tags / Glossaries).
+
+$bd-ai-accent: #00b884;
+$bd-ai-accent-dark: #009b6f;
+
+.betterdocs-docs-ai-suggest {
+    margin-top: 12px;
+}
+
+.betterdocs-docs-ai-suggest__btn {
+    // Match the "Analyze with BetterDocs AI" button: white pill with a conic
+    // rainbow gradient border (via a masked ::before) and the gradient sparkle.
+    &.components-button.is-secondary {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: auto;
+        padding: 8px 18px;
+        border: none;
+        border-radius: 12px;
+        background: #fff;
+        color: var(--text-color-700, #344054);
+        font-weight: 600;
+        box-shadow: none;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 2px; // border thickness
+            background: conic-gradient(from 90deg at 50.51% 50.65%,
+                #54B8FF -29.78deg,
+                #3751FF 26.9deg,
+                #C891FC 112.04deg,
+                #FFCE9D 216.82deg,
+                #00DE9F 248.78deg,
+                #54B8FF 330.22deg,
+                #3751FF 386.9deg);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        &:hover:not(:disabled) {
+            background: #fff;
+            color: var(--text-color-900, #101828);
+            box-shadow: none;
+        }
+
+        svg {
+            margin-right: 0;
+            flex-shrink: 0;
+        }
+    }
+}
+
+.betterdocs-docs-ai__error {
+    margin: 8px 0 0;
+    color: #cc1818;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+// Calm, neutral notice for a valid "nothing matched" result (not an error).
+.betterdocs-docs-ai__notice {
+    // The editor sidebar resets sidebar <p> margins to 0 via
+    // `.interface-complementary-area p:not(…)` (specificity 0,2,1), which beats
+    // this single-class rule — !important restores our top gap.
+    margin: 5px 0 0 !important;
+    color: #667085;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.betterdocs-docs-ai-suggest__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.betterdocs-docs-ai-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border: 1px dashed rgba( 0, 184, 132, 0.6 );
+    border-radius: 14px;
+    background: rgba( 0, 184, 132, 0.08 );
+    color: #1d2939;
+    font-size: 12px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+        background: rgba( 0, 184, 132, 0.16 );
+        border-color: $bd-ai-accent;
+    }
+
+    &__plus {
+        font-weight: 700;
+        color: $bd-ai-accent;
+    }
+
+    &__new {
+        margin-left: 2px;
+        padding: 0 5px;
+        border-radius: 8px;
+        background: $bd-ai-accent;
+        color: #fff;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+}

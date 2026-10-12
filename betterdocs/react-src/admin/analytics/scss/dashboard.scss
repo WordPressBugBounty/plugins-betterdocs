@@ -1,0 +1,675 @@
+/* ==========================================================================
+   BetterDocs Advanced Analytics v1.0 — design-system re-skin
+   Recreated in SCSS from the Claude Design handoff (Tailwind prototype).
+   Tokens: green #00b884 / #007A59 on a slate palette, rounded-xl cards.
+   All classes are prefixed `bda-` and scoped under `.bda-app`.
+   ========================================================================== */
+
+/* Neutralize the legacy wrapper + WP content padding around the app. */
+.betterdocs-admin-analytics-wrapper { padding: 0 !important; margin: 0 !important; }
+
+.bda-app {
+	/* The analytics surface uses the shared BetterDocs admin design tokens
+	   (--text-color-* / --base-color-*) directly, so it follows dark mode for
+	   free — those tokens flip under `.betterdocs-admin.betterdocs-dark-mode`. */
+
+	font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	color: var(--text-color-900);
+	border-radius: 8px;
+	/* Full width so the centered .bda-container lines up with the admin header's
+	   own .betterdocs-dashboard-container (same 1170px + gutter). */
+	margin: 0;
+	width: 100%;
+	min-height: calc(100vh - 120px);
+	/* No -webkit-font-smoothing override: the rest of the admin (settings sidebar,
+	   etc.) renders with the browser default (subpixel), so forcing `antialiased`
+	   here made the analytics text render noticeably thinner at the same weight. */
+
+	* { box-sizing: border-box; }
+	.card-shadow { box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03); }
+	.tabular-nums { font-variant-numeric: tabular-nums; }
+}
+
+/* layout */
+.bda-shell { display: flex; min-height: calc(100vh - 180px); align-items: stretch; }
+.bda-main { flex: 1; min-width: 0; overflow-x: auto; background: #fff; }
+/* .bda-main is hardcoded white (no dynamic token), so flip it explicitly for
+   dark mode to the dark surface token. */
+.betterdocs-admin.betterdocs-dark-mode .bda-main { background-color: var(--base-background) !important; }
+.bda-page { padding: 28px; }
+.bda-stack > * + * { margin-top: 24px; }
+.bda-stack-sm > * + * { margin-top: 20px; }
+
+/* On the analytics route the per-route PageHeader is portalled into the admin
+   header's second-row .betterdocs-dashboard-container (consistent with FAQ
+   Builder). Header.js skips its default row on this route, so the portalled
+   betterdocs-row (reusing the admin header classes) fills the container. The
+   analytics surface (.bda-container) mirrors the same width + gutter below. */
+
+.bda-container { max-width: 1170px; margin: 0 auto; padding: 0 12px 24px; }
+.bda-shell .bda-page { padding-left: 24px; padding-right: 24px; }
+
+/* left analytics nav */
+.bda-nav { width: 286px; flex-shrink: 0; border-right: 1px solid var(--text-color-200); background: var(--base-color-50); padding: 20px 0 32px; }
+.bda-nav-title { padding: 0 20px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-color-500); }
+.bda-nav-items { padding: 0 20px; display: flex; flex-direction: column; gap: 2px; }
+.bda-nav-item {
+	width: 100%; display: flex; align-items: center; gap: 10px; border-radius: 8px;
+	padding: 2px 20px; min-height: 40px; line-height: 1.5;
+	/* <button> does not inherit font-family from .bda-app (UA stylesheet gives
+	   buttons their own default font), so set it explicitly to match the settings
+	   sidebar's <li> .wprf-tab-nav-item which inherits IBM Plex Sans. */
+	font-family: "IBM Plex Sans", sans-serif;
+	font-size: 15px; font-style: normal; font-weight: 500;
+	text-align: left; color: var(--text-color-600); background: none; border: none; cursor: pointer; transition: background .12s, color .12s;
+}
+.bda-nav-item:hover { background: var(--base-color-65); color: var(--text-color-600); }
+.bda-nav-item .bda-nav-ico { color: var(--text-color-500); flex-shrink: 0; }
+.bda-nav-item.active { background: var(--base-color-700); color: var(--base-background); }
+.bda-nav-item.active .bda-nav-ico { color: #fff; }
+/* In dark mode --base-background is dark, so the active label needs an explicit
+   white to stay readable against the --base-color-700 fill. */
+.betterdocs-admin.betterdocs-dark-mode .bda-nav-item.active { color: #fff !important; }
+.bda-nav-item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Visual styling is shared with .bda-segtab-count; only the nav-row flex
+   placement is overridden here (nav-item spans otherwise flex:1 and stretch). */
+.bda-nav-item .bda-nav-badge { flex: 0 0 auto; width: auto; }
+.bda-nav-section { padding: 16px 20px 8px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-color-500); }
+
+/* Analytics page header — portalled into the admin header's betterdocs-row and
+   reusing its column / title / action-list classes, so the existing admin CSS
+   styles it (consistent with FAQ Builder). This wrapper spaces the reused
+   header-right and the analytics-only subtitle. */
+.bda-analytics-header .betterdocs-header-right { gap: 8px; align-items: center; }
+.bda-page-sub { font-size: 13.5px; font-weight: 400; color: var(--text-color-600); margin: 4px 0 0; }
+/* stack the (analytics-only) subtitle under the reused header title */
+.bda-page-heading .bda-page-sub { white-space: normal; }
+
+/* card */
+.bda-card { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
+.bda-card-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--text-color-100); background: var(--text-color-50); border-top-left-radius: 12px; border-top-right-radius: 12px; }
+.bda-card-title { font-weight: 600; font-size: 15px; color: var(--text-color-900); margin: 0; }
+.bda-card-body { padding: 20px; }
+/* `flush` is the table variant of the card body. It scrolls sideways rather than
+   letting a table wider than its card paint outside the rounded corner and over
+   the page — the teaser tables have the same columns as the Pro ones, so they
+   reach the same width on a narrow window. Nothing is clipped, and no scrollbar
+   appears where the table already fits. Kept in sync with the Pro copy. */
+.bda-card-body.flush { padding: 0; overflow-x: auto; }
+.bda-card-link { font-size: 12.5px; color: var(--base-color-700); font-weight: 500; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.bda-card-link:hover { text-decoration: underline; }
+
+/* grids */
+.bda-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.bda-kpi-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.bda-grid12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+.bda-col8 { grid-column: span 8; min-width: 0; }
+.bda-col4 { grid-column: span 4; min-width: 0; }
+.bda-col6 { grid-column: span 6; min-width: 0; }
+.bda-col12 { grid-column: span 12; min-width: 0; }
+.bda-col8 > * + *, .bda-col4 > * + *, .bda-col6 > * + * { margin-top: 20px; }
+
+/* KPI card — Claude design: label + tinted icon on top, big value with a small
+   sparkline graph on the right. */
+.bda-kpi { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; padding: 20px; box-shadow: 0 1px 2px rgba(15,23,42,0.04); min-width: 0; }
+.bda-kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.bda-kpi-label { font-size: 13px; color: var(--text-color-600); font-weight: 500; }
+.bda-kpi-ico { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.bda-kpi-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.bda-kpi-value { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; color: var(--text-color-900); }
+
+/* buttons */
+.bda-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: background .12s, border-color .12s; height: 36px; padding: 0 14px; font-size: 13px; border: 1px solid transparent; text-decoration: none; }
+.bda-btn.sm { height: 32px; padding: 0 12px; font-size: 12.5px; }
+.bda-btn.primary { background: var(--base-color-700); color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+.bda-btn.primary:hover { background: #009A70; }
+.bda-btn.ghost { color: var(--text-color-700); background: var(--base-background); border-color: var(--text-color-300); }
+.bda-btn.ghost:hover { background: var(--base-color-65); }
+.bda-btn.soft { color: var(--base-color-700); background: var(--base-color-75); }
+.bda-btn.soft:hover { background: var(--base-color-100); }
+.bda-btn:disabled { opacity: .55; cursor: default; }
+
+/* badge */
+/* A badge sizes to its content. `height: 20px` was fixed, so a label that wrapped
+   in a narrow column — "Not updated 8+ months" in the Stale Content Reason cell —
+   had its extra lines clipped straight out of the box. min-height keeps a one-line
+   badge at exactly the same 20px it has always been (11px × 1.35 line box + 4px
+   padding = 19px, so the floor wins), while a wrapped one grows instead of losing
+   text. Kept in sync with the Pro copy of this file, which styles the same teaser
+   markup once Pro is active. */
+.bda-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; min-height: 20px; line-height: 1.35; border-radius: 6px; font-size: 11px; font-weight: 500; }
+.bda-badge.slate { background: var(--base-color-65); color: var(--text-color-700); }
+.bda-badge.green { background: var(--base-color-75); color: var(--base-color-700); }
+.bda-badge.blue { background: #eff6ff; color: #1d4ed8; }
+.bda-badge.red { background: #fef2f2; color: #b91c1c; }
+.bda-badge.amber { background: #fffbeb; color: #b45309; }
+.bda-badge.purple { background: #f5f3ff; color: #6d28d9; }
+
+/* tables */
+.bda-table { width: 100%; border-collapse: collapse; }
+.bda-table thead { background: var(--text-color-50); }
+.bda-table thead th { text-align: left; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-color-600); padding: 12px 12px; }
+.bda-table thead th:first-child { padding-left: 20px; }
+.bda-table thead th:last-child { padding-right: 20px; }
+.bda-table tbody tr { border-top: 1px solid var(--text-color-100); }
+.bda-table tbody td { padding: 14px 12px; font-size: 13px; color: var(--text-color-700); vertical-align: middle; }
+.bda-table tbody td:first-child { padding-left: 20px; }
+.bda-table tbody td:last-child { padding-right: 20px; }
+.bda-table .row-hover:hover { background: var(--base-color-65); }
+.bda-table .clickable { cursor: pointer; }
+.bda-table tr.is-open { background: var(--base-color-75); }
+.bda-t-right { text-align: right; }
+.bda-num { font-variant-numeric: tabular-nums; }
+.bda-strong { font-weight: 600; color: var(--text-color-900); }
+.bda-title-cell { font-size: 13.5px; font-weight: 500; color: var(--text-color-900); max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Fixed layout: the title column flexes to fill the row and truncates, so the
+   table always fits its container (e.g. the narrower overview col8) instead of
+   forcing horizontal scroll. */
+.bda-table--fixed { table-layout: fixed; }
+.bda-table--fixed .bda-title-cell { max-width: 100%; }
+.bda-rank { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px; font-size: 11px; font-weight: 700; background: var(--base-color-65); color: var(--text-color-600); }
+.bda-rank.top { background: var(--base-color-75); color: #0F8567; }
+.bda-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--text-color-850); background: var(--base-color-65); padding: 3px 6px; border-radius: 4px; }
+
+/* helpfulness bar */
+.bda-helpbar { display: flex; align-items: center; gap: 8px; min-width: 100px; }
+.bda-helpbar-track { flex: 1; height: 6px; background: var(--base-color-65); border-radius: 9999px; overflow: hidden; }
+.bda-helpbar-fill { height: 100%; border-radius: 9999px; }
+.bda-helpbar-val { font-size: 12px; font-weight: 500; color: var(--text-color-700); width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* trend */
+.bda-trend { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; font-weight: 600; }
+.bda-trend.up { color: #059669; }
+.bda-trend.down { color: #ef4444; }
+
+/* avatar */
+.bda-avatar { border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+
+/* Avatar inside the shared list-table (Author Performance): the table's generic
+   `td span` rule forces inline-block on every span, which breaks the avatar's
+   centering — restore its inline-flex, center it against the name, and space them. */
+.betterdocs-dashboard-list-table .betterdocs-dashboard-list-item-title-wrap { align-items: center; }
+.betterdocs-dashboard-list-table .bda-avatar { display: inline-flex; margin-right: 10px; color: #fff; }
+
+/* dropdown */
+.bda-dd { position: relative; display: inline-block; }
+/* Matches the FAQ Builder header order control (.betterdocs-dropdown-select):
+   same 36px height, 8px radius, text-color-200 border, subtle elevation, IBM
+   Plex Sans 13px/500, and the base-color-700 focus ring. */
+.bda-dd-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; min-height: 36px; padding: 0 12px; background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text-color-900); cursor: pointer; white-space: nowrap; outline: none; box-shadow: 0 1px 2px 0 rgba(16, 24, 40, .05); transition: border-color .2s ease; }
+.bda-dd-btn:hover { border-color: var(--text-color-300); }
+.bda-dd-btn:focus { border-color: var(--base-color-700); box-shadow: none; }
+.bda-dd-btn .lbl { color: var(--text-color-500); }
+.bda-dd-btn .val { font-weight: 500; color: var(--text-color-800); }
+.bda-dd-menu { position: absolute; z-index: 30; margin-top: 6px; background: var(--base-background); border: 1px solid var(--text-color-300); border-radius: 8px; box-shadow: 0 12px 32px -8px rgba(15,23,42,.18); padding: 6px 0; min-width: 180px; }
+.bda-dd-menu.right { right: 0; }
+.bda-dd-opt { width: 100%; text-align: left; padding: 6px 12px; font-size: 13px; color: var(--text-color-700); background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bda-dd-opt:hover { background: var(--base-color-65); }
+.bda-dd-opt.sel { color: var(--base-color-700); font-weight: 500; }
+
+/* pagination */
+.bda-pag { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-top: 1px solid var(--text-color-100); }
+.bda-pag-info { font-size: 12.5px; color: var(--text-color-600); }
+.bda-pag-btns { display: flex; align-items: center; gap: 4px; }
+.bda-pag-btns button { width: 32px; height: 32px; border-radius: 6px; border: none; background: none; cursor: pointer; color: var(--text-color-850); font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
+.bda-pag-btns button:hover:not(:disabled) { background: var(--base-color-65); }
+.bda-pag-btns button.cur,
+.bda-pag-btns button.cur:hover:not(:disabled) { background: var(--base-color-700); color: #fff; }
+.bda-pag-btns button:disabled { opacity: .4; cursor: default; }
+
+/* donut legend */
+.bda-donut-wrap { display: flex; align-items: center; gap: 24px; }
+.bda-legend { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.bda-legend-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.bda-legend-key { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bda-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.bda-legend-name { font-size: 12.5px; color: var(--text-color-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bda-legend-val { font-size: 12.5px; font-weight: 600; color: var(--text-color-900); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+/* hbar */
+.bda-hbar { display: flex; flex-direction: column; gap: 10px; }
+.bda-hbar-row { display: grid; grid-template-columns: 160px 1fr 72px; align-items: center; gap: 12px; }
+.bda-hbar-name { font-size: 13px; color: var(--text-color-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bda-hbar-track { height: 8px; background: var(--base-color-65); border-radius: 9999px; overflow: hidden; }
+.bda-hbar-fill { height: 100%; border-radius: 9999px; }
+.bda-hbar-val { font-size: 12px; font-weight: 600; color: var(--text-color-900); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* device rows */
+.bda-dev-row { display: flex; align-items: center; gap: 12px; }
+.bda-dev-ico { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bda-dev-body { flex: 1; }
+.bda-dev-top { display: flex; align-items: center; justify-content: space-between; }
+.bda-dev-name { font-size: 13.5px; font-weight: 500; color: var(--text-color-800); }
+.bda-dev-track { height: 6px; margin-top: 6px; background: var(--base-color-65); border-radius: 9999px; overflow: hidden; }
+
+/* feed rows (feedback / recent) */
+.bda-feed { display: flex; flex-direction: column; }
+.bda-feed-row { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; transition: background .12s; }
+.bda-feed-row + .bda-feed-row { border-top: 1px solid var(--text-color-100); }
+.bda-feed-row:hover { background: var(--text-color-50); }
+.bda-feed-row.sel { background: var(--base-color-75); }
+.bda-feed-ico { width: 36px; height: 36px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bda-feed-ico.like { background: #ecfdf5; color: #059669; }
+.bda-feed-ico.dislike { background: #fef2f2; color: #ef4444; }
+.bda-feed-title { font-size: 14px; font-weight: 600; color: var(--text-color-900); }
+.bda-feed-meta { font-size: 11.5px; color: var(--text-color-500); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
+
+/* filter bar */
+.bda-filterbar { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; padding: 14px; box-shadow: 0 1px 2px rgba(15,23,42,.04); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bda-search-input { height: 36px; padding: 0 12px 0 32px; background: var(--text-color-50); border: 1px solid var(--text-color-300); border-radius: 8px; font-size: 13px; width: 100%; }
+.bda-search-wrap { position: relative; flex: 1; min-width: 200px; }
+.bda-search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-color-500); }
+
+/* bulk bar */
+.bda-bulk { background: #0F172A; color: #fff; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+.bda-bulk-btn { font-size: 12.5px; height: 32px; padding: 0 12px; border-radius: 8px; background: rgba(255,255,255,.1); color: #fff; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.bda-bulk-btn:hover { background: rgba(255,255,255,.16); }
+
+/* segmented tabs (search subtabs) */
+.bda-segtabs { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; padding: 6px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.bda-segtab { height: 36px; padding: 0 14px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-color-850); background: none; border: none; cursor: pointer; }
+.bda-segtab:hover { background: var(--base-color-65); }
+.bda-segtab.active { background: var(--base-color-700); color: #fff; }
+.bda-segtab-count, .bda-nav-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 6px; font-size: 11px; font-weight: 600; background: var(--text-color-100, #f1f4f8); color: var(--text-color-600); }
+.bda-segtab.active .bda-segtab-count,
+.bda-nav-item.active .bda-nav-badge { background: rgba(255,255,255,.2); color: #fff; }
+
+/* empty / skeleton */
+.bda-empty { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 56px 24px; }
+.bda-empty h3 { margin: 20px 0 0; font-size: 16px; font-weight: 600; color: var(--text-color-900); }
+.bda-empty p { margin: 6px 0 0; font-size: 13.5px; color: var(--text-color-600); max-width: 420px; line-height: 1.5; }
+.bda-empty-action { margin-top: 20px; display: inline-flex; align-items: center; gap: 4px; color: var(--base-color-700); font-weight: 500; font-size: 13px; background: none; border: none; cursor: pointer; }
+.bda-empty-action:hover { text-decoration: underline; }
+.bda-empty-actions { margin-top: 20px; display: flex; align-items: center; gap: 8px; }
+.bda-empty-code { margin-top: 20px; font-size: 11.5px; color: var(--text-color-500); background: var(--base-color-65); padding: 4px 10px; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.bda-skel { background: linear-gradient(90deg,var(--text-color-100) 25%,var(--base-color-65) 37%,var(--text-color-100) 63%); background-size: 400% 100%; animation: bda-shimmer 1.4s ease infinite; border-radius: 6px; }
+@keyframes bda-shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+/* settings tab */
+.bda-settings { max-width: 760px; }
+.bda-settings > * + * { margin-top: 20px; }
+.bda-settings-help { font-size: 13px; color: var(--text-color-850); margin: 0 0 16px; line-height: 1.5; }
+.bda-radio-list { display: flex; flex-direction: column; gap: 4px; }
+.bda-radio { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 13.5px; color: var(--text-color-800); transition: background .12s ease, border-color .12s ease; }
+.bda-radio:hover { background: var(--base-color-65); }
+/* Selected row gets a subtle highlighted surface + brand border, matching the DS list rows. */
+.bda-radio:has(input:checked) { background: var(--base-color-65); border-color: var(--text-color-200); }
+/* Custom-appearance radio matching the design-system checkbox below (green #009067)
+   instead of the browser's native accent-color dial. */
+.bda-radio input[type="radio"] {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	flex-shrink: 0;
+	border: 1.5px solid var(--text-color-300, #d0d5dd);
+	border-radius: 50%;
+	background: var(--base-background, #fff);
+	box-shadow: none !important;
+	outline: none !important;
+	cursor: pointer;
+	position: relative;
+	transition: border-color .12s ease, background .12s ease;
+}
+.bda-radio input[type="radio"]:hover { border-color: var(--text-color-400, #98a2b3); }
+.bda-radio input[type="radio"]:focus-visible { border-color: #009067; box-shadow: 0 0 0 3px rgba(0,184,132,.18) !important; }
+.bda-radio input[type="radio"]:checked { border-color: #009067; background: var(--base-background, #fff); }
+/* WP admin core draws a dashicon dot via :checked::before — kill it, render our own. */
+.bda-radio input[type="radio"]::before { content: none !important; }
+.bda-radio input[type="radio"]:checked::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #009067;
+	transform: translate(-50%, -50%);
+}
+/* Custom feedback checkbox — matches the design system (no native appearance,
+   green #009067 checked fill + a rendered tick since -webkit-appearance hides it). */
+.bda-card-head input[type="checkbox"],
+.bda-feed-row input[type="checkbox"] {
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--base-background, #fff);
+	border: 1.5px solid var(--text-color-300, #d0d5dd);
+	border-radius: 3px;
+	box-shadow: none !important;
+	outline: none !important;
+	cursor: pointer;
+	flex-shrink: 0;
+	height: 15px;
+	width: 15px;
+	margin: 0;
+	position: relative;
+	transition: border-color .12s ease, background .12s ease;
+}
+.bda-card-head input[type="checkbox"]:checked,
+.bda-feed-row input[type="checkbox"]:checked {
+	background: #009067;
+	border-color: #009067;
+	box-shadow: none !important;
+}
+/* WP admin core draws a dashicon checkmark via :checked::before — kill it so we
+   only show our own custom tick (otherwise the checkbox shows a double tick). */
+.bda-card-head input[type="checkbox"]::before,
+.bda-feed-row input[type="checkbox"]::before {
+	content: none !important;
+}
+.bda-card-head input[type="checkbox"]:checked::after,
+.bda-feed-row input[type="checkbox"]:checked::after {
+	content: "";
+	position: absolute;
+	left: 4px;
+	top: 1px;
+	width: 4px;
+	height: 8px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+.bda-feed-row.sel { box-shadow: none; outline: none; }
+.bda-settings-rows { display: flex; flex-direction: column; }
+.bda-settings-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 10px 0; }
+.bda-settings-row + .bda-settings-row { border-top: 1px solid var(--text-color-100); }
+.bda-settings-row-label { font-size: 13.5px; font-weight: 500; color: var(--text-color-800); }
+.bda-settings-row-desc { font-size: 12.5px; color: var(--text-color-600); margin-top: 2px; line-height: 1.45; }
+.bda-settings-field { display: flex; flex-direction: column; }
+/* Mirror the header search field (.betterdocs-admin .betterdocs-dashboard-header
+   .betterdocs-header-search-field input) exactly. Scoped under .betterdocs-admin
+   so it outranks WP-admin core's `input[type="text"]` (which otherwise overrode
+   the border / box-shadow / background). Full-width with no left icon padding
+   (the search field's 34px left gap is for its icon). Tokens flip for dark mode. */
+.betterdocs-admin .bda-input {
+	margin-top: 8px;
+	width: 100%;
+	max-width: 100%;
+	height: 36px;
+	min-height: 36px;
+	max-height: 36px;
+	padding: 0 12px;
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+	outline: none;
+	font-family: "IBM Plex Sans", sans-serif;
+	font-size: 13px;
+	line-height: 1;
+	color: var(--text-color-900);
+	background-color: var(--base-background);
+	box-sizing: border-box;
+	transition: border-color .12s, box-shadow .12s;
+}
+.betterdocs-admin .bda-input::placeholder { color: var(--text-color-500); }
+.betterdocs-admin .bda-input:focus {
+	border: 1px solid var(--base-color-700);
+	outline: none;
+	box-shadow: 0 0 0 4px var(--focus-shadow-1, #d0f9ed), 0 1px 2px 0 var(--focus-shadow-2, rgba(16, 24, 40, .05));
+}
+.bda-settings-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 4px; }
+/* The Save action mirrors the main Settings screen's submit button
+   (.components-button.wprf-submit-button): same min-height/width, padding,
+   type scale and weight — so both Save buttons read as one component. The
+   min-width also holds a stable edge through the "Save" → "Saving…" swap. */
+.bda-settings-actions .bda-btn.primary { min-height: 40px; height: auto; min-width: 105px; padding: 2px 0; gap: 8px; font-size: 14px; font-weight: 600; border-radius: 8px; }
+.bda-settings-saved { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; color: var(--base-color-700); }
+.bda-toggle { flex-shrink: 0; width: 40px; height: 24px; border-radius: 999px; border: none; padding: 2px; background: var(--text-color-300); cursor: pointer; transition: background .15s; display: inline-flex; align-items: center; }
+.bda-toggle.on { background: var(--base-color-700); }
+.bda-toggle-knob { width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .15s; }
+.bda-toggle.on .bda-toggle-knob { transform: translateX(16px); }
+.bda-spin { animation: bda-rotate 1s linear infinite; }
+@keyframes bda-rotate { to { transform: rotate(360deg); } }
+
+/* drawer */
+.bda-drawer-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.30); z-index: 99998; }
+.bda-drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 99999; width: min(560px, 94vw); background: var(--base-background); box-shadow: -10px 0 40px rgba(15,23,42,.18); display: flex; flex-direction: column; transform: translateX(100%); transition: transform .28s cubic-bezier(.22,.61,.36,1); }
+.bda-drawer.open { transform: translateX(0); }
+.bda-drawer-head { padding: 20px 24px 0; border-bottom: 1px solid var(--text-color-200); }
+.bda-drawer-title { font-size: 18px; font-weight: 700; color: var(--text-color-900); line-height: 1.3; margin: 4px 0 0; }
+.bda-drawer-tabs { display: flex; align-items: center; gap: 4px; margin-top: 12px; }
+.bda-drawer-tab { height: 36px; padding: 0 14px; font-size: 13px; font-weight: 500; color: var(--text-color-600); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; text-transform: capitalize; }
+.bda-drawer-tab.active { color: var(--base-color-700); border-bottom-color: var(--base-color-700); }
+.bda-drawer-body { flex: 1; overflow-y: auto; padding: 24px; background: var(--text-color-50); }
+.bda-drawer-body > * + * { margin-top: 20px; }
+.bda-drawer-close { width: 32px; height: 32px; border-radius: 6px; color: var(--text-color-500); background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.bda-drawer-close:hover { background: var(--base-color-65); color: var(--text-color-700); }
+.bda-minikpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bda-minikpi { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; padding: 14px; }
+.bda-minikpi-label { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-color-600); font-weight: 500; }
+.bda-minikpi-ico { width: 20px; height: 20px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; }
+.bda-minikpi-value { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-color-900); margin-top: 6px; }
+
+/* geography card — country list fills the card (no map, by design). */
+.bda-geo-list { display: flex; flex-direction: column; min-width: 0; }
+.bda-geo-list-head { display: grid; grid-template-columns: 1fr 120px; gap: 12px; padding: 12px 20px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-color-600); background: var(--text-color-50); border-bottom: 1px solid var(--text-color-100); }
+.bda-geo-list-body { max-height: 360px; overflow-y: auto; }
+.bda-geo-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; padding: 12px 20px; align-items: center; border-bottom: 1px solid var(--text-color-100); font-size: 13px; color: var(--text-color-800); }
+.bda-geo-row:last-child { border-bottom: 0; }
+.bda-geo-row:hover { background: var(--base-color-65); }
+.bda-geo-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bda-geo-name > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bda-geo-flag { font-size: 16px; line-height: 1; flex-shrink: 0; font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif; }
+
+/* scan bar (link health) */
+.bda-scanbar { background: var(--base-background); border: 1px solid var(--text-color-200); border-radius: 8px; padding: 16px 20px; box-shadow: 0 1px 2px rgba(15,23,42,.04); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.bda-scan-ico { width: 40px; height: 40px; border-radius: 8px; background: var(--base-color-75); color: var(--base-color-700); display: flex; align-items: center; justify-content: center; }
+
+/* banner (zero-result) */
+/* The banner keeps its semantic amber hue in both modes, but not its light-mode
+   *values*: a cream strip on a near-black dashboard glared, and any body line
+   set from a page text token vanished once dark mode flipped that token to
+   near-white on cream.
+   The palette is therefore exposed as banner-scoped custom properties and
+   re-pointed under the dark-mode class; callers style body copy with
+   `var(--bda-banner-fg-soft)` rather than the page tokens, since the strip paints
+   its own surface and has to own its foreground too. Kept byte-for-byte in sync
+   with the Pro copy of this file — the Content Intelligence teaser renders these
+   banners with Pro deactivated. */
+.bda-banner {
+	--bda-banner-bg: linear-gradient(90deg,#fffbeb,#fff7ed);
+	--bda-banner-border: #fde68a;
+	--bda-banner-fg: #78350f;
+	--bda-banner-fg-soft: #92400e;
+	--bda-banner-ico-bg: #fef3c7;
+	--bda-banner-ico-fg: #d97706;
+
+	background: var(--bda-banner-bg); border: 1px solid var(--bda-banner-border); border-radius: 8px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; color: var(--bda-banner-fg);
+}
+.bda-banner h3, .bda-banner h4, .bda-banner strong { color: var(--bda-banner-fg); }
+.bda-banner p, .bda-banner span { color: var(--bda-banner-fg-soft); }
+.bda-banner-ico { width: 40px; height: 40px; border-radius: 8px; background: var(--bda-banner-ico-bg); color: var(--bda-banner-ico-fg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* Dark mode: a dim warm surface that reads as the same amber signal without
+   punching a light hole in the page, with the text moved to the light end of the
+   amber ramp. */
+.betterdocs-admin.betterdocs-dark-mode .bda-banner {
+	--bda-banner-bg: linear-gradient(90deg,#2a1e08,#2b1c0c);
+	--bda-banner-border: rgba(245,158,11,.32);
+	--bda-banner-fg: #fde68a;
+	--bda-banner-fg-soft: #e8cfa4;
+	--bda-banner-ico-bg: rgba(245,158,11,.16);
+	--bda-banner-ico-fg: #fbbf24;
+}
+
+/* responsive: tables collapse to cards under 782px (WP breakpoint) */
+@media (max-width: 960px) {
+	.bda-grid12 { grid-template-columns: 1fr; }
+	.bda-col8, .bda-col4, .bda-col6 { grid-column: span 1; }
+	.bda-kpi-grid, .bda-kpi-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+	.bda-kpi-grid, .bda-kpi-grid.cols-3 { grid-template-columns: 1fr; }
+	.bda-page { padding-left: 16px; padding-right: 16px; }
+}
+
+
+/* ==========================================================================
+   Free-only additions (not shipped by Pro): nav count badges + the Pro teaser
+   and locked-module previews shown on the Free analytics surface. The shared
+   bda- shell above is the single source of truth — Pro loads it via Free\047s
+   dashboard.css and ships only its own view styles.
+   ========================================================================== */
+/* Design-system "Pro" badge — mirrors the quickbuilder badge in Settings
+   (crown glyph + amber warning tokens) so the upsell reads consistently across
+   the admin. Tokens carry their own dark-mode values, so this flips for free. */
+.wprf-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 6px 4px 4px;
+	border-radius: 50px;
+	background-color: var(--warning-50);
+	cursor: pointer;
+	line-height: 1;
+}
+.wprf-badge .wprf-badge-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	border-radius: 50px;
+	background: var(--warning-100);
+	color: var(--warning-400);
+	font-size: 12px;
+}
+.wprf-badge .wprf-badge-item {
+	color: var(--warning-400);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.1;
+}
+
+/* In the analytics nav the badge is pushed to the trailing edge and held at a
+   compact scale so it never crowds the (ellipsised) label. */
+.bda-nav-pro {
+	margin-left: auto;
+	flex-shrink: 0;
+	padding: 3px 7px 3px 3px;
+}
+.bda-nav-pro .wprf-badge-icon { width: 14px; height: 14px; font-size: 10px; }
+.bda-nav-pro .wprf-badge-item { font-size: 11px; }
+
+/* Pro teaser — sits inside a Card. Compact variant for Search Trends in Overview. */
+.bda-teaser {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 56px 24px;
+	gap: 14px;
+}
+.bda-teaser.compact { padding: 32px 24px; gap: 10px; }
+.bda-teaser-ico {
+	width: 52px;
+	height: 52px;
+	border-radius: 8px;
+	background: var(--base-color-75);
+	color: var(--base-color-700);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--base-color-100);
+}
+.bda-teaser.compact .bda-teaser-ico { width: 40px; height: 40px; border-radius: 8px; }
+.bda-teaser-title { margin: 4px 0 0; font-size: 16px; font-weight: 600; color: var(--text-color-900); }
+.bda-teaser.compact .bda-teaser-title { font-size: 14.5px; }
+.bda-teaser-sub { margin: 2px 0 0; font-size: 13.5px; color: var(--text-color-600); max-width: 440px; line-height: 1.55; }
+.bda-teaser.compact .bda-teaser-sub { font-size: 12.5px; max-width: 380px; }
+.bda-teaser .wprf-badge { margin-bottom: 4px; }
+
+/* ── Locked Pro module: blurred design-accurate mock + frosted lock panel ──
+   The mock sells the feature; the panel carries the upgrade CTA. */
+.bda-locked { position: relative; }
+.bda-locked-mock {
+	filter: blur(3px);
+	opacity: 0.55;
+	pointer-events: none;
+	user-select: none;
+	max-height: 640px;
+	overflow: hidden;
+	/* fade the bottom edge into the page so the cropped mock doesn't end abruptly */
+	-webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+	mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+}
+.bda-lock-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+.bda-lock-panel {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 12px;
+	width: 100%;
+	max-width: 460px;
+	padding: 32px 28px;
+	background: var(--base-background);
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18), 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+.bda-lock-ico {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 8px;
+	background: var(--warning-50);
+	color: var(--warning-400);
+}
+.bda-lock-title { margin: 6px 0 0; font-size: 18px; font-weight: 700; color: var(--text-color-900); }
+.bda-lock-sub { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-color-600); max-width: 400px; }
+.bda-lock-bullets {
+	list-style: none;
+	margin: 8px 0 4px;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+	max-width: 340px;
+	text-align: left;
+}
+.bda-lock-bullets li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-color-700); }
+.bda-lock-bullets li svg { color: var(--base-color-700); flex-shrink: 0; margin-top: 1px; }
+.bda-lock-panel .bda-btn { margin-top: 6px; }
+
+/* Inert mock controls used inside the Settings preview. */
+.bda-mock-setting { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--text-color-100); }
+.bda-mock-setting:first-child { border-top: none; padding-top: 0; }
+.bda-mock-toggle { position: relative; width: 38px; height: 22px; border-radius: 999px; background: var(--text-color-300); flex-shrink: 0; }
+.bda-mock-toggle.on { background: var(--base-color-700); }
+.bda-mock-knob { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+.bda-mock-toggle.on .bda-mock-knob { left: 19px; }
+
+@media (max-width: 600px) {
+	.bda-lock-panel { padding: 24px 18px; }
+}
+
+/* ── Dark-mode box boundaries ─────────────────────────────────────────────
+   The card / KPI / panel borders above use --text-color-200, which in dark mode
+   is #0a0a0b — indistinguishable from the #0a0a0a surface, so every analytics
+   box loses its boundary in dark mode (the reported bug across KPI grid, Article
+   Performance, Reactions, Search, Reader Engagement, Feedback Inbox, Link Health).
+   Re-point them at the visible slate token the list tables already use
+   (--text-color-150 = #232e46) so each box keeps a clear boundary, matching the
+   bd-faq-stat-card look. Light mode is unchanged (keeps --text-color-200). */
+.betterdocs-admin.betterdocs-dark-mode {
+	.bda-card,
+	.bda-kpi,
+	.bda-minikpi,
+	.bda-filterbar,
+	.bda-scanbar { border-color: var(--text-color-150); }
+	.bda-card-head { border-bottom-color: var(--text-color-150); }
+}

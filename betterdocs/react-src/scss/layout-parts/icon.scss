@@ -1,0 +1,58 @@
+// CHECKED:
+
+.betterdocs-category-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    @include for(".betterdocs-category-box-inner-wrapper") {
+        @include if(".betterdocs-category-box-inner-wrapper", ".layout-1") {
+            margin-bottom: 20px;
+        }
+        @include if(".betterdocs-category-box-inner-wrapper", ".layout-2") {
+            margin-right: 20px;
+        }
+        @include if(".betterdocs-category-box-inner-wrapper", ".layout-3") {
+            margin-right: 20px;
+        }
+    }
+	@include for(".betterdocs-category-grid-inner-wrapper") {
+		@include if(".betterdocs-single-category-wrapper", ".layout-3") {
+            margin-right: 12px;
+			.betterdocs-folder-icon {
+				display: inline-flex;
+				width: 32px;
+				height: 32px;
+				justify-content: center;
+				align-items: center;
+				background: #F2F4F7;
+				border-radius: 6px;
+				img {
+					width: 100%;
+					height: auto;
+				}
+			}
+        }
+	}
+    .betterdocs-category-icon-img {
+        @include for(".betterdocs-category-grid-wrapper .betterdocs-category-grid-inner-wrapper:not(.layout-2)") {
+            height: 32px;
+            margin-right: 15px;
+        }
+        height: 80px;
+        width: auto;
+    }
+    // A custom category/KB image rendered inside a plain .betterdocs-folder-icon
+    // (folder-icon style) overflowed the icon box on block/FSE MKB archives. Bound it
+    // to its container — whatever size that is (e.g. the 32px folder box) — rather than
+    // a fixed value, so it never exceeds the icon. Targets <img> only, so the inline
+    // SVG folder icon is untouched.
+    .betterdocs-folder-icon img,
+    img.betterdocs-category-folder-img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+}

@@ -1,0 +1,15 @@
+export const TOC_BOX_WIDTH           = 'toc_box_width';
+export const TOC_BOX_PADDING         = 'toc_box_padding';
+export const TOC_BOX_MARGIN          = 'toc_box_margin';
+export const TOC_BOX_BORDER_SHADOW   = 'toc_box_border_shadow';
+export const TOC_TITLE_PADDING	     = 'toc_title_padding';
+export const TOC_TITLE_MARGIN	     = 'toc_title_margin';
+export const TOC_LIST_PADDING        = 'toc_list_padding';
+export const TOC_LIST_MARGIN	     = 'toc_list_margin';
+export const TOC_LIST_BORDER	     = 'toc_list_border';
+export const TOC_LIST_BORDER_PADDING = 'toc_list_border_padding';
+export const TOC_ACTIVE_LIST_BORDER  = 'toc_active_list_border';
+export const TOC_ACTIVE_LIST_BORDER_POSITION_LEFT = 'toc_active_list_border_position_left';
+export const TOC_ACTIVE_LIST_BORDER_POSITION_RIGHT = 'toc_active_list_border_position_right';
+export const TOC_ACTIVE_LIST_BORDER_POSITION_TOP = 'toc_active_list_border_position_top';
+export const TOC_ACTIVE_LIST_BORDER_POSITION_BOTTOM = 'toc_active_list_border_position_bottom';

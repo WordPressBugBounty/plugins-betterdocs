@@ -1,0 +1,175 @@
+/* Free's API Docs teaser.
+ *
+ * Only the blurred mock behind the lock panel lives here — the panel itself is
+ * the shared `.bda-lock-*` shell from the Analytics teasers. The API-specific
+ * column/chip classes are `bd-apit-*` (api teaser) rather than Pro's `bd-api-*`
+ * so the two never collide: Free's teaser and Pro's real screen are mutually
+ * exclusive, and keeping the names apart makes that obvious.
+ *
+ * The table shell (`.bd-dc-tree-card`, `.bd-dc-row`, `.bd-dc-row-action`) is
+ * Free's own Doc Categories table styling, reused as-is.
+ */
+
+.bd-apit-wrapper {
+    .bda-page { padding: 0; }
+}
+
+.bd-apit-mock {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Reference list ──────────────────────────────────────────────────── */
+
+.bd-apit-c {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.bd-apit-c-name      { flex: 1; min-width: 0; }
+.bd-apit-c-endpoints { width: 100px; flex-shrink: 0; }
+.bd-apit-c-status    { width: 120px; flex-shrink: 0; }
+.bd-apit-c-actions   { width: 130px; flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+
+.bd-apit-name { display: block; }
+
+.bd-apit-source {
+    font-size: 12px;
+    color: var(--text-color-500);
+}
+
+.bd-apit-chip {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--text-color-150);
+    background: var(--page-background, #f5f6fb);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-color-600);
+}
+
+.bd-apit-chip--postman {
+    border-color: #f7c9a8;
+    background: #fff4ec;
+    color: #b8511a;
+}
+
+.bd-apit-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color-900);
+    font-variant-numeric: tabular-nums;
+}
+
+.bd-apit-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.bd-apit-status--publish { background: var(--base-color-50, #e6f7f1); color: var(--base-color-700, #00916e); }
+.bd-apit-status--draft   { background: var(--warning-50, #fff7e6); color: #b45309; }
+
+/* ── Rendered reference preview ──────────────────────────────────────── */
+
+.bd-apit-preview {
+    border: 1px solid var(--text-color-150);
+    border-radius: 8px;
+    background: var(--base-background);
+    overflow: hidden;
+}
+
+.bd-apit-preview-head {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--text-color-150);
+}
+
+.bd-apit-preview-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color-900);
+}
+
+.bd-apit-endpoints {
+    display: flex;
+    flex-direction: column;
+}
+
+.bd-apit-endpoint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--text-color-100, #eaecf0);
+
+    &:first-child { border-top: none; }
+}
+
+.bd-apit-verb {
+    flex-shrink: 0;
+    width: 62px;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fff;
+}
+
+.bd-apit-verb--get    { background: #0f7b6c; }
+.bd-apit-verb--post   { background: #2563eb; }
+.bd-apit-verb--patch  { background: #b45309; }
+.bd-apit-verb--delete { background: #b42318; }
+
+.bd-apit-path {
+    flex: 1;
+    min-width: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: var(--text-color-700);
+    background: none;
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bd-apit-tryit {
+    flex-shrink: 0;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--base-color-700, #00916e);
+    color: var(--base-color-700, #00916e);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+@media (max-width: 782px) {
+    .bd-apit-c-endpoints,
+    .bd-apit-c-status { width: auto; }
+    .bd-apit-tryit { display: none; }
+}
+
+/* Dark mode — the two places the mock reaches past the theme tokens for a
+   brand-ish tint (the Postman chip, the "Try it" pill). Everything else is
+   token-driven and flips on its own. */
+.betterdocs-admin.betterdocs-dark-mode {
+    .bd-apit-chip--postman {
+        border-color: rgba(247, 201, 168, 0.35);
+        background: rgba(180, 81, 26, 0.18);
+        color: #f0a56f;
+    }
+
+    .bd-apit-path { color: var(--text-color-600); }
+}

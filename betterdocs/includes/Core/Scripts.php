@@ -62,7 +62,7 @@ class Scripts extends Base {
 		$assets->register( 'betterdocs-category-grid-list', 'public/css/category-grid-list.css' );
 
 		// JS
-		$assets->register( 'betterdocs', 'public/js/betterdocs.js', [ 'jquery' ] );
+		$assets->register( 'betterdocs', 'public/js/betterdocs.js', [ 'jquery', 'clipboard' ] );
 		// Shortcode JS
 		$assets->register( 'betterdocs-category-toggler', 'public/js/category-toggler.js', [ 'jquery' ] );
 		$assets->register(

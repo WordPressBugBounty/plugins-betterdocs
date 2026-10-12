@@ -94,7 +94,8 @@ class Sidebar extends Block {
 		];
 		$sidebar_layout = isset( $layout_mapper[ $layout ] ) ? $layout_mapper[ $layout ] : 1;
 
-		if ( ! betterdocs()->is_pro_active() ) {
+		// Sidebars 2, 3 and 6 ship in Pro; every other layout's template is in Free.
+		if ( ! betterdocs()->is_pro_active() && in_array( $sidebar_layout, [ 2, 3, 6 ], true ) ) {
 			$sidebar_layout = 1;
 		}
 

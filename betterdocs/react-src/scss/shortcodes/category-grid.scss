@@ -1,0 +1,94 @@
+// CHECKED:
+
+.betterdocs-category-grid-wrapper {
+    .betterdocs-category-grid-inner-wrapper {
+        .betterdocs-grid-top-row-wrapper {
+            margin-bottom: 40px;
+            flex-basis: 100%;
+            @for $i from 1 through 12 {
+                @include if(
+                    ".betterdocs-category-grid-inner-wrapper",
+                    ".layout-flex.docs-col-#{$i}"
+                ) {
+                    // grid-column-start: 1;
+                    // grid-column-end: #{$i + 1};
+                    // @include responsive-below("small-laptop") {
+                    //     @if ($i >= 3) {
+                    //         grid-column-end: 4;
+                    //     } @else {
+                    //         grid-column-end: #{$i + 1};
+                    //     }
+                    // }
+                    // @include responsive("tablet") {
+                    //     @if ($i >= 2) {
+                    //         grid-column-end: 3;
+                    //     } @else {
+                    //         grid-column-end: #{$i + 1};
+                    //     }
+                    // }
+                    // @include responsive("phone") {
+                    //     grid-column-end: 2;
+                    // }
+                }
+            }
+        }
+
+        .betterdocs-single-category-wrapper {
+            width: 100%;
+        }
+    }
+}
+
+// Skeleton placeholder shown while a lazy .betterdocs-body is fetching its
+// real content. Styles intentionally do NOT inherit padding from
+// .betterdocs-body or .betterdocs-articles-list li -- the skeleton owns its
+// own spacing so it renders consistently regardless of which sidebar layout
+// the body lives in.
+ul.betterdocs-skeleton {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 18px 16px !important;
+    background: transparent;
+}
+
+ul.betterdocs-skeleton > li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 6px 0 !important;
+    border: 0 !important;
+    background: none !important;
+    min-height: 0;
+    line-height: 1;
+
+    &::before, &::after {
+        content: none !important;
+    }
+}
+
+.betterdocs-skeleton-bar {
+    display: block;
+    height: 12px;
+    border-radius: 4px;
+    background-color: #e9edf3;
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.65) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-repeat: no-repeat;
+    background-size: 220% 100%;
+    background-position: 100% 0;
+    animation: betterdocs-skeleton-shimmer 1.4s linear infinite;
+}
+
+ul.betterdocs-skeleton > li:nth-child(1) .betterdocs-skeleton-bar { width: 88%; }
+ul.betterdocs-skeleton > li:nth-child(2) .betterdocs-skeleton-bar { width: 72%; }
+ul.betterdocs-skeleton > li:nth-child(3) .betterdocs-skeleton-bar { width: 92%; }
+ul.betterdocs-skeleton > li:nth-child(4) .betterdocs-skeleton-bar { width: 65%; }
+ul.betterdocs-skeleton > li:nth-child(5) .betterdocs-skeleton-bar { width: 80%; }
+
+@keyframes betterdocs-skeleton-shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}

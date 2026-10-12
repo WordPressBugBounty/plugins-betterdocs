@@ -1,0 +1,7 @@
+// ===== write-with-ai.scss — styles for the redesigned Write with AI modal =====
+// The modal itself is styled with inline styles + the CSS custom properties in
+// ai-shared/tokens.scss; this sheet pulls in those tokens/keyframes and the
+// shared preview typography.
+
+@import "../gutenberg/ai-shared/tokens";
+@import "../gutenberg/ai-shared/preview";

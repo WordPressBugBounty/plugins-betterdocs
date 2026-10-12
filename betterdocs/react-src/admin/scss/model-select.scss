@@ -1,0 +1,34 @@
+@import "utils/common";
+@import "utils/mixin";
+
+/* Tippy Tooltip Custom Styles */
+.tippy-box {
+    background-color: #667085;
+    font-size: 14px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tippy-arrow {
+    color: #667085;
+}
+
+.tippy-content {
+    padding: 8px;
+    text-align: center;
+    //styleName: Text xs/Semibold;
+    font-family: IBM Plex Sans;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    max-width: 170px;
+    color: #fff;
+}
+
+/* Optional: Adjust the arrow size */
+.tippy-box[data-placement^="top"] .tippy-arrow {
+    border-width: 8px 8px 0;
+}

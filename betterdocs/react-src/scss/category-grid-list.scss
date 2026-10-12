@@ -1,0 +1,15 @@
+// CHECKED:
+
+// All Common SCSS
+@import "./common/index";
+@import "./common/grid";
+@import "./shortcodes/category-grid-list.scss";
+
+// ALL Layout Parts
+@import "./layout-parts/index";
+
+.betterdocs-category-grid-list-wrapper {
+    .betterdocs-category-grid-list-inner-wrapper {
+        @import "./partials/single-category-list.scss";
+    }
+}

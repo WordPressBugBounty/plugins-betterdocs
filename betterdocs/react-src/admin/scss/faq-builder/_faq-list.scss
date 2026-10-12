@@ -1,0 +1,288 @@
+// Spacing between FAQ rows inside an expanded group / search results.
+.bd-faq-list-droppable {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+// Individual FAQ rows inside an expanded group (and reused for searched FAQs).
+.bd-faq {
+    display: flex;
+    flex-direction: column;
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-200);
+    border-radius: 8px;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+    // Flash a FAQ row right after it's created in / moved into a group — the
+    // same soft mint highlight a new FAQ group gets: the head background washes
+    // mint and the border pulses green, then both settle back.
+    &.bd-faq--highlight {
+        animation: bd-faq-row-flash 2.4s ease-out;
+        border-color: var(--base-color-700, #00b884);
+
+        > .bd-faq-head {
+            animation: bd-faq-row-head-flash 2.4s ease-out;
+        }
+    }
+
+    .bd-faq-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: var(--base-background, #fff);
+        border-radius: 12px;
+        min-height: 44px;
+        box-sizing: border-box;
+
+        .bd-faq-title-wrap {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bd-faq-title {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin: 0;
+            color: var(--text-color-900);
+            cursor: pointer;
+        }
+
+        // Uncategorized FAQs render a bare title (no wrap); keep it filling the
+        // row so the action cluster stays right-aligned.
+        > .bd-faq-title {
+            flex: 1;
+        }
+
+        // FAQ-row toggle — smaller than the group / form toggles.
+        .bd-faq-toggler {
+            width: 32px;
+            height: 18px;
+            border-radius: 18px;
+            .knobs:before {
+                top: 2px;
+                left: 2px;
+                width: 14px;
+                height: 14px;
+                padding: 0;
+            }
+            .checkbox:checked + .knobs:before {
+                left: 16px;
+            }
+        }
+
+        // "Drafted" pill badge.
+        .bd-faq-status-badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            background: var(--warning-50);
+            color: var(--warning-700);
+        }
+
+        .bd-faq-button-reset {
+            background: transparent;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        // Drag handle — 6-dot grip (grip.svg uses fill:currentColor).
+        .bd-faq-drag-button {
+            cursor: grab;
+            color: var(--text-color-400);
+            svg,
+            img {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
+        .bd-faq-action-button {
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            justify-content: center;
+            transition: background 0.15s ease;
+            img,
+            svg {
+                width: 14px;
+                color: var(--text-color-600);
+                fill: var(--text-color-600);
+            }
+            &:hover {
+                background: var(--text-color-100);
+                img,
+                svg {
+                    color: var(--text-color-900);
+                    fill: var(--text-color-900);
+                }
+            }
+        }
+
+        .bd-faq-action-button.magic-icon {
+            svg {
+                color: var(--text-color-600);
+                stroke: var(--text-color-600);
+                fill: none !important;
+                path {
+                    stroke: var(--text-color-600);
+                }
+            }
+            &:hover {
+                svg path {
+                    stroke: var(--text-color-900) !important;
+                }
+            }
+        }
+
+        // Delete uses an outline (stroke) trash icon to match the edit / duplicate
+        // / AI icons. The base .bd-faq-action-button rule forces fill:text-600,
+        // which would fill the open outline paths — null it out and colour the
+        // stroke instead (same treatment as .magic-icon).
+        .bd-faq-action-button.delete-icon {
+            svg {
+                fill: none !important;
+                stroke: var(--text-color-600);
+            }
+            &:hover {
+                svg {
+                    stroke: var(--text-color-900);
+                }
+            }
+        }
+
+        // Accordion toggle — rounded square; soft green when open.
+        .bd-faq-accordion-icon {
+            background: transparent;
+            border: 1px solid transparent;
+            height: 32px;
+            width: 32px;
+            min-height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition: all 0.2s ease;
+            margin-left: 4px;
+            img,
+            svg {
+                width: 11px;
+                color: var(--text-color-600);
+                fill: var(--text-color-600);
+                transition: all 0.15s ease-in-out;
+            }
+            &:hover {
+                background: var(--text-color-100);
+            }
+            &.active {
+                background: var(--base-color-75);
+                img,
+                svg {
+                    color: var(--base-color-700);
+                    fill: var(--base-color-700);
+                }
+            }
+            &.active {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    .bd-faq-body {
+        background: var(--base-background, #fff);
+        border-radius: 0 0 12px 12px;
+        // Slide open/close via the 0fr→1fr grid track so the editor glides in
+        // smoothly instead of snapping (the old max-height:100000px hack jumped
+        // because the visible range was covered in a sliver of the duration).
+        // The inner wrapper does the clipping; the edit form's react-select menu
+        // is portaled to <body> (see EditFaq) so it is never clipped by it.
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        &.active {
+            grid-template-rows: 1fr;
+            border-top: 1px solid var(--text-color-200);
+        }
+        .bd-faq-body-inner {
+            overflow: hidden;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    // Open row gets a soft lift.
+    &:has(.bd-faq-body.active) {
+        border-color: var(--text-color-300);
+        box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+    }
+}
+
+.bd-faq-loader {
+    height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    svg {
+        height: 25px;
+        width: auto;
+        animation: identifier 1.5s linear infinite;
+        padding-bottom: 1.5px;
+        fill: var(--text-color-500);
+    }
+    .bd-title {
+        font-size: 20px;
+        font-weight: 400;
+        margin-top: 10px;
+        margin-bottom: 0;
+        color: var(--text-color-500);
+    }
+    @keyframes identifier {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+// Soft mint flash for a freshly created / moved FAQ row — mirrors the group
+// flash: a gentle mint ring that fades, and the head background washing mint
+// then settling back to white.
+@keyframes bd-faq-row-flash {
+    0%,
+    55% {
+        box-shadow: 0 0 0 3px var(--base-color-75, #ecfdf3);
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes bd-faq-row-head-flash {
+    0%,
+    55% {
+        background: var(--base-color-75, #ecfdf3);
+    }
+    100% {
+        background: var(--base-background, #fff);
+    }
+}

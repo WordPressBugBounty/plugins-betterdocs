@@ -1,0 +1,30 @@
+.bd-faq-editor {
+    height: 200px;
+    .bd-faq-editor-toolbar {
+        margin-bottom: 0px;
+        border: 1px solid var(--text-color-150);
+        border-radius: 5px 5px 0 0;
+    }
+    .bd-faq-editor-main {
+        height: calc(100% - 46px);
+        padding: 0px 15px;
+        box-sizing: border-box;
+        border: 1px solid var(--text-color-150);
+        background: var(--text-color-150);
+        color: var(--text-color-900);
+        border-top: 0px;
+        border-radius: 0 0 5px 5px;
+        font-size: 14px;
+        .public-DraftEditorPlaceholder-root {
+            color: var(--text-color-600);
+        }
+    }
+    &:focus-within {
+        .bd-faq-editor-toolbar {
+            border-color: var(--base-color-700);
+        }
+        .bd-faq-editor-main {
+            border-color: var(--base-color-700);
+        }
+    }
+}

@@ -1,0 +1,141 @@
+$color25List: (
+    1: #fcfaff,
+    2: #fffaeb,
+    3: #f6fef9,
+    4: #eff8ff,
+    5: #f7fefc,
+    6: #fffcf5,
+);
+$color700List: (
+    1: #6941c6,
+    2: #b54708,
+    3: #027a48,
+    4: #175cd3,
+    5: #00b884,
+    6: #fdb022,
+);
+
+:root {
+    $mode-base: #ffffff;
+    --page-background: #fafbfb;
+    --base-background: #ffffff;
+    --base-color-50: #f7fefc;
+    --base-color-55: #F3FFFF;
+    --base-color-60: #FDF6FE;
+    --base-color-65: #F7F8FA;
+    --base-color-75: #ecfdf3;
+    --base-color-100: #d1fadf;
+    --base-color-700: #00b884;
+    --base-color-800: #00956b;
+    --base-color-900: #007557;
+    --focus-shadow-1: #d0f9ed;
+    --focus-shadow-2: #1018280D;
+    --text-color-25: #fcfcfd;
+    --text-color-50: #f9fafb;
+    --text-color-100: #F2F4F7;
+    --text-color-150: #F2F4F7;
+    --text-color-200: #eaecf0;
+    --text-color-300: #dde2e4;
+    --text-color-400: #d0d5dd;
+    --text-color-500: #98a2b3;
+    --text-color-600: #667085;
+    --text-color-700: #344054;
+    --text-color-800: #202223;
+    --text-color-850: #475467;
+    --text-color-900: #101828;
+    --text-color-950: #1D2939;
+    --text-color-960: #303030;
+    --text-color-970: #FCFDFE;
+    --text-color-980: #172B4D;
+    --warning-50: #fffaeb;
+    --warning-100: #fef0c7;
+    --warning-400: #fdb022;
+    --warning-500: #ff8a1e;
+    --warning-700: #b54708;
+    --primary-500: #5a6bff;
+    --primary-700: #6941c6;
+    --danger-50: #fff1f3;
+    --danger-600: #d92d20;
+    --danger-700: #f01919;
+    --border-color-ai: #EDF0F3;
+
+    --mode-switcher-icon: "\e905";
+}
+
+
+
+
+.betterdocs-admin {
+    &.betterdocs-dark-mode {
+        $mode-base: #000000;
+        --page-background: #000000;
+        --base-background : #0A0A0A;
+        --base-color-50: #101211;
+        --base-color-55: #1f283d;
+        --base-color-60: #1f283d;
+        --base-color-65: #1f283d;
+        --base-color-75: #1f283d;
+        --base-color-100: #1f283d;
+        --base-color-700: #00b884;
+        --base-color-800: #00956b;
+        --base-color-900: #00c694;
+        --focus-shadow-1: #14524033;
+        --focus-shadow-2: #1028210D;
+        --text-color-25: #101828;
+        --text-color-50: #101113;
+        --text-color-100: #22242A;
+        --text-color-150: #232e46;
+        --text-color-200: #0A0A0B;
+        --text-color-300: #36405a;
+        --text-color-400: #222225;
+        --text-color-500: #d0d5dd;
+        --text-color-600: #B1B9B7;
+        --text-color-700: #fcfcfd;
+        --text-color-800: #fcfcfd;
+        --text-color-850: #fcfcfd;
+        --text-color-900: #fcfcfd;
+        --text-color-950: #fcfcfd;
+        --text-color-960: #fcfcfd;
+        --text-color-970: #0A0A0A;
+		--text-color-980: #fcfcfd;
+        --warning-50: #473502;
+        --warning-100: #5d470b;
+        --danger-50: #190207;
+        --border-color-ai: #232e46;
+
+        --mode-switcher-icon: "\e903";
+    }
+
+    #wpwrap {
+        background: var(--page-background);
+        #adminmenumain {
+            #adminmenu {
+                li {
+                    a.wp-has-current-submenu {
+                        &:after {
+                            border-right-color: var(--page-background);
+                        }
+                    }
+                }
+            }
+        }
+        #wpfooter {
+            background: var(--page-background);
+            color: var(--text-color-900);
+        }
+    }
+}
+
+// Grid Layout
+// Variables
+$grid-columns: 12;
+$grid-gutter-width: 24px;
+
+// Breakpoints
+$breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+);

@@ -1,0 +1,122 @@
+// FAQ create / edit form (rendered inside an expanded FAQ row or a group's
+// "new FAQ" slot). Also used by the Glossaries builder form.
+.bd-faq-create-new {
+    background: var(--base-background, #fff);
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+	margin-bottom: 12px;
+
+    .bd-faq-create-new-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px 22px;
+        gap: 20px;
+
+        .bd-faq-cgt-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        // Field labels.
+        .bd-faq-label {
+            font-size: 13px;
+            font-weight: normal;
+            color: var(--text-color-850);
+            cursor: initial;
+            &[required]:after {
+                content: "*";
+                margin-left: 3px;
+                color: var(--danger-600);
+            }
+        }
+
+        // Text inputs (Question).
+        .bd-faq-input {
+            height: auto;
+            border: 1px solid var(--text-color-150);
+            // Dark-mode aware: var resolves to #fff in light, the dark surface
+            // in dark mode (matching the focus state, which already used it).
+            background: var(--base-background, #fff);
+            width: 100%;
+            color: var(--text-color-900);
+            padding: 10px 16px;
+            font-size: 14px;
+            outline: none;
+            box-shadow: none;
+            border-radius: 10px;
+            transition: background 0.15s ease, border-color 0.15s ease;
+            &::placeholder {
+                color: var(--text-color-500);
+            }
+            &:not(:read-only):focus {
+                background: var(--base-background, #fff);
+                border-color: var(--base-color-700);
+                box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
+                outline: none;
+            }
+        }
+
+        // Question row: input + "Write With AI" button side by side.
+        .bd-faq-cgt-field-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+            .bd-faq-input {
+                flex: 1;
+            }
+            .bd-write-with-ai-button {
+                flex-shrink: 0;
+            }
+        }
+
+        // FAQ Group select (react-select).
+        .bd-faq-select {
+            .bd-faq-select__control {
+                border: 1px solid var(--text-color-150);
+                // Dark-mode aware: resting state now matches the focused state
+                // (which already used the variable) instead of a hardcoded white.
+                background: var(--base-background, #fff);
+                min-height: 40px;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: none;
+                .bd-faq-select__value-container {
+                    padding: 4px 16px;
+                }
+                .bd-faq-select__single-value {
+                    font-weight: normal;
+                    color: var(--text-color-900) !important;
+                }
+                &--is-focused {
+                    background: var(--base-background, #fff);
+                    border-color: var(--base-color-700);
+                    box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
+                }
+            }
+            .bd-faq-select__menu {
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+            }
+        }
+    }
+
+    .bd-faq-create-new-footer {
+        border-top: 1px solid var(--text-color-200);
+        padding: 18px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .bd-toggle-switcher-group p {
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1.4;
+            color: var(--text-color-850);
+        }
+    }
+}

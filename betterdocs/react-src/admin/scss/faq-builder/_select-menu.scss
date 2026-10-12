@@ -1,0 +1,62 @@
+// The react-select menu is portaled to document.body (menuPortalTarget), so it
+// renders OUTSIDE .betterdocs-faq-wrapper. These rules must be emitted at the
+// top level (not nested under the wrapper) or they won't match the portaled
+// menu and react-select's default blue option styling wins.
+.bd-faq-select__menu {
+	// !important on the backgrounds/colors: react-select injects its own
+	// emotion styles (default white menu) at the same specificity, so without
+	// this the menu stays white in dark mode (the CSS vars resolve correctly,
+	// they're just being overridden).
+	background-color: var(--base-background) !important;
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	box-shadow: 0 4px 12px var(--focus-shadow-2);
+	overflow: hidden;
+
+	.bd-faq-select__menu-list {
+		padding: 12px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		background-color: var(--base-background) !important;
+
+		.bd-faq-select__group-heading {
+			padding: 8px 14px 4px;
+			margin: 0;
+		}
+
+		.bd-faq-select__option {
+			display: inline-flex;
+			align-items: center;
+			justify-content: flex-start;
+			gap: 8px;
+			padding: 10px 14px;
+			border-radius: 8px;
+			background-color: transparent !important;
+			color: var(--text-color-800) !important;
+			// Match the selected value's typography (the control's single-value).
+			font-size: 14px;
+			font-weight: normal;
+			line-height: 1.5;
+			cursor: pointer;
+		}
+
+		.bd-faq-select__option--is-focused {
+			background-color: var(--text-color-50) !important;
+			color: var(--text-color-700) !important;
+		}
+
+		.bd-faq-select__option--is-selected {
+			background-color: var(--text-color-50) !important;
+			color: var(--base-color-700) !important;
+
+			&:after {
+				margin-left: auto;
+				content: "\e90a";
+				font-family: "btd-icon";
+				font-size: 20px;
+				line-height: 1;
+			}
+		}
+	}
+}

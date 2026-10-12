@@ -1,0 +1,282 @@
+// FAQ Group rows (also reused by the Glossaries builder via the same
+// .bd-faq-ctg* classes). White card, title + meta, right-aligned action
+// cluster (Add a New FAQ button, edit, delete, toggle, accordion).
+.bd-faq-ctg-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .bd-faq-ctg {
+        background: var(--base-background, #fff);
+        border: 1px solid var(--text-color-200);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+        // Active FAQ group right after it's created / revealed: a soft, subtle
+        // mint wash on the header card + a defined mint border. Lighter than the
+        // old heavy green flash so it no longer competes with the action buttons.
+        &.bd-faq-ctg--highlight {
+            animation: bd-faq-ctg-flash 2.4s ease-out;
+            border-color: var(--base-color-700, #00b884);
+
+            > .bd-faq-ctg-head {
+                animation: bd-faq-ctg-head-flash 2.4s ease-out;
+            }
+        }
+
+        .bd-faq-ctg-head {
+            display: flex;
+            align-items: center;
+            background: var(--base-background, #fff);
+            padding: 16px 20px;
+            gap: 12px;
+            box-sizing: border-box;
+
+            // On narrow screens the action cluster collides with the title.
+            // Collapse the "Add a New FAQ" button to its icon and tighten
+            // spacing so the row stays on a single line.
+            @media (max-width: 600px) {
+                padding: 14px;
+                gap: 6px;
+
+                .bd-faq-button {
+                    min-height: 32px;
+                    padding: 7px;
+
+                    .bd-faq-text {
+                        display: none;
+                    }
+                }
+
+                .bd-faq-action-button {
+                    margin-left: 0;
+                }
+
+                .bd-faq-accordion-icon {
+                    margin-left: 0;
+                }
+            }
+
+            .bd-faq-ctg-title-wrap {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .bd-faq-ctg-title {
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 1.3;
+                margin: 0;
+                color: var(--text-color-900);
+                cursor: pointer;
+            }
+
+            .bd-faq-ctg-meta {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-color-600);
+
+                .bd-faq-ctg-meta-sep {
+                    width: 3px;
+                    height: 3px;
+                    border-radius: 50%;
+                    background: var(--text-color-400);
+                }
+                .bd-faq-ctg-meta-draft {
+                    font-weight: 600;
+                    color: var(--warning-700);
+                }
+            }
+
+            // Glossary group rows render a bare title (no meta wrap); keep it
+            // filling the row so the action cluster stays right-aligned.
+            > .bd-faq-ctg-title {
+                flex: 1;
+            }
+
+            .bd-faq-button-reset {
+                background: transparent;
+                border: none;
+                padding: 0;
+                display: flex;
+                align-items: center;
+            }
+
+            // Drag handle — 6-dot grip (grip.svg uses fill:currentColor).
+            .bd-faq-ctg-drag-button {
+                cursor: grab;
+                color: var(--text-color-400);
+                svg,
+                img {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+
+            // Edit / Delete icon buttons — square hover target.
+            .bd-faq-action-button {
+                cursor: pointer;
+                width: 28px;
+                height: 28px;
+                border-radius: 7px;
+                justify-content: center;
+                transition: background 0.15s ease;
+                img,
+                svg {
+                    width: 16px;
+                    color: var(--text-color-600);
+                    fill: var(--text-color-600);
+                }
+                &:hover {
+                    background: var(--text-color-100);
+                    img,
+                    svg {
+                        color: var(--text-color-900);
+                        fill: var(--text-color-900);
+                    }
+                }
+            }
+
+            // Group delete uses the outline (stroke) trash icon. The rule above
+            // forces fill:text-600, which would fill its open outline paths — null
+            // it out and colour the stroke instead (matches the FAQ-row delete).
+            .bd-faq-action-button.delete-icon {
+                svg {
+                    fill: none !important;
+                    stroke: var(--text-color-600);
+                }
+                &:hover svg {
+                    fill: none !important;
+                    stroke: var(--text-color-900);
+                }
+            }
+
+            // Accordion toggle — rounded square; green when expanded.
+            .bd-faq-accordion-icon {
+                background: transparent;
+                border: 1px solid transparent;
+                height: 34px;
+                width: 34px;
+                min-height: 34px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 0;
+                transition: all 0.2s ease;
+                transform: rotate(0deg);
+                img,
+                svg {
+                    width: 12px;
+                    color: var(--text-color-600);
+                    fill: var(--text-color-600);
+                    transition: all 0.15s ease-in-out;
+                }
+                &:hover {
+                    background: var(--text-color-100);
+                }
+                &.active {
+                    background: var(--base-color-700);
+                    border-color: var(--base-color-700);
+                    transform: rotate(180deg);
+                    img,
+                    svg {
+                        color: #fff;
+                        fill: #fff;
+                    }
+                }
+            }
+        }
+
+        // Three clean layers so the slide is jump-free:
+        //   body  → ONLY the grid animation (no padding, no scroll of its own)
+        //   clip  → collapses to a true zero and clips the reveal
+        //   inner → owns the padding, the scroll cap, and the head/body divider
+        // Keeping the padding + scroll on `inner` (inside the clip) means they
+        // are part of the measured height and slide in from the top, instead of
+        // the body briefly painting at content height before the track catches
+        // up (the cause of the initial jump).
+        .bd-faq-category-body,
+        .bd-faq-glossary-body {
+            background: var(--page-background, #f5f6fb);
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+            &.active {
+                grid-template-rows: 1fr;
+            }
+
+            // Clip layer — the grid track sizes this; overflow:hidden + a zero
+            // automatic minimum let it collapse cleanly to 0.
+            .bd-faq-category-body-clip,
+            .bd-faq-glossary-body-clip {
+                overflow: hidden;
+                min-height: 0;
+            }
+
+            .bd-faq-category-body-inner,
+            .bd-faq-glossary-body-inner {
+                padding: 14px 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                max-height: 575px;
+                overflow-y: auto;
+                border-top: 1px solid var(--text-color-200);
+
+                // While a create/edit form is open, lift the 575px scroll cap so
+                // the whole form — including its footer (Cancel / Create) — is
+                // visible instead of being clipped inside the box. Keep
+                // overflow-y: auto (NOT visible): switching the form's scroll
+                // ancestor to overflow:visible makes wp.editor / TinyMCE fall
+                // back to the plain textarea. With no cap the content fits, so no
+                // scrollbar appears and the page scrolls instead.
+                &:has(.bd-faq-create-new) {
+                    max-height: none;
+                }
+            }
+        }
+    }
+
+    .bd-faq-ctg-list-droppable {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        .bd-faq-ctg {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Active FAQ group flash — a soft mint wash on the header that settles back to
+// the card's resting white, plus a gentle mint ring that resolves to the card's
+// resting shadow. Subtle on purpose so the group reads as "the active one"
+// without the old heavy green fill.
+@keyframes bd-faq-ctg-flash {
+    0%,
+    55% {
+        box-shadow: 0 0 0 3px var(--base-color-75, #ecfdf3);
+    }
+    100% {
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+}
+
+@keyframes bd-faq-ctg-head-flash {
+    0%,
+    55% {
+        background: var(--base-color-75, #ecfdf3);
+    }
+    100% {
+        background: var(--base-background, #fff);
+    }
+}

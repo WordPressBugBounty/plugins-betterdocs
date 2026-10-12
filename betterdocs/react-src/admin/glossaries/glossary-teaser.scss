@@ -1,0 +1,52 @@
+/* Free's Glossaries teaser.
+ *
+ * Only the blurred mock behind the lock panel lives here — the panel itself is
+ * the shared `.bda-lock-*` shell from the Analytics teasers, and the mock reuses
+ * the real Glossaries `.bd-faq-ctg-*` card markup (already styled in the admin
+ * bundle) so the blurred picture matches the real screen. Free's teaser and Pro's
+ * real screen are mutually exclusive, so nothing here can collide.
+ */
+
+.bd-gloss-wrapper {
+    /* Pro's admin-wide `analytics.css` styles the shared shell rules
+       (`.bda-btn.primary`, `.bda-card`, `.bda-badge`, …) with `--bda-*`
+       variables it only defines inside its own `.bda-app` wrapper. On this page
+       those variables resolve to nothing, so the primary CTA button loses its
+       green and renders as invisible (transparent bg + white text). Re-declare
+       the same alias mapping here so the button and shell paint correctly — the
+       right-hand side is the shared design-system token, so dark mode follows
+       for free. Mirrors the fix on `.bd-mcp-wrapper` (admin/mcp/mcp.scss). */
+    --bda-green: var(--base-color-700);
+    --bda-green-d: var(--base-color-700);
+    --bda-green-soft: var(--base-color-75);
+    --bda-green-border: var(--base-color-100);
+    --bda-bg: var(--text-color-50);
+    --bda-card-bg: var(--base-background);
+    --bda-border: var(--text-color-200);
+    --bda-border-2: var(--text-color-100);
+    --bda-border-strong: var(--text-color-300);
+    --bda-hover: var(--base-color-65);
+    --bda-thead: var(--text-color-50);
+    --bda-ink: var(--text-color-900);
+    --bda-s900: var(--text-color-900);
+    --bda-s800: var(--text-color-800);
+    --bda-s700: var(--text-color-700);
+    --bda-s600: var(--text-color-850);
+    --bda-s500: var(--text-color-600);
+    --bda-s400: var(--text-color-500);
+    --bda-amber: #f59e0b;
+    --bda-red: #ef4444;
+    --bda-blue: #3b82f6;
+
+    .bda-page { padding: 0; }
+}
+
+.bd-gloss-mock {
+    /* The frosted lock panel is centered over this mock via an absolute overlay.
+       Keep the mock comfortably taller than the panel so it never spills past the
+       blurred area and onto the dashboard footer below. */
+    min-height: 560px;
+
+    /* Purely illustrative — it sits blurred behind the lock panel. */
+    .bd-faq-ctg-list { pointer-events: none; }
+}

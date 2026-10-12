@@ -1,0 +1,425 @@
+// Elementor Only Category Box
+@import "../common";
+@import "./common";
+
+.betterdocs-category-box-wrapper.betterdocs-elementor
+    .betterdocs-category-box-inner-wrapper
+    .betterdocs-single-category-wrapper {
+    margin: 7.5px;
+    &:hover {
+        box-shadow: 0 20px 50px 0 rgba(0, 9, 78, 0.1);
+    }
+}
+
+.betterdocs-category-icon {
+    @include for(".betterdocs-category-box-wrapper") {
+        @include if(
+            ".betterdocs-category-box-wrapper",
+            ".betterdocs-elementor.el-layout-defualt"
+        ) {
+            margin-bottom: 15px;
+        }
+        @include if(
+            ".betterdocs-category-box-wrapper",
+            ".betterdocs-elementor.el-layout-3"
+        ) {
+            margin-right: 20px;
+        }
+        img {
+            width: auto;
+        }
+    }
+}
+.elementor-widget-betterdocs-multiple-kb
+    .betterdocs-category-box-wrapper.betterdocs-elementor.el-layout-2 {
+    .betterdocs-single-category-wrapper {
+        transition: 0.3s;
+        padding: 0;
+        &:hover {
+            box-shadow: 0px 20px 50px 0px rgba(#528ffe, 0.1);
+        }
+        .betterdocs-category-header-inner {
+            position: relative;
+            padding-right: 80px;
+            flex-wrap: nowrap;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-4"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+            }
+        }
+        .betterdocs-category-icon {
+            padding: 20px;
+            border-right: 1px solid #f1f1f8;
+            box-sizing: content-box;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-4"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+            }
+        }
+        .betterdocs-category-title {
+            transition: 0.3s;
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-4"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+            }
+            @include if(".betterdocs-single-category-wrapper", ":hover") {
+                a {
+                    color: #528ffe;
+                }
+            }
+        }
+        .betterdocs-category-items-counts {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.3s;
+            height: 50px;
+            width: 50px;
+            border-radius: 5px;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 20px 50px 0px rgba(0, 9, 78, 0.1);
+            font-size: 16px;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-4"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-multiple-kb",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+            }
+            @include if(".betterdocs-single-category-wrapper", ":hover") {
+                background: #f1f1f8;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+.elementor-widget-betterdocs-category-box
+    .betterdocs-category-box-wrapper.betterdocs-elementor.el-layout-2 {
+    .betterdocs-single-category-wrapper {
+        transition: 0.3s;
+        padding: 0;
+        &:hover {
+            box-shadow: 0px 20px 50px 0px rgba(#528ffe, 0.1);
+        }
+        .betterdocs-category-header-inner {
+            position: relative;
+            padding-right: 80px;
+            flex-wrap: nowrap;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-4"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-right: 0;
+                }
+            }
+        }
+        .betterdocs-category-icon {
+            padding: 20px;
+            border-right: 1px solid #f1f1f8;
+            box-sizing: content-box;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-4"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex: 0 0 100%;
+                    width: 100% !important;
+                    box-sizing: border-box;
+                    margin-left: auto;
+                    margin-right: auto;
+                    border-right: none;
+                    border-bottom: 1px solid #f1f1f8;
+                }
+            }
+        }
+        .betterdocs-category-title {
+            transition: 0.3s;
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-4"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    flex: 0 0 100%;
+                    padding: 0 20px;
+                    text-align: center;
+                    margin-left: 0px;
+                }
+            }
+            @include if(".betterdocs-single-category-wrapper", ":hover") {
+                a {
+                    color: #528ffe;
+                }
+            }
+        }
+        .betterdocs-category-items-counts {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.3s;
+            height: 50px;
+            width: 50px;
+            border-radius: 5px;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 20px 50px 0px rgba(0, 9, 78, 0.1);
+            font-size: 16px;
+            @include responsive("desktop") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-4"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+            }
+            @include responsive("tablet") {
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-3"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+                @include if(
+                    ".elementor-widget-betterdocs-category-box",
+                    ".elementor-grid-tablet-4"
+                ) {
+                    position: static;
+                    transform: translateY(0%);
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 20px;
+                }
+            }
+            @include if(".betterdocs-single-category-wrapper", ":hover") {
+                background: #f1f1f8;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+.betterdocs-category-box-wrapper.el-layout-3
+    .betterdocs-category-box-inner-wrapper {
+    display: flex;
+    flex-direction: column;
+    .betterdocs-category-header-inner {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+}
+
+.betterdocs-category-box-folder-wrapper{ //box new layout name(categories-folder)
+    &.el-layout-4{
+        @import '../partials/categories-folder.scss';
+    }
+}

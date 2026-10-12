@@ -1,0 +1,121 @@
+// CHECKED:
+
+@import "../common";
+
+.betterdocs-content-area {
+    flex: 1;
+    padding-bottom: 20px;
+    flex-shrink: 0;
+    // for single docs layout 5
+    @include for(".betterdocs-single-wrapper.betterdocs-single-layout-5") {
+        margin-top: 100px;
+    }
+    @include for(".betterdocs-single-wrapper") {
+        padding: 20px;
+        @include responsive-below("tablet") {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+    }
+    @at-root .betterdocs-fluid-wrapper .betterdocs-content-wrapper #{&} {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        grid-column-start: 4;
+        grid-column-end: 10;
+        @include if(
+            ".betterdocs-fluid-wrapper",
+            ".betterdocs-single-layout-4"
+        ) {
+            grid-column-start: 4;
+            grid-column-end: 11;
+            padding-top: 0px;
+        }
+        @include if(
+            ".betterdocs-fluid-wrapper",
+            ".betterdocs-single-layout-5"
+        ) {
+            grid-column-start: 4;
+            grid-column-end: 11;
+            padding-top: 0px;
+        }
+        @include if(
+            ".betterdocs-fluid-wrapper",
+            ".betterdocs-single-layout-2"
+        ) {
+            grid-column-start: 4;
+            grid-column-end: 11;
+            padding-top: 50px;
+        }
+        @include if(
+            ".betterdocs-fluid-wrapper",
+            ".betterdocs-single-layout-3"
+        ) {
+            grid-column-start: 4;
+            grid-column-end: 11;
+            padding-top: 50px;
+        }
+        @include if(".betterdocs-content-wrapper", ".grid-col-1") {
+            grid-column-start: 1;
+            grid-column-end: 13;
+        }
+        @include if(
+            ".betterdocs-content-wrapper",
+            ".grid-col-2:not(.sidebar-enable)"
+        ) {
+            grid-column-start: 1;
+        }
+        @include if(
+            ".betterdocs-content-wrapper",
+            ".grid-col-2:not(.toc-enable)"
+        ) {
+            grid-column-end: 13;
+        }
+        @include responsive-from("tablet") {
+            grid-column-start: 1 !important;
+        }
+        @include responsive-below("laptop") {
+            grid-column-end: 13 !important;
+        }
+    }
+    .betterdocs-content-inner-area {
+        background-color: #ffffff;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        padding-top: 35px;
+        padding-right: 35px;
+        padding-bottom: 35px;
+        padding-left: 35px;
+        @include for(".betterdocs-fluid-wrapper.betterdocs-single-layout-2") {
+            padding: 0 !important;
+            background: transparent !important;
+        }
+        @include for(".betterdocs-fluid-wrapper.betterdocs-single-layout-3") {
+            background: transparent !important;
+        }
+        @include responsive-below("tablet") {
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+        @include for(".betterdocs-wrapper") {
+            @include if(
+                ".betterdocs-wrapper",
+                ":not(.betterdocs-fluid-wrapper)"
+            ) {
+                border-radius: 5px;
+            }
+        }
+    }
+}
+.block-archive-list {
+    padding: 0;
+    .betterdocs-content-inner-area {
+        padding: 0;
+    }
+}

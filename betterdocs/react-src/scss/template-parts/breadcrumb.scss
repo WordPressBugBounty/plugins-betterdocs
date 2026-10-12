@@ -1,0 +1,154 @@
+// CHECKED:
+
+@import "../common/index";
+
+/* Breadcrumbs */
+.betterdocs-breadcrumb {
+    @at-root .betterdocs-content-inner-area #{&} {
+        margin-bottom: 10px;
+    }
+    @at-root .betterdocs-content-area #{&} {
+        margin-bottom: 20px;
+    }
+    @at-root .betterdocs-single-layout-5 #{&} {
+        position: absolute;
+        margin-top: -100px;
+        margin-bottom: 0;
+        margin-left: -35px;
+    }
+    @at-root .betterdocs-taxonomy-wrapper #{&} {
+        margin-bottom: 10px;
+    }
+    .betterdocs-breadcrumb-list {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        flex-flow: row wrap;
+        li {
+            list-style: none;
+            line-height: 1.7;
+            display: flex;
+            justify-content: center;
+            a {
+                &:hover,
+                &:focus {
+                    color: #528fff;
+                }
+            }
+        }
+    }
+    .betterdocs-breadcrumb-item {
+        color: #566e8b;
+        font-size: 0.75rem;
+        letter-spacing: 0.035em;
+        margin: 0;
+        a {
+            color: #566e8b;
+            font-size: 0.75rem;
+            letter-spacing: 0.035em;
+            text-decoration: none;
+        }
+        &.current {
+            span {
+                color: #528fff;
+            }
+        }
+    }
+    .breadcrumb-delimiter {
+        margin: 0 7px;
+        .icon-container {
+            width: 8px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .breadcrumb-delimiter-icon {
+            width: 8px;
+        }
+    }
+    &.layout-2 {
+        margin-bottom: 32px;
+		@include if(".betterdocs-wrapper",
+			".betterdocs-single-layout-8"
+		) {
+			margin-bottom: 40px;
+		}
+        @media only screen and (max-width: 1024px) {
+            margin-bottom: 24px;
+        }
+
+        ul.betterdocs-breadcrumb-list {
+            display: inline-flex;
+            padding: 8px 12px;
+            background: #F9FAFB;
+            border-radius: 20px;
+            margin: 0;
+			@media only screen and (max-width: 1280px) {
+				padding: 6px 10px;
+			}
+            .betterdocs-breadcrumb-item {
+
+                a {
+                    color: #667085;
+                    font-size: 12px;
+                    line-height: 1.5em;
+
+                }
+
+				&.current span {
+					color: #344054;
+					font-weight: 600;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					max-width: 100px;
+				}
+
+                .icon-container {
+                    svg path {
+                        color: #667085;
+                    }
+                }
+            }
+        }
+    }
+	&.layout-3 {
+        margin-bottom: 32px;
+
+        @media only screen and (max-width: 1024px) {
+            margin-bottom: 24px;
+        }
+
+        ul.betterdocs-breadcrumb-list {
+            display: inline-flex;
+            margin: 0;
+            .betterdocs-breadcrumb-item {
+                a {
+                    color: #667085;
+                    font-size: 16px;
+                    line-height: 1.5em;
+
+                }
+				&.current span {
+					color: #344054;
+					font-weight: 600;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					max-width: 150px;
+					font-size: 16px;
+				}
+                .icon-container {
+                    svg path {
+                        color: #667085;
+                    }
+                }
+				&:last-child{
+					font-weight: 600;
+				}
+            }
+        }
+    }
+}

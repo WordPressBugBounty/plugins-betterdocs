@@ -1,0 +1,98 @@
+// CHECKED:
+
+.betterdocs-category-title {
+    &:has(a) {
+        display: inline-flex;
+        align-items: center;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    &:not(:has(a)) {
+        color: #3f5876;
+        font-size: 20px;
+        line-height: 1;
+        margin-top: 0;
+        margin-bottom: 0;
+        text-decoration: none;
+    }
+    a {
+        color: #3f5876;
+        font-size: 20px;
+        line-height: 1;
+        margin-top: 0;
+        margin-bottom: 0;
+        text-decoration: none;
+    }
+    @include for(
+        ".betterdocs-category-box-wrapper .betterdocs-category-box-inner-wrapper"
+    ) {
+        margin-bottom: 15px;
+    }
+    @at-root .single-kb #{&} a {
+        color: #528ffe;
+        text-decoration: none;
+    }
+    @at-root .betterdocs-category-grid-wrapper #{&} {
+        margin: 0;
+        a {
+            font-size: 20px;
+            position: relative;
+            text-decoration: none;
+        }
+    }
+    @at-root .betterdocs-category-list-wrapper #{&} {
+        line-height: 1;
+    }
+    @at-root .betterdocs-sidebar-content.betterdocs-category-sidebar #{&} a {
+        color: #3f5876;
+        font-size: 16px;
+        text-decoration: none;
+    }
+    @at-root .betterdocs-category-box-wrapper
+            .betterdocs-category-box-inner-wrapper
+            .betterdocs-single-category-wrapper
+            #{&} {
+        color: #3f5876;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.3;
+        font-weight: 700;
+        @include if(".betterdocs-single-category-wrapper", ":hover") {
+            color: #528ffe;
+        }
+    }
+    @at-root .betterdocs-category-layout-4 .category-grid #{&} a {
+        font-size: 18px;
+        text-decoration: none;
+    }
+    @include for(".betterdocs-category-grid-list-inner-wrapper.layout-6") {
+        &:not(:has(a)) {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 1.1;
+            color: #15063f;
+            margin: 0px;
+        }
+        a {
+            font-weight: 500;
+            font-size: 30px;
+            line-height: 1.1;
+            color: #15063f;
+            margin: 0px;
+            text-decoration: none;
+        }
+    }
+	@include for(".betterdocs-category-grid-three-wrapper") {
+		@include if(".betterdocs-single-category-wrapper", ".layout-3") {
+			&:not(:has(a)) {
+				font-size: 24px;
+				color: #1D2939;
+			}
+			a {
+				font-size: 24px;
+				color: #1D2939;
+				font-weight: 500;
+			}
+		}
+	}
+}

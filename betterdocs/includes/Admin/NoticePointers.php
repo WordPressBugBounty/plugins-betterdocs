@@ -7,18 +7,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class NoticePointers {
-	const PROMOTION_URL = 'https://betterdocs.co/bfcm-wp-admin-pointer ';
+	const PROMOTION_URL = 'https://betterdocs.co/bfcm-wp-admin-pointer';
 	const BETTERDOCS_POINTER_ID = 'toplevel_page_betterdocs-dashboard';
 	const DISMISS_ACTION_KEY = 'betterdocs_black_friday_pointer_2025';
 	const USER_META_KEY = 'betterdocs_introduction_meta';
-	const PRIORITY = 4; // Priority for this pointer (lower number = higher priority)
 
 	public function __construct() {
 		add_action( 'admin_print_footer_scripts', [ $this, 'enqueue_notice' ] );
 	}
 
 	public function enqueue_notice() {
-		// Only show on specific pages: dashboard and BetterDocs screens
+		// Only show on BetterDocs screens
 		$screen = get_current_screen();
 
 		if ( ! $screen ) {
@@ -28,23 +27,6 @@ class NoticePointers {
 		// Check if we're on allowed pages
 		if ( ! $this->is_allowed_page( $screen ) ) {
 			return;
-		}
-
-		// For common pages (dashboard, plugins), check priority FIRST
-		$is_common_page = in_array( $screen->id, [ 'dashboard', 'plugins' ], true );
-		if ( $is_common_page ) {
-			$current_priority = get_option( '_wpdeveloper_plugin_pointer_priority', 999 );
-
-			// If priority is greater than 4, update it to 4
-			if ( $current_priority > 4 ) {
-				update_option( '_wpdeveloper_plugin_pointer_priority', 4 );
-				$current_priority = 4;
-			}
-
-			// If priority is not 4, don't display on common pages
-			if ( $current_priority != 4 ) {
-				return;
-			}
 		}
 
 		// Check basic conditions
@@ -112,12 +94,8 @@ class NoticePointers {
 	 * @return bool
 	 */
 	private function is_allowed_page( $screen ): bool {
-		// Dashboard
-		if ( $screen->id === 'dashboard' || $screen->id === 'plugins' ) {
-			return true;
-		}
-
-		// BetterDocs admin pages
+		// BetterDocs admin pages only — never the WP Dashboard or Plugins screen
+		// (WP.org guideline 11).
 		$betterdocs_screens = [
 			'toplevel_page_betterdocs-dashboard',
 			'betterdocs_page_betterdocs-admin',

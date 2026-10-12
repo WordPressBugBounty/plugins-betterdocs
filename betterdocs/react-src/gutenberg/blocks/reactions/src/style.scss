@@ -1,0 +1,60 @@
+.betterdocs-article-reactions{
+	padding: 2em;
+    background-color: #fff;
+    border-radius: 5px;
+	display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+	.betterdocs-article-reactions-heading{
+		flex: 0 0 auto;
+		h5{
+			display: inline-block;
+			font-size: 1em;
+			color: #566e8b;
+   	 		margin: 0;
+		}
+	}
+	.betterdocs-article-reaction-links{
+		margin: 0;
+		padding: 0;
+		li{
+			list-style: none;
+			display: inline-table;
+			margin: 0;
+			a{
+				display: inline-block;
+				width: 29px;
+				height: 29px;
+				margin-left: 5px;
+				text-align: center;
+				border-radius: 50%;
+				background-color: #19ca9e;
+				display: -ms-flexbox;
+				display: flex;
+				-ms-flex-align: center;
+				align-items: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-transition: all 0.2s ease-in-out;
+				-o-transition: all 0.2s ease-in-out;
+				transition: all 0.2s ease-in-out;
+				box-shadow: 0px 3px 10px 0px RGB(3 29 60 / 15%);
+				&:hover{
+					background-color: #fff;
+					svg{
+						path{
+							fill:#19ca9e;
+						}
+					}
+				}
+				svg{
+					width: 15px;
+					height: 15px;
+					path{
+						fill:#fff;
+					}
+				}
+			}
+		}
+	}
+}

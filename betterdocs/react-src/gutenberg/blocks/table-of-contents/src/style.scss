@@ -1,0 +1,114 @@
+.betterdocs-toc-block {
+    .betterdocs-toc {
+        background-color: #ffffff;
+        padding-top: 20px;
+        padding-right: 25px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        .angle-icon {
+            display: none;
+            width: 18px;
+            float: right;
+        }
+        > .toc-title {
+            color: #3f5876;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+            display: block;
+        }
+        .toc-list {
+            li {
+                display: table;
+                font-size: 14px;
+                font-weight: 400;
+                margin-left: 0;
+                margin-right: 0;
+                a {
+                    padding: 0px 0px 0px 0px;
+                    word-wrap: normal;
+                    color: #566e8b;
+                    font-size: 14px;
+                    margin: 5px 0px 5px 0px;
+                    line-height: 1.6;
+                    font-weight: 600;
+                    display: inline-block;
+                    text-decoration: none;
+                    &:focus {
+                        outline: none;
+                    }
+                }
+                a {
+                    &::before {
+                        font-size: 12px;
+                        color: #566e8b;
+                    }
+                }
+            }
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0 0 0 10px;
+        }
+        ul.betterdocs-hierarchial-toc {
+            position: relative;
+            counter-reset: item;
+            a.active {
+                &::after {
+                    width: 0px;
+                    content: "";
+                    position: absolute;
+                    height: 1.6em;
+                    left: -1px;
+                    background-color: #528fff;
+                }
+            }
+            ul {
+                counter-reset: item;
+            }
+        }
+    }
+}
+
+.betterdocs-toc-block {
+    .betterdocs-toc.toc-list-number {
+        .toc-list.betterdocs-hierarchial-toc {
+            li {
+                a {
+                    &::before {
+                        content: counters(item, ".") ". ";
+                        counter-increment: item;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .betterdocs-toc-block {
+        .betterdocs-toc {
+            position: relative;
+            width: 100%;
+        }
+    }
+
+    .betterdocs-toc-block {
+        .betterdocs-toc.collapsible-sm {
+            .toc-title {
+                pointer-events: auto;
+            }
+            .angle-down {
+                display: block;
+            }
+            .toc-list {
+                display: none;
+            }
+        }
+    }
+}

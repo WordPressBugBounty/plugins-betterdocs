@@ -1,0 +1,79 @@
+/* toggler group */
+.bd-toggle-switcher-group{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	p{
+		font-size: 14px;
+		line-height: 40px;
+		margin: 0;
+		color: var(--text-color-900);
+		flex: 1;
+	}
+}
+
+/* toggler  */
+.bd-faq-toggler {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    overflow: hidden;
+    border-radius: 22px;
+    flex-shrink: 0;
+}
+.bd-faq-toggler .checkbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 3;
+}
+.bd-faq-toggler .knobs {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.bd-faq-toggler .layer {
+    width: 100%;
+    background-color: var(--text-color-300);
+    transition: 0.3s ease all;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.bd-faq-toggler .knobs:before {
+    position: absolute;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    padding: 0;
+    border-radius: 2px;
+    transition: 0.3s ease all;
+    border-radius: 20px;
+}
+.bd-faq-toggler .knobs:before {
+    content: "";
+    left: 2px;
+    background-color: #fff;
+}
+.bd-faq-toggler .checkbox:checked + .knobs:before {
+    left: 20px;
+    background-color: #fff;
+}
+.bd-faq-toggler .checkbox:checked ~ .layer {
+    background-color: var(--base-color-700);
+}

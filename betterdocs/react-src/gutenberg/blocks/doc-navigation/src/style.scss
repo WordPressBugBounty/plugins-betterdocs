@@ -1,0 +1,41 @@
+.docs-navigation{
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+	a[rel="prev"] {
+		svg {
+			margin-right: 10px;
+		}
+	}
+	a[rel="next"]{
+		svg{
+			margin-left:10px
+		}
+	}
+	a{
+		text-decoration: none !important;
+		color: #3f5876;
+    	font-size: 16px;
+		position: relative;
+		color: #3f5876;
+		font-size: 16px;
+		font-weight: bolder;
+		display: flex;
+		align-items: center;
+		transition: all 0.3s;
+		line-height: 1.5em;
+		&:first-child{
+			margin-right: 20px;
+		}
+		&:last-child{
+			margin-left: 20px;
+			text-align: right;
+		}
+		svg{
+			min-width: 16px;
+			width: 16px;
+			fill: #5edf8e;
+		}
+	}
+}

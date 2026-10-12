@@ -1,0 +1,105 @@
+// CHECKED:
+
+.betterdocs-sidebar-list-wrapper {
+    &:has(.betterdocs-sidebar-layout-6) {
+        // max-width: 340px;
+        width: 100%;
+    }
+    .betterdocs-sidebar-list-inner {
+        .betterdocs-sidebar-list {
+            &.betterdocs-sidebar-layout-6 {
+                border-top: 1px solid #e8e9eb;
+                .betterdocs-sidebar-list-inner {
+                    .betterdocs-category-header {
+                        cursor: pointer;
+                        @include if(
+                            ".betterdocs-sidebar-list.betterdocs-sidebar-layout-6",
+                            ".active"
+                        ) {
+                            background-color: #f2f0ff;
+                            border-style: solid;
+                            border-width: 1px 1px 0px 1px;
+                            border-color: #000000;
+                        }
+                        .betterdocs-category-header-inner {
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 15px;
+                            border-bottom: 0;
+                            .betterdocs-category-title {
+                                text-decoration: none;
+                                margin: 0px;
+                                padding: 0px;
+                                display: inline-flex;
+                                align-items: center;
+                                a {
+                                    font-weight: 500;
+                                    font-size: 16px;
+                                    line-height: 36px;
+                                    color: #777777;
+                                }
+                            }
+                            .betterdocs-category-items-counts {
+                                font-weight: 500;
+                                font-size: 15px;
+                                line-height: 36px;
+                                color: #2b11e5;
+                                border-radius: 90px;
+                                background-color: #fff;
+                                text-align: center;
+                                height: fit-content;
+                                width: 100%;
+                                max-width: 45px;
+                                border: 1px solid #2b11e5;
+                                display: inline-flex;
+                                justify-content: center;
+                                align-items: center;
+                                @include if(
+                                    ".betterdocs-sidebar-list.betterdocs-sidebar-layout-6",
+                                    ".active"
+                                ) {
+                                    background-color: #591fff;
+                                    color: #fefeff;
+                                }
+                            }
+                        }
+                    }
+                    .betterdocs-body {
+                        @include if(
+                            ".betterdocs-sidebar-list.betterdocs-sidebar-layout-6",
+                            ".active"
+                        ) {
+                            background-color: #f2f0ff;
+                            border-style: solid;
+                            border-width: 0px 1px 1px 1px;
+                            border-color: #000000;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.betterdocs-sidebar-layout-6 {
+    &.active {
+        .betterdocs-category-items-counts {
+            background-color: #591fff;
+            color: #fefeff;
+            span {
+                color: #fefeff;
+            }
+        }
+    }
+    .betterdocs-body {
+        padding: 0 !important;
+        .betterdocs-articles-list {
+            padding: 0px 27px 20px 10px;
+            li {
+                margin: 0!important;
+                a {
+                    line-height: 24px;
+                }
+            }
+        }
+    }
+}

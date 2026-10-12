@@ -5,7 +5,7 @@ Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.4
+Stable tag: 4.9.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -199,6 +199,39 @@ If you like BetterDocs, then consider checking out our other projects:
 Visit [WPDeveloper](https://wpdeveloper.com) to learn more about how to do better in WordPress with [Help Tutorial, Tips & Tricks](https://wpdeveloper.com/blog)!
 
 
+== External services ==
+
+BetterDocs works without contacting any outside service. The services below are only contacted after you opt in, enter your own API key, or click the feature that needs them.
+
+**Usage tracking (WPInsight, by WPDeveloper)**
+Only if you click "Sure, I'd like to help" on the opt-in notice. Once a day, it sends your site URL, the email of the admin who opted in, WordPress and PHP versions, active theme and plugins, and BetterDocs usage counts to `send.wpinsight.com`. It also sends your public IP to `ip-api.com` to look up the country.
+WPDeveloper: [Terms](https://wpdeveloper.com/terms-and-conditions/), [Privacy Policy](https://wpdeveloper.com/privacy-policy/). ip-api.com: [Terms and Privacy](https://ip-api.com/docs/legal).
+
+**AI Sample Docs (BetterDocs AI service, `api.betterdocs.co`)**
+Only when you click "Generate" in AI Sample Docs. It sends your site name, tagline, URL, short excerpts from your pages, posts and products, and your BetterDocs Pro license key (if any), and gets back draft docs.
+[Terms](https://betterdocs.co/terms-conditions/), [Privacy Policy](https://wpdeveloper.com/privacy-policy/).
+
+**Elementor template library (`betterdocs.co`)**
+Only when you open the BetterDocs templates in Elementor's template library. It requests the template list and the template you insert; your site URL is sent as part of the request.
+[Terms](https://betterdocs.co/terms-conditions/), [Privacy Policy](https://wpdeveloper.com/privacy-policy/).
+
+**AI providers (OpenAI, Anthropic, Google Gemini, OpenRouter, DeepSeek)**
+Only for the provider you configure with your own API key, and only when an AI feature runs (Write with AI, AI editing, article summaries, FAQ generation and similar). It sends the prompt and the doc content the feature works on.
+- OpenAI (`api.openai.com`): [Terms](https://openai.com/policies/terms-of-use/), [Privacy Policy](https://openai.com/policies/privacy-policy/)
+- Anthropic (`api.anthropic.com`): [Terms](https://www.anthropic.com/legal/commercial-terms), [Privacy Policy](https://www.anthropic.com/legal/privacy)
+- Google Gemini (`generativelanguage.googleapis.com`): [Terms](https://ai.google.dev/gemini-api/terms), [Privacy Policy](https://policies.google.com/privacy)
+- OpenRouter (`openrouter.ai`): [Terms](https://openrouter.ai/terms), [Privacy Policy](https://openrouter.ai/privacy)
+- DeepSeek (`api.deepseek.com`): [Terms](https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html), [Privacy Policy](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
+
+**Help Scout migration (`docsapi.helpscout.net`)**
+Only when you enter your Help Scout API key and run the migration. It sends your key to read your Help Scout Docs collections, categories and articles.
+[Terms](https://www.helpscout.com/company/legal/terms-of-service/), [Privacy Policy](https://www.helpscout.com/company/legal/privacy/).
+
+**Google Analytics 4 (`googletagmanager.com`)**
+Only if a GA4 Measurement ID is set. The standard GA4 tag is loaded on doc pages and sends page views to Google.
+[Terms](https://marketingplatform.google.com/about/analytics/terms/us/), [Privacy Policy](https://policies.google.com/privacy).
+
+
 == Installation ==
 
 = Modern Way: =
@@ -253,6 +286,10 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 
 == Changelog ==
+
+= 4.9.5 - 12/10/2026 =
+
+- Few minor bug fixes & improvements
 
 = 4.9.4 - 08/10/2026 =
 

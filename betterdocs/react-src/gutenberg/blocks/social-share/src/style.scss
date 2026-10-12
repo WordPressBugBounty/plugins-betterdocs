@@ -1,0 +1,42 @@
+.betterdocs-social-share{
+	display: flex;
+    flex-flow: row wrap;
+	margin-top: 44px;
+	.betterdocs-social-share-heading{
+		margin-right: 10px;
+		display: flex;
+		align-items: center;
+		flex: 0 0 auto;
+		h5{
+			font-size: 1em;
+    		margin: 0;
+			color: #566e8b;
+		}
+	}
+	.betterdocs-social-share-links{
+		padding: 0;
+		margin: 0;
+		flex: 0 0 auto;
+		text-align: center;
+		display: flex;
+		justify-content: space-around;
+		li{
+			list-style: none;
+			padding: 0 8px;
+			text-align: center;
+			flex: 1 1 auto;
+			margin: 0;
+			a{
+				display: inline-block;
+				color: #f56a6a;
+				-webkit-transition: all 0.3s;
+				-moz-transition: all 0.3s;
+				transition: all 0.3s;
+				img{
+					height: 30px;
+    				width: 30px;
+				}
+			}
+		}
+	}
+}

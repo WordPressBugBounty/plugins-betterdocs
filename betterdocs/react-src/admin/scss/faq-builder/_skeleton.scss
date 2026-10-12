@@ -1,0 +1,156 @@
+// Card-style loading skeletons for the FAQ Builder + Glossaries, matching the
+// real group / FAQ row cards (white, rounded, subtle border + shadow).
+.bd-faq-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--base-background, #fff);
+        border: 1px solid var(--text-color-200);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        padding: 16px 20px;
+        min-height: 68px;
+        box-sizing: border-box;
+    }
+
+    &__grip {
+        width: 14px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+    &__text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    &__line {
+        display: block;
+        height: 14px;
+        border-radius: 6px;
+    }
+    &__line--title {
+        width: 180px;
+    }
+    &__line--meta {
+        width: 90px;
+        height: 10px;
+    }
+    &__btn {
+        width: 140px;
+        height: 36px;
+        border-radius: 9px;
+        flex-shrink: 0;
+    }
+    &__icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        flex-shrink: 0;
+    }
+    &__toggle {
+        width: 40px;
+        height: 22px;
+        border-radius: 22px;
+        flex-shrink: 0;
+    }
+
+    // FAQ-row variant — match the real .bd-faq rows (radius 12, ~44px head,
+    // 10px row gap) so a count-sized skeleton occupies the same height as the
+    // list that swaps in, keeping the accordion open animation jump-free.
+    &--faq {
+        gap: 10px;
+    }
+    &--faq &__card {
+        border-radius: 12px;
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+
+    // Create-form variant — mirrors .bd-faq-create-new (white card, radius 12)
+    // and matches its ~670px desktop height so the real form swaps in cleanly.
+    &--create {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 12px;
+        min-height: 670px;
+        background: var(--base-background, #fff);
+        border-radius: 12px;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    &__form-body {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 22px;
+    }
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    &__field--grow {
+        flex: 1;
+        min-height: 0;
+    }
+    &__line--label {
+        width: 90px;
+        height: 13px;
+    }
+    &__field-box {
+        display: block;
+        border-radius: 10px;
+    }
+    &__field-box--select,
+    &__field-box--input {
+        height: 48px;
+    }
+    &__field-box--editor {
+        flex: 1;
+        min-height: 240px;
+    }
+    &__form-footer {
+        display: flex;
+        gap: 12px;
+        padding: 20px 22px;
+        border-top: 1px solid var(--text-color-150);
+    }
+    &__btn--ghost {
+        width: 90px;
+    }
+
+    // Shimmer on every placeholder block.
+    &__grip,
+    &__line,
+    &__btn,
+    &__icon,
+    &__toggle,
+    &__field-box {
+        background: linear-gradient(
+            90deg,
+            var(--text-color-200) 25%,
+            var(--text-color-100) 37%,
+            var(--text-color-200) 63%
+        );
+        background-size: 400% 100%;
+        animation: bd-faq-skeleton-shimmer 1.4s ease infinite;
+    }
+}
+
+@keyframes bd-faq-skeleton-shimmer {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}

@@ -5,16 +5,18 @@ namespace WPDeveloper\BetterDocs\Core;
 use WPDeveloper\BetterDocs\Utils\Base;
 
 /**
- * Free analytics retention: a daily native-cron purge of the simple aggregate
- * tables. Free keeps a rolling 12 months (365 days) of analytics by default —
- * enough history to be useful, while unlimited retention stays a Pro perk. A
- * site can shorten the window with the data_retention_days setting, or change /
- * disable it (0 = keep forever) via the betterdocs_analytics_retention_days
- * filter.
+ * Free analytics retention.
+ *
+ * Free keeps every analytics row forever by default; nothing is purged. A site
+ * that wants a rolling window can opt in through the
+ * betterdocs_analytics_retention_days filter (number of days, 0 = keep forever),
+ * and a daily native-cron purge of the aggregate tables then trims older rows.
+ *
+ * Earlier versions purged anything older than 12 months on every Free-only
+ * install. That schedule is cleared on the next request when no window is set.
  *
  * Pro-safe: when Pro is active the purge is skipped entirely, because Pro
- * manages its own retention (unlimited by default) on top of these tables.
- * Mirrors the scheduling pattern in Pro's RelatedDocsTracker.
+ * manages its own retention (data_retention_days) on top of these tables.
  */
 class AnalyticsRetention extends Base {
 	const CRON_HOOK = 'betterdocs_analytics_cleanup';
@@ -29,10 +31,29 @@ class AnalyticsRetention extends Base {
 	}
 
 	/**
-	 * Schedule the daily purge once if it isn't already scheduled.
+	 * Retention window in days. 0 (the default) keeps everything.
+	 *
+	 * @return int
+	 */
+	public function retention_days() {
+		return max( 0, (int) apply_filters( 'betterdocs_analytics_retention_days', 0 ) );
+	}
+
+	/**
+	 * Schedule the daily purge only while a window is set; otherwise make sure
+	 * no purge is left scheduled (including the one older versions added).
 	 */
 	public function maybe_schedule_cleanup() {
-		if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
+		$scheduled = wp_next_scheduled( self::CRON_HOOK );
+
+		if ( betterdocs()->is_pro_active() || $this->retention_days() < 1 ) {
+			if ( $scheduled ) {
+				$this->clear_cleanup();
+			}
+			return;
+		}
+
+		if ( ! $scheduled ) {
 			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK );
 		}
 	}
@@ -42,27 +63,17 @@ class AnalyticsRetention extends Base {
 	}
 
 	/**
-	 * Free keeps a rolling 12 months of analytics by default.
-	 */
-	const DEFAULT_RETENTION_DAYS = 365;
-
-	/**
-	 * Delete aggregate rows older than the retention window. No-op when Pro is
-	 * active so Pro's longer (unlimited-by-default) retention is never trimmed
-	 * by Free.
+	 * Delete aggregate rows older than the opted-in retention window. No-op when
+	 * Pro is active or no window is set.
 	 */
 	public function run_cleanup() {
 		if ( betterdocs()->is_pro_active() ) {
 			return;
 		}
 
-		// A site may shorten the window via the setting; the filter can lengthen
-		// it or disable pruning entirely (0 => keep forever). Default is 12 months.
-		$setting = (int) betterdocs()->settings->get( 'data_retention_days', 0 );
-		$window  = $setting > 0 ? $setting : self::DEFAULT_RETENTION_DAYS;
-		$days    = (int) apply_filters( 'betterdocs_analytics_retention_days', $window );
+		$days = $this->retention_days();
 		if ( $days < 1 ) {
-			return; // filtered to 0 => keep forever.
+			return;
 		}
 
 		global $wpdb;

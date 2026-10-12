@@ -1,0 +1,22 @@
+.betterdocs-entry-content .betterdocs-print-pdf {
+  float: right;
+  margin-right: 10px;
+  margin-top: -15px;
+}
+.betterdocs-entry-content .betterdocs-print-pdf .betterdocs-print-btn {
+  background-color: #fafafa;
+  padding: 6px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.betterdocs-entry-content #betterdocs-single-content {
+  color: #4d4d4d;
+  font-size: 16px;
+}
+.betterdocs-entry-content #betterdocs-single-content .betterdocs-content-heading {
+  font-size: 20px;
+  color: #4d4d4d;
+}/*# sourceMappingURL=style.css.map */

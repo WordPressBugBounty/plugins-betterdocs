@@ -1,0 +1,475 @@
+// Full-page overlay (click to dismiss)
+// z-index: 100000 — above WP admin bar (99999)
+.bd-dc-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.25);
+    z-index: 100000;
+    animation: bd-dc-fade-in 0.15s ease;
+}
+
+// Slide-over panel — z-index 100001 so it sits above the overlay and WP admin bar
+.bd-dc-slideover {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 520px;
+    max-width: 100vw;
+    background: var(--base-background, #fff);
+    box-shadow: -8px 0 40px rgba(15, 23, 42, 0.12);
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.bd-dc-slideover--open {
+        transform: translateX(0);
+    }
+}
+
+// Header band — matches the shared modal header (.bd-faq-ctg-header): soft-gray
+// surface, soft bottom divider, 16px/22px padding.
+.bd-dc-slideover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    background: var(--text-color-50);
+    border-bottom: 1px solid var(--text-color-150);
+    flex-shrink: 0;
+}
+
+.bd-dc-slideover-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color-900);
+    margin: 0;
+}
+
+// Cross/close — 32px gray rounded square like the modal close button (only the
+// glyph is resized to 16px; markup is unchanged).
+.bd-dc-slideover-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: var(--text-color-100);
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-600);
+    transition: background 0.12s ease, color 0.12s ease;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        background: var(--text-color-200);
+        color: var(--text-color-900);
+    }
+}
+
+// Form wrapper holds the scroll body + the fixed footer bar, so only the body
+// scrolls and the footer stays pinned (like the modal / quick-edit panel).
+.bd-dc-slideover-form {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.bd-dc-slideover-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+// Footer bar — matches the shared modal footer (.bd-faq-ctg-footer): soft-gray
+// surface + top divider, full-width and pinned to the bottom. Cancel sits left,
+// primary right.
+.bd-dc-slideover-footer {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 22px;
+    background: var(--text-color-50);
+    border-top: 1px solid var(--text-color-150);
+}
+
+// Form fields
+.bd-dc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &.bd-dc-field-full {
+        grid-column: 1 / -1;
+    }
+}
+
+.bd-dc-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color-700);
+}
+
+.bd-dc-required {
+    color: var(--error-500, #ef4444);
+    margin-left: 2px;
+}
+
+// Inline validation banner shown at the top of the slide-over body when a
+// name/slug fails client-side validation (empty/whitespace-only or too long).
+.bd-dc-form-error {
+    margin-bottom: 4px;
+    padding: 10px 12px;
+    border: 1px solid var(--error-200, #fecdca);
+    border-radius: 8px;
+    background: var(--error-50, #fef3f2);
+    color: var(--error-600, #d92d20);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+// ── Inputs / selects — scoped under .bd-dc-slideover to beat WP core specificity ──
+// WP core targets bare element selectors; our class+parent chain wins without !important
+// on most properties, but we add it on focus-state overrides to be safe.
+.bd-dc-slideover .bd-dc-input {
+    width: 100% !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+    border: 1px solid var(--text-color-200) !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    color: var(--text-color-900) !important;
+    background: var(--base-background, #fff) !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+
+    &:focus {
+        border-color: var(--base-color-700, #00b884) !important;
+        box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15) !important;
+        outline: none !important;
+    }
+
+    &::placeholder {
+        color: var(--text-color-400) !important;
+    }
+}
+
+.bd-dc-slideover .bd-dc-textarea {
+    height: auto !important;
+    min-height: 80px !important;
+    padding: 10px 12px !important;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.bd-dc-slideover .bd-dc-select {
+    width: 100% !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 32px 0 12px !important;
+    border: 1px solid var(--text-color-200) !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    color: var(--text-color-900) !important;
+    font-weight: 500 !important;
+    background-color: var(--base-background, #fff) !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    background-size: 10px 6px !important;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05) !important;
+    outline: none !important;
+
+    &:focus {
+        border-color: var(--base-color-700, #00b884) !important;
+        box-shadow: 0 0 0 4px var(--focus-shadow-1), 0 1px 2px 0 var(--focus-shadow-2) !important;
+        outline: none !important;
+    }
+}
+
+// React-select dropdowns in the slide-over (Parent Category / Knowledge Base,
+// Language, "translation of") — same look as the FAQ Builder / bulk-action
+// dropdown, full-width and without the left icon. Markup: SlideoverSelect.js.
+.bd-dc-slideover .betterdocs-dropdown-wrapper {
+    @include betterdocs-dropdown-styles;
+
+    // Wrapped in `& {}` because the mixin ends in nested rules — bare declarations
+    // after it would be dropped (Sass "declarations after nested rules").
+    & {
+        display: flex;
+        width: 100%;
+        margin-right: 0; // mixin's header spacing isn't wanted in a stacked form
+    }
+
+    .betterdocs-dropdown-select {
+        width: 100%;
+        min-width: 0;
+
+        // No leading icon — drop the gutter the shared style reserves.
+        .betterdocs-dropdown__control {
+            padding-left: 0;
+        }
+    }
+}
+
+// The slide-over body scrolls (overflow-y:auto), so these menus are portaled to
+// <body>; emit the menu styles at the top level so they reach the portaled node.
+@include betterdocs-dropdown-menu;
+
+// Primary / ghost buttons inside the slide-over footer
+.bd-dc-slideover .bd-dc-btn-primary {
+    background: var(--base-color-700, #00b884) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+
+    &:hover:not(:disabled) { background: #009e71 !important; }
+    &:disabled { opacity: 0.65 !important; cursor: not-allowed !important; }
+}
+
+// Borderless text "Cancel" — matches .betterdocs-sd-btn-ghost (sample-docs footer).
+.bd-dc-slideover .bd-dc-btn-ghost {
+    background: none !important;
+    border: 0 !important;
+    color: var(--text-color-600, #667085) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+
+    &:hover { background: none !important; color: var(--text-color-900, #101828) !important; }
+}
+
+// ── Language / translation panel (WPML / Polylang) ──
+.bd-dc-lang-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 4px;
+    padding-top: 18px;
+    border-top: 1px solid var(--text-color-200);
+}
+
+.bd-dc-lang-panel-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color-900);
+}
+
+.bd-dc-translate {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--text-color-200);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bd-dc-translate-head {
+    padding: 8px 12px;
+    background: var(--page-background, #f4f6f8);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-color-600);
+    border-bottom: 1px solid var(--text-color-200);
+}
+
+.bd-dc-translate-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 12px;
+
+    & + .bd-dc-translate-row { border-top: 1px solid var(--text-color-100); }
+}
+
+.bd-dc-translate-lang {
+    font-size: 13px;
+    color: var(--text-color-800);
+}
+
+.bd-dc-translate-name {
+    font-size: 13px;
+    color: var(--text-color-500);
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bd-dc-translate-add {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--base-color-700, #00b884);
+
+    &:hover { text-decoration: underline; }
+}
+
+// ── Image picker (Category Icon — Free; reused by Pro Handbook Cover) ──
+.bd-dc-icon-field {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .bd-dc-icon-preview {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--base-background, #f1f5f9);
+        border: 1px dashed var(--text-color-200, #cbd5e1);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .bd-dc-icon-placeholder {
+            color: var(--text-color-400, #94a3b8);
+            display: inline-flex;
+        }
+    }
+
+    .bd-dc-icon-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .bd-dc-icon-remove {
+            color: var(--error-500, #dc2626) !important;
+        }
+    }
+}
+
+// Slug input with prefix
+.bd-dc-input-prefix-wrap {
+    display: flex;
+    border: 1px solid var(--text-color-200);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+
+    &:focus-within {
+        border-color: var(--base-color-700, #00b884);
+        box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
+    }
+}
+
+.bd-dc-input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background: var(--page-background, #f5f6fb);
+    border-right: 1px solid var(--text-color-200);
+    font-size: 12px;
+    color: var(--text-color-500);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bd-dc-input--prefixed {
+    border: none;
+    border-radius: 0;
+    flex: 1;
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+@keyframes bd-dc-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+// ── Dark mode overrides ───────────────────────────────────────────────────────
+.betterdocs-admin.betterdocs-dark-mode {
+    .bd-dc-overlay {
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .bd-dc-slideover {
+        box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5);
+    }
+
+    // Inputs — dark background, visible border, teal focus ring
+    .bd-dc-slideover .bd-dc-input,
+    .bd-dc-slideover .bd-dc-textarea {
+        background: var(--text-color-50, #101113) !important;
+        border-color: var(--text-color-300, #36405a) !important;
+        color: var(--text-color-700) !important;
+
+        &:focus {
+            border-color: var(--base-color-700, #00b884) !important;
+            box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15) !important;
+        }
+
+        &::placeholder { color: var(--text-color-500) !important; }
+    }
+
+    // Select — dark background + light chevron SVG
+    .bd-dc-slideover .bd-dc-select {
+        background-color: var(--text-color-50, #101113) !important;
+        background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23B1B9B7' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+        background-size: 10px 6px !important;
+        border-color: var(--text-color-300, #36405a) !important;
+        color: var(--text-color-700) !important;
+
+        &:focus {
+            border-color: var(--base-color-700, #00b884) !important;
+            box-shadow: 0 0 0 4px var(--focus-shadow-1), 0 1px 2px 0 var(--focus-shadow-2) !important;
+        }
+    }
+
+    // Prefix wrap
+    .bd-dc-input-prefix-wrap {
+        border-color: var(--text-color-300, #36405a) !important;
+    }
+
+    .bd-dc-input-prefix {
+        background: var(--text-color-100) !important;
+        border-right-color: var(--text-color-300, #36405a) !important;
+        color: var(--text-color-500) !important;
+    }
+
+    // Ghost (text) button — stays borderless in dark mode.
+    .bd-dc-slideover .bd-dc-btn-ghost {
+        color: var(--text-color-600) !important;
+
+        &:hover { background: none !important; color: var(--text-color-900) !important; }
+    }
+}

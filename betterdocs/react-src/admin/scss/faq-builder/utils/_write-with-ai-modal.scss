@@ -1,0 +1,411 @@
+$color_9: #2271b1;
+$font-family_1: "IBM Plex Sans", sans-serif;
+
+/* WriteWithAI CSS */
+/* Override autofill text color */
+/* Add this CSS to your existing stylesheet or create a new one */
+/* Change the default checkbox color */
+/* Style the checked state */
+/* .bd-close-button {
+        right: px;
+        top: 1px;
+        border-radius: 5px;
+        width: 12px;
+        height: 12px;
+        color: #ffffff;
+        background: var(--base-color-700);
+    } */
+.bd-faq-cgt-field-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+button.bd-faq-button.button-success.bd-write-with-ai-button {
+	min-width: 150px;
+	max-width: 180px;
+	gap: 5px;
+	height: 40px;
+	border: none;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.disabled-input-field {
+	input {
+		pointer-events: none;
+		opacity: 0.6;
+	}
+
+	textarea {
+		pointer-events: none;
+		opacity: 0.6;
+	}
+
+	button {
+		pointer-events: none;
+		opacity: 0.6;
+	}
+
+	label {
+		pointer-events: none;
+		opacity: 0.6;
+		opacity: 1;
+	}
+}
+
+.betterdocs-ai-button-container {
+	margin-left: 10px;
+	min-width: 142px;
+}
+
+.prompt-field {
+	.input-description {
+		margin: 0 !important;
+	}
+}
+
+.betterdocs-ai-button {
+	background: var(--base-color-700);
+	border: 1px solid transparent;
+	color: #ffffff;
+	box-shadow: none;
+	font-size: 12px;
+	margin-right: 8px;
+	padding: 0px 15px;
+	cursor: pointer;
+	border-radius: 3px;
+	height: 38px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+
+	img {
+		width: 20px;
+		height: 20px;
+	}
+}
+
+// Generated-answer box, shown inside the unified modal body (.bd-faq-ctg-body).
+.betterdocs-ai-content-wrapper {
+	padding: 15px;
+	border: 1px solid var(--text-color-150);
+	background: var(--base-background);
+	color: var(--text-color-900);
+	border-radius: 5px;
+
+	p {
+		display: inline;
+		line-height: 1.2rem;
+	}
+}
+
+#betterdocs-ai-form {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+
+	.form-group {
+		margin-bottom: 24px;
+	}
+
+	.bd-aiform-flex {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	label {
+		font-weight: 600;
+		margin-bottom: 5px;
+		display: block;
+		font-size: 14px;
+		line-height: 20px;
+		color: var(--text-color-600);
+	}
+
+	input[type="text"] {
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;
+		border: 1px solid var(--text-color-150);
+		background: var(--base-background);
+		border-radius: 4px;
+		color: var(--text-color-900);
+		font-weight: 400;
+
+		&::placeholder {
+			color: var(--text-color-600);
+		}
+	}
+
+	textarea {
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;
+		border: 1px solid var(--text-color-150);
+		background: var(--base-background);
+		border-radius: 4px;
+		color: var(--text-color-900);
+		font-weight: 400;
+
+		&::placeholder {
+			color: var(--text-color-600);
+		}
+
+		&:focus {
+			box-shadow: none;
+			color: var(--text-color-900);
+			box-shadow: none;
+		}
+	}
+
+	input {
+		&:-webkit-autofill {
+			-webkit-text-fill-color: var(--text-color-600) !important;
+		}
+
+		&::placeholder {
+			color: var(--text-color-600);
+		}
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+}
+
+.form-inner-content {
+	overflow: auto;
+	height: 100%;
+	max-height: 435px;
+	padding: 0 40px;
+
+	>.form-group {
+		margin-top: 20px;
+	}
+}
+
+select#bd-autowrtite-content-section {
+	width: 150px !important;
+	height: 40px;
+}
+
+#bd-autowrtite-content-paragraph {
+	width: 150px !important;
+	height: 40px;
+}
+
+#betterdocs-ai-language {
+	width: 150px !important;
+	height: 40px;
+}
+
+.input-description {
+	font-size: 14px;
+	color: var(--text-color-600);
+}
+
+.betterdocs-ai-checkbox-field {
+	.form-group {
+		display: flex;
+		align-items: start;
+		justify-content: space-between;
+	}
+
+	input {
+		width: 20px;
+		height: 20px;
+	}
+
+	position: relative;
+	font-size: 16px;
+
+	input[type="checkbox"] {
+		&:checked {
+			&::before {
+				padding: 2px;
+				content: "\2713";
+				color: var(--base-color-700);
+			}
+		}
+
+		border: 1px solid var(--base-color-700);
+	}
+
+	input[type="checkbox"] {
+		&:hover {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+			border: 1px solid var(--base-color-700);
+			outline: none;
+		}
+
+		&:checked {
+			border: 1px solid var(--base-color-700);
+		}
+	}
+}
+
+.checkbox-field-label {
+	width: calc(100% - 150px);
+
+	p {
+		margin: 0 !important;
+	}
+}
+
+.checkbox-input-field {
+	width: 300px;
+	text-align: right;
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+
+	input {
+		display: none;
+
+		&:checked+.toggle-label {
+			background-color: var(--base-color-700);
+
+			&:after {
+				transform: translateX(26px);
+			}
+		}
+	}
+}
+
+.toggle-label {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: (--text-color-150);
+	border-radius: 34px;
+	transition: background-color 0.3s;
+	scale: 0.9;
+	width: 52px;
+	height: 26px;
+
+	&:after {
+		content: "";
+		position: absolute;
+		height: 22px;
+		width: 22px;
+		left: 2px;
+		bottom: 2px;
+		background-color: var(--text-color-900);
+		border-radius: 50%;
+		transition: transform 0.3s;
+	}
+}
+
+.prompt-btn {
+	background-color: var(--base-color-700);
+	color: #fff;
+	border: none;
+	padding: 10px 15px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+div#betterdocs-ai-error-message,
+.betterdocs-ai-error-message {
+	font-size: 14px;
+	font-family: $font-family_1;
+	color: var(--text-color-600);
+	margin-bottom: 20px;
+
+	a {
+		text-decoration: none;
+		font-weight: 600;
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			color: $color_9;
+		}
+	}
+}
+
+#betterdocs-ai-message {
+	font-size: 14px;
+	font-family: $font-family_1;
+	color: var(--text-color-600);
+	margin-bottom: 20px;
+
+	a {
+		text-decoration: none;
+		font-weight: 600;
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			color: $color_9;
+		}
+	}
+
+	span {
+		color: var(--danger-600);
+	}
+}
+
+.warning-message {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: var(--danger-50);
+	padding: 12px;
+	border-radius: 5px;
+	font-size: 14px;
+	line-height: 1.4em;
+	border-left: 4px solid var(--danger-600);
+
+	svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	span {
+		color: var(--danger-600);
+	}
+
+	.footer-message {
+		width: calc(100% - 20px);
+	}
+}
+
+// NOTE: `.glossary-counter-container` and `.bd-faq-button.bd-define-with-ai-button`
+// plus `.bd-define-with-ai-modal`. Glossaries moved to Pro, so those glossary-only blocks
+// now ship in betterdocs-pro/react-src/admin/glossaries/glossaries.scss. The
+// shared `.bd-faq-*` rules below stay here — they are the FAQ Builder's own.
+
+h3.bd-faq-ctg-title span {
+	font-size: 12px;
+	margin-top: -4px;
+	/* display: inline-block; */
+	background: #daf0e9;
+	color: #101828;
+	padding: 4px 10px;
+	border-radius: 14px;
+	font-weight: 500;
+	margin-left: 10px;
+}
+
+.betterdocs-faq-wrapper .bd-faq-ctg-list .bd-faq-ctg .bd-faq-ctg-head .bd-faq-action-button.magic-icon svg {
+	fill: none;
+}
+
+

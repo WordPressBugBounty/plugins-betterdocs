@@ -1,0 +1,1 @@
+export const NAVIGATION_TEXT_TYPO = 'navigation_text_typo';

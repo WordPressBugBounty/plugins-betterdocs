@@ -1,0 +1,670 @@
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap {
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  background-color: #ffffff;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap {
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  background-color: #fff;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0 !important;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap.active-title {
+  background-color: rgba(90, 148, 255, 0.1);
+  border-right: 3px solid #528fff;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  background-color: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner {
+  padding: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title img {
+  width: auto;
+  height: 24px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title .docs-cat-heading {
+  color: #3f5876;
+  font-size: 16px;
+  padding-left: 15px;
+  line-height: 1;
+  position: relative;
+  margin: 0;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-item-count {
+  background-color: #528ffe;
+  padding: 6px;
+  border-radius: 50%;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-item-count span {
+  background-color: rgba(82, 143, 255, 0.2);
+  color: #ffffff;
+  font-size: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container {
+  background-color: #ffffff;
+  padding: 15px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul {
+  margin: 0;
+  padding: 0;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li {
+  padding-left: 0;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  width: 100%;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li svg {
+  fill: #566e8b;
+  font-size: 14px;
+  margin-right: 10px;
+  min-width: 15px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title {
+  margin-bottom: 0;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title svg {
+  margin-right: 10px;
+  font-size: 15px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+  font-weight: 500;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat li {
+  padding-left: 0;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat li svg {
+  fill: #566e8b;
+  font-size: 14px;
+  margin-right: 10px;
+  min-width: 15px;
+}
+#betterdocs-sidebar .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background {
+  position: relative;
+  height: fit-content;
+  padding: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-category-sidebar {
+  position: sticky;
+  top: 4vh;
+  overflow: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height {
+  height: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar {
+  left: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap {
+  padding: 15px 0px;
+  background-color: #ffffff;
+  width: 100% !important;
+  border-radius: 0;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap {
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  background-color: transparent !important;
+  min-width: auto;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0 !important;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap {
+  position: relative;
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  box-shadow: none;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title .docs-cat-heading {
+  color: #3f5876;
+  font-size: 16px;
+  padding-left: 15px;
+  line-height: 1;
+  position: relative;
+  margin: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .cat-list-arrow-down {
+  display: block;
+  height: 15px;
+  width: 15px;
+  transition: all 0.3s ease-in-out 0s;
+  color: #3f5876;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container {
+  background-color: #ffffff;
+  padding: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li svg {
+  fill: #566e8b;
+  font-size: 14px;
+  margin-right: 10px;
+  min-width: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title {
+  margin-bottom: 0;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title svg {
+  margin-right: 10px;
+  font-size: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+  font-weight: 500;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-4.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap.active-title {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background {
+  position: relative;
+  height: fit-content;
+  padding: 0;
+  background-color: #ffffff;
+  box-shadow: 0px 8px 20px RGB(0 1 35/10%);
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap {
+  padding: 15px 0px;
+  background-color: #ffffff;
+  width: 100% !important;
+  border-radius: 0;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap {
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  background-color: transparent !important;
+  min-width: auto;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0 !important;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap.active-title {
+  background-color: transparent !important;
+  border: none !important;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap {
+  position: relative;
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  box-shadow: none;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title {
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title .docs-cat-heading {
+  color: #3f5876;
+  font-size: 16px;
+  padding-left: 15px;
+  line-height: 1;
+  position: relative;
+  margin: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .cat-list-arrow-down {
+  color: #3f5876;
+  display: block;
+  height: 15px;
+  width: 15px;
+  transition: all 0.3s ease-in-out 0s;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container {
+  background-color: #ffffff;
+  padding: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li {
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 0;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li svg {
+  margin-right: 10px;
+  min-width: 15px;
+  fill: #566e8b;
+  font-size: 14px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title {
+  margin-bottom: 0;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title svg {
+  margin-right: 10px;
+  font-size: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-5.betterdocs-background .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 {
+  padding: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar {
+  position: sticky;
+  top: 4vh;
+  height: 100vh;
+  overflow: auto;
+  left: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap {
+  background-color: #fff;
+  padding: 15px 0px;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-cat-title-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-cat-title-inner .docs-cat-title {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-cat-title-inner .docs-cat-title a {
+  text-decoration: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-cat-title-inner .docs-cat-title a .docs-cat-heading {
+  position: relative;
+  margin: 0;
+  line-height: 1;
+  padding-left: 0;
+  color: #3f5876;
+  font-size: 16px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container {
+  background-color: #ffffff;
+  padding: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container ul li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 0;
+  width: 100%;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container ul li svg {
+  fill: #566e8b;
+  font-size: 14px;
+  margin-right: 10px;
+  min-width: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container .docs-sub-cat-title {
+  margin-bottom: 0;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container .docs-sub-cat-title svg {
+  margin-right: 10px;
+  font-size: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-2 .betterdocs-sidebar-content.betterdocs-category-sidebar .betterdocs-categories-wrap .docs-single-cat-wrap-2 .docs-item-container .docs-sub-cat-title a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background {
+  position: relative;
+  height: fit-content;
+  padding: 0;
+  background-color: #ffffff;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height {
+  height: auto;
+  left: 0;
+  position: sticky;
+  top: 4vh;
+  overflow: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap {
+  padding: 15px 0px;
+  background-color: #ffffff;
+  width: 100% !important;
+  border-radius: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap {
+  margin-top: 5px;
+  margin-right: 0px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  background-color: transparent !important;
+  min-width: auto;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0 !important;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap {
+  position: relative;
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  background-color: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap .docs-cat-title-inner .docs-cat-title .docs-cat-heading {
+  color: #3f5876;
+  font-size: 16px;
+  padding-left: 15px;
+  line-height: 1;
+  position: relative;
+  margin: 0;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-cat-title-wrap.active-title {
+  background-color: rgba(90, 148, 255, 0.1);
+  border-right: 3px solid #528fff;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container {
+  background-color: #ffffff;
+  padding: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li {
+  padding-left: 0px !important;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 0;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat {
+  margin-left: 20px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title {
+  margin-bottom: 0 !important;
+  list-style: none;
+  margin: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title svg {
+  margin-right: 10px;
+  font-size: 15px;
+}
+#betterdocs-sidebar-left.betterdocs-full-sidebar-left.sidebar-layout-3.betterdocs-background .betterdocs-sidebar-content.betterdocs-category-sidebar.betterdocs-height .betterdocs-categories-wrap .docs-single-cat-wrap .docs-item-container .docs-sub-cat-title a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+  font-weight: 500;
+}

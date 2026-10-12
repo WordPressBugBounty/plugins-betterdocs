@@ -1,0 +1,105 @@
+.docs-listing-main {
+  display: flex;
+  flex: 1 1 70%;
+  padding: 20px 20px 20px 20px;
+}
+.docs-listing-main .docs-category-listing {
+  background-color: #ffffff;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
+  padding-left: 30px;
+  border-radius: 5px;
+}
+.docs-listing-main .docs-category-listing .docs-cat-title {
+  display: block;
+  line-height: 1;
+}
+.docs-listing-main .docs-category-listing .docs-cat-title .docs-cat-heading {
+  color: #566e8b;
+  font-size: 20px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+  line-height: 1;
+}
+.docs-listing-main .docs-category-listing .docs-cat-title p {
+  line-height: 1.5;
+  color: #566e8b;
+  font-size: 14px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+}
+.docs-listing-main .docs-category-listing .docs-list ul {
+  margin: 0;
+  padding: 0;
+}
+.docs-listing-main .docs-category-listing .docs-list ul li {
+  margin-top: 10px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  list-style: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.docs-listing-main .docs-category-listing .docs-list ul li svg {
+  fill: #566e8b;
+  font-size: 16px;
+  min-width: 16px;
+  margin-right: 10px;
+}
+.docs-listing-main .docs-category-listing .docs-list ul li a {
+  color: #566e8b;
+  font-size: 14px;
+  line-height: 2;
+  font-weight: 400;
+  transition: all 0.3s;
+  outline: none;
+  text-decoration: none;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat-title {
+  margin-top: 10px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat-title svg {
+  fill: #566e8b;
+  font-size: 15px;
+  margin-right: 10px;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat-title > a {
+  color: #566e8b;
+  font-size: 17px;
+  line-height: 2;
+  text-decoration: none;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat {
+  margin-left: 20px;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat li {
+  margin-top: 10px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat li svg {
+  fill: #566e8b;
+  font-size: 16px;
+  min-width: 16px;
+}
+.docs-listing-main .docs-category-listing .docs-list .docs-sub-cat li a {
+  color: #566e8b;
+}

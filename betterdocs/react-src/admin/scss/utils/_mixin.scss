@@ -1,0 +1,234 @@
+@use "sass:string";
+@use "sass:list";
+
+@mixin set-mode($property, $light, $dark, $important: false) {
+    $string: "#{&}";
+    @at-root #{$string} {
+        @if ($important) {
+            #{$property}: $light !important;
+        } @else {
+            #{$property}: $light;
+        }
+    }
+    $classes: string.split($string, " ");
+    $results: ();
+    @for $i from 1 through length($classes) {
+        @if nth($classes, $i) == ".betterdocs-admin" {
+            $_replace: ".betterdocs-admin.betterdocs-dark-mode";
+            $results: list.append($results, $_replace);
+        } @else {
+            $results: list.append($results, nth($classes, $i));
+        }
+    }
+    @at-root #{$results} {
+        @if ($important) {
+            #{$property}: $dark !important;
+        } @else {
+            #{$property}: $dark;
+        }
+    }
+}
+
+@mixin if($search, $replace) {
+    $string: "#{&}";
+    $index: str-index($string, $search);
+    $classes: string.split($string, " ");
+    $results: ();
+    @for $i from 1 through length($classes) {
+        @if nth($classes, $i) == $search {
+            $_replace: $search + $replace;
+            $results: list.append($results, $_replace);
+        } @else {
+            $results: list.append($results, nth($classes, $i));
+        }
+    }
+    @at-root #{$results} {
+        @content;
+    }
+}
+
+@mixin for($parent) {
+    $string: "#{&}";
+    $index: str-index($string, $parent);
+    @if ($index == null) {
+        @at-root #{$parent} & {
+            @content;
+        }
+    } @else {
+        & {
+            @content;
+        }
+    }
+}
+
+// The react-select menu (option list) for the shared dropdown. Kept separate so
+// it can be emitted both nested (inside `.betterdocs-dropdown-select`, for inline
+// menus) AND at the top level — needed when the menu is portaled to <body> (e.g.
+// the slide-over dropdowns, whose scrolling body would otherwise clip it).
+@mixin betterdocs-dropdown-menu {
+	.betterdocs-dropdown__menu {
+		margin-top: 6px;
+		min-width: 180px;
+		border-radius: 8px;
+		overflow: hidden;
+		background-color: var(--base-background);
+		box-shadow: 0px 4px 16px rgba(16, 24, 40, 0.12);
+		z-index: 20;
+
+		// Padded option wrapper so options read as rounded pills with breathing
+		// room — mirrors the FAQ Group (bd-faq-select) menu.
+		.betterdocs-dropdown__menu-list {
+			padding: 8px;
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.betterdocs-dropdown__option {
+			display: flex;
+			align-items: center;
+			padding: 8px 12px;
+			border-radius: 6px;
+			font-size: 13px;
+			color: var(--text-color-700);
+			background-color: transparent;
+			cursor: pointer;
+
+			// Hover + active mirror the FAQ Group bd-faq-select option.
+			&--is-focused {
+				background-color: var(--text-color-50);
+				color: var(--text-color-700);
+			}
+
+			&--is-selected {
+				background-color: var(--text-color-50);
+				color: var(--base-color-700);
+
+				// Tick on the right for the active option (btd-icon glyph).
+				&::after {
+					margin-left: auto;
+					content: "\e90a";
+					font-family: "btd-icon";
+					font-size: 18px;
+					line-height: 1;
+				}
+			}
+		}
+	}
+}
+
+// Shared FAQ-order dropdown styling (react-select). The FAQ Builder header's
+// "Order" picker and the Doc Categories / Tags "Bulk actions" picker both reuse
+// the `.betterdocs-dropdown-*` (classNamePrefix) markup, but they live in
+// different DOM containers (`.betterdocs-dashboard-header` vs `.bd-dc-toolbar`).
+// Keeping the rules in a mixin lets both contexts share one source of truth so
+// the two dropdowns stay visually identical. Apply on the
+// `.betterdocs-dropdown-wrapper` element. The icon / `.betterdocs-kb-filter`
+// rules simply don't match when those elements are absent (e.g. bulk actions).
+@mixin betterdocs-dropdown-styles {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	margin-right: 10px;
+
+	// Knowledge Base filter reuses this select, but with a slightly wider control.
+	&.betterdocs-kb-filter .betterdocs-dropdown-select {
+		min-width: 188px;
+	}
+
+	.betterdocs-dropdown-icon {
+		position: absolute;
+		left: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+		z-index: 1;
+		color: var(--text-color-600);
+		line-height: 0;
+
+		svg {
+			width: 14px;
+			height: 14px;
+		}
+	}
+
+	.betterdocs-dropdown-select {
+		min-width: 180px;
+		font-family: "IBM Plex Sans", sans-serif;
+		font-size: 13px;
+		font-weight: 500;
+
+		.betterdocs-dropdown__control {
+			min-height: 36px;
+			padding-left: 24px;
+			border: 1px solid var(--text-color-200);
+			border-radius: 8px;
+			background-color: var(--base-background);
+			color: var(--text-color-900);
+			box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+			cursor: pointer;
+
+			&--is-focused {
+				border: 1px solid var(--base-color-700);
+				box-shadow: 0 0 0 4px var(--focus-shadow-1), 0 1px 2px 0 var(--focus-shadow-2);
+				outline: none;
+			}
+
+			.betterdocs-dropdown__value-container {
+				padding: 0 4px 0 8px;
+			}
+
+			.betterdocs-dropdown__single-value {
+				color: var(--text-color-900);
+			}
+
+			// Searchable selects (e.g. the Knowledge Base filter) show a
+			// placeholder + typeahead input — keep both legible in either theme.
+			.betterdocs-dropdown__placeholder {
+				color: var(--text-color-500);
+			}
+
+			.betterdocs-dropdown__input-container,
+			.betterdocs-dropdown__input {
+				color: var(--text-color-900);
+				margin: 0;
+				padding: 0;
+			}
+
+			// react-select renders a real <input> for searchable selects
+			// (the Knowledge Base filter). Reset the WP/theme admin-input
+			// defaults — min-height: 40px, focus border + box-shadow — so the
+			// input doesn't inflate the 36px control or draw its own focus ring.
+			.betterdocs-dropdown__input-container input,
+			input.betterdocs-dropdown__input {
+				min-height: 0 !important;
+				height: auto !important;
+				margin: 0 !important;
+				padding: 0 !important;
+				border: 0 !important;
+				box-shadow: none !important;
+				outline: none !important;
+				background: transparent !important;
+
+				&:focus {
+					border: 0 !important;
+					box-shadow: none !important;
+					outline: none !important;
+				}
+			}
+
+			.betterdocs-dropdown__indicator-separator {
+				display: none;
+			}
+
+			.betterdocs-dropdown__indicator {
+				padding: 4px;
+				color: var(--text-color-500);
+			}
+		}
+
+		@include betterdocs-dropdown-menu;
+	}
+}

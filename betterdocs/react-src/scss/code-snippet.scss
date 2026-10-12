@@ -1,0 +1,875 @@
+/* BetterDocs Code Snippet Frontend Styles */
+
+.betterdocs-code-snippet-wrapper {
+    position: relative;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    // Visible so the language dropdown menu isn't clipped. Corners are rounded
+    // on the header (top) + content (bottom) instead of on the wrapper.
+    overflow: visible;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Courier New', monospace;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .betterdocs-code-snippet-header,
+    .betterdocs-file-preview-header {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .betterdocs-code-snippet-content {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        overflow: hidden;
+
+        // No header → the content rounds all four corners.
+        &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+    }
+
+    /* Light */
+    &.theme-light {
+        background-color: #ffffff;
+        border: 1px solid #e1e5e9;
+
+        .betterdocs-code-snippet-header,
+        .betterdocs-file-preview-header {
+            background-color: #f6f8fa;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .betterdocs-code-snippet-language {
+            color: #586069;
+        }
+
+        .betterdocs-file-name .file-name-text {
+            color: #24292e;
+        }
+
+        .betterdocs-traffic-lights .traffic-light {
+            &.traffic-light-red {
+                background-color: #ff5f57;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            &.traffic-light-yellow {
+                background-color: #ffbd2e;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            &.traffic-light-green {
+                background-color: #28ca42;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        .betterdocs-code-snippet-code {
+            background-color: #ffffff;
+            color: #24292e;
+        }
+
+        .betterdocs-code-snippet-line-numbers {
+            background-color: #f6f8fa;
+            color: #586069;
+            border-right: 1px solid #e1e5e9;
+        }
+
+        .betterdocs-code-snippet-copy-button {
+            background: transparent;
+            color: #6c757d;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            &:hover {
+                background: rgba(31, 35, 40, 0.08);
+                color: #24292f;
+            }
+
+            &:active {
+                background: rgba(31, 35, 40, 0.14);
+            }
+        }
+    }
+
+    /* Dark Theme */
+    &.theme-dark {
+        background-color: #0d1117;
+        border: 1px solid #30363d;
+
+        .betterdocs-code-snippet-header,
+        .betterdocs-file-preview-header {
+            background-color: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .betterdocs-code-snippet-language {
+            color: #8b949e;
+        }
+
+        .betterdocs-file-name .file-name-text {
+            color: #e6edf3;
+        }
+
+        .betterdocs-traffic-lights .traffic-light {
+            &.traffic-light-red {
+                background-color: #ff6058;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            &.traffic-light-yellow {
+                background-color: #ffbd2e;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            &.traffic-light-green {
+                background-color: #28ca42;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        .betterdocs-code-snippet-code {
+            background-color: #0d1117;
+            color: #e6edf3;
+        }
+
+        .betterdocs-code-snippet-line-numbers {
+            background-color: #161b22;
+            color: #656d76;
+            border-right: 1px solid #30363d;
+        }
+
+        .betterdocs-code-snippet-copy-button {
+            background: transparent;
+            color: #a0aec0;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            &:hover {
+                background: rgba(230, 237, 243, 0.1);
+                color: #e6edf3;
+            }
+
+            &:active {
+                background: rgba(230, 237, 243, 0.16);
+                color: #cbd5e0;
+            }
+
+			&:focus {
+				outline: none;
+			}
+        }
+    }
+}
+
+/* File Preview Header Styles */
+.betterdocs-file-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-height: 3rem;
+
+    .betterdocs-file-preview-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+    }
+
+    .betterdocs-file-preview-right {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+/* Multi-language dropdown (Mintlify-style language switcher) */
+.betterdocs-code-lang-dropdown {
+    position: relative;
+
+    .betterdocs-code-lang-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 6px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        color: #57606a;
+        line-height: 1.4;
+        font-family: inherit;
+        text-transform: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #24292f;
+        }
+
+        // Icon + label spacing (matches the menu options).
+        .betterdocs-code-lang-current {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .betterdocs-code-lang-caret {
+            transition: transform 0.2s ease;
+        }
+    }
+
+    &.is-open .betterdocs-code-lang-toggle .betterdocs-code-lang-caret {
+        transform: rotate(180deg);
+    }
+
+    // Menu + options mirror the shared betterdocs-dropdown (react-select)
+    // `__menu` / `__option`: rounded-pill options, neutral hover, green active
+    // with a checkmark tick.
+    .betterdocs-code-lang-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        z-index: 20;
+        min-width: 180px;
+        margin: 0;
+        padding: 8px;
+        list-style: none;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0px 4px 16px rgba(16, 24, 40, 0.12);
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+
+        .betterdocs-code-lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #344054;
+            background: transparent;
+            text-transform: none;
+
+            // --is-focused
+            &:hover {
+                background: #f9fafb;
+            }
+
+            // --is-selected: neutral bg + brand-green text + tick
+            &.is-active {
+                background: #f9fafb;
+                color: #00b884;
+
+                &::after {
+                    margin-left: auto;
+                    content: "\2713";
+                    font-size: 13px;
+                    line-height: 1;
+                }
+            }
+        }
+    }
+
+    &.is-open .betterdocs-code-lang-menu {
+        display: flex;
+    }
+}
+
+/* Dark theme for the language dropdown */
+.betterdocs-code-snippet-wrapper.theme-dark {
+    .betterdocs-code-lang-toggle {
+        color: #8b949e;
+
+        &:hover {
+            color: #e6edf3;
+        }
+    }
+
+    .betterdocs-code-lang-menu {
+        background: #161b22;
+        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.4);
+
+        .betterdocs-code-lang-option {
+            color: #e6edf3;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            &.is-active {
+                background: rgba(255, 255, 255, 0.06);
+                color: #00b884;
+            }
+        }
+    }
+}
+
+/* Traffic Lights */
+.betterdocs-traffic-lights {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .traffic-light {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: block;
+
+        &.traffic-light-red {
+            background-color: #ff5f57;
+        }
+
+        &.traffic-light-yellow {
+            background-color: #ffbd2e;
+        }
+
+        &.traffic-light-green {
+            background-color: #28ca42;
+        }
+    }
+}
+
+/* File Info */
+.betterdocs-file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+}
+
+.betterdocs-file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 2px;
+    }
+
+    .betterdocs-file-icon-emoji {
+        font-size: 16px;
+        line-height: 1;
+        display: block;
+    }
+}
+
+.betterdocs-file-name {
+    flex: 1;
+    min-width: 0;
+
+    .file-name-text {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Courier New', monospace;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+}
+
+/* Legacy header styles for backward compatibility */
+.betterdocs-code-snippet-header:not(.betterdocs-file-preview-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-height: 3rem;
+}
+
+.betterdocs-code-snippet-language {
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    font-size: 0.8125rem;
+}
+
+.betterdocs-code-snippet-copy-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:focus {
+        outline: none;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+    }
+}
+
+/* All buttons inside a code block stay flat — reset the theme's default
+   <button> box-shadow (and any of our own) in every state. One rule for every
+   code-snippet button: the copy button, the language-dropdown toggle, and the
+   Code Snippet Tab status tabs. */
+.betterdocs-code-snippet-wrapper .betterdocs-code-snippet-copy-button,
+.betterdocs-code-snippet-wrapper .betterdocs-code-lang-toggle,
+.betterdocs-code-snippet-wrapper .betterdocs-code-snippet-tab-item {
+    box-shadow: none;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:active {
+        box-shadow: none;
+    }
+}
+
+.betterdocs-code-snippet-content {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Each language is its own panel; only the active one shows. The flex row
+   (line numbers + code) lives on the panel. */
+.betterdocs-code-snippet-panel {
+    display: none;
+    position: relative;
+
+    &.is-active {
+        display: flex;
+    }
+}
+
+.betterdocs-code-snippet-line-numbers {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    text-align: right;
+    user-select: none;
+    min-width: 3rem;
+    flex-shrink: 0;
+
+    .line-number {
+        height: 1.5em;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.betterdocs-code-snippet-code {
+    flex: 1;
+    margin: 0;
+    padding: 1rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+    background: transparent;
+    border: none;
+    min-height: 3rem;
+
+    code {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        background: transparent;
+        padding: 0;
+        border: none;
+        display: block;
+        white-space: pre;
+    }
+
+    /* Custom scrollbar for webkit browsers */
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------------
+   Copy button + tooltip
+
+   The button ships both icons and CSS cross-fades between them on `.is-copied`,
+   so the script never rewrites the SVG (rewriting it used to bake the tick in
+   permanently when you clicked twice quickly). The tooltip is anchored to the
+   container with plain absolute positioning — the wrapper and header are
+   `overflow: visible`, so it can sit above the button with no JS layout pass.
+   -------------------------------------------------------------------------- */
+.betterdocs-code-snippet-copy-container {
+    position: relative;
+    display: inline-flex;
+}
+
+.betterdocs-code-snippet-wrapper .betterdocs-code-snippet-copy-button {
+    position: relative;
+    flex-shrink: 0;
+
+    .betterdocs-code-snippet-copy-icon,
+    .betterdocs-code-snippet-copied-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    /* Stack the tick on top of the copy glyph so the button never resizes. */
+    .betterdocs-code-snippet-copied-icon {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    &.is-copied {
+        .betterdocs-code-snippet-copy-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        // No accent colour — the tick inherits the button's `currentColor` so it
+        // reads exactly like the copy glyph it replaces.
+        .betterdocs-code-snippet-copied-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid #0969da;
+        outline-offset: 2px;
+    }
+}
+
+.betterdocs-code-snippet-tooltip {
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    padding: 5px 9px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+    white-space: nowrap;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(3px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+
+    /* Arrow */
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: 5px solid transparent;
+        border-top-color: inherit;
+    }
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Light theme — dark bubble on a light snippet. `border-top-color` feeds the
+   arrow through `inherit`; the bubble itself has no visible border.
+   "Copied!" deliberately reuses the idle palette — the label carries the
+   confirmation, so no colour change is needed. Only failure gets an accent. */
+.betterdocs-code-snippet-wrapper.theme-light .betterdocs-code-snippet-tooltip {
+    background-color: #24292f;
+    border-top-color: #24292f;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(31, 35, 40, 0.28);
+
+    &.is-error {
+        background-color: #cf222e;
+        border-top-color: #cf222e;
+    }
+}
+
+/* Dark theme — light bubble on a dark snippet. */
+.betterdocs-code-snippet-wrapper.theme-dark .betterdocs-code-snippet-tooltip {
+    background-color: #e6edf3;
+    border-top-color: #e6edf3;
+    color: #0d1117;
+    box-shadow: 0 4px 12px rgba(1, 4, 9, 0.6);
+
+    &.is-error {
+        background-color: #f85149;
+        border-top-color: #f85149;
+        color: #2d0709;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .betterdocs-code-snippet-wrapper {
+        margin: 1rem 0;
+        border-radius: 6px;
+    }
+
+    .betterdocs-code-snippet-header,
+    .betterdocs-file-preview-header {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.8125rem;
+        min-height: auto;
+    }
+
+    .betterdocs-file-preview-header {
+        .betterdocs-file-preview-left {
+            gap: 0.5rem;
+        }
+
+        .betterdocs-traffic-lights {
+            gap: 0.375rem;
+
+            .traffic-light {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        .betterdocs-file-name .file-name-text {
+            font-size: 0.8125rem;
+        }
+    }
+
+    /* Legacy header responsive styles */
+    .betterdocs-code-snippet-header:not(.betterdocs-file-preview-header) {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+
+    .betterdocs-code-snippet-copy-button {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.8125rem;
+        align-self: flex-end;
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    .betterdocs-code-snippet-line-numbers {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.75rem;
+        min-width: 2.5rem;
+    }
+
+    .betterdocs-code-snippet-code {
+        padding: 0.75rem;
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .betterdocs-code-snippet-wrapper {
+        margin: 0.75rem 0;
+        border-radius: 4px;
+    }
+
+    .betterdocs-code-snippet-header,
+    .betterdocs-file-preview-header {
+        padding: 0.5rem;
+    }
+
+    .betterdocs-file-preview-header {
+        .betterdocs-file-preview-left {
+            gap: 0.375rem;
+        }
+
+        .betterdocs-traffic-lights {
+            gap: 0.25rem;
+
+            .traffic-light {
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        .betterdocs-file-icon {
+            width: 16px;
+            height: 16px;
+
+            .betterdocs-file-icon-emoji {
+                font-size: 12px;
+            }
+        }
+
+        .betterdocs-file-name .file-name-text {
+            font-size: 0.75rem;
+        }
+    }
+
+    .betterdocs-code-snippet-copy-button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        gap: 0.25rem;
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    .betterdocs-code-snippet-line-numbers {
+        padding: 0.5rem 0.375rem;
+        font-size: 0.6875rem;
+        min-width: 2rem;
+    }
+
+    .betterdocs-code-snippet-code {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .betterdocs-code-snippet-wrapper {
+        border-width: 2px;
+
+        &.theme-light {
+            border-color: #000000;
+
+            .betterdocs-code-snippet-header {
+                border-bottom-color: #000000;
+            }
+
+            .betterdocs-code-snippet-line-numbers {
+                border-right-color: #000000;
+            }
+        }
+
+        &.theme-dark {
+            border-color: #ffffff;
+
+            .betterdocs-code-snippet-header {
+                border-bottom-color: #ffffff;
+            }
+
+            .betterdocs-code-snippet-line-numbers {
+                border-right-color: #ffffff;
+            }
+        }
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .betterdocs-code-snippet-wrapper,
+    .betterdocs-code-snippet-copy-button,
+    .betterdocs-code-snippet-tooltip {
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .betterdocs-code-snippet-wrapper {
+        box-shadow: none;
+        border: 1px solid #000000;
+        break-inside: avoid;
+    }
+
+    .betterdocs-code-snippet-header {
+        background-color: #f5f5f5 !important;
+        border-bottom: 1px solid #000000;
+    }
+
+    .betterdocs-code-snippet-copy-button {
+        display: none;
+    }
+
+    .betterdocs-code-snippet-code {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        overflow: visible;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .betterdocs-code-snippet-line-numbers {
+        background-color: #f5f5f5 !important;
+        color: #666666 !important;
+        border-right: 1px solid #000000;
+    }
+}

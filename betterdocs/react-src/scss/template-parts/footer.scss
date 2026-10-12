@@ -1,0 +1,20 @@
+// CHECKED:
+
+.betterdocs-entry-footer {
+    margin: 25px 0;
+    .betterdocs-tags {
+        margin: 20px 0;
+        a {
+            font-weight: bold;
+        }
+    }
+}
+.betterdocs-tags {
+    a {
+        color: #566e8b;
+        font-size: 16px;
+        font-weight: normal;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+}

@@ -1,0 +1,9 @@
+/**
+ * BetterDocs Code Snippet Tab — Block Editor Styles
+ *
+ * The block preview renders inside the editor's (iframed) canvas, which does
+ * NOT load the frontend stylesheet. Import the frontend styles here so the
+ * editor preview is pixel-identical to the frontend — status tabs, copy button,
+ * dark/light themes, and panel switching all come from one source of truth.
+ */
+@import '../../../../scss/code-snippet-tab.scss';

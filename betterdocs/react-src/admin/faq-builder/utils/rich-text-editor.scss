@@ -1,0 +1,472 @@
+// Styles for the WordPress classic editor (TinyMCE + QuickTags) embedded in
+// the FAQ Builder.
+//
+// Structure (rounded borders, spacing, the Visual/Code segmented tabs) is
+// kept, but COLORS use the default editor palette — neutral greys, not
+// BetterDocs brand colors. The one exception is the Visual / Code tab text
+// and its hover, which keep the BetterDocs green (--base-color-700) per
+// design request.
+
+// Prefixed with the `.betterdocs-admin` body class (Admin.php) so every nested
+// rule gets +1 class of specificity — enough to override TinyMCE's own
+// `.mce-*` / `.wp-editor-*` stylesheet rules without per-rule !important. The
+// dark-mode block below keeps its extra `.betterdocs-dark-mode` class, so it
+// still wins over this one.
+.betterdocs-admin .betterdocs-faq-wrapper .bd-faq-editor {
+    // Override .bd-faq-editor { height: 200px } from utils/_editor.scss
+    // (kept for back-compat); the classic editor needs to size to its own
+    // toolbar + content + status bar height.
+    width: 100%;
+    height: auto;
+    min-height: 0;
+
+    &.bd-faq-editor-wp {
+        // ---------------------------------------------------------------
+        // Outer wrap
+        // ---------------------------------------------------------------
+        .wp-editor-wrap {
+            display: block;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #dcdcde;
+            border-radius: 5px;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        // ---------------------------------------------------------------
+        // Top toolbar row: Add Media (left) + Visual / Code tabs (right)
+        // ---------------------------------------------------------------
+        .wp-editor-tools {
+            background: var(--page-background);
+            border: none;
+            border-bottom: 1px solid #dcdcde;
+            border-radius: 5px 5px 0 0;
+            padding: 0px;
+        }
+
+        // Add Media button — default WordPress secondary button look
+        .wp-media-buttons {
+            margin: 0;
+
+            .button.insert-media,
+            .button {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                min-height: 32px;
+                margin: 8px 12px;
+                padding: 4px 12px;
+                background: #f6f7f7;
+                color: #1E1E1E;
+                border: 1px solid #DCDCDE;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 1.4;
+                box-shadow: none;
+                cursor: pointer;
+                transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+
+                .wp-media-buttons-icon {
+                    margin: 0;
+                    color: inherit;
+
+                    &::before {
+                        color: inherit;
+                        font-size: 16px;
+                        line-height: 1;
+                        vertical-align: middle;
+                    }
+                }
+
+                &:hover,
+                &:focus {
+                    background: #f0f0f1;
+                    color: #0a4b78;
+                    border-color: #0a4b78;
+                    box-shadow: none;
+
+                    .wp-media-buttons-icon {
+                        color: #0a4b78;
+                    }
+                }
+            }
+        }
+
+        // Visual / Code tab switches — white bordered segmented control.
+        // EXCEPTION: the tab button color + hover keep the BetterDocs green.
+        .wp-editor-tabs {
+            background: var(--base-background, #fff);
+            border: 1px solid var(--text-color-200);
+            border-radius: 8px;
+			margin: 6px 12px;
+            padding: 3px;
+            overflow: hidden;
+
+            .wp-switch-editor {
+                float: left;
+                position: static;
+                top: auto;
+                height: auto;
+                margin: 0;
+                padding: 5px 14px;
+                background: transparent;
+                border: none;
+                border-radius: 6px;
+                color: var(--base-color-700);
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 1.4;
+                cursor: pointer;
+                transition: background-color 0.15s ease, color 0.15s ease;
+
+                &:hover {
+                    color: var(--base-color-700);
+                    background: transparent;
+                    box-shadow: none;
+                }
+
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        // Active tab — soft green pill, green text (tabs exception).
+        &.tmce-active .switch-tmce,
+        &.html-active .switch-html,
+        .tmce-active .switch-tmce,
+        .html-active .switch-html {
+            background: var(--base-color-75);
+            color: var(--base-color-700);
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        // ---------------------------------------------------------------
+        // Editor body (TinyMCE iframe + QuickTags textarea)
+        // ---------------------------------------------------------------
+        .wp-editor-container {
+            border: none;
+            background: #fff;
+            border-radius: 0 0 5px 5px;
+            overflow: hidden;
+            box-shadow: none;
+        }
+
+        .mce-tinymce {
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        // TinyMCE renders the toolbar drop-shadow via this pseudo-element.
+        .mce-top-part::before {
+            box-shadow: none;
+        }
+
+        // TinyMCE toolbar — keep WP defaults with a subtle separator.
+        .mce-toolbar-grp {
+            background: #fff !important;
+            border-bottom: 1px solid #dcdcde !important;
+        }
+
+        .mce-toolbar .mce-btn-group {
+            margin: 0;
+            padding: 2px 6px;
+        }
+
+        // -----------------------------------------------------------
+        // Toolbar buttons — default neutral hover + subtle pressed
+        // active state (standard editor look, no inverted/brand colors).
+        // -----------------------------------------------------------
+        .mce-toolbar .mce-btn-group .mce-btn {
+            border: 1px solid transparent !important;
+            border-radius: 4px !important;
+            background: transparent !important;
+            color: #50575e !important;
+            transition: background-color 0.12s ease, color 0.12s ease,
+                box-shadow 0.12s ease, border-color 0.12s ease;
+
+            button {
+                color: inherit !important;
+            }
+
+            i,
+            .mce-ico {
+                color: #50575e !important;
+            }
+
+            // Hover / keyboard focus — light grey
+            &:hover,
+            &:focus {
+                background: #f0f0f1 !important;
+                color: #1e1e1e !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+                outline: none !important;
+
+                i,
+                .mce-ico {
+                    color: #1e1e1e !important;
+                }
+            }
+
+            // Active (formatting applied at the caret) — subtle pressed grey.
+            &.mce-active,
+            &:active {
+                background: #dcdcde !important;
+                color: #1e1e1e !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+
+                button,
+                i,
+                .mce-ico,
+                .mce-txt {
+                    color: #1e1e1e !important;
+                }
+            }
+
+            // Active + hover — slightly darker pressed grey.
+            &.mce-active:hover,
+            &.mce-active:focus {
+                background: #c3c4c7 !important;
+                color: #1e1e1e !important;
+                border-color: transparent !important;
+            }
+
+            // Disabled — neutral, dim
+            &.mce-disabled,
+            &[aria-disabled="true"] {
+                background: transparent !important;
+                color: #a7aaad !important;
+                opacity: 0.5 !important;
+
+                i,
+                .mce-ico {
+                    color: #a7aaad !important;
+                }
+            }
+        }
+
+        // Paragraph / format-select dropdown — same neutral treatment
+        .mce-toolbar .mce-btn-group .mce-listbox {
+            background: #fff !important;
+            border: 1px solid #dcdcde !important;
+            border-radius: 4px !important;
+            color: #1e1e1e !important;
+
+            &:hover,
+            &:focus {
+                background: #f6f7f7 !important;
+                border-color: #c3c4c7 !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .mce-statusbar {
+            background: #fff !important;
+            border-top: 1px solid #dcdcde !important;
+            // Drop TinyMCE's default bottom shadow; keep just the plain border.
+            box-shadow: none !important;
+            color: #757575;
+        }
+
+        .mce-edit-area {
+            background: #fff;
+        }
+
+        // QuickTags toolbar (Text/Code mode) — default neutral buttons
+        .quicktags-toolbar {
+            background: #fff;
+            border: none;
+            border-bottom: 1px solid #dcdcde;
+            padding: 8px 10px;
+
+            input.ed_button.button.button-small {
+                background: #f6f7f7;
+                border: 1px solid #dcdcde;
+                border-radius: 3px;
+                color: #50575e;
+                font-size: 12px;
+                font-weight: 500;
+                padding: 4px 10px;
+                margin: 0 4px 4px 0;
+                box-shadow: none;
+                cursor: pointer;
+                transition: all 0.15s ease;
+
+                &:hover,
+                &:focus {
+                    color: #1e1e1e;
+                    border-color: #c3c4c7;
+                    background: #f0f0f1;
+                    box-shadow: none;
+                    outline: none;
+                }
+            }
+        }
+
+        // Code-mode textarea
+        .wp-editor-area {
+            border: none;
+            box-shadow: none;
+            outline: none;
+            font-family: Menlo, Consolas, Monaco, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            color: #1e1e1e;
+            background: #fff;
+            min-height: 120px;
+            width: 100%;
+            box-sizing: border-box;
+            resize: vertical;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Dark mode — the chrome above uses light defaults; remap to a dark surface
+// when the admin is in dark mode. Light mode is left untouched. The iframe
+// content (TinyMCE body) is themed separately via content_style in
+// TextEditor.js (the iframe can't read these styles).
+// ---------------------------------------------------------------------------
+.betterdocs-admin.betterdocs-dark-mode
+    .betterdocs-faq-wrapper
+    .bd-faq-editor.bd-faq-editor-wp {
+    .wp-editor-wrap {
+        background: #0c0f14;
+        border-color: #2a313c;
+    }
+
+    .wp-editor-tools {
+        background: #151a22;
+        border-bottom-color: #2a313c;
+    }
+
+    .wp-media-buttons {
+        .button.insert-media,
+        .button {
+            background: #1b212b;
+            color: #e6e8eb;
+            border-color: #2a313c;
+            .wp-media-buttons-icon {
+                color: #aab0ba;
+            }
+            &:hover,
+            &:focus {
+                background: #232a35;
+                color: #fff;
+                border-color: #3a4250;
+                .wp-media-buttons-icon {
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    // Visual / Code tabs — dark container; active pill keeps the green family
+    // (base-color-75 → dark navy, base-color-700 → green).
+    .wp-editor-tabs {
+        background: #151a22;
+        border-color: #2a313c;
+    }
+
+    .wp-editor-container {
+        background: #0c0f14;
+    }
+
+    .mce-toolbar-grp {
+        background: #0c0f14 !important;
+        border-bottom-color: #2a313c !important;
+    }
+
+    .mce-toolbar .mce-btn-group .mce-btn {
+        color: #aab0ba !important;
+        i,
+        .mce-ico {
+            color: #aab0ba !important;
+        }
+        &:hover,
+        &:focus {
+            background: #232a35 !important;
+            color: #fff !important;
+            i,
+            .mce-ico {
+                color: #fff !important;
+            }
+        }
+        &.mce-active,
+        &:active {
+            background: #2c3543 !important;
+            color: #fff !important;
+            button,
+            i,
+            .mce-ico,
+            .mce-txt {
+                color: #fff !important;
+            }
+        }
+        &.mce-active:hover,
+        &.mce-active:focus {
+            background: #36404f !important;
+        }
+        &.mce-disabled,
+        &[aria-disabled="true"] {
+            color: #5b616c !important;
+            i,
+            .mce-ico {
+                color: #5b616c !important;
+            }
+        }
+    }
+
+    .mce-toolbar .mce-btn-group .mce-listbox {
+        background: #151a22 !important;
+        border-color: #2a313c !important;
+        color: #e6e8eb !important;
+        &:hover,
+        &:focus {
+            background: #1b212b !important;
+            border-color: #3a4250 !important;
+        }
+    }
+
+    .mce-statusbar {
+        background: #0c0f14 !important;
+        border-top-color: #2a313c !important;
+        color: #aab0ba;
+    }
+
+    .mce-edit-area {
+        background: #0c0f14;
+    }
+
+    .quicktags-toolbar {
+        background: #0c0f14;
+        border-bottom-color: #2a313c;
+        input.ed_button.button.button-small {
+            background: #1b212b;
+            color: #aab0ba;
+            border-color: #2a313c;
+            &:hover,
+            &:focus {
+                background: #232a35;
+                color: #fff;
+                border-color: #3a4250;
+            }
+        }
+    }
+
+    .wp-editor-area {
+        background: #0c0f14;
+        color: #e6e8eb;
+    }
+}

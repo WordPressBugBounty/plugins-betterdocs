@@ -1,0 +1,26 @@
+// CHECKED:
+
+// All Common SCSS
+@import "./common/index";
+@import "./common/grid";
+@import "./shortcodes/category-grid.scss";
+
+// ALL Layout Parts
+@import "./layout-parts/index";
+
+.betterdocs-category-grid-wrapper {
+    .betterdocs-category-grid-inner-wrapper {
+        & > {
+            @import "./partials/single-category-grid.scss";
+        }
+    }
+}
+.betterdocs-docs-archive-wrapper {
+	&.betterdocs-category-layout-8 {
+		.betterdocs-category-grid-three-wrapper,
+		.betterdocs-faq-wrapper {
+			padding-left: 50px;
+			padding-right: 50px;
+		}
+	}
+}

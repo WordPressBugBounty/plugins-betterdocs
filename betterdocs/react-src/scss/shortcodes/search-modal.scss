@@ -1,0 +1,609 @@
+@keyframes betterdocs-skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.betterdocs-search-layout-1 {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 50px 0;
+    max-width: 100%;
+    margin: 0 auto;
+    margin-top: 57px;
+    background-color: #F9FAFB;
+    .search-header {
+        margin-bottom: 40px;
+        .search-heading {
+            font-size: 36px;
+            line-height: 1.2em;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .search-subheading {
+            font-size: 24px;
+            line-height: 1.2em;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            margin-top: 15px;
+        }
+    }
+    .search-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 656px;
+        background-color: #FFFFFF;
+        border: 1px solid #EAECF0;
+        border-radius: 12px;
+        padding: 12px 12px 12px 20px;
+        .search-input-wrapper {
+            display: flex;
+            flex: 1;
+            background-color: #FFF;
+            margin-right: 10px;
+            justify-content: flex-start;
+            align-items: center;
+            .search-icon {
+                margin-right: 15px;
+            }
+            .search-input {
+                border: none;
+                outline: none;
+                font-size: 16px;
+                line-height: 20px;
+                font-weight: 400;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                flex: 1;
+                background-color: transparent;
+                text-align: left;
+                color: #667085;
+            }
+        }
+        .search-button {
+            background-color: #667085;
+            color: #FFF;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0;
+        }
+    }
+}
+.betterdocs-search-popup {
+    margin-bottom: 24px;
+
+    @media only screen and (max-width: 1024px) {
+        margin-bottom: 16px;
+    }
+
+    .betterdocs-searchform {
+        border-radius: 4px;
+        background: #F9FAFB;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+
+        .betterdocs-searchform-input-wrap {
+            svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .betterdocs-search-command {
+                width: 100%;
+                padding: 0 16px 0 36px;
+                border: none;
+                background: transparent;
+                color: #98A2B3;
+				font-size: 1rem;
+                &:focus-visible {
+                    outline: 0;
+                    box-shadow: none;
+                }
+            }
+
+            ::placeholder {
+                color: #98A2B3;
+            }
+        }
+
+        .command-key {
+            width: 38px;
+            height: 24px;
+            background: #FFFFFF;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+}
+
+.betterdocs-search-wrapper {
+    z-index: 9999999;
+    position: fixed;
+    inset: 0;
+    background: #00000033;
+
+    .betterdocs-search-details {
+        position: absolute;
+        top: 110px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #FFFFFF;
+        border-radius: 4px;
+        border: 1px solid #EAECF0;
+        width: 867px;
+        height: auto;
+        overflow: auto;
+        max-height: calc(100vh - 300px);
+
+        @media only screen and (max-width: 1024px) {
+            width: 95%;
+            top: 10px;
+            max-height: calc(100vh - 100px);
+        }
+
+        @media only screen and (max-width: 767px) {
+            width: 95%;
+            max-height: calc(100vh - 100px);
+        }
+
+        .xmark {
+            display: none;
+            @media only screen and (max-width: 1024px) {
+                display: block;
+                margin-top: 5px;
+                right: 10px;
+                position: absolute;
+                height: 35px;
+                width: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #F2F4F7;
+                border-radius: 50%;
+            }
+        }
+
+        .betterdocs-search-header {
+            margin: 20px 20px 14px;
+            padding: 5px;
+            border-radius: 4px;
+            background: #F9FAFB;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+
+            @media only screen and (max-width: 1024px) {
+                margin: 46px 16px 10px;
+            }
+
+            .betterdocs-searchform-input-wrap {
+                display: flex;
+                align-items: center;
+                flex: 1;
+
+                .betterdocs-search-field {
+                    flex: 1;
+                    background: transparent;
+                    border: none;
+                    padding: 0;
+                    padding: 7px 16px 7px 4px;
+                    color: #475467;
+                    font-size: 16px;
+                    line-height: 1.6em;
+                    box-shadow: none;
+                    @media only screen and (max-width: 1024px) {
+                        font-size: 14px;
+                        padding-right: 12px;
+                    }
+                    &:focus-visible {
+                        outline: 0;
+                    }
+                }
+
+                .esc-button {
+                    background-color: #FFF;
+                    padding: 5px 10px;
+                    border-radius: 2px;
+                    color: #667085;
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 1.2em;
+                    margin-right: 8px;
+                    @media only screen and (max-width: 1024px) {
+                        display: none;
+                    }
+                }
+
+                .clear-icon {
+                    margin-right: 8px;
+                }
+            }
+
+            .betterdocs-select-option-wrapper {
+                position: relative;
+                width: 220px;
+                padding: 2px 8px 2px 16px;
+                border-left: 1px solid #EAECF0;
+                flex-shrink: 0;
+
+                @media only screen and (max-width: 1024px) {
+                    width: 190px;
+                    padding: 0 8px 0 12px;
+                }
+
+                @media only screen and (max-width: 767px) {
+                    width: 155px;
+                }
+
+                .betterdocs-form-select {
+                    color: #667085;
+                    font-size: 16px;
+                    line-height: 1.4em;
+                    padding: 0;
+                    width: 100%;
+                    height: auto;
+                    border: none;
+                    box-shadow: none;
+                    background: transparent;
+                    cursor: pointer;
+                    appearance: none;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+
+                    @media only screen and (max-width: 1024px) {
+                        font-size: 14px;
+                    }
+
+                    &:focus-visible {
+                        outline: 0;
+                        box-shadow: none;
+                    }
+                    .css-1fdsijx-ValueContainer {
+                        padding: 0;
+                    }
+                    .css-1u9des2-indicatorSeparator {
+                        display: none;
+                    }
+                    .css-13cymwt-control,
+                    .css-t3ipsp-control {
+                        background-color: transparent;
+                        border: none;
+                        border-radius: 0;
+                        min-height: auto;
+                        border-width: 0;
+                        box-shadow: none;
+                        &:hover {
+                            border: none;
+                            border-color: transparent;
+                        }
+                    }
+                    .css-15lsz6c-indicatorContainer,
+                    .css-1xc3v61-indicatorContainer,
+                    .css-19bb58m,
+                    .css-hlgwow,
+                    .css-qbdosj-Input {
+                        margin: 0;
+                        padding: 0;
+                    }
+
+                }
+            }
+        }
+
+        .betterdocs-popular-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            line-height: 1.4em;
+            margin-bottom: 22px;
+            padding: 0 27px;
+            .search-title {
+                color: #D0D5DD;
+            }
+            .keywords {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+                span {
+                    background: #F9FAFB;
+                    color: #475467;
+                    padding: 4px;
+                    display: inline-block;
+                    cursor: pointer;              ;
+                }
+            }
+        }
+
+        .betterdocs-search-content {
+            height: 100%;
+            overflow: auto;
+
+            .betterdocs-search-info-tab {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                padding: 0 28px;
+                border-bottom: 1px solid #D0D5DD;
+
+                @media only screen and (max-width: 1024px) {
+                    gap: 12px;
+                    padding: 0 20px;
+                }
+
+                .betterdocs-tab-items {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 2px 10px 16px 4px;
+                    cursor: pointer;
+                    min-height: 44px;
+
+                    @media only screen and (max-width: 1024px) {
+                        gap: 4px;
+                        padding: 2px 8px 12px 4px;
+                        min-height: 38px;
+                    }
+
+                    span {
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 1.2em;
+                        color: #D0D5DD;
+
+                        @media only screen and (max-width: 1024px) {
+                            font-size: 12px;
+                        }
+                    }
+
+                    &.active {
+                        border-bottom: 2px solid #00B884;
+
+                        span {
+                            color: #00B884;
+
+                            svg path {
+                                fill: #00B884;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .betterdocs-search-items-wrapper {
+                padding-bottom: 24px;
+                min-height: 360px;
+
+                @media only screen and (max-width: 1024px) {
+                    padding-bottom: 16px;
+                    min-height: 280px;
+                }
+
+                .betterdocs-search-skeleton {
+                    padding: 0;
+
+                    .betterdocs-search-skeleton-row {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 18px 24px;
+                        border-bottom: 1px solid #EAECF0;
+
+                        @media only screen and (max-width: 1024px) {
+                            padding: 14px 20px;
+                        }
+
+                        .skeleton-icon {
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 4px;
+                            background: #F2F4F7;
+                            flex-shrink: 0;
+                            animation: betterdocs-skeleton-pulse 1.2s ease-in-out infinite;
+                        }
+
+                        .skeleton-lines {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                        }
+
+                        .skeleton-line {
+                            height: 12px;
+                            border-radius: 4px;
+                            background: #F2F4F7;
+                            animation: betterdocs-skeleton-pulse 1.2s ease-in-out infinite;
+
+                            &.skeleton-line-title {
+                                width: 60%;
+                            }
+
+                            &.skeleton-line-meta {
+                                width: 30%;
+                                height: 10px;
+                            }
+                        }
+
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
+                }
+
+                .betterdocs-search-item-content {
+                    .betterdocs-search-item-list {
+                        padding: 16px 24px;
+                        border-bottom: 1px solid #EAECF0;
+                        background: #FFFFFF;
+                        transition: ease-in-out .35s;
+
+                        &:hover {
+                            background: #F6FEF9;
+                        }
+
+                        @media only screen and (max-width: 1024px) {
+                            padding: 12px 20px;
+                        }
+
+                        .content-main {
+                            display: flex;
+                            align-items: center;
+                            flex-wrap: wrap;
+                            justify-content: space-between;
+                            flex-direction: row;
+                            gap: 8px;
+                            margin-bottom: 10px;
+                            a {
+                                flex: 1;
+                                cursor: pointer;
+                                text-decoration: none;
+                            }
+                            h4 {
+                                flex: 1;
+                                font-size: 16px;
+                                font-weight: 500;
+                                line-height: 1.2em;
+                                color: #1D2939;
+                                margin: 0;
+                            }
+                        }
+
+                        .content-sub {
+                            display: flex;
+                            align-items: center;
+                            flex-wrap: wrap;
+                            flex-direction: row;
+                            gap: 4px;
+                            padding-left: 40px;
+
+                            h5 {
+                                font-size: 14px;
+                                font-weight: 500;
+                                line-height: 1.2em;
+                                color: #475467;
+                                margin: 0;
+                            }
+                            p {
+                                margin: 0;
+                                padding: 0;
+                                font-size: 18px;
+                                line-height: 1.4em;
+                                color: #475467;
+                                .show-more-btn {
+                                    color: #D0D5DD;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    float: right;
+                                }
+                            }
+                        }
+                    }
+                    &:last-child {
+                        .betterdocs-search-item-list {
+                            border-bottom: none !important;
+                        }
+                    }
+                }
+
+                .betterdocs-search-items-not-found {
+                    padding: 36px 30px 70px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+
+                    @media only screen and (max-width: 1024px) {
+                        padding: 24px 20px 50px;
+                        gap: 4px;
+                    }
+
+                    h4 {
+                        font-size: 24px;
+                        line-height: 1.2em;
+                        color: #1D2939;
+                        margin: 0;
+
+                        @media only screen and (max-width: 1024px) {
+                            font-size: 18px;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.betterdocs-search-modal-archive {
+	width: 100%;
+	max-width: 340px;
+	@media only screen and (max-width: 768px) {
+		width: 100%;
+		max-width: 100%;
+		.betterdocs-search-popup {
+			margin-bottom: 24px;
+		}
+	}
+	.betterdocs-live-search {
+		.betterdocs-searchform {
+			background: transparent;
+			border: 1px solid #F2F4F7;
+			padding: 3px;
+			.betterdocs-searchform-input-wrap {
+				flex: 1 1 auto;
+				svg {
+					left: 6px;
+				}
+			}
+			.search-button {
+				width: 90px;
+				height: 34px;
+				border-radius: 8px;
+				background-color: #667085;
+				color: #FFFFFF;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1rem;
+				flex-shrink: 0;
+			}
+		}
+	}
+}
+
+body.logged-in {
+    .betterdocs-search-wrapper {
+        @media only screen and (max-width: 1024px) {
+            top: 50px;
+        }
+    }
+}

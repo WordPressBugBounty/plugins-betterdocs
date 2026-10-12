@@ -1,0 +1,1488 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+@import "utils/mixin";
+@import "sample-docs";
+
+:root {
+    $mode-base: #ffffff;
+    --page-background: #fafbfb;
+    --base-background: #fff;
+    --base-color-50: #f7fefc;
+    --base-color-65: #f7f8fa;
+    --base-color-75: #ecfdf3;
+    --base-color-100: #d1fadf;
+    --base-color-700: #00b884;
+    --base-color-800: #00956b;
+    --base-color-900: #007557;
+    --green: #00b884;
+    --green-50: #ecfdf3;
+    --green-100: #d1fadf;
+    --qs-field-border: #eef0f3;
+    --text-color-25: #fcfcfd;
+    --text-color-50: #f9fafb;
+    --text-color-100: #f0f0f0;
+    --text-color-150: #eff2f7;
+    --text-color-200: #eaecf0;
+    --text-color-300: #dde2e4;
+    --text-color-400: #d0d5dd;
+    --text-color-500: #98a2b3;
+    --text-color-600: #667085;
+    --text-color-700: #344054;
+    --text-color-800: #202223;
+    --text-color-850: #475467;
+    --text-color-900: #101828;
+    --text-color-950: #1d2939;
+    --warning-50: #fffaeb;
+    --warning-100: #fef0c7;
+    --warning-400: #fdb022;
+    --warning-700: #b54708;
+    --primary-700: #6941c6;
+    --danger-50: #fff1f3;
+    --danger-600: #d92d20;
+    --mode-switcher-icon: "\e905";
+}
+
+.betterdocs_page_betterdocs-setup {
+    font-family: "IBM Plex Sans", sans-serif;
+    #adminmenumain {
+        #adminmenu {
+            li {
+                a.wp-has-current-submenu {
+                    &:after {
+                        border-right-color: var(--page-background);
+                    }
+                }
+            }
+        }
+    }
+    #wpcontent {
+        padding-left: 0px;
+        background-color: var(--page-background);
+    }
+    .betterdocs-settings-wrap {
+        padding-left: 0;
+        padding-right: 0;
+        #betterdocsQuickSetupBuilder {
+            // Full-width white top bar; its content stays inside the centered
+            // container, aligned with the wizard content below.
+            .betterdocs-quick-setup-header-top {
+                background-color: var(--base-background);
+                padding: 15px 0;
+                margin: 0;
+                width: 100%;
+                box-sizing: border-box;
+                // 1138 content + 40px gutters each side = matches the builder wrapper.
+                .betterdocs-dashboard-container {
+                    width: 100%;
+                    max-width: 1218px;
+                    margin: 0 auto;
+                    padding: 0 40px;
+                    box-sizing: border-box;
+                }
+                .betterdocs-logo-action {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    .betterdocs-dashboard-header-items {
+                        display: flex;
+                        align-items: center;
+                        &.betterdocs-dashboard-header-right {
+                            flex: 1;
+                            justify-content: flex-end;
+                        }
+                    }
+                    .betterdocs-dashboard-logo {
+                        display: inline-flex;
+                        align-items: center;
+                        // Match the dashboard: the logo renders at the SVG's
+                        // intrinsic 220px width (no height override).
+                        svg {
+                            width: 220px;
+                            height: auto;
+                            display: block;
+                        }
+                    }
+                }
+                .betterdocs-dashboard-header-action-list {
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                    li {
+                        display: inline-block;
+                        .betterdocs-dashboard-header-action {
+                            transition: all 0.3s ease 0s;
+                            font-size: 18px;
+                            line-height: 0;
+                            background: var(--base-background);
+                            color: var(--text-color-900);
+                            height: 36px;
+                            width: 36px;
+                            padding: 0;
+                            border: 1px solid var(--text-color-200);
+                            border-radius: 8px;
+                            box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            box-sizing: border-box;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+            .betterdocs-settings-wrapper {
+                margin-top: 32px;
+                padding-left: 40px;
+                padding-right: 40px;
+                padding-top: 0;
+                padding-bottom: 0;
+                .betterdocs-quick-setup-builder-wrapper {
+                    width: 100%;
+                    max-width: 1138px;
+                    margin-top: 0;
+                    margin-bottom: 0;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    padding-left: 0;
+                    padding-right: 0;
+                    box-shadow: none;
+                    background-color: transparent;
+                    .wprf-tabs-wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        border: none;
+                        background: transparent;
+                        margin: 0;
+                        .wprf-tab-menu-wrapper {
+                            margin-bottom: 8px;
+                            .wprf-tab-nav {
+                                display: flex;
+                                width: 100%;
+                            }
+                        }
+                    }
+                    .wprf-tab-menu-wrapper {
+                        background: var(--base-background);
+                        border-radius: 8px 8px 0 0;
+                        overflow: hidden;
+                        .wprf-tab-nav {
+                            .wprf-tab-nav-item {
+                                flex-grow: 1;
+                                flex-basis: 0;
+                                padding: 18px 12px;
+                                display: inline-flex;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 12px;
+                                border-top: 0;
+                                border-bottom: 3px solid transparent;
+                                background: var(--base-background);
+                                color: var(--text-color-500);
+                                font-size: 16px;
+                                font-weight: 500;
+                                line-height: 1;
+                                cursor: pointer;
+                                position: relative;
+                                // Locked steps: not reached yet, or the consent
+                                // intro after consent was given. Not clickable.
+                                &.wprf-tab-disabled {
+                                    cursor: not-allowed;
+                                    opacity: 0.5;
+                                    pointer-events: none;
+                                }
+                                // vertical divider between steps
+                                &:not(:last-child)::after {
+                                    content: "";
+                                    position: absolute;
+                                    right: 0;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    width: 1px;
+                                    height: 26px;
+                                    background: var(--text-color-150);
+                                }
+                                .icon {
+                                    height: 34px;
+                                    min-width: 34px;
+                                    width: 34px;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background-color: var(--text-color-200);
+                                    color: var(--text-color-500);
+                                    text-align: center;
+                                    font-size: 14px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;
+                                    border-radius: 50%;
+                                    box-sizing: border-box;
+                                }
+                                &.wprf-active-nav {
+                                    border-bottom-color: var(--base-color-700);
+                                    color: var(--text-color-900);
+                                    .icon {
+                                        background-color: #e0fff6;
+                                        color: #00b884;
+                                        border: 2px solid var(--base-color-75);
+                                    }
+                                }
+                                &.wprf-tab-complete:not(.wprf-active-nav) {
+                                    color: var(--text-color-950);
+                                    .icon {
+                                        background-color: var(--base-color-700);
+                                        color: #ffffff;
+                                        background-image: url(../../../assets/static/admin/images/icons/tick.svg);
+                                        background-repeat: no-repeat;
+                                        background-position: center center;
+                                        background-size: 16px;
+                                        .count {
+                                            display: none;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .wprf-tab-content-wrapper {
+                        background-color: transparent;
+                        padding: 0;
+                        .wprf-tab-flex {
+                            .wprf-tab-contents {
+                                .wprf-tab-content {
+                                    padding: 40px;
+                                    border-radius: 16px;
+                                    background-color: transparent;
+                                    .wprf-tab-heading-wrapper {
+                                        display: none;
+                                    }
+
+                                    // Content steps render as the card body below the tab menu:
+                                    // white bg, 32px padding, rounded bottom corners (the menu
+                                    // wrapper carries the matching rounded top corners).
+                                    &.wprf-tab-getting-started,
+                                    &.wprf-tab-create-content,
+                                    &.wprf-tab-setup-page,
+                                    &.wprf-tab-customize,
+                                    &.wprf-tab-finalize {
+                                        background-color: var(--base-background);
+                                        border-radius: 0 0 8px 8px;
+                                        padding: 32px;
+
+                                        .wprf-section-header:not(:last-child) {
+                                            margin-bottom: 34px;
+                                        }
+                                    }
+
+                                    // Only "Create Content" wraps its field (the AI promo)
+                                    // in a white panel. "Setup Page" / "Customize" keep the
+                                    // plain wprf-section-fields — no extra wrapper/padding.
+                                    &.wprf-tab-create-content {
+                                        .betterdocs-quick-setup-fields {
+                                            background-color: var(--base-background);
+                                            border: 1px solid var(--text-color-150);
+                                            border-radius: 16px;
+                                            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+                                            padding: 24px;
+                                            margin: 0;
+                                        }
+                                    }
+
+                                    // Finalize: an honest "ready to finish" panel. Nothing in
+                                    // the wizard is saved until the user clicks Finish, so this
+                                    // prompts that action rather than celebrating prematurely.
+                                    // One green touch (icon + primary CTA) on a clean neutral card.
+                                    &.wprf-tab-finalize {
+                                        .betterdocs-finish {
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                            text-align: center;
+                                            padding: 48px 32px 44px;
+                                            border-radius: 16px;
+                                            border: 1px solid var(--text-color-150, #eff2f7);
+                                            background-color: var(--base-background, #fff);
+                                            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+                                        }
+
+                                        // Match the wizard step-icon tile (.wprf-icon):
+                                        // a neutral surface with the brand-green glyph.
+                                        .betterdocs-finish-icon {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            width: 66px;
+                                            height: 66px;
+                                            margin-bottom: 20px;
+                                            border-radius: 18px;
+                                            color: var(--base-color-700, #00b884);
+                                            background-color: var(--page-background, #fafbfb);
+
+                                            svg {
+                                                width: 30px;
+                                                height: 30px;
+                                            }
+                                        }
+
+                                        .betterdocs-finish-title {
+                                            margin: 0 0 8px;
+                                            font-size: 20px;
+                                            font-weight: 600;
+                                            line-height: 1.3;
+                                            color: var(--text-color-900, #101828);
+                                        }
+
+                                        .betterdocs-finish-text {
+                                            margin: 0 auto 24px;
+                                            max-width: 440px;
+                                            font-size: 14px;
+                                            line-height: 1.6;
+                                            color: var(--text-color-600, #667085);
+                                        }
+
+                                        .betterdocs-finish-btn {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            height: 44px;
+                                            padding: 0 26px;
+                                            border-radius: 8px;
+                                            font-family: inherit;
+                                            font-size: 14px;
+                                            font-weight: 500;
+                                            line-height: 1;
+                                            text-transform: capitalize;
+                                            color: #fff;
+                                            background-color: var(--base-color-700, #00b884);
+                                            border: 1px solid var(--base-color-700, #00b884);
+                                            cursor: pointer;
+                                            transition: all 0.15s ease;
+
+                                            &:hover:not(:disabled) {
+                                                background-color: var(--base-color-800, #00956b);
+                                                border-color: var(--base-color-800, #00956b);
+                                            }
+
+                                            &:focus {
+                                                outline: none;
+                                                box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.2);
+                                            }
+
+                                            &:disabled {
+                                                opacity: 0.7;
+                                                cursor: default;
+                                            }
+                                        }
+
+                                        .betterdocs-finish-hint {
+                                            margin: 16px 0 0;
+                                            font-size: 12.5px;
+                                            color: var(--text-color-500, #98a2b3);
+                                        }
+                                    }
+                                    .wprf-section-header {
+                                        display: flex;
+                                        gap: 24px;
+                                        &:last-child {
+                                            margin-bottom: 0;
+                                        }
+                                        &:not(:last-child) {
+                                            margin-bottom: 40px;
+                                        }
+                                        // Row headers read left-aligned (icon left, text
+                                        // beside it); column headers stay centered.
+                                        &.wprf-direction-row {
+                                            flex-direction: row;
+                                            flex-wrap: nowrap;
+                                            justify-content: flex-start;
+                                            align-items: flex-start;
+                                            text-align: left;
+                                        }
+                                        &.wprf-direction-column {
+                                            flex-direction: column;
+                                            align-items: center;
+                                            justify-self: center;
+                                            text-align: center;
+                                        }
+                                        // Single source for the header icon — the green
+                                        // tile used by every step (Content Crafting style).
+                                        .wprf-icon {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            width: 66px;
+                                            height: 66px;
+                                            flex-shrink: 0;
+                                            padding: 0;
+                                            border-radius: 18px;
+                                            background-color: #fafbfb;
+                                            color: var(--base-color-700);
+                                            svg,
+                                            img {
+                                                display: block;
+                                                width: 30px;
+                                                height: 30px;
+                                            }
+                                        }
+                                        .wprf-content {
+                                            display: inline-flex;
+                                            flex-direction: column;
+                                            gap: 10px;
+                                            @include if(
+                                                ".wprf-tab-content",
+                                                ".wprf-tab-getting-started"
+                                            ) {
+                                                max-width: 450px;
+                                            }
+                                            @include if(
+                                                ".wprf-tab-content",
+                                                ".wprf-tab-migration"
+                                            ) {
+                                                max-width: 590px;
+                                            }
+                                            .wprf-title {
+                                                margin: 0;
+                                                color: var(--text-color-900);
+                                                font-size: 32px;
+                                                font-weight: 600;
+                                                line-height: 1;
+                                            }
+                                            .wprf-description {
+                                                margin: 0;
+                                                color: var(--text-color-600);
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                            }
+                                        }
+                                        .wprf-link-wrapper {
+                                            margin-left: auto;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: flex-end;
+                                            gap: 8px;
+                                            a {
+                                                display: inline-flex;
+                                                padding: 10px 16px 10px 10px;
+                                                justify-content: center;
+                                                align-items: center;
+                                                gap: 8px;
+                                                border-radius: 8px;
+                                                border: 1px solid var(--text-color-400);
+                                                background: var(--base-background);
+                                                box-shadow: 0px 1px 2px 0px
+                                                    rgba(16, 24, 40, 0.05);
+                                                color: var(--text-color-700);
+                                                font-size: 14px;
+                                                font-style: normal;
+                                                font-weight: 600;
+                                                line-height: 1.43;
+                                                text-decoration: none;
+                                                box-sizing: border-box;
+                                            }
+                                        }
+                                    }
+                                    .wprf-video-player {
+                                        width: 100%;
+                                        border-radius: 12px;
+                                        overflow: hidden;
+                                        iframe {
+                                            width: 100%;
+                                        }
+                                    }
+                                    .wprf-image-wrapper {
+                                        background: var(--base-background, #fff);
+                                        border: 1px solid var(--text-color-150, #f2f4f7);
+                                        border-radius: 16px;
+                                        padding: 24px;
+                                        img {
+                                            width: 100%;
+                                            height: auto;
+                                            display: block;
+                                        }
+                                    }
+                                    .betterdocs-quick-setup-fields {
+                                        margin: 0;
+                                        padding: 0;
+                                        background-color: transparent;
+                                        border: none;
+                                        .wprf-section-fields {
+                                            margin: 0;
+                                            padding: 0;
+                                            background-color: transparent;
+                                            border: none;
+                                        }
+                                        .wprf-control-wrapper {
+                                            padding: 24px 32px;
+                                            margin: 0;
+                                            background-color: var(--base-background);
+                                            display: flex;
+                                            align-items: center;
+                                            border-bottom: 1px solid var(--qs-field-border);
+                                            border-left: 1px solid var(--qs-field-border);
+                                            border-right: 1px solid var(--qs-field-border);
+                                            gap: 5%;
+                                            flex-wrap: nowrap;
+                                            box-sizing: border-box;
+                                            &:first-child {
+                                                border-top-left-radius: 16px;
+                                                border-top-right-radius: 16px;
+                                                border-top: 1px solid var(--qs-field-border);
+                                            }
+                                            &:last-child {
+                                                border-bottom-left-radius: 16px;
+                                                border-bottom-right-radius: 16px;
+                                            }
+                                            &:hover {
+                                                background: var(--text-color-50);
+                                            }
+                                            .wprf-badge-wrapper {
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 5%;
+                                                .wprf-control-label {
+                                                    .wprf-label-with-badge {
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 10px;
+                                                        .wprf-badge {
+                                                            display: inline-flex;
+                                                            align-items: center;
+                                                            padding: 4px 6px 4px
+                                                                4px;
+                                                            border-radius: 50px;
+                                                            background-color: #fffaeb;
+                                                            gap: 5px;
+                                                            cursor: pointer;
+                                                            .wprf-badge-icon {
+                                                                height: 16px;
+                                                                width: 16px;
+                                                                border-radius: 50px;
+                                                                font-size: 12px;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                justify-content: center;
+                                                                background: #fef0c7;
+                                                                color: #fdb022;
+                                                            }
+                                                            .wprf-badge-item {
+                                                                font-size: 14px;
+                                                                font-style: normal;
+                                                                font-weight: 500;
+                                                                line-height: 1.1;
+                                                                color: #fdb022;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .wprf-control-label {
+                                                width: 50%;
+                                                flex-basis: 50%;
+                                                gap: 6px;
+                                                display: flex;
+                                                flex-direction: column;
+                                                font-weight: initial;
+                                                label {
+                                                    color: var(--text-color-700);
+                                                    font-size: 14px;
+                                                    font-weight: 500;
+                                                    line-height: 1.43;
+                                                }
+                                                .wprf-label-subtitle {
+                                                    width: 100%;
+                                                    color: var(--text-color-600);
+                                                    font-size: 14px;
+                                                    font-weight: 400;
+                                                    line-height: 1.43;
+                                                    margin-top: 0;
+                                                    margin-bottom: 0;
+                                                }
+                                            }
+                                            .wprf-control-field {
+                                                box-sizing: border-box;
+                                                width: 45%;
+                                                flex-basis: 45%;
+                                            }
+                                            &.wprf-type-select {
+                                                .wprf-control-field {
+                                                    .wprf-select-wrapper {
+                                                        width: 100%;
+                                                        min-width: 180px;
+                                                        .wprf-select {
+                                                            .wprf-select__control {
+                                                                height: 44px;
+                                                                min-height: 44px;
+                                                                border-radius: 8px;
+                                                                border-color: var(
+                                                                    --text-color-400
+                                                                );
+                                                                background-color: transparent;
+                                                                .wprf-select__value-container {
+                                                                    padding: 2px
+                                                                        12px;
+                                                                    .wprf-select__single-value {
+                                                                        color: var(
+                                                                            --text-color-700
+                                                                        );
+                                                                        font-size: 16px;
+                                                                        font-weight: 400;
+                                                                        list-style: 1.5;
+                                                                    }
+                                                                    .wprf-select__input {
+                                                                        input {
+                                                                            box-shadow: none;
+                                                                        }
+                                                                        &:focus {
+                                                                            box-shadow: none;
+                                                                        }
+                                                                    }
+                                                                    .wprf-select__placeholder {
+                                                                        color: var(
+                                                                            --text-color-600
+                                                                        );
+                                                                        font-size: 16px;
+                                                                        font-weight: 400;
+                                                                        line-height: 1.5;
+                                                                        text-overflow: ellipsis;
+                                                                        width: 20ch;
+                                                                        overflow: hidden;
+                                                                        white-space: nowrap;
+                                                                    }
+                                                                }
+                                                                .wprf-select__indicators {
+                                                                    .wprf-select__indicator-separator {
+                                                                        display: none;
+                                                                    }
+                                                                    .wprf-select__indicator {
+                                                                        padding-right: 12px;
+                                                                        color: var(
+                                                                            --text-color-600
+                                                                        );
+                                                                    }
+                                                                }
+                                                                &--is-focused {
+                                                                    border-color: var(
+                                                                        --base-color-700
+                                                                    ) !important;
+                                                                    .wprf-select__indicators {
+                                                                        .wprf-select__indicator {
+                                                                            color: var(
+                                                                                --text-color-700
+                                                                            ) !important;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            .wprf-select__menu {
+                                                                background-color: var(
+                                                                    --base-background
+                                                                );
+                                                                .wprf-select__menu-list {
+                                                                    margin: 0;
+                                                                    padding: 20px;
+                                                                    display: inline-flex;
+                                                                    flex-direction: column;
+                                                                    gap: 4px;
+                                                                    width: 100%;
+                                                                    .wprf-select__option {
+                                                                        display: inline-flex;
+                                                                        align-items: center;
+                                                                        justify-content: flex-start;
+                                                                        gap: 8px;
+                                                                        padding: 10px
+                                                                            14px;
+                                                                        border-radius: 8px;
+                                                                        background: transparent;
+                                                                        color: var(
+                                                                            --text-color-800
+                                                                        );
+                                                                        font-size: 16px;
+                                                                        font-style: normal;
+                                                                        font-weight: 500;
+                                                                        line-height: 1.5;
+                                                                        cursor: pointer;
+                                                                        &:hover {
+                                                                            background-color: var(
+                                                                                --text-color-50
+                                                                            );
+                                                                            color: var(
+                                                                                --text-color-700
+                                                                            );
+                                                                        }
+                                                                        &.wprf-select__option--is-selected {
+                                                                            background-color: var(
+                                                                                --text-color-50
+                                                                            );
+                                                                            color: var(
+                                                                                --base-color-700
+                                                                            );
+                                                                            &:after {
+                                                                                margin-left: auto;
+                                                                                content: "\e90a";
+                                                                                font-family: "btd-icon";
+                                                                                font-size: 20px;
+                                                                                line-height: 1;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                .pro-deactivated {
+                                                    .wprf-control-field {
+                                                        .wprf-select-wrapper {
+                                                            .wprf-select {
+                                                                .wprf-select__control {
+                                                                    .wprf-select__indicators {
+                                                                        .wprf-select__indicator {
+                                                                            color: var(
+                                                                                --text-color-500
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                    .wprf-select__single-value {
+                                                                        color: var(
+                                                                            --text-color-500
+                                                                        );
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            &.wprf-type-toggle {
+                                                .wprf-control-field {
+                                                    display: flex;
+                                                    flex-direction: row-reverse;
+                                                    justify-content: space-between;
+                                                    flex-wrap: nowrap;
+                                                    gap: 10px;
+                                                    padding: 12px 16px;
+                                                    border: 1px solid var(--text-color-400);
+                                                    background-color: var(--base-background);
+                                                    border-radius: 8px;
+                                                    .wprf-description {
+                                                        color: var(--text-color-700);
+                                                        font-size: 14px;
+                                                        font-weight: 500;
+                                                        line-height: 1.43;
+                                                        margin: 0;
+                                                        padding: 0;
+                                                        white-space: nowrap;
+                                                        overflow: hidden;
+                                                        text-overflow: ellipsis;
+                                                    }
+                                                    .wprf-toggle-wrap {
+                                                        position: relative;
+                                                        display: inline-flex;
+                                                        width: 44px;
+                                                        height: 24px;
+                                                        input[type="checkbox"] {
+                                                            display: block !important;
+                                                            position: absolute;
+                                                            inset: 0;
+                                                            opacity: 0 !important;
+                                                        }
+                                                        .wprf-input-label {
+                                                            margin: 0;
+                                                            width: 44px;
+                                                            position: relative;
+                                                            min-height: 24px;
+                                                            height: 24px;
+                                                            max-height: 24px;
+                                                            cursor: pointer;
+                                                            display: inline-block;
+                                                            &:before {
+                                                                background: var(--text-color-100);
+                                                                width: 44px;
+                                                                height: 24px;
+                                                                border: none;
+                                                                left: 0;
+                                                                top: 0;
+                                                                border-radius: 20px;
+                                                                transition: all
+                                                                    0.4s ease;
+                                                            }
+                                                            &:after {
+                                                                left: 2px;
+                                                                top: 2px;
+                                                                width: 20px;
+                                                                height: 20px;
+                                                                border-radius: 50%;
+                                                                background: var(--base-background);
+                                                                transition:
+                                                                    left 0.3s
+                                                                        cubic-bezier(
+                                                                            0.175,
+                                                                            0.885,
+                                                                            0.32,
+                                                                            1.275
+                                                                        ),
+                                                                    padding 0.3s
+                                                                        ease,
+                                                                    margin 0.3s
+                                                                        ease;
+                                                            }
+                                                        }
+                                                        &.wprf-checked {
+                                                            .wprf-input-label {
+                                                                &:before {
+                                                                    background: #00b884;
+                                                                }
+                                                                &:after {
+                                                                    left: 22px;
+                                                                    right: auto;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-badge-wrapper.pro-deactivated {
+                                                    .wprf-control-field {
+                                                        .wprf-toggle-wrap {
+                                                            .wprf-input-label {
+                                                                &:after {
+                                                                    content: "\e907";
+                                                                    font-family: "btd-icon";
+                                                                    display: inline-flex;
+                                                                    align-items: center;
+                                                                    justify-content: center;
+                                                                    font-size: 14px;
+                                                                    color: var(--text-color-700);
+                                                                }
+                                                            }
+                                                            &.wprf-checked {
+                                                                .wprf-input-label {
+                                                                    &:before {
+                                                                        background: #344054;
+                                                                    }
+                                                                    &:after {
+                                                                        left: 22px;
+                                                                        right: auto;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        .wprf-description {
+                                                            color: var(--text-color-500);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            &.wprf-type-text,
+                                            &.wprf-type-permalink_structure,
+                                            &.wprf-type-number {
+                                                .wprf-control-field {
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    gap: 8px;
+                                                    > input {
+                                                        width: 100%;
+                                                        min-height: 44px;
+                                                        padding: 2px 14px;
+                                                        border-radius: 8px;
+                                                        border: 1px solid var(--text-color-400);
+                                                        background-color: var(--base-background);
+                                                        color: var(--text-color-900);
+                                                        font-size: 16px;
+                                                        font-style: normal;
+                                                        font-weight: 400;
+                                                        line-height: 1.5;
+                                                        &::placeholder {
+                                                            color: var(--text-color-600);
+                                                        }
+                                                    }
+                                                    .wprf-tags-wrapper {
+                                                        width: 100%;
+                                                        display: flex;
+                                                        justify-content: flex-end;
+                                                        gap: 8px;
+                                                        .button {
+                                                            min-height: 22px;
+                                                            padding: 2px 8px;
+                                                            font-size: 12px;
+                                                            line-height: 1;
+                                                            color: var(--text-color-700);
+                                                            background: var(--text-color-50);
+                                                            border: 1px solid var(--text-color-400);
+                                                            border-radius: 4px;
+                                                            display: inline-flex;
+                                                            align-items: center;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .betterdocs-quick-setup-start {
+                                        margin: 0;
+                                        background-color: var(--base-background);
+                                        border: 1px solid var(--text-color-150, #f2f4f7);
+                                        border-radius: 16px;
+                                        padding: 40px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 24px;
+                                        .wprf-section-fields {
+                                            margin: 0;
+                                            padding: 0;
+                                            .wprf-betterdocs-quick-setup-start-message-message
+                                                p {
+                                                margin: 0;
+                                                padding: 0;
+                                                display: flex;
+                                                align-items: flex-start;
+                                                gap: 8px;
+                                                color: var(--text-color-850);
+                                                text-align: center;
+                                                font-size: 16px;
+                                                font-style: normal;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                                a {
+                                                    color: var(--text-color-600);
+                                                    font-size: 14px;
+                                                    font-style: normal;
+                                                    font-weight: 400;
+                                                    line-height: 1.43;
+                                                    text-decoration-line: underline;
+                                                }
+                                            }
+                                            .wprf-betterdocs-quick-setup-start-collapse-collapse {
+                                                text-align: center;
+                                                .wprf-collapse-header {
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    text-align: center;
+                                                    gap: 1ch;
+                                                    .wprf-collapse-title {
+                                                        margin: 0;
+                                                        padding: 0;
+                                                        display: flex;
+                                                        align-items: flex-start;
+                                                        gap: 8px;
+                                                        color: var(--text-color-850);
+                                                        text-align: center;
+                                                        font-size: 16px;
+                                                        font-style: normal;
+                                                        font-weight: 400;
+                                                        line-height: 1.5;
+                                                    }
+                                                    .wprf-collapse-collapser {
+                                                        margin: 0;
+                                                        padding: 0;
+                                                        color: var(--text-color-600);
+                                                        font-size: 14px;
+                                                        font-style: normal;
+                                                        font-weight: 400;
+                                                        line-height: 1.43;
+                                                        text-decoration-line: underline;
+                                                        cursor: pointer;
+                                                        &:hover {
+                                                            color: #00b884;
+                                                        }
+                                                    }
+                                                    &.show {
+                                                        .wprf-collapse-collapser {
+                                                            color: #00b884;
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-collapse-body {
+                                                    display: grid;
+                                                    transition: grid-template-rows
+                                                        0.2s ease-in;
+                                                    &.hide {
+                                                        grid-template-rows: 0fr;
+                                                    }
+                                                    &.show {
+                                                        grid-template-rows: 1fr;
+                                                        .wprf-collapse-body-inner {
+                                                            padding-top: 20px;
+                                                        }
+                                                    }
+                                                    .wprf-collapse-body-inner {
+                                                        overflow: hidden;
+                                                        max-width: 800px;
+                                                        font-size: 14px;
+                                                        line-height: 1.5;
+                                                        transition: padding-top
+                                                            0.2s ease-in;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .wprf-stepped-button {
+                                            margin: 0;
+                                            padding: 0;
+                                            flex-direction: column-reverse;
+                                            gap: 12px;
+                                            .wprf-step-btn-skip {
+                                                margin-left: auto;
+                                                margin-right: auto;
+                                                min-height: auto;
+                                            }
+                                            .wprf-step-btn-next {
+                                                .wprf-type-button {
+                                                    .wprf-button {
+                                                        width: 200px;
+                                                        background-position: 165px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .betterdocs-quick-setup-migrate {
+                                        margin: 0;
+                                        background-color: var(--base-background);
+                                        border: 1px solid #f1f1f1;
+                                        border-radius: 16px;
+                                        padding: 40px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 24px;
+                                        .wprf-section-fields {
+                                            margin: 0;
+                                            padding: 0;
+                                            .wprf-name-migration_step {
+                                                display: flex;
+                                                align-items: center;
+                                                flex-direction: row-reverse;
+                                                flex-wrap: nowrap;
+                                                gap: 12px;
+                                                .wprf-control-field {
+                                                    flex-basis: auto;
+                                                    flex-grow: 0;
+                                                    input {
+                                                        margin: 0;
+                                                        height: 20px;
+                                                        width: 20px;
+                                                        border-radius: 6px;
+                                                        border: 1px solid
+                                                            #00b884;
+                                                        box-shadow: none;
+                                                        outline: none;
+                                                        &:checked::before {
+                                                            margin: 2px;
+                                                            height: 14px;
+                                                            width: 14px;
+                                                            content: url("../../../assets/static/admin/images/icons/check.svg");
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-control-label {
+                                                    flex-basis: auto;
+                                                    label {
+                                                        display: inline-flex;
+                                                        color: var(--text-color-900);
+                                                        font-size: 16px;
+                                                        font-style: normal;
+                                                        font-weight: 500;
+                                                        line-height: 1.5;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .wprf-name-enable_sample_data{
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: flex-end;
+                                        flex-direction: row-reverse;
+                                        padding: 10px 0px 0px 0px;
+
+                                        .wprf-control-field{
+                                            box-sizing: border-box !important;
+                                            width: inherit !important;
+                                            flex-basis: inherit !important;
+
+                                            input[type="checkbox"]{
+                                                color: #00B884;
+                                                margin: -0.25rem 0.75rem 0 0;
+                                            }
+                                        }
+
+                                        .wprf-control-label{
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 500;
+                                            line-height: 18px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .wprf-stepped-button {
+                            margin-top: 24px;
+                            width: 100%;
+                            box-sizing: border-box;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 16px;
+                            .wprf-btn {
+                                min-height: 40px;
+                                align-items: center;
+                            }
+                            .wprf-step-btn-skip {
+                                background-color: transparent;
+                                border: none;
+                                color: var(--text-color-600);
+                                font-size: 13.5px;
+                                font-style: normal;
+                                font-weight: 600;
+                                line-height: 1.43;
+                                text-decoration: none;
+                                padding: 8px 6px;
+                            }
+                            .wprf-step-btn-prev {
+                                // Pin "Back" to the far left; skip + Save&Continue group right.
+                                margin-right: auto;
+                                order: -1;
+                                .wprf-type-button {
+                                    margin: 0;
+                                    padding: 0;
+                                    .wprf-button {
+                                        width: auto;
+                                        min-width: 100px;
+                                        display: inline-flex;
+                                        padding: 10px 16px;
+                                        justify-content: center;
+                                        align-items: center;
+                                        gap: 8px;
+                                        flex-shrink: 0;
+                                        color: var(--text-color-700);
+                                        font-size: 14px;
+                                        font-style: normal;
+                                        font-weight: 600;
+                                        line-height: 1.43;
+                                        border-radius: 10px;
+                                        border: 1px solid var(--text-color-300);
+                                        background-color: var(--base-background);
+                                        box-shadow: none;
+                                        transition: background .15s ease, border-color .15s ease;
+                                        // Left arrow (inline icon, inherits text color).
+                                        &::before {
+                                            content: "";
+                                            flex-shrink: 0;
+                                            width: 15px;
+                                            height: 15px;
+                                            background-color: currentColor;
+                                            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2012H5M12%2019l-7-7%207-7'/%3E%3C/svg%3E") center / contain no-repeat;
+                                            mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2012H5M12%2019l-7-7%207-7'/%3E%3C/svg%3E") center / contain no-repeat;
+                                        }
+                                        &:hover {
+                                            background-color: var(--text-color-50);
+                                            border-color: var(--text-color-400);
+                                        }
+                                    }
+                                }
+                                &.disabled {
+                                    .wprf-type-button {
+                                        .wprf-button {
+                                            background-color: #cccccc;
+                                            color: #666666;
+                                            cursor: not-allowed;
+                                            opacity: 0.65;
+                                            pointer-events: none;
+                                        }
+                                    }
+                                }
+                            }
+
+                            .wprf-step-btn-next {
+                                .wprf-type-button {
+                                    margin: 0;
+                                    padding: 0;
+                                    .wprf-button {
+                                        width: auto;
+                                        min-width: 116px;
+                                        display: inline-flex;
+                                        padding: 11px 18px;
+                                        justify-content: center;
+                                        align-items: center;
+                                        gap: 8px;
+                                        flex-shrink: 0;
+                                        color: #fff;
+                                        font-size: 14px;
+                                        font-style: normal;
+                                        font-weight: 600;
+                                        line-height: 1.43;
+                                        border-radius: 10px;
+                                        border: 1px solid var(--base-color-700);
+                                        background-color: var(--base-color-700);
+                                        box-shadow: 0 1px 0 rgba(0, 0, 0, .04), inset 0 -1px 0 rgba(0, 0, 0, .06);
+                                        transition: background .15s ease;
+                                        // Right arrow (inline icon, inherits white text color).
+                                        &::after {
+                                            content: "";
+                                            flex-shrink: 0;
+                                            width: 16px;
+                                            height: 16px;
+                                            background-color: currentColor;
+                                            -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M5%2012h14M13%205l7%207-7%207'/%3E%3C/svg%3E") center / contain no-repeat;
+                                            mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23000'%20stroke-width='2.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M5%2012h14M13%205l7%207-7%207'/%3E%3C/svg%3E") center / contain no-repeat;
+                                        }
+                                        &:hover { background-color: var(--base-color-800); }
+                                    }
+                                }
+                            }
+                            .wprf-step-btn-publish {
+                                min-width: 116px;
+                                display: inline-flex;
+                                padding: 11px 18px;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 8px;
+                                flex-shrink: 0;
+                                color: #fff;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: 600;
+                                line-height: 1.43;
+                                border-radius: 10px;
+                                border: 1px solid var(--base-color-700);
+                                background-color: var(--base-color-700);
+                                box-shadow: 0 1px 0 rgba(0, 0, 0, .04), inset 0 -1px 0 rgba(0, 0, 0, .06);
+                                transition: background .15s ease;
+                                &:hover { background-color: var(--base-color-800); }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .Toastify__toast--success {
+                background: var(--base-color-700) !important;
+            }
+
+            .Toastify__toast--error {
+                background: #e74c3c;
+            }
+
+            .Toastify__toast--info {
+                background: #157efb;
+            }
+        }
+    }
+    .betterdocs-pro-alert-container {
+        background: rgba(#000, 0.5);
+        padding: 50px 10px;
+        .betterdocs-pro-alert-popup {
+            width: 100%;
+            max-width: 650px;
+            margin-right: 55px;
+            border-radius: 8px;
+            background: var(--base-background);
+            padding: 40px;
+            position: relative;
+            .betterdocs-pro-alert-close-button {
+                width: 40px;
+                height: 40px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: var(--base-background);
+                color: var(--text-color-700);
+                position: absolute;
+                top: 0;
+                right: -55px;
+                transition: all 0.2s ease-in-out;
+                box-shadow: none !important;
+                &:hover {
+                    background: var(--text-color-300);
+                    color: var(--text-color-900);
+                }
+            }
+            .betterdocs-pro-alert-html {
+                margin: 0;
+                padding: 0;
+                display: flex !important;
+                flex-direction: column;
+                align-items: flex-start;
+                .icon {
+                    height: 56px;
+                    width: 56px;
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 50%;
+                    font-size: 35px !important;
+                    background-color: var(--warning-100);
+                    color: var(--warning-400);
+                    &:not(:last-child) {
+                        margin-bottom: 8px;
+                    }
+                }
+                .title {
+                    color: var(--text-color-900);
+                    font-size: 24px;
+                    font-weight: 500;
+                    line-height: 1.5;
+                    margin: 0;
+                    &:not(:last-child) {
+                        margin-bottom: 16px;
+                    }
+                }
+                .description {
+                    color: var(--text-color-600);
+                    font-size: 16px;
+                    line-height: 1.6;
+                    text-align: left;
+                    &:not(:last-child) {
+                        margin-bottom: 24px;
+                    }
+                }
+                .features {
+                    display: flex;
+                    padding: 16px;
+                    flex-direction: column;
+                    gap: 16px;
+                    border-radius: 8px;
+                    background: var(--text-color-50);
+                    width: 100%;
+                    box-sizing: border-box;
+                    text-align: left;
+                    &:not(:last-child) {
+                        margin-bottom: 24px;
+                    }
+                    .feature-title {
+                        color: var(--text-color-900);
+                        font-size: 16px;
+                        line-height: 1.25;
+                        font-weight: 600;
+                        margin: 0;
+                    }
+                    .feature-list {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 16px;
+                        margin: 0;
+                        .list-item {
+                            margin: 0;
+                            padding: 0;
+                            color: var(--text-color-600);
+                            font-size: 16px;
+                            line-height: 1.25;
+                            font-weight: 400;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;
+                            &:before {
+                                content: "\e90a";
+                                font-family: "btd-icon";
+                                height: 24px;
+                                width: 24px;
+                                border-radius: 50%;
+                                flex-shrink: 0;
+                                background-color: var(--base-color-100);
+                                color: var(--base-color-700);
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 12px;
+                            }
+                        }
+                        .more {
+                            margin: 0;
+                            padding: 0;
+                            a {
+                                @include set-mode(
+                                    color,
+                                    var(--primary-700),
+                                    var(--base-color-700)
+                                );
+                                font-size: 16px;
+                                font-weight: 400;
+                                line-height: 1.25;
+                                text-decoration-line: underline;
+                            }
+                        }
+                    }
+                }
+                .footer {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    a {
+                        margin-left: auto;
+                        min-height: 40px;
+                        display: inline-flex;
+                        padding: 2px 24px;
+                        justify-content: center;
+                        align-items: center;
+                        flex-shrink: 0;
+                        border-radius: 8px;
+                        border: 1px solid var(--base-color-700);
+                        background: var(--base-color-700);
+                        @include set-mode(color, var(--base-background), #fff);
+                        font-size: 14px;
+                        font-weight: 600;
+                        line-height: 1.43;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ============================================================
+   Dark mode — mirrors the dashboard design system.
+   The mode switcher adds .betterdocs-dark-mode to <body>, which also
+   carries .betterdocs_page_betterdocs-setup. Custom properties defined
+   here inherit to every descendant, so the var()-based chrome + the
+   sample-docs UI (header, promo banner, modal, chips, generated docs)
+   all theme automatically — no per-selector overrides needed.
+   ============================================================ */
+.betterdocs_page_betterdocs-setup.betterdocs-dark-mode {
+    --page-background: #000000;
+    --base-background: #0a0a0a;
+    --base-color-50: #101211;
+    --base-color-65: #1f283d;
+    --base-color-75: #1f283d;
+    --base-color-100: #1f283d;
+    --base-color-700: #00b884;
+    --base-color-800: #00956b;
+    --base-color-900: #00c694;
+    --green: #00b884;
+    --green-50: #1f283d;
+    --green-100: #1f283d;
+    --qs-field-border: #232e46;
+    --text-color-25: #101828;
+    --text-color-50: #101113;
+    --text-color-100: #22242a;
+    --text-color-150: #232e46;
+    --text-color-200: #0a0a0b;
+    --text-color-300: #36405a;
+    --text-color-400: #222225;
+    --text-color-500: #d0d5dd;
+    --text-color-600: #b1b9b7;
+    --text-color-700: #fcfcfd;
+    --text-color-800: #fcfcfd;
+    --text-color-850: #fcfcfd;
+    --text-color-900: #fcfcfd;
+    --text-color-950: #fcfcfd;
+    --warning-50: #473502;
+    --warning-100: #5d470b;
+    --danger-50: #190207;
+}
+
+/* The header wordmark SVG uses an inline fill="#16342F" that CSS custom
+   properties can't reach; flip it to white in dark mode so the logo text stays
+   legible — mirrors the dashboard rule in admin.scss. */
+.betterdocs_page_betterdocs-setup.betterdocs-dark-mode {
+    .betterdocs-quick-setup-header-top .betterdocs-dashboard-logo svg path[fill="#16342F"] {
+        fill: #ffffff;
+    }
+}

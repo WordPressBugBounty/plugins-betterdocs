@@ -1,0 +1,36 @@
+// CHECKED:
+
+.betterdocs-single-category-wrapper {
+    color: #566e8b;
+    padding: 20px;
+    transition: all 0.25s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    box-sizing: border-box;
+    @include if(".betterdocs-category-box-wrapper",
+        ":not(.betterdocs-elementor)"
+
+    ) {
+        box-shadow: 0 10px 100px 0 rgba(40, 47, 98, 0.08);
+    }
+
+    &:hover {
+        text-decoration: none;
+        box-shadow: 0px 20px 50px 0px rgba(0, 9, 78, 0.1);
+    }
+
+    @include if(".betterdocs-category-box-inner-wrapper", ".ash-bg") {
+        background-color: $ash-bg;
+        box-shadow: 0px 20px 50px 0px rgba(0, 9, 78, 0.1);
+
+        &:hover {
+            background-color: $white;
+        }
+    }
+
+    @include if(".betterdocs-category-box-inner-wrapper", ".layout-1") {
+        text-align: center;
+    }
+}

@@ -1,0 +1,21 @@
+// CHECKED:
+
+.betterdocs-category-description {
+    color: #566e8b;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0;
+    @include for(
+        ".betterdocs-category-box-wrapper .betterdocs-category-box-inner-wrapper"
+    ) {
+        margin-bottom: 15px;
+    }
+    @include for(".betterdocs-category-grid-list-inner-wrapper.layout-6") {
+        color: #7b7b7b;
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 1.7;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+}

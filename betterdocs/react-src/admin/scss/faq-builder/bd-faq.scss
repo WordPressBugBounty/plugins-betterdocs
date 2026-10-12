@@ -1,0 +1,58 @@
+@import "../utils/common";
+@import "../utils/mixin";
+.betterdocs_page_betterdocs-faq {
+	background: #f5f6fb;
+	&.swal2-height-auto {
+		height: inherit !important;
+	}
+}
+.betterdocs-faq-wrapper {
+	font-family: "IBM Plex Sans", sans-serif;
+	display: flex;
+	flex-direction: column;
+	@import "./utils/button";
+	@import "./utils/form";
+	@import "./utils/select";
+	@import "./utils/editor";
+	@import "./utils/toggler";
+	@import "./utils/utils";
+	@import "./empty-dashboard";
+	@import "./faq-stats";
+	@import "./create-faq";
+	@import "./category-list";
+	@import "./faq-list";
+	@import "./empty-category";
+}
+
+// Toast notifications (FAQ + Glossaries enable/disable, create, etc.) — use
+// the BetterDocs brand colors instead of react-toastify's default green/red.
+.betterdocs-faq-builder-wrapper {
+	.Toastify__toast--success {
+		background: var(--base-color-700) !important;
+	}
+	.Toastify__toast--error {
+		background: var(--danger-600) !important;
+	}
+}
+
+@import "select-menu";
+@import "woo-faq";
+@import "skeleton";
+@import "utils/modal";
+@import "utils/write-with-ai-modal";
+
+// Stat-card / modal-header icon chip colour. TOP-LEVEL (not nested under
+// .betterdocs-faq-wrapper) so it reaches BOTH the dashboard stat cards and the
+// portaled modal-header icons. Tint comes from inline CSS vars: --bd-icon-tint
+// (hex, icon colour) + --bd-icon-tint-rgb ("r, g, b", chip background).
+.bd-faq-stat-card__icon {
+	color: var(--bd-icon-tint, #00b884);
+	background: rgba(var(--bd-icon-tint-rgb, 0, 184, 132), 0.12);
+}
+.betterdocs-admin.betterdocs-dark-mode .bd-faq-stat-card__icon {
+	// Keep the soft tinted-chip look from light mode — just a touch stronger so
+	// the tint reads on the dark surface; the icon stays in the brand tint
+	// colour (inherited) rather than a flat white on a loud chip.
+	background: rgba(var(--bd-icon-tint-rgb, 0, 184, 132), 0.2);
+}
+

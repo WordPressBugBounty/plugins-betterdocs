@@ -1,0 +1,366 @@
+// CHECKED:
+
+@import "../common/index";
+
+.betterdocs-faq-wrapper {
+    margin: 0 auto;
+    margin-top: 80px;
+    .betterdocs-faq-section-title {
+        text-align: center;
+        margin: 20px 0;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.2;
+        color: #15063f;
+    }
+    .betterdocs-faq-inner-wrapper {
+        margin: 0px auto;
+        width: 100%;
+        max-width: 1000px;
+
+        .betterdocs-faq-title {
+            .betterdocs-faq-title-tag {
+                font-weight: 500;
+                font-size: 25px;
+                line-height: 1.2;
+                color: #15063f;
+                padding: 20px 20px;
+                margin: 0;
+            }
+        }
+
+        .betterdocs-faq-list {
+            list-style: none;
+            margin-top: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+            margin-bottom: 2em;
+            padding: 0px;
+            text-indent: 0;
+
+            @at-root .layout-classic#{&} {
+                padding: 0px;
+                margin: 0px;
+            }
+
+            & > li {
+                margin: 0px;
+                padding: 0px;
+                text-indent: 0;
+                list-style: none;
+                background: none;
+
+                .betterdocs-faq-group {
+                    margin-bottom: 5px;
+                    overflow: hidden;
+
+                    @at-root .layout-classic#{&} {
+                        background: #fff;
+                        box-shadow: 0px 3px 15px rgb(0 0 0 / 15%),
+                            0 0 2px rgb(0 0 0 / 5%);
+                        margin: 0 0 20px;
+                        border-radius: 1px;
+                    }
+
+                    .betterdocs-faq-post {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        cursor: pointer;
+                        padding: 20px;
+                        margin-bottom: 5px;
+                        background-color: #f0f1f5;
+                        box-shadow: none!important;
+
+                        @at-root .layout-classic#{&} {
+                            justify-content: flex-start;
+                            padding: 20px 20px 20px 20px;
+                            margin: 0px;
+                            font-weight: bold;
+                            background-color: transparent;
+                        }
+
+                        .betterdocs-faq-post-icon-group {
+                            padding: 5px 10px 0px 0px;
+                            flex-shrink: 0;
+                        }
+
+                        .betterdocs-faq-post-name {
+                            font-size: 17px;
+                            line-height: 1.2;
+                            color: #2f3b48;
+                            font-weight: 500;
+							margin: 0;
+							padding: 0;
+                        }
+
+                        .betterdocs-faq-iconplus {
+                            margin-left: 16px;
+                            max-width: 30px;
+                            max-height: 20px;
+                            flex-shrink: 0;
+
+                            @at-root .layout-classic#{&} {
+                                height: 18px;
+                                width: 18px;
+                                margin-left: auto;
+                            }
+                        }
+
+
+                        .betterdocs-faq-iconminus {
+                            margin-left: 16px;
+                            max-width: 30px;
+                            max-height: 20px;
+                            flex-shrink: 0;
+                            display: none;
+
+                            @at-root .layout-classic#{&} {
+                                height: 18px;
+                                width: 18px;
+                                margin-left: auto;
+                            }
+                        }
+
+
+                    }
+
+                    &.active {
+                        .betterdocs-faq-post {
+                            .betterdocs-faq-post-name {
+                                color: #528ffe;
+                                @at-root .layout-classic#{&} {
+                                    color: inherit;
+                                }
+                            }
+
+                            @at-root .layout-classic#{&} {
+                                background-color: #f0f1f5;
+                            }
+                        }
+                    }
+
+                    .betterdocs-faq-main-content {
+                        display: none;
+                        padding: 20px;
+                        overflow: auto;
+                        color: #7b7b7b;
+                        background-color: #fbfcff;
+                        box-shadow: none !important;
+
+                        & > p:first-of-type {
+                            margin-top: 0px;
+                        }
+                        & > p:last-of-type {
+                            margin-bottom: 0px;
+                        }
+
+                        @at-root .layout-classic#{&} {
+                            background-color: #fff;
+                        }
+                    }
+                }
+                .betterdocs-faq-group.before .betterdocs-faq-post {
+                    justify-content: start!important;
+                    gap: 10px;
+
+                    svg{
+                        margin-left: 0!important;
+                    }
+                }
+
+
+
+            }
+        }
+    }
+    &.betterdocs-faq-layout-3 {
+        .betterdocs-faq-section-title {
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.4em;
+            text-align: left;
+            padding-bottom: 12px;
+            margin-bottom: 56px;
+            border-bottom: 1px solid #EAECF0;
+        }
+        .betterdocs-faq-inner-wrapper {
+            .betterdocs-faq-list {
+                & > li {
+                    .betterdocs-faq-group {
+                        border: 1px solid #DFE7F5;
+                        padding: 24px 14px 24px 24px;
+                        border-radius: 4px;
+                        margin-bottom: 16px;
+                        .betterdocs-faq-post {
+                            background-color: transparent;
+                            padding: 0;
+                            margin: 0;
+                            .betterdocs-faq-post-name {
+                                font-size: 18px;
+                                font-weight: 500;
+                                line-height: 1.2em;
+                                text-align: left;
+                                color: #172B4D;
+								margin: 0;
+								padding: 0;
+                            }
+                        }
+                        .betterdocs-faq-main-content {
+                            background-color: transparent;
+                            padding: 0;
+                            margin-top: 18px;
+                            color: #3A4B68;
+                        }
+                        &.active {
+                            .betterdocs-faq-post {
+                                .betterdocs-faq-post-name {
+                                    color: #172B4D;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.betterdocs-faq-layout-4 {
+        .betterdocs-faq-section-title {
+            margin-bottom: 50px;
+        }
+        .betterdocs-faq-inner-wrapper {
+            max-width: 1320px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 80px;
+			@media (max-width: 768px) {
+				display: block;
+				width: 100%;
+				gap: 0;
+			}
+            .betterdocs-faq-tab-wrapper {
+				@media only screen and (max-width: 768px) {
+					display: none;
+				}
+                .betterdocs-faq-tab {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 16px;
+                    background: transparent;
+                    border-radius: 8px;
+                    transition: all .35s ease-in-out;
+                    cursor: pointer;
+
+                    &.active {
+                        background: #E8FFF4;
+                            .faq-tab-title {
+                                color: #344054;
+                            }
+                    }
+                    .faq-tab-icon {
+                        display: inline-flex;
+                    }
+                    .faq-tab-title {
+                        font-size: 18px;
+                        line-height: 22px;
+                        font-weight: 500;
+                        color: #667085;
+                    }
+                }
+            }
+            .betterdocs-faq-list-wrapper {
+				.betterdocs-faq-tab {
+					display: none;
+					@media only screen and (max-width: 768px) {
+						display: block;
+						padding: 16px;
+						display: flex;
+						align-items: center;
+						&.active {
+							background-color: #f6fef9;
+						}
+						.faq-group-image {
+							margin-right: 16px;
+						}
+						.faq-tab-title {
+							font-size: 18px;
+							font-weight: 500;
+							line-height: 22px;
+						}
+						.betterdocs-faq-iconminus {
+							display: none;
+						}
+						.betterdocs-faq-iconminus,
+						.betterdocs-faq-iconplus {
+							margin-left: auto;
+						}
+					}
+				}
+                .betterdocs-faq-list-content {
+					@media only screen and (max-width: 768px) {
+						padding: 0 16px 5px;
+						// Only the category tab (.betterdocs-faq-tab) should get the
+						// active highlight on mobile — tinting the list content here
+						// lit up every FAQ under the active category (issue #55).
+					}
+                    .betterdocs-faq-list {
+                        li {
+                            .betterdocs-faq-group {
+                                padding: 24px;
+                                border: 1px solid #DFE7F5;
+                                border-radius: 8px;
+                                background-color: transparent;
+                                margin-bottom: 16px;
+                                .betterdocs-faq-post {
+                                    padding: 0;
+                                    margin: 0;
+                                    background: transparent;
+                                    .betterdocs-faq-post-name {
+                                        font-size: 18px;
+                                        font-weight: 500;
+                                        line-height: 22px;
+                                        color: #172B4D;
+										margin: 0;
+										padding: 0;
+                                    }
+                                }
+                                .betterdocs-faq-main-content {
+                                    font-size: 16px;
+                                    line-height: 26px;
+                                    padding: 0;
+                                    overflow: auto;
+                                    color: #3A4B68;
+                                    background-color: transparent;
+                                    padding-top: 18px;
+                                }
+                                &.active {
+                                    background: #F6FEF9;
+                                    .betterdocs-faq-post {
+                                        // margin-bottom: 18px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.betterdocs-faq-wrapper.icon-before .betterdocs-faq-post {
+    justify-content: start!important;
+    gap: 10px;
+}
+
+// Single WooCommerce product pages: the FAQ sits inside the product tab/summary,
+// so drop the default 80px top margin and the 1000px content cap and let it span
+// the available width.
+.betterdocs-faq-wrapper.betterdocs-woo-product-faq {
+    margin-top: 0;
+
+    .betterdocs-faq-inner-wrapper {
+        max-width: none;
+    }
+}

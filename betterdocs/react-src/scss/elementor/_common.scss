@@ -1,0 +1,285 @@
+// Column CSS
+@import "../common/index";
+
+@include responsive() {
+    .elementor-element.elementor-grid-1,
+    .elementor-element.elementor-grid-2,
+    .elementor-element.elementor-grid-3,
+    .elementor-element.elementor-grid-4,
+    .elementor-element.elementor-grid-5,
+    .elementor-element.elementor-grid-6 {
+        position: relative;
+    }
+}
+
+@include responsive("tablet") {
+    .elementor-element.elementor-grid-tablet-1,
+    .elementor-element.elementor-grid-tablet-2,
+    .elementor-element.elementor-grid-tablet-3,
+    .elementor-element.elementor-grid-tablet-4,
+    .elementor-element.elementor-grid-tablet-5,
+    .elementor-element.elementor-grid-tablet-6 {
+        position: relative;
+    }
+}
+
+@include responsive("mobile") {
+    .elementor-element.elementor-grid-mobile-1,
+    .elementor-element.elementor-grid-mobile-2,
+    .elementor-element.elementor-grid-mobile-3,
+    .elementor-element.elementor-grid-mobile-4,
+    .elementor-element.elementor-grid-mobile-5,
+    .elementor-element.elementor-grid-mobile-6 {
+        position: relative;
+    }
+}
+.betterdocs-category-box-wrapper.betterdocs-elementor:not(.el-layout-3,.betterdocs-category-grid-three-wrapper)
+    .betterdocs-category-box-inner-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    .betterdocs-single-category-wrapper {
+        background: #fff;
+        @include responsive-elementor() {
+            @include for(".elementor-element.elementor-grid-1") {
+                flex: 1 1 100%;
+            }
+
+            @include for(".elementor-element.elementor-grid-2") {
+                flex: 1 1 calc(50% - 15px);
+
+                &:nth-of-type(2n + 1) {
+                    clear: left;
+                }
+            }
+
+            @include for(".elementor-element.elementor-grid-3") {
+                flex: 1 1 calc(33.3333% - 15px);
+
+                &:nth-of-type(3n + 1) {
+                    clear: left;
+                }
+            }
+
+            @include for(".elementor-element.elementor-grid-4") {
+                flex: 1 1 calc(25% - 15px);
+                &:nth-of-type(4n + 1) {
+                    clear: left;
+                }
+            }
+        } // desktop css end
+        @include responsive-elementor("tablet") {
+            @include for(".elementor-element.elementor-grid-tablet-1") {
+                flex: 1 1 100%;
+            }
+
+            @include for(".elementor-element.elementor-grid-tablet-2") {
+                flex: 1 1 calc(50% - 15px);
+
+                &:nth-of-type(2n + 1) {
+                    clear: left;
+                }
+            }
+
+            @include for(".elementor-element.elementor-grid-tablet-3") {
+                flex: 1 1 calc(33.3333% - 15px);
+
+                &:nth-of-type(3n + 1) {
+                    clear: left;
+                }
+            }
+
+            @include for(".elementor-element.elementor-grid-tablet-4") {
+                flex: 1 1 calc(33.3333% - 15px);
+
+                &:nth-of-type(3n + 1) {
+                    clear: left;
+                }
+            }
+        } // tablet css end
+        @include responsive-elementor("phone") {
+            @include for(".elementor-element.elementor-grid-mobile-1") {
+                flex: 1 1 100%;
+            }
+
+            @include for(".elementor-element.elementor-grid-mobile-2") {
+                flex: 1 1 100%;
+            }
+
+            @include for(".elementor-element.elementor-grid-mobile-3") {
+                flex: 1 1 100%;
+            }
+
+            @include for(".elementor-element.elementor-grid-mobile-4") {
+                flex: 1 1 100%;
+            }
+        } // mobile css end
+    }
+}
+
+.betterdocs-single-category-wrapper:not(.category-grid.layout-3) {
+    @include responsive() {
+        @include editor(".elementor-element.elementor-grid-1") {
+            float: left;
+            width: 100%;
+        }
+
+        @include editor(".elementor-element.elementor-grid-2") {
+            float: left;
+            width: 50%;
+
+            &:nth-of-type(2n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-3") {
+            width: 33.3333%;
+            float: left;
+
+            &:nth-of-type(3n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-4") {
+            float: left;
+            width: 25%;
+
+            &:nth-of-type(4n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-5") {
+            float: left;
+            width: 20%;
+
+            &:nth-of-type(5n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-6") {
+            float: left;
+            width: 16%;
+
+            &:nth-of-type(6n + 1) {
+                clear: left;
+            }
+        }
+    } // desktop css end
+
+    @include responsive("tablet") {
+        @include editor(".elementor-element.elementor-grid-tablet-1") {
+            float: left;
+            width: 100%;
+        }
+
+        @include editor(".elementor-element.elementor-grid-tablet-2") {
+            float: left;
+            width: 50%;
+
+            &:nth-of-type(2n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-tablet-3") {
+            width: 33.3333%;
+            width: 100%;
+
+            &:nth-of-type(3n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-tablet-4") {
+            float: left;
+            width: 25%;
+
+            &:nth-of-type(4n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-tablet-5") {
+            float: left;
+            width: 20%;
+
+            &:nth-of-type(5n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-tablet-6") {
+            float: left;
+            width: 16%;
+
+            &:nth-of-type(6n + 1) {
+                clear: left;
+            }
+        }
+    } // tablet css end
+
+    @include responsive("mobile") {
+        @include editor(".elementor-element.elementor-grid-mobile-1") {
+            float: left;
+            width: 100%;
+        }
+
+        @include editor(".elementor-element.elementor-grid-mobile-2") {
+            float: left;
+            width: 50%;
+
+            &:nth-of-type(2n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-mobile-3") {
+            width: 33.3333%;
+            width: 100%;
+
+            &:nth-of-type(3n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-mobile-4") {
+            float: left;
+            width: 25%;
+
+            &:nth-of-type(4n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-mobile-5") {
+            float: left;
+            width: 20%;
+
+            &:nth-of-type(5n + 1) {
+                clear: left;
+            }
+        }
+
+        @include editor(".elementor-element.elementor-grid-mobile-6") {
+            float: left;
+            width: 16%;
+
+            &:nth-of-type(6n + 1) {
+                clear: left;
+            }
+        }
+    } // mobile css end
+}
+.betterdocs-body {
+    @include for(
+        ".betterdocs-elementor-single-sidebar.betterdocs-sidebar-layout-2"
+    ) {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}

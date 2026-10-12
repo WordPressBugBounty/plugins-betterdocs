@@ -1,0 +1,24 @@
+// Wrapper that sits below the row in the table body
+.bd-dc-quick-edit-wrap {
+    background: var(--page-background, #f5f6fb);
+    border-bottom: 1px solid var(--text-color-200);
+    padding: 14px 16px 14px 48px; // indent to align with name column
+}
+
+.bd-dc-quick-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bd-dc-quick-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.bd-dc-quick-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

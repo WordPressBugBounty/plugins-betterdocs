@@ -1,0 +1,260 @@
+// CHECKED:
+
+@import "../common/index";
+.betterdocs-full-sidebar-right {
+    .betterdocs-toc {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+}
+.betterdocs-toc {
+    display: inline-block;
+    background-color: #fff;
+    padding: 20px 25px;
+    border-radius: 5px;
+
+    @include responsive('phone') {
+        position: relative;
+        width: 100%;
+        // Include the 25px side padding in that 100%, or the box is 50px
+        // wider than its column and the page scrolls sideways on phones.
+        box-sizing: border-box;
+
+        &.collapsible-sm {
+            .angle-icon {
+                color: #3f5876;
+                display: none;
+                width: 18px;
+                float: right;
+                &.angle-down{
+                    display: block;
+                }
+            }
+
+            .toc-list{
+                display: none;
+            }
+
+            .toc-title {
+                pointer-events: auto;
+            }
+        }
+    }
+
+    @include for(".betterdocs-single-layout-5") {
+        background: transparent !important;
+        padding: 0 !important;
+        @include responsive-from("tablet") {
+            padding-left: 20px !important;
+        }
+    }
+
+    @at-root .betterdocs-entry-content #{&} {
+        min-width: 250px;
+    }
+
+    @at-root {
+
+        .betterdocs-single-layout4 .betterdocs-entry-content #{&},
+        .betterdocs-single-layout5 .betterdocs-entry-content #{&} {
+            display: none;
+        }
+    }
+
+    .toc-title {
+        pointer-events: none;
+        color: #3f5876;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0;
+        display: block;
+
+        svg {
+            display: none;
+        }
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0 0 0 10px;
+    }
+
+    .toc-list {
+        padding-left: 0;
+        list-style: disc;
+
+        @include for(".betterdocs-single-layout-4") {
+            border-left: 1px solid #d2d2d2;
+            padding-left: 16px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        @include for(".betterdocs-single-layout-5") {
+            border-left: 1px solid #d2d2d2;
+            padding-left: 16px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        @include for(".betterdocs-single-layout-2") {
+            position: relative;
+        }
+
+        li {
+            display: table;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 0;
+            margin-right: 0;
+
+            a {
+                color: #566e8b;
+                font-size: 14px;
+                line-height: 1.6;
+                font-weight: normal;
+                display: inline-block;
+                text-decoration: none;
+
+                &:hover {
+                    color: #528fff;
+                }
+
+                &:focus {
+                    outline: none;
+                }
+
+                @include for(".betterdocs-single-layout-4") {
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        width: 3px;
+                        height: 1.6em;
+                        left: -1px;
+                    }
+                }
+
+                @include for(".betterdocs-single-layout-5") {
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        width: 2px;
+                        height: 1.6em;
+                        left: -1px;
+                    }
+                }
+
+                &.active {
+                    color: #528fff;
+
+                    @include for(".betterdocs-single-layout-4") {
+                        &:after {
+                            background: #528fff;
+                        }
+                    }
+
+                    @include for(".betterdocs-single-layout-5") {
+                        &:after {
+                            background: #528fff;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.betterdocs-hierarchial-toc {
+
+            &,
+            ul {
+                counter-reset: item;
+            }
+        }
+    }
+
+    &.toc-list-number {
+        ul {
+            counter-reset: item;
+            list-style-type: disc;
+
+            li {
+                a {
+                    text-decoration: none;
+
+                    &:before {
+                        content: counters(item, ".") ". ";
+                        counter-increment: item;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.sticky-toc-container {
+    display: none;
+    position: fixed;
+    width: 320px;
+    left: auto;
+    right: auto;
+    top: 10vh;
+    z-index: 2;
+
+    .betterdocs-toc {
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &.toc-sticky {
+        display: block;
+    }
+
+    .close-toc {
+        position: absolute;
+        width: 16px;
+        display: block;
+        top: 8px;
+        right: 8px;
+        line-height: 1;
+    }
+}
+
+.betterdocs-hierarchial-toc {
+    @at-root {
+
+        .betterdocs-single-layout4 .betterdocs-full-sidebar-right #{&},
+        .betterdocs-single-layout5 .betterdocs-full-sidebar-right #{&} {
+            border-left: 1px solid #d2d2d2;
+            padding-left: 16px;
+            // padding-right: 5px;
+            position: relative;
+            margin-top: 15px;
+
+            a {
+                text-decoration: none;
+
+                &.active {
+                    &:before {
+                        content: counters(item, ".") ". ";
+                        counter-increment: item;
+                    }
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        width: 2px;
+                        height: 1.6em;
+                        left: -1px;
+                    }
+                }
+            }
+        }
+    }
+}

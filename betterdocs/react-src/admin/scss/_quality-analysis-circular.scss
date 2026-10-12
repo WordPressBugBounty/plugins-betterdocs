@@ -1,0 +1,584 @@
+// Article Quality Analysis - Circular Progress Design
+// Matching ai-challenge branch design
+
+$size: 100px;
+$spinnerWidth: 0.8;
+$color: #0fa;
+$maskColor: #ffffff;
+$animTime: 2.25s;
+$easing: ease;  
+$timing: $easing;
+
+.betterdocs-quality-analysis-content {
+
+    .quality-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        text-align: center;
+
+        .quality-loading-spinner {
+            position: relative;
+            width: $size;
+            height: $size;
+            margin-bottom: 1.5rem;
+
+            .quality-spinner {
+                width: $size;
+                height: $size;
+                position: relative;
+                border-radius: 100%;
+                overflow: hidden;
+
+                &::before,
+                &::after {
+                    content: "";
+                    z-index: 100;
+                    display: block;
+                    transform-origin: 50% 50%;
+                    -webkit-transform-origin: 100% 50%;
+                    width: $size / 2;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background: $maskColor;
+                    height: $size;
+                }
+                &::before {
+                    animation: spin $animTime $easing infinite;
+                    -webkit-animation: spin $animTime $easing infinite;
+                    animation-delay: $animTime / 4;  
+                    -webkit-animation-delay: $animTime / 4;
+                    transition-timing-function: $easing;
+                    -webkit-transition-timing-function: $easing;
+                }
+                &::after {
+                    animation: offsetSpin $animTime $easing infinite;
+                    -webkit-animation: offsetSpin $animTime $easing infinite;
+                    transition-timing-function: $easing;
+                    -webkit-transition-timing-function: $easing;
+                }
+
+                .quality-spinner-mask {
+                    width: $size * $spinnerWidth;
+                    height: $size * $spinnerWidth;
+                    background: $maskColor;
+                    border-radius: 100%;
+                    position: absolute;
+                    top: $size * (0.5 - $spinnerWidth/2);
+                    left: $size * (0.5 - $spinnerWidth/2);
+                    z-index: 200;
+                }
+
+                .quality-spinner-color {
+                    width: $size;
+                    height: $size;
+                    animation: spin $animTime $timing infinite;
+                    -webkit-animation: spin $animTime $timing infinite;
+                    transition-timing-function: $easing;
+                    -webkit-transition-timing-function: $easing;
+                    border-radius: 100%;
+                    background: linear-gradient($color 1%, transparent);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+            }
+        }
+
+        p {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #374151;
+            text-align: center;
+            margin: 0;
+        }
+    }
+
+    .quality-results {
+        .quality-results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+
+            h4 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 600;
+                color: #1d2327;
+            }
+
+            .betterdocs-regenerate-quality {
+                display: inline-flex;
+                align-items: center;
+				justify-content: center;
+                background: #EAECF0;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+				padding: 5px;
+				border: none;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+        }
+
+        .quality-results-body {
+            display: flex;
+            flex-direction: column;
+			background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+			margin-bottom: 32px;
+            @media (min-width: 1024px) {
+                flex-direction: row;
+            }
+        }
+
+        // Left Column: Circular Progress Score
+        .score-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-shrink: 0;
+            width: 100%;
+			padding: 16px;
+			border-right: 1px solid rgba(242, 244, 247, 1);
+            background-image: url('../../../assets/static/admin/images/overallscore.png');
+            background-position: bottom left;
+            background-repeat: no-repeat;
+
+            @media (min-width: 1024px) {
+                width: 300px;
+            }
+
+            .score-column-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #667085;
+                margin: 0 0 16px 0;
+            }
+
+            .progress-ring-wrapper {
+                position: relative;
+                width: 120px;
+                height: 120px;
+                margin-bottom: 16px;
+
+                .progress-ring {
+                    width: 100%;
+                    height: 100%;
+
+                    .progress-ring-bg {
+                        stroke: #e5e7eb;
+                    }
+
+                    .progress-ring-circle {
+                        stroke: #d1d5db;
+                        transition: stroke-dashoffset 0.5s ease-in-out;
+
+                        &.green {
+                            stroke: #00b884;
+                        }
+
+                        &.yellow {
+                            stroke: #eab308;
+                        }
+
+                        &.orange {
+                            stroke: #f97316;
+                        }
+
+                        &.red {
+                            stroke: #ef4444;
+                        }
+                    }
+                }
+
+                .score-text-wrapper {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    .score-value {
+                        font-size: 36px;
+                        font-weight: 700;
+                        color: #1f2937;
+                        line-height: 48px;
+
+                        &.green {
+                            color: #00b884;
+                        }
+
+                        &.yellow {
+                            color: #eab308;
+                        }
+
+                        &.orange {
+                            color: #f97316;
+                        }
+
+                        &.red {
+                            color: #ef4444;
+                        }
+                    }
+
+                    .score-label {
+                        font-size: 14px;
+                        color: #6b7280;
+                    }
+                }
+            }
+
+            .score-feedback {
+                padding: 6px 12px;
+                border-radius: 9999px;
+                font-size: 14px;
+                font-weight: 500;
+
+                &.green {
+                    background-color: #f0fdf9;
+                    color: #007554;
+                }
+
+                &.yellow {
+                    background-color: #fef9c3;
+                    color: #a16207;
+                }
+
+                &.orange {
+                    background-color: #ffedd5;
+                    color: #c2410c;
+                }
+
+                &.red {
+                    background-color: #fee2e2;
+                    color: #b91c1c;
+                }
+            }
+
+            .score-description {
+                margin-top: 8px;
+                font-size: 13px;
+                color: #6b7280;
+                line-height: 1.5;
+            }
+        }
+
+        // Right Column: Details
+        .details-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+			padding: 18px 24px;
+
+            .section {
+                .section-title {
+                    font-size: 14px;
+					font-weight: 600;
+					color: #667085;
+                    margin: 0 0 24px 0;
+					text-align: center;
+                }
+
+                .score-breakdown-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+
+                    .score-item {
+						.score-name-group {
+							display: flex;
+                        	align-items: center;
+							justify-content: space-between;
+							margin-bottom: 6px;
+							font-size: 14px;
+							line-height: 1.5;
+							font-weight: 400;
+							.score-name {
+								color: #1D2939;
+							}
+							.score-percentage {
+                                text-align: right;
+								color: #667085;
+                            }
+						}
+                        .score-bar-group {
+                            .score-bar-wrapper {
+                                background-color: #e5e7eb;
+                                border-radius: 9999px;
+                                height: 10px;
+
+                                .score-bar-fill {
+                                    height: 10px;
+                                    border-radius: 9999px;
+                                    transition: width 0.5s ease-in-out;
+
+                                    &.green {
+                                        background: #00b884;
+                                    }
+
+                                    &.yellow {
+                                        background: #eab308;
+                                    }
+
+                                    &.orange {
+                                        background: #f97316;
+                                    }
+
+                                    &.red {
+                                        background: #ef4444;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+	.improvement-section {
+		h3 {
+			font-weight: 600;
+			font-size: 16px;
+			color: #1D2939;
+			margin: 0 0 16px 0;
+		}
+		.improvements-list {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+
+			.improvement-item {
+				display: flex;
+				align-items: flex-start;
+				gap: 8px;
+
+				.improvement-icon {
+					flex-shrink: 0;
+					width: 20px;
+					height: 20px;
+
+					svg {
+						display: block;
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				.improvement-text {
+					flex: 1;
+					font-size: 14px;
+					line-height: 1.5;
+					color: #667085;
+				}
+			}
+		}
+
+	}
+
+    .quality-error {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        margin: 0 20px;
+        background-color: rgba(255, 247, 237, 0.5);
+        border: 1px solid #ffedd5;
+        border-radius: 12px;
+        
+        // Content validation error (red background)
+        &.error-content-validation {
+            background-color: rgba(254, 226, 226, 0.5);
+            border: 1px solid #fecaca;
+            
+            .error-content .error-text .error-message {
+                color: #991b1b;
+            }
+        }
+        
+        // Configuration error (orange background - default)
+        &.error-config {
+            background-color: rgba(255, 247, 237, 0.5);
+            border: 1px solid #ffedd5;
+        }
+        
+        .error-content {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 20px;
+
+            .error-icon {
+                padding: 0.75rem;
+                background-color: white;
+                border-radius: 50%;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                border: 1px solid #ffedd5;
+                color: #f97316;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+
+                svg {
+                    display: block;
+                }
+                
+                // When icon is hidden, adjust layout
+                &:not([style*="display: none"]) ~ .error-text {
+                    flex: 1;
+                }
+            }
+            
+            .error-text {
+                flex: 1;
+                
+                strong {
+                    color: #111827;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    margin-bottom: 0.25rem;
+                    margin-top: 0;
+                    display: block;
+                }
+
+                .error-message {
+                    color: #6b7280;
+                    font-size: 0.875rem;
+                    line-height: 1.625;
+                    margin-top: 0;
+                }
+
+                .error-action-button {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    padding: 0.625rem 1.25rem;
+                    border-radius: 0.5rem;
+                    background: #00b884;
+                    color: #FFFFFF;
+                    font-weight: 500;
+                    font-size: 0.875rem;
+                    border: none;
+                    cursor: pointer;
+                    box-shadow: 0 1px 2px 0 rgba(16, 185, 129, 0.1);
+                    transition: opacity 0.2s;
+                    text-decoration: none;
+                    margin-top: 1rem;
+                }
+            }
+        }
+    }
+
+    .quality-empty {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        padding: 24px;
+        h4 {
+            margin: 0 0 16px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1D2939;
+        }
+
+        p {
+            margin: 0 0 16px;
+            font-size: 16px;
+            color: #475467;
+            line-height: 1.5;
+        }
+
+        .betterdocs-analyze-btn {
+            display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			padding: 8px 24px;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1.5;
+			width: auto;
+			max-width: max-content;
+			white-space: nowrap;
+			border-radius: 12px;
+			background: #fff; /* Add background color for the button */
+			position: relative;
+			border: none;
+			&::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: 12px;
+				padding: 2px; /* This creates the border width */
+				background: conic-gradient(from 90deg at 50.51% 50.65%,
+					#54B8FF -29.78deg,
+					#3751FF 26.9deg,
+					#C891FC 112.04deg,
+					#FFCE9D 216.82deg,
+					#00DE9F 248.78deg,
+					#54B8FF 330.22deg,
+					#3751FF 386.9deg);
+				-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+				-webkit-mask-composite: xor;
+				mask-composite: exclude;
+				pointer-events: none;
+			}
+        }
+    }
+}
+
+// Keyframes for spinner animation
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes offsetSpin {
+    from {
+        transform: rotate(180deg);
+    }
+    to {
+        transform: rotate(540deg);
+    }
+}
+
+@-webkit-keyframes offsetSpin {
+    from {
+        -webkit-transform: rotate(180deg);
+    }
+    to {
+        -webkit-transform: rotate(540deg);
+    }
+}

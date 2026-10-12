@@ -1,0 +1,61 @@
+// CHECKED:
+
+@import "../common/index";
+@import '../partials/categories-folder.scss';
+
+.betterdocs-content-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1400px;
+    display: block;
+}
+
+
+.betterdocs-content-area .betterdocs-content-inner-area {
+    .betterdocs-content-wrapper.betterdocs-categories-folder {
+        .betterdocs-shortcode {
+            flex: 1;
+        }
+    }
+}
+
+@import '../template-parts/archive-header.scss';
+@import '../template-parts/archive-doc-list.scss';
+
+
+
+
+// popular article list
+.betterdocs-article-list-wrapper {
+    flex-basis: 70%;
+    margin-right: 30px;
+}
+
+.betterdocs-popular-article-list-wrapper {
+    flex-basis: 30%;
+    margin-left: 30px;
+}
+
+.betterdocs-archive-layout-8 {
+	.betterdocs-search-modal-layout-1 {
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.doc-category-layout-8 {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		.betterdocs-content-area {
+			.betterdocs-breadcrumb-search {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				@media only screen and (max-width: 768px) {
+					flex-direction: column;
+					align-items: flex-start;
+				}
+			}
+		}
+	}
+}

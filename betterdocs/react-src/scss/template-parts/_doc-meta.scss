@@ -1,0 +1,86 @@
+// The single-doc meta row, and the screen-reader utility both of its occupants
+// need. Shared by ai-actions.scss and listen.scss.
+//
+// Partialled rather than left in ai-actions.scss because each of those is a
+// separately registered handle that the shortcode, block and Elementor widget
+// drop onto arbitrary pages — so either one has to be able to lay the row out on
+// its own. The rules are byte-identical in both bundles, which costs ~500 bytes
+// when both load (the usual case on a single doc) and is what keeps either one
+// from depending on the other being enqueued.
+//
+// Imports NOTHING from common/, for the reason ai-actions.scss spells out:
+// `common/_index.scss` pulls in ~1,200 lines of global layout rules, which is why
+// article-summary.css builds to 46 KB and author.css to 1 KB.
+//
+// Logical properties throughout: the repo ships no RTL build step, so physical
+// left/right would simply be wrong on RTL sites with nothing to flip them.
+
+// Screen-reader-only utility. `.screen-reader-text` is NOT defined by this
+// plugin — it comes from core's wp-block-library stylesheet or the theme, both of
+// which a site can legitimately dequeue. Relying on it would render hidden hint
+// text as visible copy next to the doc title.
+.betterdocs-sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+// Reading time and Listen on the leading edge, AI Actions on the trailing edge.
+// Rendered by views/templates/parts/doc-meta.php, which omits the wrapper
+// entirely when neither side has anything, so there is no empty-row case to style
+// around.
+.betterdocs-doc-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-bottom: 24px;
+
+    @media only screen and (max-width: 1280px) {
+        margin-bottom: 18px;
+    }
+
+    &-start,
+    &-end {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    // Holds the trailing edge right even when the leading edge is absent.
+    &-end {
+        margin-inline-start: auto;
+    }
+
+    // Standing alone, each of these owns the gap to the content below it. Inside
+    // the row the row owns it, so their block margins have to go — a leftover
+    // bottom margin inflates the flex line and knocks the taller item off centre.
+    //
+    // `!important` is load-bearing here, not laziness. The Customizer emits
+    // `.betterdocs-content-area .betterdocs.reading-time { margin-bottom: 24px }`
+    // (0,3,0), which outranks any selector this partial can write without
+    // hard-coding the same ancestor chain — and that ancestor differs by layout.
+    // That rule is exactly what pushed the button 12px below the reading-time
+    // pill (pill centre 351, button centre 363, half of the pill's 24px margin).
+    &-start > *,
+    &-end > * {
+        margin-block: 0 !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    // The row already wraps; once it does, keep the trailing edge on the leading
+    // edge so a dropdown opens over the content rather than off the far edge.
+    .betterdocs-doc-meta-end {
+        margin-inline-start: 0;
+    }
+}

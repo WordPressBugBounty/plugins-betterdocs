@@ -1,0 +1,37 @@
+.docs-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+.docs-navigation a[rel=prev] svg {
+  margin-right: 10px;
+}
+.docs-navigation a[rel=next] svg {
+  margin-left: 10px;
+}
+.docs-navigation a {
+  text-decoration: none !important;
+  color: #3f5876;
+  font-size: 16px;
+  position: relative;
+  color: #3f5876;
+  font-size: 16px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  line-height: 1.5em;
+}
+.docs-navigation a:first-child {
+  margin-right: 20px;
+}
+.docs-navigation a:last-child {
+  margin-left: 20px;
+  text-align: right;
+}
+.docs-navigation a svg {
+  min-width: 16px;
+  width: 16px;
+  fill: #5edf8e;
+}/*# sourceMappingURL=style.css.map */

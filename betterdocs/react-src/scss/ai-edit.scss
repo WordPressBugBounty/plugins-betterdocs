@@ -1,0 +1,166 @@
+// Redesigned modal uses the shared AI design system (tokens + preview typography).
+@import "../gutenberg/ai-shared/tokens";
+@import "../gutenberg/ai-shared/preview";
+
+$betterdocs-green: #00B884;
+$betterdocs-green-hover: #019970;
+$betterdocs-green-active: #017d5b;
+
+.betterdocs-ai-edit-modal {
+    max-width: 640px;
+    width: 100%;
+
+    .components-modal__content {
+        padding-top: 16px;
+    }
+
+    .betterdocs-ai-edit__label {
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #1e1e1e;
+        margin: 0 0 8px;
+    }
+
+    .betterdocs-ai-edit__selection {
+        background: #f3fbf7;
+        border-left: 3px solid $betterdocs-green;
+        padding: 12px 14px;
+        border-radius: 2px;
+        margin-bottom: 18px;
+    }
+
+    .betterdocs-ai-edit__selection-text {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #50575e;
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 120px;
+        overflow: auto;
+    }
+
+    .betterdocs-ai-edit__presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 18px;
+
+        .components-button {
+            font-size: 12px;
+            height: auto;
+            min-height: 30px;
+            padding: 4px 10px;
+        }
+    }
+
+    // Consistent vertical rhythm for form controls between presets and actions.
+    .components-base-control,
+    .components-select-control,
+    .components-textarea-control {
+        margin-bottom: 18px;
+    }
+
+    .components-base-control + .components-base-control {
+        margin-top: 0;
+    }
+
+    .betterdocs-ai-edit__result {
+        margin-top: 4px;
+        margin-bottom: 18px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 12px 14px;
+        background: #fff;
+
+        .betterdocs-ai-edit__result-body {
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 260px;
+            overflow: auto;
+
+            > * {
+                margin: 0 0 8px;
+            }
+
+            > *:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .betterdocs-ai-edit__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 18px;
+        align-items: center;
+
+        .components-spinner {
+            margin: 0 6px 0 0;
+        }
+    }
+}
+
+// Green overrides for WP components used inside the AI Edit modal.
+// Scoped to the modal so nothing else on the admin screen is affected.
+.components-modal__frame.betterdocs-ai-edit-modal,
+.betterdocs-ai-edit-modal {
+    .components-button.is-primary {
+        background: $betterdocs-green;
+        color: #fff;
+        box-shadow: inset 0 0 0 1px $betterdocs-green;
+
+        &:not(:disabled):hover,
+        &:not(:disabled):focus {
+            background: $betterdocs-green-hover;
+            box-shadow: inset 0 0 0 1px $betterdocs-green-hover;
+            color: #fff;
+        }
+
+        &:not(:disabled):active {
+            background: $betterdocs-green-active;
+            box-shadow: inset 0 0 0 1px $betterdocs-green-active;
+        }
+
+        &[aria-disabled="true"],
+        &:disabled {
+            background: #9ad8c4;
+            box-shadow: none;
+            color: #fff;
+            cursor: not-allowed;
+        }
+    }
+
+    .components-button.is-secondary {
+        color: $betterdocs-green;
+        box-shadow: inset 0 0 0 1px $betterdocs-green;
+        background: transparent;
+
+        &:not(:disabled):hover,
+        &:not(:disabled):focus {
+            color: $betterdocs-green-hover;
+            box-shadow: inset 0 0 0 1px $betterdocs-green-hover;
+            background: rgba($betterdocs-green, 0.06);
+        }
+
+        &:not(:disabled):active {
+            color: $betterdocs-green-active;
+            box-shadow: inset 0 0 0 1px $betterdocs-green-active;
+        }
+    }
+
+    .components-button.is-tertiary,
+    .components-button.is-link {
+        color: $betterdocs-green;
+
+        &:not(:disabled):hover,
+        &:not(:disabled):focus {
+            color: $betterdocs-green-hover;
+            background: rgba($betterdocs-green, 0.06);
+            box-shadow: none;
+        }
+    }
+}

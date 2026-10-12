@@ -1,0 +1,357 @@
+/* Free's Content Intelligence teaser.
+ *
+ * The shell (`.bda-app` / `.bda-shell` / `.bda-nav` / `.bda-main`), the lock
+ * panel (`.bda-lock-*`), the cards, tables, badges, KPI cards and banners all
+ * come from the shared analytics stylesheet (`../analytics/scss/dashboard.scss`),
+ * imported by index.js. Only the Content-Intelligence-specific pieces live here.
+ *
+ * Prefix is `bd-cit-*` (content intelligence teaser), not Pro's `bda-ci-*`, for
+ * the same reason the API Docs teaser uses `bd-apit-*`: Free's teaser and Pro's
+ * real screen are mutually exclusive, and keeping the names apart makes that
+ * impossible to get wrong. The values below are Pro's, re-expressed in the
+ * shared admin tokens (`--text-color-*` / `--base-color-*`) so the teaser
+ * follows dark mode the way the rest of the analytics surface does.
+ */
+
+/* ── Shell ───────────────────────────────────────────────────────────── */
+
+.bd-cit-wrapper {
+	.bda-app { min-height: 0; }
+	.bda-shell { min-height: calc(100vh - 260px); }
+}
+
+/* The nav's Pro pill. `.bda-nav-item span` (in dashboard.scss) makes every span
+   in a nav row the ellipsising label — which would stretch the badge and its
+   two inner spans as well — so pin them back here, where the badge is used. */
+.bd-cit-nav .bda-nav-item .bda-nav-pro,
+.bd-cit-nav .bda-nav-item .bda-nav-pro span {
+	flex: 0 0 auto;
+	overflow: visible;
+}
+
+/* ── Shared bits across the mocks ────────────────────────────────────── */
+
+.bd-cit-hint { font-size: 11.5px; color: var(--text-color-600); }
+
+.bd-cit-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-color-850);
+	margin-bottom: 6px;
+}
+
+.bd-cit-row-meta { font-size: 12px; color: var(--text-color-600); }
+
+.bd-cit-row-actions { display: inline-flex; gap: 6px; justify-content: flex-end; align-items: center; }
+
+/* Banner copy — `.bda-banner` is the shared amber explainer strip; these are
+   just its title/body rows. */
+.bd-cit-banner-copy { flex: 1; min-width: 0; }
+.bd-cit-banner-title { font-size: 15px; font-weight: 700; }
+.bd-cit-banner-sub { font-size: 13px; margin-top: 4px; line-height: 1.5; }
+
+/* ── Overview: KPI strip ─────────────────────────────────────────────── */
+
+.bd-cit-kpi { display: flex; flex-direction: column; }
+.bd-cit-kpi-body { display: flex; align-items: flex-end; gap: 10px; min-height: 34px; }
+.bd-cit-kpi-foot {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 10px;
+	min-height: 18px;
+}
+
+.bd-cit-score { display: flex; align-items: flex-end; gap: 10px; }
+
+.bd-cit-grade {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 26px;
+	height: 26px;
+	padding: 0 7px;
+	border-radius: 7px;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.bd-cit-rate { font-size: 12px; color: var(--text-color-600); padding-bottom: 3px; }
+.bd-cit-rate strong { color: var(--base-color-700); font-weight: 600; }
+
+.bd-cit-bar {
+	width: 100%;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--base-color-65);
+	overflow: hidden;
+}
+.bd-cit-bar-fill { height: 100%; border-radius: 999px; background: #8b5cf6; }
+
+/* ── Overview: "this week's top action" hero ─────────────────────────── */
+
+.bd-cit-hero {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	padding: 24px;
+	border: 1px solid var(--base-color-100);
+	border-radius: 8px;
+	background: linear-gradient(135deg, var(--base-color-75) 0%, var(--base-background) 55%);
+}
+
+.bd-cit-hero-main { display: flex; align-items: flex-start; gap: 16px; flex: 1; min-width: 340px; }
+
+.bd-cit-hero-ico {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 8px;
+	border: 1px solid var(--base-color-100);
+	background: var(--base-background);
+	color: var(--base-color-700);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.bd-cit-hero-copy { flex: 1; min-width: 0; }
+
+.bd-cit-hero-eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 6px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--base-color-700);
+}
+
+.bd-cit-conf {
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-transform: none;
+	background: var(--base-color-65);
+	color: var(--text-color-700);
+}
+.bd-cit-conf.is-high { background: var(--base-color-75); color: var(--base-color-700); }
+
+.bd-cit-hero-title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.35;
+	letter-spacing: -0.01em;
+	color: var(--text-color-900);
+}
+.bd-cit-hero-title em { font-style: normal; color: var(--base-color-700); }
+
+.bd-cit-hero-sub {
+	margin: 6px 0 0;
+	max-width: 62ch;
+	font-size: 13.5px;
+	line-height: 1.55;
+	color: var(--text-color-700);
+}
+
+.bd-cit-hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+
+.bd-cit-signals {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+	gap: 16px;
+	padding: 16px 18px;
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	background: var(--base-background);
+}
+.bd-cit-signal { text-align: center; }
+.bd-cit-signal-num {
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-color-900);
+}
+.bd-cit-signal-label { margin-top: 5px; font-size: 10.5px; line-height: 1.3; color: var(--text-color-600); }
+
+/* ── Overview: module tiles ──────────────────────────────────────────── */
+
+.bd-cit-section { margin: 0 0 12px; font-size: 15px; font-weight: 600; color: var(--text-color-900); }
+
+.bd-cit-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.bd-cit-tile {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 20px;
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	background: var(--base-background);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.bd-cit-tile-ico {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	margin-bottom: 14px;
+	border-radius: 8px;
+}
+.bd-cit-tile-num { display: flex; align-items: baseline; gap: 6px; }
+.bd-cit-tile-num strong {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+	color: var(--text-color-900);
+}
+.bd-cit-tile-unit { font-size: 12px; color: var(--text-color-600); }
+.bd-cit-tile-title { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--text-color-900); }
+.bd-cit-tile-blurb { margin-top: 4px; font-size: 12.5px; line-height: 1.45; color: var(--text-color-600); }
+.bd-cit-tile-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: 12px;
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--text-color-600);
+}
+
+/* ── Content Gaps ────────────────────────────────────────────────────── */
+
+.bd-cit-gap-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.bd-cit-gap-main { flex: 1; min-width: 240px; }
+.bd-cit-gap-badges { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bd-cit-gap-title { font-size: 15px; font-weight: 700; color: var(--text-color-900); margin-bottom: 4px; }
+.bd-cit-gap-meta { font-size: 12px; color: var(--text-color-850); }
+.bd-cit-gap-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+
+.bd-cit-demand { display: flex; align-items: center; gap: 3px; }
+.bd-cit-demand span { width: 14px; height: 6px; border-radius: 2px; background: var(--text-color-100); }
+.bd-cit-demand span.is-on { background: #8b5cf6; }
+
+.bd-cit-gap-queries { margin-top: 12px; }
+.bd-cit-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.bd-cit-chip {
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: var(--text-color-100);
+	color: var(--text-color-700);
+	font-size: 12px;
+}
+
+.bd-cit-gap-foot { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--text-color-100); }
+.bd-cit-gap-suggested { font-weight: 600; color: var(--text-color-900); }
+.bd-cit-gap-outline {
+	margin: 6px 0 0;
+	white-space: pre-wrap;
+	font-family: inherit;
+	font-size: 12px;
+	line-height: 1.6;
+	color: var(--text-color-850);
+}
+.bd-cit-gap-draft { display: flex; align-items: center; gap: 8px; }
+
+/* ── Stale Content ───────────────────────────────────────────────────── */
+
+.bd-cit-staleness { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.bd-cit-staleness-track {
+	flex: 1;
+	height: 6px;
+	border-radius: 4px;
+	background: var(--text-color-100);
+	overflow: hidden;
+}
+.bd-cit-staleness-fill { height: 100%; border-radius: 4px; }
+
+.bd-cit-flags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* ── Health Score ────────────────────────────────────────────────────── */
+
+.bd-cit-health-top { display: flex; align-items: center; gap: 20px; }
+.bd-cit-health-grade {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 28px;
+	font-weight: 800;
+	color: var(--text-color-900);
+}
+.bd-cit-health-cell { display: flex; align-items: center; gap: 8px; }
+.bd-cit-health-grade-chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+}
+
+/* ── Duplicates & Overlaps ───────────────────────────────────────────── */
+
+.bd-cit-pair-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+.bd-cit-pair-body { display: flex; align-items: center; gap: 12px; }
+.bd-cit-pair-doc {
+	flex: 1;
+	min-width: 0;
+	padding: 12px;
+	border: 1px solid var(--text-color-100);
+	border-radius: 8px;
+	background: var(--text-color-50);
+}
+.bd-cit-pair-title { font-weight: 500; color: var(--text-color-900); margin-bottom: 6px; }
+.bd-cit-pair-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 12px;
+	color: var(--base-color-700);
+}
+.bd-cit-pair-join { flex-shrink: 0; color: var(--text-color-600); }
+
+/* ── Narrow screens ──────────────────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+	.bd-cit-tiles { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 782px) {
+	.bd-cit-tiles { grid-template-columns: 1fr; }
+	.bd-cit-hero { padding: 20px; }
+	.bd-cit-hero-main { min-width: 0; }
+	.bd-cit-signals { width: 100%; }
+	.bd-cit-pair-body { flex-direction: column; align-items: stretch; }
+}
+
+/* Dark mode — everything above is token-driven and flips on its own except the
+   two places the mock reaches past the palette for a module accent (the violet
+   demand meter / suggestion bar), which stay readable as-is, and the hero's
+   gradient, which needs the dark surface rather than the light green wash. */
+.betterdocs-admin.betterdocs-dark-mode {
+	.bd-cit-hero { background: var(--base-background); border-color: var(--text-color-150); }
+	.bd-cit-signals,
+	.bd-cit-tile { border-color: var(--text-color-150); }
+	.bd-cit-pair-doc { border-color: var(--text-color-150); background: var(--base-color-50); }
+}

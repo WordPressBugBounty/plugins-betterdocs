@@ -1,0 +1,11 @@
+@import "../common";
+.betterdocs-popular-articles-wrapper {
+    .betterdocs-popular-articles-heading {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 36px;
+        color: #000000;
+        padding-left: 8px !important;
+    }
+    @import "../layout-parts/list";
+}

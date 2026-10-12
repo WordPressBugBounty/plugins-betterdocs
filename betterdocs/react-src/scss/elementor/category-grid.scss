@@ -1,0 +1,112 @@
+// Elementor Only Category Grid
+@import "../common";
+@import "./common";
+.betterdocs-category-grid-wrapper.betterdocs-elementor
+    .betterdocs-category-grid-inner-wrapper
+    .betterdocs-single-category-wrapper:not(.layout-2)
+    .betterdocs-single-category-inner {
+    margin: 0 7.5px 15px 7.5px;
+}
+
+.betterdocs-category-header {
+    .betterdocs-category-header-inner {
+        @at-root .betterdocs-category-grid-wrapper #{&} {
+            @include if(
+                ".betterdocs-category-grid-wrapper",
+                ".betterdocs-elementor .betterdocs-single-category-wrapper:not(.layout-2)"
+            ) {
+                padding-bottom: 20px;
+                border-bottom: 2px solid #528ffe;
+            }
+        }
+    }
+}
+
+.betterdocs-elementor.betterdocs-category-grid-wrapper {
+    .betterdocs-single-category-wrapper {
+        .betterdocs-footer {
+            > a,
+            > button {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.3125em;
+                img,
+                svg {
+                    height: 1em;
+                }
+            }
+        }
+        &.layout-2 {
+            margin-bottom: 15px;
+            .betterdocs-single-category-inner {
+                margin-left: 7.5px;
+                margin-right: 7.5px;
+                border-radius: 5px;
+            }
+            .betterdocs-category-header {
+                padding-top: 0;
+                .betterdocs-category-header-inner {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: stretch;
+                    padding-bottom: 10px;
+                }
+            }
+            .betterdocs-category-items-counts {
+                height: 45px;
+                min-width: 40px;
+                padding: 0 2px;
+                background-color: #fc8c91;
+                color: #fff;
+                border-radius: 0%;
+                margin-left: 0;
+                margin-right: auto;
+                position: relative;
+                margin-top: -1px;
+                span {
+                    background: transparent;
+                    height: auto;
+                    width: auto;
+                    color: inherit;
+                }
+                &:after {
+                    content: "";
+                    position: absolute;
+                    right: -6px;
+                    top: 0;
+                    border-top: 6px solid #ad5e62;
+                    border-right: 6px solid transparent;
+                    opacity: 0.9;
+                }
+            }
+            .betterdocs-category-title a {
+                font-size: 18px;
+            }
+            .betterdocs-body {
+                padding-top: 0;
+            }
+            .betterdocs-articles-list {
+                li {
+                    margin-left: 5px;
+                    margin-right: 5px;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+            }
+            .betterdocs-footer {
+                button,
+                a {
+                    margin-left: 0;
+                    margin-bottom: 0;
+                    color: #3f5876;
+                    border: none;
+                    border-radius: 0px;
+                    padding: 0px;
+                    &:hover {
+                        color: #fc8c91;
+                    }
+                }
+            }
+        }
+    }
+}

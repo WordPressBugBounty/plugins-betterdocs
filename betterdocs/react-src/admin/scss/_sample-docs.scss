@@ -1,0 +1,1083 @@
+/* ============================================================
+   AI "Generate Sample Docs" flow.
+   Aligned to the BetterDocs admin design system: green is reserved
+   for the primary action, the live progress indicator, success, and
+   selection — every other surface and all metadata use the neutral
+   ramp. Uses var(--token, #fallback) so it renders in both the
+   dashboard bundle (tokens defined, dark-mode aware) and the
+   quick-setup / setup-wizard bundle.
+   ============================================================ */
+
+/* Brand green — primary action, live progress, success, selection only. */
+$sd-green:       var(--base-color-700, #00b884);
+$sd-green-600:   var(--base-color-800, #00956b);
+$sd-green-700:   var(--base-color-900, #007557);
+$sd-green-50:    var(--base-color-75, #ecfdf3); // selection ring tint only
+
+/* Neutral ramp — the house default for surfaces, borders, text, metadata. */
+$sd-ink:         var(--text-color-900, #101828);
+$sd-ink-2:       var(--text-color-950, #1d2939);
+$sd-muted:       var(--text-color-600, #667085);
+$sd-border:      var(--text-color-300, #dde2e4);
+$sd-border-soft: var(--text-color-100, #f2f4f7);
+$sd-hairline:    var(--text-color-150, #eef0f3);
+$sd-surface:     var(--text-color-50, #f9fafb);  // subtle fill (headers, highlights)
+$sd-meta-bg:     var(--text-color-100, #f2f4f7); // neutral badge fill
+$sd-card:        var(--base-background, #ffffff);
+$sd-page:        var(--page-background, #fafbfb);
+
+@keyframes sdSpin { to { transform: rotate(360deg); } }
+@keyframes sdFade { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sdPop  { from { transform: scale(.975); } to { transform: none; } }
+@keyframes sdPulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes sdCheckIn { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.betterdocs-sd-fade { animation: sdFade .34s ease both; }
+.betterdocs-sd-pop  { animation: sdPop .26s cubic-bezier(.2, .8, .3, 1) both; }
+
+.betterdocs-sd-spinner {
+    display: inline-block;
+    border-radius: 50%;
+    border: 3px solid var(--text-color-200, #eaecf0);
+    border-top-color: $sd-green;
+    animation: sdSpin .7s linear infinite;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- AI badge (neutral pill, green spark icon only) ---------- */
+.betterdocs-sd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: $sd-meta-bg;
+    color: $sd-muted;
+    border: 1px solid $sd-hairline;
+    padding: 5px 12px 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1;
+
+    svg { flex-shrink: 0; color: $sd-green; } // the one small green accent
+}
+
+/* ---------- Generate pill (primary) ---------- */
+.betterdocs-sd-gen-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: $sd-green;
+    color: #fff;
+    padding: 11px 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    box-sizing: border-box;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background .15s ease;
+
+    &:hover { background: $sd-green-600; color: #fff; }
+    &:disabled { background: var(--text-color-300, #d0d5dd); cursor: not-allowed; box-shadow: none; }
+    &--block { width: 100%; }
+    svg { flex-shrink: 0; }
+}
+
+/* ---------- Empty "No Category Found" card ---------- */
+/* Scoped under .betterdocs-admin to outrank the base
+   `.betterdocs-admin .betterdocs-no-docs-wrapper { max-width:364px }` rule. */
+.betterdocs-admin .betterdocs-no-docs-wrapper.betterdocs-sd-empty-card {
+    max-width: 558px;
+    width: 100%;
+    margin: 0 auto 48px;
+    /* Match the doc category card (.betterdocs-dashboard-category-wrap):
+       white bg, single border + the standard dashboard card shadow. */
+    background: var(--base-background);
+    border: 1px solid var(--text-color-150);
+    border-radius: 12px;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.betterdocs-sd-empty-card {
+    .betterdocs-sd-empty-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 340px;
+        margin: 24px auto 0;
+    }
+
+    /* White "Create A New Category" button — neutral secondary. */
+    .betterdocs-sd-create-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background: var(--base-background, #fff);
+        border: 1px solid var(--text-color-300, #d0d5dd);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--text-color-700, #344054);
+        text-decoration: none;
+        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+        transition: background .15s ease, border-color .15s ease;
+
+        &:hover,
+        &:focus {
+            border-color: var(--text-color-300, #d0d5dd);
+            color: var(--text-color-900, #101828);
+            background: var(--text-color-100, #f2f4f7);
+            box-shadow: none;
+        }
+    }
+
+    /* Generate pill matches the secondary button's box. */
+    .betterdocs-sd-gen-btn {
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .betterdocs-sd-empty-badge {
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* ---------- Modal shell ---------- */
+.betterdocs-sd-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    background: rgba(16, 24, 40, .42);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: sdFade .2s ease both;
+}
+
+.betterdocs-sd-modal {
+    width: 100%;
+    max-width: 640px;
+    max-height: 88vh;
+    background: $sd-card;
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(16, 24, 40, .24);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
+.betterdocs-sd-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: $sd-surface;
+    border-bottom: 1px solid $sd-hairline;
+}
+.betterdocs-sd-modal-spark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: $sd-meta-bg;
+    color: $sd-green; // small green spark on a neutral tile
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.betterdocs-sd-modal-heading { flex: 1; min-width: 0; }
+.betterdocs-sd-modal-title { font-size: 16px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-modal-sub { font-size: 12px; color: $sd-muted; margin-top: 2px; }
+.betterdocs-sd-modal-close {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-600, #667085);
+    background: var(--text-color-100, #f2f4f7);
+    box-shadow: none;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+
+    &:hover {
+        background: var(--text-color-200, #eaecf0);
+        color: var(--text-color-900, #101828);
+    }
+}
+.betterdocs-sd-modal-body { padding: 24px; overflow: auto; background: var(--base-background, #fff); }
+
+.betterdocs-sd-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid $sd-hairline;
+    background: $sd-surface;
+
+    /* Left-side (ghost) buttons sit left; the primary stays right. A lone
+       primary button (e.g. preview's "Insert all docs") right-aligns. */
+    .betterdocs-sd-btn-ghost {
+        margin-right: auto;
+    }
+}
+
+/* Ghost actions (Cancel, Remove sample docs, Close) — bordered secondary,
+   identical to the Discard button. */
+.betterdocs-sd-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--text-color-300, #dde2e4);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-color-700, #344054);
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease;
+
+    svg { width: 16px; height: 16px; }
+
+    &:hover { background: var(--text-color-100, #f2f4f7); color: var(--text-color-900, #101828); }
+}
+
+/* Discard — bordered ghost, mirrors .betterdocs-quick-edit-cancel-btn. */
+.betterdocs-sd-btn-discard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: auto;
+    color: var(--text-color-700, #344054);
+    background: transparent;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--text-color-300, #d0d5dd);
+    cursor: pointer;
+    transition: background .12s ease, border-color .12s ease;
+
+    svg { width: 16px; height: 16px; }
+
+    &:hover { background: var(--text-color-100, #f2f4f7); }
+}
+.betterdocs-sd-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: $sd-green;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease;
+
+    &:hover { background: $sd-green-600; }
+    &:disabled { background: var(--text-color-300, #d0d5dd); cursor: not-allowed; }
+    svg { flex-shrink: 0; }
+}
+
+/* ---------- Detecting ---------- */
+.betterdocs-sd-detecting {
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.betterdocs-sd-detecting-orb {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.betterdocs-sd-detecting-spark { position: absolute; color: $sd-green; display: flex; }
+.betterdocs-sd-detecting-title { font-size: 18px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-detecting-sub { font-size: 14px; color: $sd-muted; margin-top: 8px; max-width: 360px; line-height: 1.55; }
+.betterdocs-sd-detecting-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 24px;
+
+    span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: $sd-green;
+        animation: sdPulse 1s ease infinite;
+    }
+}
+
+/* ---------- Profile ---------- */
+.betterdocs-sd-profile { display: flex; flex-direction: column; gap: 24px; }
+.betterdocs-sd-profile-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.betterdocs-sd-profile-title { margin: 0; font-size: 18px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-profile-blurb { margin: 8px 0 0; font-size: 14px; color: $sd-muted; line-height: 1.55; max-width: 560px; }
+.betterdocs-sd-signals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.betterdocs-sd-signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: $sd-muted;
+    background: $sd-meta-bg;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+.betterdocs-sd-signal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-color-400, #d0d5dd); }
+.betterdocs-sd-profile-subhead { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.betterdocs-sd-profile-subtitle { font-size: 14px; font-weight: 600; color: $sd-ink-2; }
+.betterdocs-sd-profile-count { font-size: 12px; color: $sd-muted; font-weight: 600; }
+
+/* ---------- Chips (neutral, removable tokens) ---------- */
+.betterdocs-sd-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.betterdocs-sd-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: $sd-card;
+    border: 1px solid $sd-border;
+    color: $sd-ink-2;
+    padding: 5px 8px 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.betterdocs-sd-chip-remove {
+    width: 22px;
+    height: 22px;
+    border: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $sd-muted;
+    background: $sd-meta-bg;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+
+    &:hover { background: var(--danger-50, #fef3f2); color: var(--danger-600, #d92d20); }
+}
+/* Empty state when every suggested chip is removed. */
+.betterdocs-sd-chips-empty { margin: 0; font-size: 13px; color: $sd-muted; line-height: 1.55; }
+/* Privacy disclosure under the suggested categories. */
+.betterdocs-sd-privacy-note { margin: 12px 0 0; font-size: 12px; color: var(--text-color-500, #98a2b3); line-height: 1.5; }
+
+/* ---------- Intent steer (docs only) ---------- */
+.betterdocs-sd-intent { margin: 4px 0 2px; }
+.betterdocs-sd-intent-label { display: block; font-size: 13px; font-weight: 600; color: $sd-ink-2; margin-bottom: 6px; }
+.betterdocs-sd-intent-input {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 56px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: $sd-ink;
+    background: $sd-card;
+    border: 1px solid $sd-border;
+    border-radius: 8px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+    &:focus { outline: none; border-color: $sd-green; box-shadow: 0 0 0 3px $sd-green-50; }
+    &::placeholder { color: var(--text-color-400, #b5bcc6); }
+}
+.betterdocs-sd-intent-hint { margin: 6px 0 0; font-size: 12px; color: $sd-muted; line-height: 1.5; }
+
+/* ---------- Quota note (neutral info surface) ---------- */
+.betterdocs-sd-quota {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: $sd-surface;
+    border: 1px solid $sd-border-soft;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+.betterdocs-sd-quota-icon { color: $sd-muted; flex-shrink: 0; display: flex; margin-top: 1px; }
+.betterdocs-sd-quota-text { font-size: 13px; color: $sd-ink-2; line-height: 1.55; }
+
+/* ---------- Generating ---------- */
+.betterdocs-sd-progress-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.betterdocs-sd-progress-label { font-size: 14px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-progress-pct { font-size: 13px; font-weight: 600; color: $sd-muted; }
+.betterdocs-sd-progress-track { height: 8px; border-radius: 999px; background: var(--text-color-200, #eaecf0); overflow: hidden; margin-bottom: 20px; }
+.betterdocs-sd-progress-fill { height: 100%; border-radius: 999px; background: $sd-green; transition: width .4s cubic-bezier(.4, 0, .2, 1); }
+.betterdocs-sd-progress-rows { display: flex; flex-direction: column; gap: 8px; }
+.betterdocs-sd-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: $sd-card;
+    border: 1px solid $sd-border-soft;
+    transition: background .3s, border-color .3s, opacity .3s;
+
+    &.is-live { background: $sd-surface; border-color: $sd-border; }
+    &.is-pending { opacity: .6; }
+}
+.betterdocs-sd-progress-row-meta { flex: 1; min-width: 0; }
+.betterdocs-sd-progress-row-name { font-size: 14px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-progress-row-sub { font-size: 12px; color: $sd-muted; margin-top: 3px; font-weight: 500; &.is-done { color: $sd-muted; } }
+.betterdocs-sd-progress-row-state { flex-shrink: 0; width: 26px; display: flex; justify-content: center; }
+.betterdocs-sd-progress-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: $sd-green;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sdCheckIn .3s cubic-bezier(.2, .8, .3, 1) both;
+}
+.betterdocs-sd-progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-color-300, #d0d5dd); }
+
+/* Final "finalizing" step shown while the bar parks near 97% waiting for the
+   real generation result; flips to a check once it reaches 100%. */
+.betterdocs-sd-progress-finalizing {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: $sd-surface;
+    border: 1px solid $sd-border-soft;
+    animation: sdCheckIn .3s cubic-bezier(.2, .8, .3, 1) both;
+}
+.betterdocs-sd-progress-finalizing-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $sd-muted;
+
+    .betterdocs-sd-progress-finalizing.is-done & {
+        background: $sd-green;
+        color: #fff;
+        border-radius: 50%;
+    }
+}
+.betterdocs-sd-progress-finalizing-text { font-size: 13px; font-weight: 500; color: $sd-muted; }
+
+/* ---------- Preview ---------- */
+.betterdocs-sd-preview-intro { margin-bottom: 16px; }
+.betterdocs-sd-preview-intro-title { font-size: 18px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-preview-intro-sub { font-size: 13px; color: $sd-muted; margin-top: 4px; }
+/* Partial-generation warning shown above the preview when some articles failed. */
+.betterdocs-sd-preview-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 11px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-color-800, #92400e);
+    background: var(--base-color-50, #fff8ec);
+    border: 1px solid var(--base-color-200, #fde3b3);
+    border-radius: 8px;
+}
+.betterdocs-sd-preview-warning-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: #f59e0b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+}
+.betterdocs-sd-preview { display: flex; flex-direction: column; gap: 12px; }
+.betterdocs-sd-preview-group { border: 1px solid $sd-border-soft; border-radius: 12px; overflow: hidden; background: $sd-card; }
+.betterdocs-sd-preview-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: $sd-surface;
+    border-bottom: 1px solid $sd-border-soft;
+}
+.betterdocs-sd-preview-name { font-size: 14px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-preview-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: $sd-muted;
+    background: $sd-meta-bg;
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+// "All products" tag on the store-wide product FAQ group (green, since it's the one
+// group that behaves differently — shown on every product page).
+.betterdocs-sd-preview-tag {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: $sd-green-700;
+    background: $sd-green-50;
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+// When the tag is present it takes the auto-margin, so the count badge sits next to it.
+.betterdocs-sd-preview-tag + .betterdocs-sd-preview-badge { margin-left: 8px; }
+.betterdocs-sd-preview-article {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+
+    & + & { border-top: 1px solid $sd-border-soft; }
+}
+.betterdocs-sd-preview-article-icon { color: var(--text-color-500, #98a2b3); flex-shrink: 0; display: flex; }
+.betterdocs-sd-preview-article-title { font-size: 14px; color: $sd-ink-2; font-weight: 500; }
+.betterdocs-sd-preview-article-draft { margin-left: auto; font-size: 11px; font-weight: 600; color: $sd-muted; background: $sd-meta-bg; border-radius: 999px; padding: 3px 9px; }
+
+/* ---------- Success / Error ---------- */
+.betterdocs-sd-success { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 24px; }
+.betterdocs-sd-success-check {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: $sd-green;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    animation: sdCheckIn .3s cubic-bezier(.2, .8, .3, 1) both;
+}
+.betterdocs-sd-success-title { font-size: 18px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-success-sub { font-size: 13px; color: $sd-muted; margin-top: 6px; }
+.betterdocs-sd-error {
+    padding: 32px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+// Soft-tinted alert tile, mirroring the success check's treatment (but neutral-warning,
+// not a heavy red block).
+.betterdocs-sd-error-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: var(--danger-600, #d92d20);
+    background: var(--danger-50, #fef3f2);
+}
+// Smaller, calmer title — the icon carries the "something went wrong" signal, so the
+// message no longer needs to be a large red heading.
+.betterdocs-sd-error-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    max-width: 380px;
+    color: $sd-ink;
+}
+.betterdocs-sd-error-sub { font-size: 13px; color: $sd-muted; margin-top: 6px; line-height: 1.55; }
+
+/* ---------- Quick Setup "Create Content" — AI banner (neutral surface) ---------- */
+.betterdocs-sd-promo {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: $sd-surface;
+    border: 1px solid $sd-border-soft;
+    border-radius: 12px;
+    padding: 24px;
+}
+.betterdocs-sd-promo-glow { display: none; } // removed decorative green glow
+.betterdocs-sd-promo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $sd-card;
+    border: 1px solid $sd-border-soft;
+    color: $sd-green; // small green spark on a neutral tile
+    box-shadow: none;
+}
+.betterdocs-sd-promo-body { flex: 1; min-width: 240px; }
+.betterdocs-sd-promo-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.betterdocs-sd-promo-title { margin: 0; font-size: 18px; font-weight: 600; color: $sd-ink; }
+.betterdocs-sd-promo-text { margin: 6px 0 0; font-size: 14px; color: $sd-muted; line-height: 1.55; max-width: 540px; }
+
+@media (max-width: 600px) {
+    .betterdocs-sd-promo { text-align: center; justify-content: center; }
+}
+
+/* ---------- Customize step — layout picker ---------- */
+.betterdocs-sd-layouts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-150, #eef0f3);
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 24px;
+}
+.betterdocs-sd-layout-group {
+    margin-bottom: 24px;
+}
+.betterdocs-sd-layout-group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.betterdocs-sd-layout-group-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $sd-ink;
+}
+.betterdocs-sd-layout-group-hint {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color-500, #98a2b3);
+}
+.betterdocs-sd-layout-saved {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: $sd-muted;
+    background: $sd-meta-bg;
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+.betterdocs-sd-layout-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+.betterdocs-sd-layout-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+
+    .betterdocs-sd-layout-thumb {
+        position: relative;
+        display: block;
+        background: var(--base-background, #fff);
+        border: 2px solid $sd-border;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+        transition: border-color .16s ease, box-shadow .16s ease, transform .12s ease;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .betterdocs-sd-layout-check {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: $sd-green;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 184, 132, .4);
+        animation: sdCheckIn .3s cubic-bezier(.2, .8, .3, 1) both;
+    }
+
+    .betterdocs-sd-layout-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: $sd-muted;
+        transition: color .16s ease, font-weight .16s ease;
+    }
+
+    &:hover:not(.is-selected) {
+        .betterdocs-sd-layout-thumb {
+            border-color: var(--text-color-400, #d0d5dd);
+            box-shadow: 0 4px 14px rgba(16, 24, 40, .06);
+            transform: translateY(-2px);
+        }
+    }
+
+    &.is-selected {
+        .betterdocs-sd-layout-thumb {
+            border-color: $sd-green;
+            box-shadow: 0 0 0 4px $sd-green-50, 0 4px 14px rgba(16, 24, 40, .06);
+        }
+        .betterdocs-sd-layout-name {
+            color: $sd-ink;
+            font-weight: 600;
+        }
+    }
+}
+
+/* ---------- Customize step — FSE hand-off (block themes) ----------
+   The layout picker is meaningless on a block theme, so the step becomes a hand-off to
+   the Site Editor: copy left, preview right, one primary action. Same card language as
+   the Create Content step's AI banner (.betterdocs-sd-promo) — surface, border, radius,
+   18/600 title, 14px muted body — so the wizard still reads as one flow. */
+.betterdocs-sd-fse {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    background: $sd-card;
+    border: 1px solid $sd-border-soft;
+    border-radius: 16px;
+    padding: 32px;
+
+    .betterdocs-sd-fse-body {
+        flex: 1 1 auto;
+        min-width: 260px;
+    }
+
+    /* Badge: the shared .betterdocs-sd-badge pill — only its spacing is set here. */
+    .betterdocs-sd-badge {
+        margin-bottom: 12px;
+    }
+
+    .betterdocs-sd-fse-title {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: $sd-ink;
+    }
+
+    .betterdocs-sd-fse-text {
+        margin: 0;
+        max-width: 460px;
+        font-size: 14px;
+        line-height: 1.55;
+        color: $sd-muted;
+    }
+
+    .betterdocs-sd-fse-list {
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: $sd-ink-2;
+        }
+    }
+
+    .betterdocs-sd-fse-tick {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: $sd-green-50;
+        color: $sd-green-700;
+    }
+
+    .betterdocs-sd-fse-action {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .betterdocs-sd-fse-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        border-radius: 8px;
+        background: $sd-green;
+        border: 1px solid $sd-green;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+        text-decoration: none;
+        box-shadow: none;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &:hover,
+        &:focus {
+            background: $sd-green-600;
+            border-color: $sd-green-600;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $sd-green-700;
+            outline-offset: 2px;
+        }
+    }
+
+    .betterdocs-sd-fse-note {
+        font-size: 12.5px;
+        color: $sd-muted;
+    }
+
+    /* Preview sits right, and is decorative — the copy carries the meaning. */
+    .betterdocs-sd-fse-preview {
+        flex: 0 1 380px;
+        min-width: 0;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+        }
+    }
+}
+
+@media (max-width: 960px) {
+    .betterdocs-sd-fse {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 28px;
+        padding: 24px;
+
+        .betterdocs-sd-fse-text { max-width: none; }
+        .betterdocs-sd-fse-preview { flex: 1 1 auto; }
+    }
+}
+
+@media (max-width: 782px) {
+    .betterdocs-sd-layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none !important; }
+}
+
+/* ---------- "or build it yourself" manual instruction ---------- */
+.betterdocs-sd-manual-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+}
+.betterdocs-sd-manual-line {
+    flex: 1;
+    height: 1px;
+    background: $sd-border-soft;
+}
+.betterdocs-sd-manual-label {
+    font-size: 13px;
+    color: var(--text-color-500, #98a2b3);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.betterdocs-sd-manual {
+    margin-top: 16px;
+    background: $sd-card;
+    border: 1px dashed $sd-border;
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+}
+.betterdocs-sd-manual-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    border-radius: 12px;
+    background: $sd-meta-bg;
+    color: var(--text-color-500, #98a2b3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.betterdocs-sd-manual-title { font-size: 14px; font-weight: 600; color: $sd-ink-2; }
+.betterdocs-sd-manual-text { font-size: 13px; color: $sd-muted; margin-top: 4px; }
+
+/* ---------- Quick Setup: generated docs (read-only) ---------- */
+.betterdocs-sd-qs-result {
+    margin-top: 24px;
+}
+.betterdocs-sd-qs-result-head {
+    font-size: 13px;
+    font-weight: 600;
+    color: $sd-muted;
+    margin-bottom: 16px;
+}
+
+/* ---------- Populated docs — All Docs grid look (read-only) ---------- */
+.betterdocs-sd-populated {
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-150, #eef0f3);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.betterdocs-sd-populated-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+}
+.betterdocs-sd-populated-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.betterdocs-sd-populated-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color-900, #101828);
+}
+.betterdocs-sd-populated-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: $sd-muted;
+    background: $sd-meta-bg;
+    border-radius: 999px;
+    padding: 3px 11px;
+}
+.betterdocs-sd-populated-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 24px 24px;
+    margin: 0;
+
+    .betterdocs-col {
+        flex: 0 0 calc(50% - 12px);
+        max-width: calc(50% - 12px);
+        min-width: 0;
+        box-sizing: border-box;
+    }
+}
+.betterdocs-sd-cat-wrap {
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-150, #eef0f3);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.betterdocs-sd-cat-header {
+    padding: 10px;
+    border-bottom: 1px solid var(--text-color-150, #eef0f3);
+}
+.betterdocs-sd-cat-name {
+    margin: 0;
+    color: var(--text-color-900, #101828);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+.betterdocs-sd-cat-list {
+    list-style: none;
+    margin: 16px 12px 8px;
+    padding: 0;
+    /* height follows content — no fixed height / scrollbar */
+
+    li {
+        padding: 10px 32px;
+        margin-bottom: 0;
+        border-radius: 8px;
+        position: relative;
+        transition: background .2s ease;
+
+        &:hover { background: var(--text-color-100, #f2f4f7); }
+    }
+}
+.betterdocs-sd-doc-drag {
+    cursor: move;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    line-height: 0;
+    svg {
+        display: block;
+        width: 16px;
+        height: 16px;
+        fill: var(--text-color-500, #98a2b3);
+        path { fill: var(--text-color-500, #98a2b3); }
+    }
+}
+.betterdocs-sd-doc-title {
+    color: var(--text-color-900, #101828);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+    .betterdocs-sd-populated-grid .betterdocs-col {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+}

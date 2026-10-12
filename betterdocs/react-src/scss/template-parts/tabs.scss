@@ -1,0 +1,55 @@
+// CHECKED:
+@import "../common";
+
+.betterdocs-tab-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+    button,
+    a {
+        display: block;
+        margin: 8px;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 36px;
+        padding: 10px 36px;
+        color: #15063f;
+        background-color: #ededff;
+        border-radius: 5px;
+        &.focus,
+        &.active {
+            background-color: #614efc;
+            color: #fff;
+        }
+    }
+}
+
+.betterdocs-tabgrid-content-wrapper {
+    display: none;
+    &.active {
+        display: block;
+    }
+}
+.betterdocs-tabgrid-contents-wrapper {
+    .betterdocs-category-grid-wrapper {
+        .betterdocs-category-grid-inner-wrapper {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            row-gap: 30px;
+            column-gap: 30px;
+            @include responsive-below("small-laptop") {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            @include responsive("tablet") {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            @include responsive("phone") {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}

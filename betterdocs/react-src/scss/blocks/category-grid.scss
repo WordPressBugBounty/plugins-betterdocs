@@ -1,0 +1,86 @@
+// Block Only Category Grid
+
+@import "../common";
+@import "./common";
+
+.betterdocs-blocks.betterdocs-category-grid-wrapper {
+    .betterdocs-category-grid-inner-wrapper {
+        .betterdocs-single-category-wrapper {
+            &.layout-2 {
+                @include if(
+                    ".betterdocs-category-grid-inner-wrapper",
+                    ".masonry"
+                ) {
+                    margin-bottom: 10px;
+                }
+                .betterdocs-category-header {
+                    padding-top: 0;
+                    .betterdocs-category-header-inner {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: stretch;
+                        padding-bottom: 10px;
+                    }
+                }
+                .betterdocs-category-items-counts {
+                    height: 45px;
+                    min-width: 40px;
+                    padding: 0 2px;
+                    background-color: #fc8c91;
+                    color: #fff;
+                    border-radius: 0%;
+                    margin-left: 0;
+                    margin-right: auto;
+                    position: relative;
+                    margin-top: -1px;
+                    span {
+                        background: transparent;
+                        height: auto;
+                        width: auto;
+                        color: inherit;
+                    }
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        right: -6px;
+                        top: 0;
+                        border-top: 6px solid #ad5e62;
+                        border-right: 6px solid transparent;
+                        opacity: 0.9;
+                    }
+                }
+                .betterdocs-category-title a {
+                    font-size: 18px;
+                }
+                .betterdocs-body {
+                    padding-top: 0;
+                }
+                .betterdocs-articles-list {
+                    li {
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        margin-top: 5px;
+                        margin-bottom: 5px;
+                    }
+                }
+                .betterdocs-footer {
+                    button,
+                    a {
+                        margin-left: 0;
+                        margin-bottom: 0;
+                        color: #3f5876;
+                        border: none;
+                        border-radius: 0px;
+                        padding: 0px;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 5px;
+                        &:hover {
+                            color: #fc8c91;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

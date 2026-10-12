@@ -1,0 +1,128 @@
+.bd-faq-button-group {
+	display: flex;
+	column-gap: 20px;
+	row-gap: 10px;
+	flex-wrap: wrap;
+
+	&.direction-column {
+		flex-direction: column;
+	}
+}
+
+.bd-faq-button {
+    display: inline-flex;
+    min-height: 36px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--base-color-75);
+    background-image: none;
+    color: var(--base-color-700);
+    border: 1px solid var(--base-color-700);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+    box-sizing: border-box;
+    .bd-faq-icon {
+        width: 16px;
+        display: inline-flex;
+        align-items: center;
+        line-height: 0;
+        img,
+        svg {
+            max-width: 100%;
+            color: var(--base-color-700);
+            fill: var(--base-color-700);
+            transition: all 0.3s ease 0s;
+        }
+    }
+    // Plus icon (IconPlus) — matches the dashboard header action button.
+    .action-button-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+        img,
+        svg {
+            display: block;
+        }
+    }
+    .bd-faq-text {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+    }
+    &:hover {
+        background-color: var(--base-color-700);
+        color: #ffffff;
+        border-color: transparent;
+        .bd-faq-icon {
+            img,
+            svg {
+                color: #ffffff;
+                fill: #ffffff;
+            }
+        }
+    }
+    // Ghost / cancel button — transparent surface with a muted border,
+    // matching the doc-categories slide-over cancel. The compound
+    // `.bd-faq-button.button-ghost` selector (specificity 0,2,0) outranks the
+    // base `.bd-faq-button` rules above, so no !important is needed.
+    &.button-ghost {
+        background: transparent;
+        border: 1px solid var(--text-color-200);
+        box-shadow: none;
+        color: var(--text-color-700);
+        &:hover {
+            background: var(--text-color-100);
+            border-color: var(--text-color-200);
+            color: var(--text-color-700);
+        }
+    }
+    &.button-success {
+        background-color: var(--base-color-700);
+        color: #ffffff !important;
+        border-color: transparent !important;
+        .bd-faq-icon {
+            img,
+            svg {
+                color: #ffffff !important;
+                fill: #ffffff !important;
+            }
+        }
+        &:hover {
+            background-color: #00956b;
+        }
+    }
+    // Secondary action — mirrors the dashboard header "Add New FAQ" button
+    // (.betterdocs-faq-button): white surface, muted border + subtle shadow,
+    // dark text and dark plus icon. The compound .bd-faq-button.button-secondary
+    // (0,2,0) outranks the base .bd-faq-button rules above.
+    &.button-secondary {
+        background-color: var(--base-background, #ffffff);
+        color: var(--text-color-700);
+        border: 1px solid #d0d5dd;
+        box-shadow: 0px 1px 2px 0px #1018280d;
+        // No transition (incl. border) and no hover state — the button stays
+        // static. The resting values out-order the base `.bd-faq-button:hover`
+        // (equal specificity, declared later), so no `:hover` block is needed.
+        transition: none;
+        .bd-faq-icon {
+            img,
+            svg {
+                color: var(--text-color-700);
+                fill: var(--text-color-700);
+            }
+        }
+        // IconPlus hardcodes fill="#fff" on its <path>; author CSS overrides that
+        // presentation attribute so the plus stays visible on the light surface.
+        .action-button-icon svg path {
+            fill: var(--text-color-700);
+        }
+    }
+}

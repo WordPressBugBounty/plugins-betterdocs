@@ -1,0 +1,417 @@
+.betterdocs-access-control-wrapper-overlay {
+	z-index: 3;
+	display: block;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+
+	.betterdocs-access-control-wrapper {
+		max-width: 709px;
+		height: auto;
+		background: #fff;
+		position: relative;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		margin: 20px 0;
+		border-radius: 8px;
+
+		.wprf-modal-preview-header {
+			position: absolute;
+			right: -55px;
+			height: 40px;
+			width: 40px;
+			background-color: #F2F4F7;
+			border-radius: 25px;
+			cursor: pointer;
+
+			svg {
+				cursor: pointer;
+				display: block;
+				position: relative;
+				top: 13px;
+				left: 12.3px;
+			}
+		}
+
+		.wpsp-better-repeater-fields {
+			display: flex;
+			flex-direction: column;
+			padding: 50px;
+			gap: 20px;
+			max-height: 72vh;
+			overflow: auto;
+
+			.wprf-control-wrapper {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 6px;
+				align-self: stretch;
+
+				&:nth-child(1),
+				&:nth-child(2),
+				&:nth-last-child(2),
+				&:nth-last-child(1) {
+					.wprf-control-label {
+						&::after {
+							content: "*";
+							position: relative;
+							color: red;
+							left: 10px;
+							top: 3px;
+						}
+					}
+				}
+
+
+
+				.wprf-control-label {
+					color: #344054;
+					font-size: 14px;
+					font-style: normal;
+					font-weight: 500;
+					line-height: 20px;
+				}
+
+				.wprf-control-field {
+					input {
+						&:nth-child(1) {
+							width: 605px;
+						}
+
+						border-radius: 8px;
+						border: 1px solid #D0D5DD;
+						background: #FFF;
+						box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+						padding: 10px 14px;
+						color: #101828;
+						font-size: 16px;
+						font-style: normal;
+						font-weight: 400;
+						line-height: 24px;
+					}
+
+					.wprf-select-wrapper {
+						.wprf-selected-options {
+							display: flex;
+							gap: 8px;
+							justify-content: flex-end;
+							flex-wrap: wrap;
+							margin: 0;
+							padding: 5px 0 0 0;
+
+							.wprf-selected-option {
+								min-height: 22px;
+								display: inline-flex;
+								margin: 0;
+								padding: 1px 8px 1px 10px;
+								justify-content: center;
+								align-items: center;
+								gap: 4px;
+								border-radius: 4px;
+								background: var(--warning-50);
+								color: var(--warning-700);
+								text-align: center;
+								font-size: 12px;
+								font-style: normal;
+								font-weight: 500;
+								line-height: 1.5;
+
+								button {
+									width: 12px;
+									height: 12px;
+									border: none;
+									margin: 0;
+									padding: 0;
+									background-color: transparent;
+									color: var(--warning-700);
+									display: inline-flex;
+									align-items: center;
+									justify-content: center;
+									cursor: pointer;
+								}
+							}
+						}
+
+						.wprf-select {
+							width: 605px !important;
+						}
+
+						.wprf-select__control {
+							border-radius: 8px !important;
+							border: 1px solid #D0D5DD !important;
+
+							.wprf-select__value-container {
+								padding: 0px 0px 0px 15px !important;
+
+								.wprf-select__placeholder,
+								.wprf-select__single-value {
+									color: #101828;
+									font-size: 16px;
+									font-style: normal;
+									font-weight: 400;
+									line-height: 24px;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			.repeater-heading {
+				color: #1D2939;
+				font-size: 24px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: normal;
+			}
+
+			.repeater-subtitle {
+				color: #475467;
+				font-size: 16px;
+				font-style: normal;
+				font-weight: 400;
+				line-height: 160%;
+			}
+		}
+	}
+}
+
+.wprf-repeater-no-rules-message-wrapper {
+	display: flex !important;
+	width: 100% !important;
+	justify-content: center !important;
+	padding: 60px 0px 30px 0px !important;
+
+	.wprf-repeater-no-rules-message-wrapper-secondary-wrapper {
+		display: flex !important;
+		width: 457px !important;
+		flex-direction: column !important;
+		align-items: center !important;
+		gap: 25px !important;
+
+		img {
+			width: 115px !important;
+			height: 95px !important;
+		}
+
+		.wprf-repeater-rules-heading {
+			color: var(--text-color-900) !important;
+			font-size: 20px !important;
+			font-style: normal !important;
+			font-weight: 500 !important;
+			line-height: 28px !important;
+		}
+
+		.wprf-repeater-rules-subtitle {
+			color: var(--text-color-600) !important;
+			text-align: center !important;
+			font-size: 14px !important;
+			font-style: normal !important;
+			font-weight: 400 !important;
+			line-height: 130% !important;
+		}
+	}
+}
+
+.wprf-repeater-content {
+	.wprf-repeater-field {
+		margin-bottom: 20px !important;
+
+		.wprf-repeater-inner-field {
+			&.betterdocs {
+				display: flex !important;
+				justify-content: space-between !important;
+				border-radius: 4px !important;
+				border: 1px solid #F2F4F7 !important;
+				background: #FAFBFB !important;
+
+				.wprf-repeater-inner-field-item {
+					p {
+						color: #1D2939 !important;
+						font-size: 14px !important;
+						font-style: normal !important;
+						font-weight: 600 !important;
+						line-height: 20px !important;
+					}
+				}
+
+				.betterdocs-action-toggle-wrapper {
+					.betterdocs-cookies-list-action {
+						#betterdocs-admin-actions-ul {
+							display: flex !important;
+							align-items: center !important;
+							justify-content: space-between !important;
+							gap: 10px !important;
+
+							svg {
+								cursor: pointer !important;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.wprf-modal-preview-footer {
+	.wpsp-btn-preview-update {
+		display: flex !important;
+		width: 145px !important;
+		padding: 10px 16px !important;
+		justify-content: center !important;
+		align-items: center !important;
+		gap: 8px !important;
+		flex-shrink: 0 !important;
+		border-radius: 8px !important;
+		border: 1px solid #00B884 !important;
+		background: #00B884 !important;
+		box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05) !important;
+		color: #FFF !important;
+		font-size: 14px !important;
+		font-style: normal !important;
+		font-weight: 600 !important;
+		line-height: 20px !important;
+		/* 142.857% */
+
+		&.locked {
+			opacity: 0.5 !important;
+			cursor: not-allowed !important;
+		}
+	}
+}
+
+.wprf-repeater-control {
+	padding: 0px 0px 40px 0px !important;
+
+	&.no-rules {
+		display: flex !important;
+		justify-content: center !important;
+	}
+
+	.wprf-repeater-label {
+		display: flex !important;
+		width: 181px !important;
+		justify-content: center !important;
+		align-items: center !important;
+		gap: 8px !important;
+		border-radius: 8px !important;
+		border: 1px solid var(--text-color-400) !important;
+		cursor: pointer !important;
+		min-height: 40px !important; box-sizing: border-box !important; padding: 2px 16px !important;
+
+		.repeater-button-icon-wrapper {
+			height: 16px !important;
+			width: 16px !important;
+		}
+
+		.wprf-repeater-button {
+			border: none !important;
+			background: transparent !important;
+			color: var(--text-color-900) !important;
+			font-size: 14px !important;
+			font-style: normal !important;
+			font-weight: 600 !important;
+			line-height: 1.42 !important;
+			padding: 0px !important;
+			margin: 0px !important;
+			cursor: pointer !important;
+		}
+	}
+}
+
+// plus.png is a dark glyph; flip it to white so the "Add New Rule" icon
+// stays visible in dark mode.
+.betterdocs-dark-mode .wprf-repeater-control .wprf-repeater-label .repeater-button-icon-wrapper {
+	filter: brightness(0) invert(1) !important;
+}
+
+//disable radio card styles
+.wprf-input-radio-option {
+	min-height: 0px !important;
+	box-shadow: unset !important;
+	margin-top: 0px !important;
+	line-height: 0px !important;
+
+	&.wprf-option-selected {
+		&::before {
+			display: none !important;
+		}
+
+		&::after {
+			content: unset !important;
+		}
+	}
+
+	input {
+		&[type="radio"] {
+			display: block !important;
+
+			&:focus {
+				box-shadow: unset;
+			}
+
+			&:checked {
+				&::before {
+					background-color: #00b884 !important;
+					width: 100%;
+					height: 100%;
+					margin: 0;
+				}
+			}
+		}
+	}
+}
+
+.wprf-control {
+	.wprf-flex {
+		justify-content: flex-end !important;
+	}
+
+	&.wprf-radio-card {
+		.wprf-column-3 {
+			width: 35% !important;
+
+			.wprf-input-label {
+				white-space: pre;
+				line-height: 10px !important;
+				background: none !important;
+				color: #3c434a !important;
+			}
+		}
+	}
+
+	&.modal-radio-card-access-control {
+		.wprf-flex {
+			flex-wrap: nowrap !important;
+			width: 135% !important;
+		}
+
+		.wprf-input-radio-option {
+			flex-direction: row-reverse !important;
+			justify-content: space-between !important;
+
+			.wprf-input-label {
+				padding: 10px 10px 10px 0px !important;
+			}
+
+			.modal-radio-card-access-control {
+				margin: 0px !important;
+			}
+		}
+	}
+}
+
+.betterdocs-access-control-wrapper {
+	.wprf-modal-preview-footer {
+		padding-bottom: 30px !important;
+
+		.wpsp-btn-preview-update {
+			cursor: pointer !important;
+		}
+	}
+}

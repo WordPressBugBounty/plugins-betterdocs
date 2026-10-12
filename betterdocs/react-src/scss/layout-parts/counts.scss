@@ -1,0 +1,63 @@
+// CHECKED:
+
+%count-circle-style {
+    padding: 6px;
+    background-color: rgba(#528ffe, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-left: auto;
+    span {
+        background-color: rgba(#528ffe, 0.2);
+        height: 30px;
+        width: 30px;
+        font-size: 15px;
+        font-weight: bold;
+        color: #528ffe;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+}
+
+.betterdocs-category-items-counts {
+    span {
+        @include for(".betterdocs-category-box-wrapper") {
+            color: #707070;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+        }
+    }
+
+    @at-root .betterdocs-category-grid-wrapper
+            .betterdocs-category-grid-inner-wrapper
+            #{&} {
+        @include if(
+            ".betterdocs-category-grid-inner-wrapper",
+            " >*:not(.betterdocs-grid-top-row-wrapper)"
+        ) {
+            @extend %count-circle-style;
+        }
+    }
+    @at-root .betterdocs-sidebar-content.betterdocs-category-sidebar #{&} span {
+        font-size: 12px;
+    }
+
+    @include for(".betterdocs-category-layout-6") {
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 1.7;
+        color: #e32222;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: lighten(#e32222, 45%);
+        border-radius: 100px;
+        text-align: center;
+        margin-left: 15px;
+        padding: 5px 10px;
+    }
+}

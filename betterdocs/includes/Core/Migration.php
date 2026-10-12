@@ -38,6 +38,7 @@ class Migration extends Base {
 		$this->search_migration();
 		$this->fix_search_table_collation();
 		$this->backfill_search_keyword_hash();
+		$this->reset_formerly_locked_analytics_settings();
 
 		/**
 		 * Settings Migration
@@ -206,5 +207,46 @@ class Migration extends Base {
 		if ( 0 === $remaining ) {
 			$this->database->save( 'betterdocs_search_keyword_hash_filled', '1.0.3' );
 		}
+	}
+
+	/**
+	 * Clear the placeholder values the old Pro lock saved for the analytics
+	 * collection settings.
+	 *
+	 * Until these settings were unlocked in Free (WP.org guideline 5), the
+	 * settings screen merged Settings::pro_settings_default_values() into its
+	 * form whenever Pro was inactive, so any save stored `analytics_from`,
+	 * `unique_visitor_count`, `exclude_bot_analytics` and
+	 * `child_category_exclude` as boolean false. Free ignored those keys then,
+	 * so the tracker counted everyone, excluded bots and skipped unique visits.
+	 *
+	 * Free now reads the stored values, so a leftover `exclude_bot_analytics =
+	 * false` would suddenly start counting bot traffic. A boolean false in
+	 * `analytics_from` is the marker of that merge: no UI ever saves it (Free's
+	 * select saves a string; Pro's Analytics → Settings never writes the key).
+	 * When it is present, restore the behaviour those sites actually had.
+	 * `unique_visitor_count` is left as stored — false there matches the old
+	 * behaviour — and `child_category_exclude` false is already the default.
+	 *
+	 * @return void
+	 */
+	public function reset_formerly_locked_analytics_settings() {
+		if ( $this->database->get( 'betterdocs_unlocked_analytics_settings_migrated', false ) ) {
+			return;
+		}
+
+		$settings = $this->database->get( 'betterdocs_settings', [] );
+
+		if ( is_array( $settings ) && array_key_exists( 'analytics_from', $settings ) && false === $settings['analytics_from'] ) {
+			$settings['analytics_from'] = 'everyone';
+
+			if ( array_key_exists( 'exclude_bot_analytics', $settings ) && ! $settings['exclude_bot_analytics'] ) {
+				$settings['exclude_bot_analytics'] = true;
+			}
+
+			$this->database->save( 'betterdocs_settings', $settings );
+		}
+
+		$this->database->save( 'betterdocs_unlocked_analytics_settings_migrated', '1' );
 	}
 }

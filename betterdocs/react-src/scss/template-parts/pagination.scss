@@ -1,0 +1,64 @@
+.betterdocs-pagination {
+    margin-top: 20px;
+    ul {
+        display: flex;
+        gap: 10px;
+        padding-left: 0;
+        list-style: none;
+        border-radius: 4px;
+        margin: 0;
+        li {
+            display: inline;
+            a {
+                color: #737A85;
+                background-color: #fff;
+                float: left;
+                height: 40px;
+                width: 40px;
+                text-decoration: none;
+                transition: border 0.3s;
+                border-radius: 4px;
+                font-size: 14px;
+                line-height: 1.4em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                &:hover {
+                    color: #00B884;
+                    border: 1px solid #00B884;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }
+            &.active a {
+                color: #00B884;
+                border: 1px solid #00B884;
+            }
+            &.disabled a {
+                color: #ddd; // Disabled color
+                pointer-events: none;
+            }
+        }
+    }
+    &.next {
+        a {
+            color: #949DA8;
+        }
+    }
+}
+.doc-category-layout-7 {
+    .betterdocs-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 60px;
+        ul {
+            li {
+                a {
+                    background-color: #F6F7F8;
+                }
+            }
+        }
+    }
+}

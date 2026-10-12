@@ -1,0 +1,198 @@
+/**
+ * BetterDocs Unified Metabox Styles
+ */
+
+// Import circular progress quality analysis styles
+@import 'quality-analysis-circular';
+
+#betterdocs-unified-metabox {
+	background-color: #FAFBFB;
+	.postbox-header {
+        background-color: #fff;
+        padding: 12px 0;
+        border-bottom: 1px solid #D0D5DD;
+        h2 {
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 100%;
+            color: #1D2939;
+        }
+	}
+    .inside {
+        margin-top: 24px;
+    }
+}
+.betterdocs-unified-metabox {
+	width: 100%;
+	max-width: 850px;
+	margin: 0 auto;
+    .betterdocs-metabox-tabs {
+        display: flex;
+        border-bottom: 1px solid #E2E5E9;
+		background-color: #fff;
+        margin: 0;
+        padding: 0 24px;
+		gap: 24px;
+
+        .betterdocs-metabox-tab {
+            flex: 0 0 auto;
+            padding: 16px 32px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+			line-height: 1.5;
+            font-weight: 500;
+            color: #D0D5DD;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+
+
+            .tab-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 16px;
+                height: 16px;
+
+                svg {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+
+            &:hover {
+                color: #00B884;
+            }
+
+            &.active {
+                border-bottom-color: #00B884;
+                color: #00B884;
+                border-radius: 0px;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .betterdocs-metabox-content {
+        background: #fff;
+        padding: 24px;
+
+        .betterdocs-metabox-panel {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+        }
+    }
+}
+
+// Article Quality Analysis Tab Styles - Now imported from _quality-analysis-circular.scss
+
+// Regenerate button
+.betterdocs-regenerate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    border: 1px solid #2271b1;
+    color: #2271b1;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    &:hover {
+        background: #2271b1;
+        color: #fff;
+        border-color: #2271b1;
+
+        svg {
+            animation: rotate 0.6s ease-in-out;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .dashicons {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Reading Time Tab Styles
+.betterdocs-reading-time-content {
+    .est-reading-box-wrapper {
+        p {
+            margin-bottom: 15px;
+            color: #50575e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .est-reading-box-outer-wrapper {
+            background: #f9fafb;
+            border-radius: 6px;
+            display: flex;
+            padding: 1em;
+            margin-bottom: 10px;
+
+            .ert-text-field-class {
+                width: 100%;
+                max-width: 400px;
+                padding: 10px 14px;
+                border: 1px solid #8c8f94;
+                border-radius: 6px;
+                font-size: 14px;
+                background: #fff;
+                transition: all 0.2s ease;
+
+                &:focus {
+                    border-color: #2271b1;
+                    outline: none;
+                    box-shadow: 0 0 0 1px #2271b1;
+                }
+
+                &::placeholder {
+                    color: #9ca3af;
+                }
+            }
+        }
+    }
+}
+
+// Related Docs Tab Styles
+.betterdocs-related-docs-content {
+    #betterdocs-related-articles-root {
+        min-height: 200px;
+    }
+}
+

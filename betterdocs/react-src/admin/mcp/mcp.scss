@@ -1,0 +1,1247 @@
+/**
+ * MCP page — the delta on top of the shared `bda-*` shell.
+ *
+ * Everything that already exists is reused by class name: `.bda-card`,
+ * `.bda-card-head/body/title`, `.bda-btn` (`primary` / `ghost` / `sm`),
+ * `.bda-badge` (`green` / `amber` / `red` / `slate`), `.bda-table` and its
+ * `.bda-t-right` / `.bda-strong` helpers. Only what this screen genuinely adds
+ * is below, and every colour is a token so dark mode follows for free
+ * (`docs/design-system.md` → Foundations rule 2).
+ */
+
+/**
+ * The `bda-*` alias tokens, re-declared for this page.
+ *
+ * BetterDocs Pro's `admin/css/analytics.css` is enqueued on **every** BetterDocs
+ * admin screen, and it re-declares the shared shell rules — `.bda-card`,
+ * `.bda-card-head`, `.bda-btn.primary`, `.bda-badge`, `.bda-table` and a dozen
+ * more — in terms of `--bda-*` variables it only defines inside its own
+ * `.bda-app` wrapper. On any other page those variables resolve to nothing, the
+ * whole declaration becomes invalid, and the element falls back to its initial
+ * value: cards lose their background *and* their border, the primary button
+ * loses its green and reads as disabled. That is what the MCP screen was showing
+ * (measured: `.bda-card` computed `background: rgba(0,0,0,0)`, `border-width: 0`;
+ * 19 unscoped Pro rules affected).
+ *
+ * Pro's own `.bda-app` block maps each alias onto a BetterDocs design-system
+ * token, so declaring the same mapping on this page's wrapper restores every one
+ * of those rules to the value it was written for — and, because the right-hand
+ * side is the shared token, dark mode still follows for free. Free-side and
+ * local on purpose: it must not depend on a Pro release, and with Pro inactive
+ * the aliases are simply unused.
+ */
+/* `.bd-mcp-header-host` is the node the MCP header row is portalled into — it
+   lives in the admin shell's header, outside `.bd-mcp-wrapper`, and the status
+   badge inside it is a `bda-badge`, so it needs the same aliases or Pro's
+   admin-wide stylesheet strips the badge's background. */
+.bd-mcp-wrapper,
+.bd-mcp-header-host {
+    --bda-green: var(--base-color-700);
+    --bda-green-d: var(--base-color-700);
+    --bda-green-soft: var(--base-color-75);
+    --bda-green-border: var(--base-color-100);
+    --bda-bg: var(--text-color-50);
+    --bda-card-bg: var(--base-background);
+    --bda-border: var(--text-color-200);
+    --bda-border-2: var(--text-color-100);
+    --bda-border-strong: var(--text-color-300);
+    --bda-hover: var(--base-color-65);
+    --bda-thead: var(--text-color-50);
+    --bda-ink: var(--text-color-900);
+    --bda-s900: var(--text-color-900);
+    --bda-s800: var(--text-color-800);
+    --bda-s700: var(--text-color-700);
+    --bda-s600: var(--text-color-850);
+    --bda-s500: var(--text-color-600);
+    --bda-s400: var(--text-color-500);
+    --bda-amber: #f59e0b;
+    --bda-red: #ef4444;
+    --bda-blue: #3b82f6;
+}
+
+// Toast notifications (the master switch, rotate, revoke) — use the BetterDocs
+// brand colors instead of react-toastify's default green/red. The library's
+// `--toastify-color-success` (#07bc0c) is a brighter, yellower green than the
+// CTA green this page uses everywhere else, so a success toast landed beside a
+// green button that did not match it.
+//
+// Scoped to this screen, matching `.betterdocs-faq-builder-wrapper`
+// (`admin/scss/faq-builder/bd-faq.scss`) and `.betterdocs-settings`
+// (`admin/scss/admin.scss`), which theme their toasts exactly this way — and
+// which is why this page, a third wrapper, never inherited it. The library
+// default is deliberately left alone: every screen that has not opted in still
+// gets it.
+//
+// A block of its own rather than a member of the alias selector list above:
+// that list also carries `.bd-mcp-header-host`, the portalled header node, and
+// no toast is ever rendered inside it.
+.bd-mcp-wrapper {
+    .Toastify__toast--success {
+        background: var(--base-color-700) !important;
+    }
+
+    .Toastify__toast--error {
+        background: var(--danger-600) !important;
+    }
+}
+
+.bd-mcp {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    // No cap of its own: the header row is portalled into the shell's
+    // `.betterdocs-dashboard-container` (1170px), and a page whose cards stop
+    // 90px short of their own title reads as broken. The 1080px cap that used
+    // to sit here existed to keep a third column out of the card grid; the grid
+    // states its two columns outright now, so the cap has nothing left to do
+    // (ADR-062).
+
+    // -- Header row ---------------------------------------------------------
+    //
+    // Portalled into the admin shell's own header container, so it inherits the
+    // shell's `.betterdocs-row` grid and its 24px title size — the same heading
+    // every other BetterDocs screen wears — and only needs what the shell has no
+    // rule for: the mark, the badge's alignment and the switch beside the
+    // dark-mode button (ADR-062).
+    &-header {
+        &__left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &__tile {
+            flex: 0 0 auto;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--base-color-700);
+            background: var(--base-color-75);
+        }
+
+        &__title {
+            margin: 0;
+        }
+
+        &__right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+    }
+
+    // -- Intro strip --------------------------------------------------------
+    //
+    // What the hero card used to be. The description is one muted line with the
+    // capability disclosure beside it; opening the disclosure lets the line wrap
+    // in full and reveals the list. A dashboard's first job is to show numbers,
+    // and five lines of prose above the KPI row pushed them off the fold
+    // (ADR-062).
+    &-intro {
+        padding: 10px 16px;
+
+        &__row {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+        }
+
+        &__desc {
+            margin: 0;
+            flex: 1 1 auto;
+            min-width: 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-color-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.is-open &__desc {
+            white-space: normal;
+        }
+
+        &__more {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 0;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--base-color-700);
+
+            &:hover {
+                color: var(--base-color-800);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--base-color-700);
+                outline-offset: 3px;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    // -- KPI tiles ----------------------------------------------------------
+    //
+    // The geometry is the shared `bda-kpi*` shell; only the two things it has
+    // no rule for are here. There is no sparkline and no delta chip on this row
+    // on purpose: the server keeps one `last_used` stamp per credential and no
+    // history, so a trend could only be invented (ADR-062).
+    &-kpi {
+        &__ico {
+            color: var(--bd-accent, var(--base-color-700));
+            background: var(--bd-accent-tint, var(--base-color-75));
+        }
+
+        // Two of the four tiles hold words, not a number. At 28px "Setup
+        // needed" wraps to two lines and pushes the row taller than its
+        // neighbours.
+        &__value--sm {
+            font-size: 20px;
+        }
+
+        &__note {
+            font-size: 11.5px;
+            color: var(--text-color-500);
+            white-space: nowrap;
+        }
+    }
+
+    // -- Toggle -------------------------------------------------------------
+    &-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+
+        input {
+            // Kept in the accessibility tree and focusable — the visible track
+            // is styled from its :focus-visible state below.
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        &__track {
+            position: relative;
+            width: 42px;
+            height: 24px;
+            border-radius: 999px;
+            background: var(--text-color-300);
+            transition: background 0.15s;
+            flex: 0 0 auto;
+        }
+
+        &__thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.2);
+            transition: transform 0.15s;
+        }
+
+        &__label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color-800);
+        }
+
+        input:checked + &__track {
+            background: var(--base-color-700);
+        }
+
+        input:checked + &__track &__thumb,
+        input:checked + .bd-mcp-switch__track .bd-mcp-switch__thumb {
+            transform: translateX(18px);
+        }
+
+        input:disabled + &__track {
+            opacity: 0.6;
+        }
+
+        // Standard focus state (design-system Foundations rule 5).
+        input:focus-visible + &__track {
+            box-shadow:
+                0 0 0 4px var(--focus-shadow-1),
+                0 1px 2px 0 var(--focus-shadow-2);
+        }
+    }
+
+    // -- Capability list ----------------------------------------------------
+    //
+    // What the disclosure in the intro strip reveals. Two columns, because the
+    // strip is the full width of the page and five short items down one side of
+    // it would leave the other side empty.
+    &-caps {
+        list-style: none;
+        margin: 12px 0 4px;
+        padding: 10px 0 0;
+        border-top: 1px solid var(--text-color-150);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 24px;
+
+        &__note {
+            grid-column: 1 / -1;
+            margin: 0 0 2px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-color-600);
+        }
+
+        &__item {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-size: 13px;
+            color: var(--text-color-700);
+        }
+
+        &__check {
+            color: var(--base-color-700);
+            display: inline-flex;
+            margin-top: 3px;
+            flex: 0 0 auto;
+        }
+    }
+
+    // -- Shared bits --------------------------------------------------------
+    &-muted {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--text-color-600);
+        max-width: 78ch;
+    }
+
+    &-cardhead {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    &-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    &-danger {
+        color: var(--danger-600);
+
+        &:hover {
+            border-color: var(--danger-600);
+        }
+    }
+
+    &-alert {
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 13px;
+        line-height: 1.6;
+        border: 1px solid var(--text-color-200);
+        background: var(--text-color-50);
+        color: var(--text-color-800);
+        margin-bottom: 14px;
+
+        &.is-success {
+            border-color: var(--base-color-700);
+            background: var(--base-color-75);
+            color: var(--text-color-900);
+        }
+
+        &.is-warning {
+            border-color: var(--warning-400);
+            background: var(--warning-50);
+            color: var(--warning-700);
+        }
+
+        &.is-error {
+            border-color: var(--danger-600);
+            background: var(--danger-50);
+            color: var(--danger-700);
+        }
+    }
+
+    // -- Copy fields --------------------------------------------------------
+    &-field {
+        display: block;
+        margin-bottom: 14px;
+
+        &__label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text-color-600);
+            margin-bottom: 6px;
+        }
+
+        &__control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--text-color-200);
+            border-radius: 8px;
+            background: var(--base-background);
+            padding: 7px 8px 7px 12px;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+
+            &.is-block {
+                display: block;
+                padding: 12px;
+            }
+        }
+
+        &__value {
+            flex: 1 1 auto;
+            min-width: 0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12.5px;
+            color: var(--text-color-900);
+            background: none;
+
+            // wp-admin's own `code` rule (`wp-admin/css/common.css`, WP 7.1
+            // L419) hands this element `padding: 3px 5px 2px` and
+            // `margin: 0 1px`, and the element is `box-sizing: border-box`.
+            // Those 12px come out of the width the flex algorithm just handed
+            // it, so the value is laid out in a box narrower than the space it
+            // was given. Measured at 1400px on a 52-character connector URL
+            // (`https://numberlessview.s6-tastewp.com/betterdocs/mcp`): the box
+            // is 401.31px, the text 391.34px, and the content box 391.31px —
+            // three hundredths of a pixel short. The URL therefore broke after
+            // `numberlessview.s6-` into two 195.67px lines, leaving 207.6px of
+            // the field empty between the first line and the Copy button
+            // `background` was already being
+            // neutralised here for the same reason; these two belong with it.
+            padding: 0;
+            margin: 0;
+
+            // `anywhere` cuts mid-token as soon as any constraint is hit, and
+            // it also drops the box's min-content contribution to a single
+            // character. `break-word` keeps the URL's own break opportunities
+            // (after `/`, after `-`) and only cuts a word up when that one word
+            // cannot fit on a line of its own — which is still what the
+            // 64-character connection token needs, so it wraps exactly as
+            // before.
+            overflow-wrap: break-word;
+        }
+
+        &__pre {
+            margin: 0 0 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-color-900);
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        &__actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 0 auto;
+        }
+
+        &__help {
+            display: block;
+            font-size: 12px;
+            color: var(--text-color-600);
+            margin-top: 6px;
+            max-width: 78ch;
+        }
+    }
+
+    // -- Tabs ---------------------------------------------------------------
+    //
+    // The two tabs are now the shared analytics segmented control (`bda-segtabs`
+    // / `bda-segtab`), sitting in the connect card's head — the underline strip
+    // this class used to draw is gone with the standalone section head (ADR-062).
+    // Only the focus ring is ours: `bda-segtab` has none.
+    &-tabs {
+        flex-shrink: 0;
+
+        .bda-segtab:focus-visible {
+            outline: 2px solid var(--base-color-700);
+            outline-offset: -2px;
+        }
+    }
+
+    &-tabpanel {
+        min-height: 120px;
+    }
+
+    // -- Steps --------------------------------------------------------------
+    &-steps {
+        list-style: none;
+        counter-reset: none;
+        margin: 14px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+
+        &__item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13.5px;
+            color: var(--text-color-700);
+        }
+
+        &__num {
+            flex: 0 0 auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11.5px;
+            font-weight: 700;
+            background: var(--base-color-75);
+            color: var(--base-color-700);
+        }
+    }
+
+    // -- Connect section ----------------------------------------------------
+    //
+    // An analytics card (ADR-062): the title, its "how it works" line and the
+    // two tabs live in `bda-card-head`, the panel in `bda-card-body`, and the
+    // rotate row is the card's footer. Nothing of its own is left to declare.
+
+    &-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: var(--base-color-700);
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover,
+        &:focus {
+            color: var(--base-color-800);
+            text-decoration: underline;
+        }
+    }
+
+    // -- Client cards -------------------------------------------------------
+    //
+    // Two columns on a wide screen, one below 782px (WordPress' own admin
+    // breakpoint). Stated rather than left to `auto-fit`/`minmax`: this grid
+    // holds exactly two cards since the five editor clients moved into the
+    // picker (ADR-057), so the arithmetic that once had to keep a third column
+    // out (ADR-054) is arithmetic about cards that are no longer here.
+    &-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    &-card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 16px;
+
+        // The card owns its spacing; `CopyField`'s own bottom margin would
+        // double up against the flex gap.
+        .bd-mcp-field {
+            margin-bottom: 0;
+        }
+
+        &__head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        // `--bd-accent` / `--bd-accent-tint` are set inline per card, so each
+        // client wears its own mark's colour without a rule per client.
+        &__icon {
+            flex: 0 0 auto;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bd-accent, var(--base-color-700));
+            background: var(--bd-accent-tint, var(--base-color-75));
+
+            // Every client tile is white with a hairline border and the glyph
+            // in its own colour: the vendor marks carry their own fill from the
+            // file they were supplied as, ours take the accent. One treatment
+            // for the whole row (ADR-066, replacing ADR-065's split).
+            &.is-solid {
+                background: var(--base-background);
+                border: 1px solid var(--text-color-200);
+            }
+        }
+
+        &__headtext {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        &__title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color-900);
+        }
+
+        &__sub {
+            display: block;
+            margin-top: 3px;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--text-color-600);
+        }
+
+        &__cta {
+            align-self: flex-start;
+        }
+    }
+
+    // -- The accent tile ----------------------------------------------------
+    //
+    // One rule for every client mark. `--bd-accent` / `--bd-accent-tint` are set
+    // inline per client, so a brand colour never needs a rule of its own, and
+    // dark mode can override the pair in one place (ADR-054).
+    &-tile {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bd-accent, var(--base-color-700));
+        background: var(--bd-accent-tint, var(--base-color-75));
+
+        // Same pair as `.bd-mcp-card__icon` above, and for the same reason.
+        // Every client tile is white with a hairline border and the glyph in
+        // its own colour — the vendor marks carry their own fill from the
+        // supplied file, ours take the accent. One treatment for the row, so a
+        // mark we drew never looks more endorsed than a vendor's (ADR-066).
+        &.is-solid {
+            background: var(--base-background);
+            border: 1px solid var(--text-color-200);
+        }
+
+        &--36 {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+        }
+
+        &--28 {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+        }
+    }
+
+    // -- Editors & CLI: rail + detail panel ---------------------------------
+    //
+    // Five clients whose natural heights are nothing alike — a deep-link button
+    // beside a twelve-line prompt — so they are picked one at a time instead of
+    // tiled (ADR-057). The OAuth tab keeps the grid; its two cards match.
+    &-split {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 4px;
+    }
+
+    &-rail {
+        flex: 0 0 250px;
+        border-right: 1px solid var(--text-color-150);
+        padding: 6px 10px 12px 0;
+
+        &__label {
+            display: block;
+            padding: 8px 14px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-color-600);
+        }
+
+        &__item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 7px 12px 7px 14px;
+            border: 0;
+            border-radius: 0 8px 8px 0;
+            background: none;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+
+            &:hover:not(.is-selected) {
+                background: var(--text-color-50);
+            }
+
+            &.is-selected {
+                background: var(--base-color-75);
+            }
+
+            // The 3px edge, drawn rather than bordered so the item's own
+            // padding does not shift by 3px when it becomes selected.
+            &.is-selected::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 6px;
+                bottom: 6px;
+                width: 3px;
+                border-radius: 0 2px 2px 0;
+                background: var(--base-color-700);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--base-color-700);
+                outline-offset: -2px;
+            }
+        }
+
+        &__name {
+            flex: 1 1 auto;
+            min-width: 0;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--text-color-900);
+        }
+    }
+
+    &-detail {
+        flex: 1 1 560px;
+        min-width: 0;
+        padding: 18px 4px 4px 22px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &__head {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        &__headtext {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        &__name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-color-900);
+        }
+
+        &__desc {
+            display: block;
+            margin-top: 2px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-color-600);
+        }
+
+        &__label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-color-600);
+        }
+
+        // `CopyField` carries its own label and bottom margin; the panel owns
+        // the rhythm, so the field only supplies the box.
+        &__pay {
+            margin-top: 18px;
+
+            .bd-mcp-field {
+                margin-bottom: 0;
+            }
+        }
+
+        &__cta {
+            align-self: flex-start;
+        }
+
+        &__hint {
+            margin: 8px 0 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-color-600);
+        }
+    }
+
+    // -- Browser / token segmented control ----------------------------------
+    &-seg {
+        display: inline-flex;
+        margin-top: 16px;
+        padding: 3px;
+        border-radius: 8px;
+        background: var(--text-color-50);
+
+        &__btn {
+            border: 0;
+            border-radius: 6px;
+            padding: 6px 12px;
+            background: none;
+            color: var(--text-color-700);
+            font: inherit;
+            font-size: 13px;
+            line-height: 1.4;
+            cursor: pointer;
+            white-space: nowrap;
+
+            small {
+                margin-left: 6px;
+                font-size: 12px;
+                font-weight: 400;
+                color: var(--text-color-600);
+            }
+
+            &:hover:not(.is-active) {
+                color: var(--text-color-900);
+            }
+
+            &.is-active {
+                background: var(--base-background);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+                color: var(--text-color-900);
+                font-weight: 500;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--base-color-700);
+                outline-offset: 1px;
+            }
+        }
+    }
+
+    // The one line that says what the token mode costs. Informational, beside
+    // the payload rather than over it: choosing the token is supported.
+    &-warn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 10px 0 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-color-600);
+
+        svg {
+            flex: 0 0 auto;
+        }
+    }
+
+    // -- Rotate row (the connect card's footer) -----------------------------
+    //
+    // A footer row on the card rather than a block inside one tab's panel: it
+    // is a property of the connection, not of the tab that happens to be open,
+    // and its own last clause is addressed to the OAuth reader (ADR-062).
+    &-reset {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding: 14px 20px;
+        border-top: 1px solid var(--text-color-100);
+
+        &__text {
+            margin: 0;
+            flex: 1 1 420px;
+            max-width: 78ch;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-color-600);
+        }
+    }
+
+    &-checkline {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        text-align: left;
+        margin: 16px 0 18px;
+        font-size: 13.5px;
+        color: var(--text-color-800);
+        cursor: pointer;
+
+        input {
+            margin-top: 3px;
+            flex: 0 0 auto;
+        }
+
+        label {
+            cursor: pointer;
+        }
+
+        em {
+            display: block;
+            font-style: normal;
+            font-size: 12.5px;
+            color: var(--text-color-600);
+            margin-top: 2px;
+            max-width: 60ch;
+        }
+    }
+
+    // -- Empty state --------------------------------------------------------
+    &-empty {
+        text-align: center;
+        padding: 26px 20px;
+
+        &__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: var(--text-color-100);
+            color: var(--text-color-500);
+            margin-bottom: 12px;
+        }
+
+        &__title {
+            margin: 0 0 6px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color-900);
+        }
+
+        &__text {
+            margin: 0 auto;
+            font-size: 13px;
+            color: var(--text-color-600);
+            max-width: 54ch;
+        }
+    }
+
+    // -- Connected apps table ----------------------------------------------
+    &-tablewrap {
+        overflow-x: auto;
+    }
+
+    &-table {
+        width: 100%;
+        min-width: 780px;
+    }
+
+    // The `Actions` column's header, dragged left by a three-rule cascade:
+    //
+    //   .bda-t-right                        right   (0,1,0)  the helper
+    //   .bda-table thead th                 left    (0,1,2)  outranks it
+    //   .bda-app .bda-t-right               center  (0,2,0)  Pro, inside Analytics only
+    //
+    // So a `<th class="bda-t-right">` came out **left** while its `<td>` came out
+    // right, and the label could never line up with the Revoke buttons under it.
+    //
+    // Scoped to this page rather than fixed on the helper, because the helper is
+    // not broken — this page is the thing using it somewhere its author did not
+    // plan for. Pro's `analytics/scss/analytics.scss` says so in as many words:
+    // *"`.bda-t-right` is used only inside `.bda-app` … so this scoped override
+    // is safe"*, and inside `.bda-app` it centres header **and** values together
+    // on purpose. An unscoped `.bda-table thead th.bda-t-right` (0,2,2) outranks
+    // that and leaves Analytics' headers right over centred cells — built,
+    // measured at 29.1px and 25.1px of drift on the Overview teaser, and
+    // reverted. Do not "simplify" this back onto the shared helper.
+    .bda-table thead th.bda-t-right {
+        text-align: right;
+    }
+
+    &-host {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        color: var(--text-color-700);
+    }
+
+    // -- Health -------------------------------------------------------------
+    &-health {
+        &__list {
+            display: grid;
+            border: 1px solid var(--text-color-150);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        &__row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 13px 16px;
+
+            + .bd-mcp-health__row {
+                border-top: 1px solid var(--text-color-150);
+            }
+        }
+
+        &__text {
+            min-width: 0;
+        }
+
+        &__label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-color-900);
+        }
+
+        &__detail {
+            display: block;
+            font-size: 12.5px;
+            color: var(--text-color-600);
+            margin-top: 2px;
+            max-width: 78ch;
+        }
+    }
+
+    &-checks {
+        list-style: none;
+        margin: 0 0 16px;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+
+        &__item {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-color-700);
+        }
+
+        &__ok {
+            color: var(--base-color-700);
+            font-weight: 700;
+        }
+
+        &__warn {
+            color: var(--warning-500);
+            font-weight: 700;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    // Title + badge + label + switch + the dark-mode button is more than one
+    // phone-width line: the header row's two halves wrap onto their own lines
+    // and the right one aligns left under the title, rather than pushing the
+    // page wider than the viewport (the failure U12b measured at 390px).
+    .bd-mcp-header {
+        &__left,
+        &__right {
+            flex-wrap: wrap;
+        }
+
+        &__right {
+            justify-content: flex-start;
+            gap: 12px;
+        }
+    }
+
+    // The description is a single ellipsised line on a wide screen; on a narrow
+    // one there is no room for both it and the disclosure beside it, so the
+    // strip stacks and the line wraps.
+    .bd-mcp-intro__row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .bd-mcp-intro__desc {
+        white-space: normal;
+        flex-basis: 100%;
+    }
+
+    .bd-mcp-caps {
+        grid-template-columns: 1fr;
+    }
+
+    .bd-mcp-actions {
+        justify-content: flex-start;
+    }
+}
+
+// WordPress' own admin breakpoint. `auto-fit` already folds the grid when the
+// cards no longer fit, but a phone-width viewport must never leave two 320px
+// columns fighting for 390px — so the single column is stated, not left to the
+// minmax arithmetic.
+@media (max-width: 782px) {
+    .bd-mcp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    // The rail turns into a horizontal, scrollable row of chips above the
+    // panel: five items down the side of a phone would push the payload —
+    // the thing anyone came for — below the fold.
+    .bd-mcp-rail {
+        flex: 1 1 100%;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--text-color-150);
+        padding: 0 0 12px;
+        // The chips scroll inside this container; the page must not.
+        -webkit-overflow-scrolling: touch;
+
+        &__label {
+            display: none;
+        }
+
+        &__item {
+            flex: 0 0 auto;
+            width: auto;
+            gap: 8px;
+            padding: 6px 12px 6px 10px;
+            border: 1px solid var(--text-color-200);
+            border-radius: 999px;
+
+            &.is-selected {
+                border-color: var(--base-color-100);
+            }
+
+            // The selected edge is a vertical bar against a vertical list; on a
+            // chip the tint alone reads as selected.
+            &.is-selected::before {
+                content: none;
+            }
+        }
+
+        &__name {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+
+        // The badge repeats what the payload below already says, and it is what
+        // makes a chip too wide to scan.
+        .bda-badge {
+            display: none;
+        }
+    }
+
+    .bd-mcp-detail {
+        flex: 1 1 100%;
+        padding: 16px 0 4px;
+    }
+
+    .bd-mcp-reset {
+        align-items: flex-start;
+
+        .bd-mcp-actions {
+            justify-content: flex-start;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    // Two labels of this length cannot sit side by side on a phone without
+    // either wrapping mid-word or scrolling the page.
+    .bd-mcp-seg {
+        display: flex;
+        width: 100%;
+
+        &__btn {
+            flex: 1 1 50%;
+            padding: 8px 10px;
+            text-align: center;
+            white-space: normal;
+
+            small {
+                display: block;
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+/**
+ * Dark mode — the one thing the tokens cannot do for us.
+ *
+ * A card's accent is a brand colour set inline (ChatGPT's black, Cursor's
+ * near-black), and a tint computed as `#rrggbb14` is an 8% wash of that colour
+ * over whatever is behind it. On a dark surface the near-black marks disappear
+ * and the tints turn to mud, so both are replaced here: the mark takes the
+ * card's own `--bd-accent-dark` and the square takes a neutral wash.
+ */
+.betterdocs-admin.betterdocs-dark-mode {
+    .bd-mcp-card__icon,
+    .bd-mcp-tile {
+        color: var(--bd-accent-dark, var(--base-color-700));
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    // The vendor marks carry their own colours, so their tile stays a light
+    // chip in dark mode too — a terracotta logo on a near-black square is
+    // unreadable, and we no longer recolour anyone's logo (ADR-066).
+    .bd-mcp-card__icon.is-solid,
+    .bd-mcp-tile.is-solid {
+        background: #fff;
+        border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    // `--text-color-50` is a near-black surface in dark mode, so an unselected
+    // rail item hovering to it, and the segmented track, both need the lighter
+    // wash the cards use rather than the token's own value.
+    .bd-mcp-rail__item:hover:not(.is-selected) {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .bd-mcp-seg {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .bd-mcp-seg__btn.is-active {
+        background: var(--text-color-100);
+        box-shadow: none;
+    }
+}

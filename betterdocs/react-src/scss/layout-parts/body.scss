@@ -1,0 +1,51 @@
+// CHECKED:
+
+.betterdocs-body {
+    &:not(:last-of-type) {
+        padding: 15px 15px 0;
+    }
+    &:last-of-type {
+        padding: 15px;
+    }
+    @include for(".betterdocs-sidebar-layout-6") {
+        padding-top: 0;
+    }
+    @include for(
+        ".betterdocs-category-grid-wrapper > .betterdocs-category-grid-inner-wrapper"
+    ) {
+        &:last-child {
+            flex-grow: 1;
+        }
+    }
+    @include for(".betterdocs-category-grid-list-inner-wrapper.layout-6") {
+        padding: 0px;
+    }
+    @include for(
+        ".betterdocs-sidebar-content .betterdocs-category-grid-wrapper .betterdocs-single-category-wrapper"
+    ) {
+        display: none;
+    }
+    @include for(
+        ".betterdocs-sidebar-content .betterdocs-sidebar-list-wrapper .betterdocs-sidebar-list"
+    ) {
+        display: none;
+    }
+
+    // The current doc's category is rendered with `.active` by PHP, and
+    // category-toggler.js (grid) / betterdocs.js (list) open its body with an
+    // inline `display: block` -- the toggler only on window `load`, seconds
+    // after first paint, pushing every category below it down (CLS). Open it
+    // from CSS so the first paint already matches the post-JS state. The
+    // collapse/expand toggle is unaffected: jQuery's slideUp/slideToggle
+    // leave an inline `display`, which overrides this rule.
+    @include for(
+        ".betterdocs-sidebar-content .betterdocs-category-grid-wrapper .betterdocs-single-category-wrapper.active"
+    ) {
+        display: block;
+    }
+    @include for(
+        ".betterdocs-sidebar-content .betterdocs-sidebar-list-wrapper .betterdocs-sidebar-list.active"
+    ) {
+        display: block;
+    }
+}

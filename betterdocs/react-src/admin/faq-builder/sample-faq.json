@@ -1,0 +1,50 @@
+{
+  "Orders": {
+    "posts": [
+      {
+        "post_title": "What are my payment options?",
+        "post_content": "We accept all the popular payment methods such as PayPal, Visa, MasterCard, Discover, Amazon Pay, American Express and Google Pay."
+      },
+      {
+        "post_title": "How to track my order?",
+        "post_content": "You will receive an email from us after you have placed the order. You’ll get confirmation in your email when you purchase and we’ll let you know when your order is on the move. You will be able to track your order through your preferred shipping partner."
+      },
+      {
+        "post_title": "How do I cancel or change my order?",
+        "post_content": "Unfortunately, it’s not possible to make any changes to an order or cancel it once it has been placed. However, you could ask for a refund."
+      }
+    ]
+  },
+  "Shipping & Delivery": {
+    "posts": [
+      {
+        "post_title": "How long does the delivery take?",
+        "post_content": "We usually take 3-5 business days for your order to be shipped & delivered."
+      },
+      {
+        "post_title": "Do you offer free shipping?",
+        "post_content": "Yes, free shipping is available for all the orders that's placed inside the United States. We charge shipping fees for overseas orders."
+      },
+      {
+        "post_title": "Do you ship overseas?",
+        "post_content": "Yes, we ship all over the world. Please note that additional shipping costs will be applied based on your delivery location."
+      }
+    ]
+  },
+  "Refund & Exchange": {
+    "posts": [
+      {
+        "post_title": "What is your Refund & Exchange Policy?",
+        "post_content": "You can ask for a refund within 30 days of your purchase. Returned items must be in the exact same condition as they were received."
+      },
+      {
+        "post_title": "How do I track my Refund?",
+        "post_content": "To track the status of your refund, kindly refer to your confirmation email that you have received from us."
+      },
+      {
+        "post_title": "How long does it take to get the Refund?",
+        "post_content": "Once we receive your return, please allow us 3-5 business days for your refund to process. Refund amount will be automatically debited to the same form of payment originally used for purchase."
+      }
+    ]
+  }
+}

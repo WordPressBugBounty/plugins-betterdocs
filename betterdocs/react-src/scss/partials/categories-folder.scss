@@ -1,0 +1,318 @@
+.betterdocs-categories-folder {
+    &.layout-4 {
+        display: grid;
+        grid-template-columns: repeat(var(--column, 4), 1fr);
+        gap: 0;
+        position: inherit;
+
+        .category-box {
+            display: flex;
+            flex-direction: column;
+            padding: 40px 20px;
+            border-right: 1px solid #EAECF0;
+            border-bottom: 1px solid #EAECF0;
+            background: #fff;
+            transition: ease-in-out .35s;
+            text-decoration: none;
+
+            @media only screen and (max-width: 1024px) {
+                padding: 28px 16px;
+            }
+            // Remove right border for the last column in each row
+            &.no-border-right {
+                border-right: none;
+            }
+
+            // Remove bottom border for the last row
+            &.no-border-bottom {
+                border-bottom: none;
+            }
+
+            &:hover {
+                background: #F6FEF9;
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            .betterdocs-single-category-inner {
+                display: flex;
+                flex-direction: column;
+
+                .betterdocs-category-header-inner {
+
+                    .betterdocs-folder-icon {
+                        display: inline-flex;
+                        width: 32px;
+                        height: 32px;
+                        justify-content: center;
+                        align-items: center;
+                        background: #F2F4F7;
+                        border-radius: 6px;
+                        margin-bottom: 16px;
+
+                        svg {
+                            width: 18px;
+                        }
+                    }
+
+                    .betterdocs-category-title-counts {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+
+                        .betterdocs-new-post-tag {
+                            position: absolute;
+                            top: 10px;
+                            right: 14px;
+                            display: inline-flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 40px;
+                            height: 40px;
+                            background: #F63D68;
+                            border-radius: 50%;
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: #FFFFFF;
+                            margin: 0;
+
+                            @media only screen and (max-width: 768px) {
+                                width: 32px;
+                                height: 32px;
+                                background: #F63D68;
+                                border-radius: 50%;
+                                font-size: 12px;
+                            }
+                        }
+
+                        .betterdocs-category-title {
+                            color: #1D2939;
+                            font-size: 24px;
+                            font-weight: 500;
+                            line-height: 1.2em;
+                            text-align: center;
+                            margin-bottom: 16px;
+
+                            @media only screen and (max-width: 1024px) {
+                                font-size: 18px;
+                                margin-bottom: 8px;
+                            }
+                        }
+
+                        .betterdocs-sub-category-items-counts {
+                            font-size: 16px;
+                            line-height: 1.1em;
+                            font-weight: 500;
+                            color: #475467;
+                            margin-bottom: 6px;
+                            text-align: center;
+
+                            @media only screen and (max-width: 1024px) {
+                                font-size: 14px;
+                                margin-bottom: 6px;
+                            }
+                        }
+
+                        .betterdocs-last-update {
+                            font-size: 12px;
+                            color: #475467;
+                            line-height: 1.4em;
+                            padding: 8px;
+                            background: #FFFCF5;
+                            border-radius: 4px;
+                            text-align: center;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+        // If there are fewer than 4 items, adjust the grid to center them
+        &[style*="--count: 3;"] {
+            grid-template-columns: repeat(3, 1fr);
+            justify-content: center;
+            .category-box {
+                &:nth-child(3n) {
+                    border-right: none;
+                }
+            }
+			@media only screen and (max-width: 768px) {
+                grid-template-columns: repeat(2, 1fr);
+            }
+			@media only screen and (max-width: 500px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        &[style*="--count: 2;"] {
+            grid-template-columns: repeat(2, 1fr);
+			@media only screen and (max-width: 500px) {
+                grid-template-columns: 1fr;
+            }
+            justify-content: center;
+            .category-box {
+                &:nth-child(2n) {
+                    border-right: none;
+                }
+            }
+        }
+
+        &[style*="--count: 1;"] {
+            grid-template-columns: 1fr;
+            justify-content: center;
+            .category-box {
+                border-right: none;
+            }
+        }
+    }
+    &.docs-col-5 {
+        @media only screen and (max-width: 1024px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @media only screen and (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .category-box {
+            @media only screen and (max-width: 1024px) {
+                &:nth-child(3n) {
+                    border-right: none;
+                }
+                &:nth-child(5n) {
+                    border-right: 1px solid #EAECF0;
+                }
+
+                &:nth-last-child(-n + 3) {
+                    border-bottom: none;
+                }
+                &:nth-last-child(5) {
+                    border-bottom: 1px solid #EAECF0;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                &:nth-child(2n) {
+                    border-right: none;
+                }
+                &:nth-child(3n) {
+                    border-right: 1px solid #EAECF0;
+                }
+                &:nth-last-child(-n + 2) {
+                    border-bottom: none;
+                }
+                &:nth-last-child(3) {
+                    border-bottom: 1px solid #EAECF0;
+                }
+            }
+        }
+    }
+    &.docs-col-4,
+    &.docs-col-3 {
+        @media only screen and (max-width: 1024px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media only screen and (max-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .category-box {
+            @media only screen and (max-width: 1024px) {
+                &:nth-child(3n) {
+                    border-right: none;
+                }
+                &:nth-child(4n) {
+                    border-right: 1px solid #EAECF0;
+                }
+
+                &:nth-last-child(-n + 3) {
+                    border-bottom: none;
+                }
+                &:nth-last-child(4) {
+                    border-bottom: 1px solid #EAECF0;
+                }
+            }
+
+            @media only screen and (max-width: 768px) {
+                &:nth-child(2n) {
+                    border-right: none;
+                }
+                &:nth-child(3n) {
+                    border-right: 1px solid #EAECF0;
+                }
+                &:nth-last-child(-n + 2) {
+                    border-bottom: none;
+                }
+                &:nth-last-child(3) {
+                    border-bottom: 1px solid #EAECF0;
+                }
+            }
+        }
+    }
+    &.docs-col-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.betterdocs-archive-layout-7 {
+    .betterdocs-categories-folder {
+        &.layout-4 {
+            &.docs-col-3 {
+                @media only screen and (max-width: 1024px) {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                @media only screen and (max-width: 768px) {
+                    grid-template-columns: repeat(1, 1fr);
+                }
+                .category-box {
+                    @media only screen and (max-width: 1024px) {
+                        &:nth-child(2n) {
+                            border-right: none;
+                        }
+                        &:nth-child(3n) {
+                            border-right: 1px solid #EAECF0;
+                        }
+                        &:nth-last-child(-n + 2) {
+                            border-bottom: none;
+                        }
+                        &:nth-last-child(3) {
+                            border-bottom: 1px solid #EAECF0;
+                        }
+                    }
+                    @media only screen and (max-width: 768px) {
+                        border-right: none !important;
+                        border-bottom: 1px solid #EAECF0 !important;
+                        &:last-child {
+                            border-bottom: none !important;
+                        }
+                    }
+                }
+                &[style*="--count: 1;"] {
+                    grid-template-columns: repeat(3, 1fr);
+                    justify-content: center;
+                    @media only screen and (max-width: 1024px) {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                    @media only screen and (max-width: 767px) {
+                        grid-template-columns: 1fr;
+                    }
+                    .category-box {
+                        border-right: 1px solid #EAECF0;
+                        border-bottom: none;
+                        @media only screen and (max-width: 1024px) {
+                            border-right: 1px solid #EAECF0 !important;
+                        }
+                        @media only screen and (max-width: 767px) {
+                            border-left: none !important;
+                            border-right: none !important;
+                            border-top: 1px solid #EAECF0 !important;
+                            border-bottom: 1px solid #EAECF0 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

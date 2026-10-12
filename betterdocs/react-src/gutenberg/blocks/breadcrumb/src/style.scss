@@ -1,0 +1,59 @@
+.betterdocs-breadcrumb{
+	margin-bottom: 10px;
+
+	.betterdocs-breadcrumb-list{
+		margin: 0;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		flex-flow: row wrap;
+
+		.betterdocs-breadcrumb-item{
+			margin: 0px;
+			color: #566e8b;
+			font-size: 16px;
+			letter-spacing: 0.035em;
+			a{
+				color: #566e8b;
+				font-size: 16px;
+				letter-spacing: 0.035em;
+				text-decoration: none;
+			}
+		}
+
+		.betterdocs-breadcrumb-item.current{
+			span{
+				color: #528fff;
+				font-size: 16px;
+				letter-spacing: 0.035em;
+				text-decoration: none;
+			}
+		}
+
+		li{
+			list-style: none;
+			line-height: 1.7;
+			display: flex;
+			justify-content: center;
+
+			.icon-container{
+				position: relative;
+				width: 8px;
+				height: 16px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				.breadcrumb-delimiter-icon{
+					width: 8px;
+				}
+			}
+		}
+
+		.breadcrumb-delimiter{
+			margin: 0 7px;
+			opacity: 0.5;
+		}
+	}
+
+}

@@ -1,0 +1,1 @@
+export const DOC_DATE_TYPO = 'doc_date_typo';

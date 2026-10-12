@@ -1,0 +1,276 @@
+@import "../common";
+@import "./common";
+// CHECKED:
+
+%listStyle {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+        margin: 10px;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        position: relative;
+        @include for(".betterdocs-popular-articles-wrapper") {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            a {
+                font-size: 17px;
+            }
+        }
+        img,
+        svg {
+            width: 15px;
+            font-size: 15px;
+            flex-shrink: 0;
+            margin-right: 10px;
+            @include for(
+                ".betterdocs-category-grid-list-inner-wrapper.layout-6 "
+            ) {
+                margin-right: 0;
+            }
+            @at-root .single-kb #{&} {
+                fill: #566e8b;
+            }
+            @include for(".betterdocs-popular-articles-wrapper") {
+                display: flex;
+                align-items: center;
+                font-size: 15px;
+                width: 15px;
+                fill: #a6a4ef;
+            }
+        }
+        @include for(".betterdocs-sidebar-list") {
+            &:not(.betterdocs-nested-category-wrapper) {
+                flex-direction: row;
+                align-items: center;
+            }
+            display: flex;
+            margin-bottom: 10px;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            list-style: none;
+        }
+        a {
+            font-size: 15px;
+            transition: all 0.3s;
+            outline: none;
+            text-decoration: none;
+            color: #566e8b;
+            line-height: 2;
+            @include for(".betterdocs-popular-articles-wrapper") {
+                transition: all 0.3s;
+                outline: none;
+                font-size: 15px;
+                color: #566e8b;
+                line-height: 2;
+                &:hover {
+                    color: #528ffe;
+                }
+            }
+        }
+        @include for(
+            ".betterdocs-single-category-wrapper .betterdocs-single-category-inner"
+        ) {
+            &:not(.betterdocs-nested-category-wrapper) {
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                // color: #566e8b;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+            }
+            i {
+                line-height: 1.8;
+                margin-right: 10px;
+            }
+            a {
+                color: #566e8b;
+                text-decoration: none;
+                &:hover,
+                &.active {
+                    color: #528fff;
+                }
+            }
+        }
+    }
+    .betterdocs-nested-category-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        .betterdocs-nested-category-title {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-right: 10px;
+            img,
+            svg {
+                fill: #566e8b;
+                width: 15px;
+                font-size: 15px;
+                flex-shrink: 0;
+            }
+            .arrow-down {
+                display: none;
+            }
+            @at-root .single-kb #{&} {
+                a {
+                    color: #566e8b;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+    .betterdocs-nested-category-list {
+        display: none;
+        margin-left: 20px;
+        padding-left: 0;
+        &.active {
+            display: block;
+        }
+    }
+}
+
+.betterdocs-articles-list {
+    @extend %listStyle;
+}
+.betterdocs-entry-body {
+    @include for(".doc-category-layout-6") {
+        width: 100%;
+    }
+    @extend %listStyle;
+    ul {
+        @include if(
+            ".betterdocs-entry-body",
+            ".betterdocs-taxonomy-doc-category"
+        ) {
+            &:not(.betterdocs-nested-category-list) {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            li {
+                display: flex;
+                padding-top: 0px;
+                padding-right: 0px;
+                padding-bottom: 0px;
+                padding-left: 0px;
+                list-style: none;
+                &:not(.betterdocs-nested-category-wrapper) {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    // color: #566e8b;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+                @at-root .block-archive-list #{&} {
+                    &:not(.betterdocs-nested-category-wrapper) {
+                        margin-left: 0;
+                        margin-right: 0;
+                    }
+                }
+                i {
+                    line-height: 1.8;
+                    margin-right: 10px;
+                }
+                a {
+                    transition: all 0.3s;
+                    outline: none;
+                    font-size: 17px;
+                    color: #566e8b;
+                    line-height: 1.5;
+                    @include for(".betterdocs-wrapper") {
+                        @include if(".betterdocs-wrapper", ":not(.layout-6)") {
+                            text-decoration: none;
+                        }
+                    }
+                    &.active,
+                    &:hover {
+                        color: #528ffe;
+                    }
+                }
+            }
+        }
+    }
+}
+
+%listStyle-layout-6 {
+    list-style: none;
+    padding: 0;
+    margin-left: 0px;
+    width: 100%;
+    li {
+        width: 100%;
+        a {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s ease-in-out;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 63px;
+            color: #15063f;
+            text-decoration: none;
+            @include for(".betterdocs-wrapper") {
+                @include if(".betterdocs-wrapper", ":not(.layout-6)") {
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: #e8e9eb transparent transparent;
+                    text-decoration: none;
+                }
+            }
+            &:hover {
+                @include for(".betterdocs-wrapper") {
+                    @include if(".betterdocs-wrapper", ":not(.layout-6)") {
+                        border-color: #15063f;
+                        background-color: #f2f0ff;
+                        padding-left: 15px;
+                        padding-right: 15px;
+                    }
+                }
+            }
+            img,
+            svg {
+                height: 14px;
+                max-height: 500px;
+                max-width: 500px;
+                @include for(".betterdocs-wrapper") {
+                    @include if(".betterdocs-wrapper", ":not(.layout-6)") {
+                        width: 26px;
+                    }
+                }
+                @include for(".betterdocs-wrapper") {
+                    @include if(".betterdocs-wrapper", ".layout-6") {
+                        width: 12px;
+                    }
+                }
+            }
+        }
+    }
+}
+.betterdocs-category-grid-list-inner-wrapper.layout-6 .betterdocs-body ul {
+    @extend %listStyle-layout-6;
+}
+.betterdocs-category-grid-list-inner-wrapper.layout-6
+    .betterdocs-single-category-wrapper
+    .betterdocs-single-category-inner
+    .betterdocs-body
+    .betterdocs-articles-list
+    li:not(.betterdocs-nested-category-wrapper) {
+    margin: 0;
+}

@@ -1,0 +1,105 @@
+/**
+ * BetterDocs Code Snippet Tab — Frontend Styles
+ *
+ * The Code Snippet Tab reuses the Code Snippet shell (wrapper / header / panels
+ * / copy button / light+dark themes / line numbers) so every Code Snippet style
+ * option applies here too. It swaps the language dropdown for a row of HTTP
+ * status tabs. We import the Code Snippet frontend styles as the base, then add
+ * only the tab-bar layer on top.
+ */
+@import 'code-snippet';
+
+.betterdocs-code-snippet-wrapper.betterdocs-code-snippet-tab {
+
+    // Header reads as a tab strip: no vertical padding on the row, tabs align
+    // to the header's bottom edge so the active underline meets the divider.
+    .betterdocs-code-snippet-tab-header {
+        align-items: stretch;
+    }
+
+    .betterdocs-file-preview-left {
+        align-items: stretch;
+    }
+
+    // The status-tab bar. One button per response; the active one carries a
+    // status-colored bottom border (tab underline).
+    .betterdocs-code-snippet-tabs {
+        display: flex;
+        align-items: stretch;
+        gap: 2px;
+        flex-wrap: wrap;
+    }
+
+    .betterdocs-code-snippet-tab-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 12px;
+        margin: 0;
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: transparent;
+        color: inherit;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        cursor: pointer;
+        transition: color 0.15s ease, border-color 0.15s ease;
+
+        // Box-shadow reset lives in code-snippet.scss (shared button reset).
+        &:hover,
+        &:focus,
+        &:focus-visible,
+        &:active {
+            outline: none;
+        }
+
+        // Active tab underline — colored by status bucket.
+        &.is-active {
+            border-bottom-color: #8b949e;
+        }
+        &.is-active.betterdocs-api-response--2xx { border-bottom-color: #28ca42; }
+        &.is-active.betterdocs-api-response--3xx { border-bottom-color: #ffbd2e; }
+        &.is-active.betterdocs-api-response--4xx,
+        &.is-active.betterdocs-api-response--5xx { border-bottom-color: #ff5f57; }
+    }
+
+    // Status color dot — mirrors the API-docs `--Nxx` scheme.
+    .betterdocs-code-snippet-tab-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        background: #8b949e;
+
+        &.betterdocs-api-response--2xx { background: #28ca42; }
+        &.betterdocs-api-response--3xx { background: #ffbd2e; }
+        &.betterdocs-api-response--4xx,
+        &.betterdocs-api-response--5xx { background: #ff5f57; }
+    }
+
+    .betterdocs-code-snippet-tab-label {
+        white-space: nowrap;
+    }
+
+    // Light theme tab contrast.
+    &.theme-light {
+        .betterdocs-code-snippet-tab-item {
+            color: #57606a;
+            &:hover { color: #24292e; }
+            &.is-active { color: #24292e; }
+        }
+    }
+
+    // Dark theme tab contrast.
+    &.theme-dark {
+        .betterdocs-code-snippet-tab-item {
+            color: #8b949e;
+            &:hover { color: #e6edf3; }
+            &.is-active { color: #e6edf3; }
+        }
+    }
+}

@@ -1,0 +1,111 @@
+// Block Only Category Slate Layout
+
+@import "../common";
+@import "./common";
+
+// Block-specific styles for Category Slate Layout
+.betterdocs-blocks {
+	.betterdocs-category-grid-three-wrapper {
+		.betterdocs-single-category-wrapper {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.betterdocs-category-header {
+			padding: 0;
+			.betterdocs-category-header-inner {
+				align-items: center;
+				display: flex;
+				justify-content: stretch;
+				.betterdocs-category-title {
+					font-size: 24px;
+					&:has(a) {
+						display: inline-flex;
+						align-items: center;
+						margin-top: 0;
+						margin-bottom: 0;
+					}
+					&:not(:has(a)) {
+						color: #1D2939;
+						line-height: 1;
+						margin-top: 0;
+						margin-bottom: 0;
+						text-decoration: none;
+					}
+					a {
+						font-size: 24px;
+						color: #1D2939;
+						font-weight: 500;
+						line-height: 1;
+						margin-top: 0;
+						margin-bottom: 0;
+						text-decoration: none;
+					}
+				}
+			}
+		}
+
+		.betterdocs-folder-icon {
+			display: inline-flex;
+			width: 32px;
+			height: 32px;
+			justify-content: center;
+			align-items: center;
+			background: #F2F4F7;
+			border-radius: 6px;
+		}
+
+		.betterdocs-category-icon {
+			align-items: center;
+			display: inline-flex;
+			flex-shrink: 0;
+			justify-content: center;
+			margin-right: 12px;
+			.betterdocs-folder-icon {
+				display: inline-flex;
+				width: 32px;
+				height: 32px;
+				justify-content: center;
+				align-items: center;
+				background: #F2F4F7;
+				border-radius: 6px;
+				img {
+					width: 100%;
+					height: auto;
+				}
+			}
+			img {
+				width: 100%;
+				height: auto;
+			}
+		}
+
+		.betterdocs-articles-list {
+			display: inline-block;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+
+			li {
+				margin: 24px 0 0 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				position: relative;
+				a {
+					font-size: 16px;
+					color: #475467;
+					line-height: 1.6;
+					font-weight: 500;
+					transition: all 0.3s;
+					outline: none;
+					text-decoration: none;
+					&:hover {
+						text-decoration: underline;
+						color: #00B884;
+					}
+				}
+			}
+		}
+	}
+}

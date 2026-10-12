@@ -1,0 +1,457 @@
+// AI Actions — the "Copy page" split button beside the single-doc title.
+//
+// Deliberately imports NOTHING from common/. `common/_index.scss` pulls in
+// `_normalizer.scss`, which is ~1,200 lines of real global layout rules — the
+// reason `article-summary.css` builds to 46 KB while `author.css` builds to 1 KB.
+// This handle is enqueued on arbitrary pages by the shortcode, block and
+// Elementor widget, so it has to stay self-contained.
+//
+// Logical properties throughout: the repo ships no RTL build step (nothing calls
+// wp_style_add_data( $handle, 'rtl', 'replace' ) and no *-rtl.css is generated),
+// so physical `left`/`right` would simply be wrong on RTL sites with nothing to
+// flip them.
+
+// The meta row and `.betterdocs-sr-only`, shared with listen.scss — the other
+// occupant of the row, and the other separately registered handle that has to be
+// able to lay the row out on its own. Still nothing from common/.
+@import "./doc-meta";
+
+// The pill takes fill, type and corner from `.reading-time`, the control it
+// sits beside in the meta row — same #F9FAFB, same #667085 at 14px/400, same
+// 16px radius — so the two read as one pair rather than as a soft pill next to
+// a hard bordered box. Only the split is this component's own: two halves and a
+// short divider, which is what makes it read as "click here, or open the menu".
+$bd-ai-surface: #f9fafb;
+$bd-ai-surface-hover: #f2f4f7;
+$bd-ai-menu-border: #eaecf0;
+$bd-ai-divider: #d0d5dd;
+$bd-ai-text: #667085;
+$bd-ai-muted: #667085;
+$bd-ai-tile-icon: #475467;
+$bd-ai-menu-title: #1d2939;
+$bd-ai-focus: #2271b1;
+$bd-ai-success: #039855;
+$bd-ai-success-icon: #12b76a;
+$bd-ai-danger: #b42318;
+
+$bd-ai-font-size: 14px;
+$bd-ai-radius: 16px;
+$bd-ai-pad-block: 5px;
+$bd-ai-pad-inline: 10px;
+
+// Every box this component owns, sized the way the rest of the web is sized.
+//
+// Not belt-and-braces: `.betterdocs-ai-actions-item` is `width: 100% !important`
+// with 10px of inline padding, so under `content-box` each menu row is 20px wider
+// than the menu that holds it and the external-link arrow lands on top of the
+// border. Nothing in the WordPress stack sets this globally — `wp-block-library`
+// only touches specific block classes, and no block theme's `style.css` or
+// theme.json output carries a `*` reset. Classic themes and page builders
+// (Elementor ships `*,:after,:before{box-sizing:border-box}`) do, which is why
+// this only shows up on a block theme, and why it went unnoticed.
+//
+// Scoped to this component's own subtree rather than declared globally: the
+// button is dropped into arbitrary pages by the shortcode, block and widget, and
+// re-boxing a theme's elements from a plugin stylesheet is how you break someone
+// else's layout.
+.betterdocs-ai-actions {
+    &,
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+}
+
+.betterdocs-ai-actions {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: stretch;
+    background-color: $bd-ai-surface;
+    // No border by design: the fill alone carries the affordance, the same way
+    // the reading-time pill does. The Customizer, block and widget border
+    // controls still work — they just start from nothing rather than from a
+    // 1px grey rectangle that made this the heaviest element in the header.
+    border: 0;
+    border-radius: $bd-ai-radius;
+    line-height: 1;
+    font-size: $bd-ai-font-size;
+    font-weight: 400;
+
+    // BetterDocs has never shipped a real frontend <button> (the print affordance
+    // is a <span>), so nothing here has ever had to survive a theme's button
+    // rules. Classic and block themes routinely force padding, uppercase,
+    // letter-spacing, min-height, full width and brand colours onto bare buttons.
+    .betterdocs-ai-actions-primary,
+    .betterdocs-ai-actions-toggle,
+    .betterdocs-ai-actions-item {
+        appearance: none;
+        -webkit-appearance: none;
+        font: inherit;
+        font-size: inherit;
+        // 1.15, not 1: `.reading-time p` is 14px on a 16px line, and the pill
+        // beside it has to be the same 26px tall or the meta row reads as two
+        // mismatched controls. A ratio rather than 16px so the two stay level
+        // when somebody raises the font size on both.
+        line-height: 1.15;
+        letter-spacing: normal;
+        text-transform: none;
+        text-decoration: none;
+        text-shadow: none;
+        // No `border: 0` and no `border-radius: 0` here, for the same reason. This
+        // block is a descendant selector (0,2,0) while each element's own rules
+        // below are a single class (0,1,0), so a reset here outranks them.
+        //
+        // For radius that squared off every corner — the hover fill painted square
+        // corners inside the wrapper's 8px border, and menu items hovered as square
+        // blocks inside the 10px menu. For border it silently ate the divider
+        // between the two halves of the split button: `border-inline-start` on
+        // `.betterdocs-ai-actions-toggle` never survived the cascade, so the caret
+        // floated against the label with nothing between them.
+        //
+        // Each element resets and re-declares its own instead, which defends against
+        // a theme's `button { border }` just as well because every edge is stated.
+        margin: 0;
+        width: auto;
+        min-width: 0;
+        min-height: 0;
+        height: auto;
+        box-shadow: none;
+        background-image: none;
+        background-color: transparent;
+        color: $bd-ai-text;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        transition: background-color 0.15s ease;
+
+        &:hover,
+        &:focus,
+        &:active {
+            box-shadow: none;
+            text-decoration: none;
+            color: $bd-ai-text;
+        }
+
+        // Pointer focus draws nothing. macOS browsers do not focus a <button> on
+        // click at all, but Windows/Linux do, and there the click left the button
+        // wearing whatever `button:focus` styling the theme (or the UA) supplies —
+        // the ring that reads as a stuck control. `:not(:focus-visible)` scopes
+        // this to the pointer case only; the keyboard ring below is untouched.
+        &:focus:not(:focus-visible) {
+            outline: none;
+            box-shadow: none;
+        }
+
+        // Many themes ship `button:focus { outline: none }`, so this needs the
+        // weight to win.
+        &:focus-visible {
+            outline: 2px solid $bd-ai-focus !important;
+            outline-offset: 2px;
+        }
+    }
+
+    // Hover, stated here (0,3,0) and as an inset shadow rather than only as a
+    // fill. The Customizer, the block and Elementor all write `background-color`
+    // onto these two halves, at up to four classes — a hover that was only a
+    // background-color would be painted over on every instance that has a colour
+    // set, and the button would stop responding to the pointer. Nothing writes
+    // `box-shadow` here, so the tint always lands on top of whatever fill won.
+    .betterdocs-ai-actions-primary:hover,
+    .betterdocs-ai-actions-toggle:hover {
+        background-color: $bd-ai-surface-hover;
+        box-shadow: inset 0 0 0 999px rgba(16, 24, 40, 0.035);
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+        flex: 0 0 auto;
+        display: block;
+    }
+
+    .betterdocs-ai-actions-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+    }
+}
+
+// Matching the neighbour's box exactly — `.reading-time` is 5px/10px around
+// 14px type — is what makes the two pills the same height without either one
+// hard-coding a height that a font-size control could then break.
+.betterdocs-ai-actions-primary {
+    gap: 6px;
+    padding: $bd-ai-pad-block $bd-ai-pad-inline;
+    border: 0;
+    border-radius: 0;
+    border-start-start-radius: $bd-ai-radius;
+    border-end-start-radius: $bd-ai-radius;
+    white-space: nowrap;
+    font-weight: 400;
+
+    &:hover {
+        background-color: $bd-ai-surface-hover;
+    }
+
+    .betterdocs-ai-actions-icon {
+        color: $bd-ai-muted;
+    }
+}
+
+.betterdocs-ai-actions-toggle {
+    position: relative;
+    padding: $bd-ai-pad-block 8px;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+    border-start-end-radius: $bd-ai-radius;
+    border-end-end-radius: $bd-ai-radius;
+    color: $bd-ai-muted;
+
+    // The divider between the two halves. A pseudo-element, not the
+    // `border-inline-start` this used to be: on a pill the full-height rule
+    // meets the curve at both ends and reads as a crack across the control,
+    // where a centred 14px line reads as a seam. Drawn on the toggle so the
+    // primary half's hover fill still runs to its own edge.
+    &::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: 50%;
+        width: 1px;
+        height: 14px;
+        transform: translateY(-50%);
+        background-color: $bd-ai-divider;
+    }
+
+    &:hover {
+        background-color: $bd-ai-surface-hover;
+    }
+
+    svg {
+        width: 12px;
+        height: 12px;
+        transition: transform 0.15s ease;
+    }
+
+    &[aria-expanded="true"] svg {
+        transform: rotate(180deg);
+    }
+}
+
+// The seam never curves. Only the OUTER corners belong to the radius control:
+// the block writes `border-radius` as a shorthand onto both halves, so a radius
+// set there — or shipped as its default — rounds the two edges that meet at the
+// divider too and opens a lens-shaped notch through the middle of the pill.
+// `!important` because the block's rules are three classes deep and land in a
+// file enqueued after this one, so nothing this stylesheet can write about a
+// specific corner would otherwise survive.
+.betterdocs-ai-actions-primary {
+    border-start-end-radius: 0 !important;
+    border-end-end-radius: 0 !important;
+}
+
+// `:not()` so the pin lifts in the no-primary case below, where the toggle is
+// the whole control and every corner is legitimately the radius control's.
+.betterdocs-ai-actions:not(.betterdocs-ai-actions-no-primary) .betterdocs-ai-actions-toggle {
+    border-start-start-radius: 0 !important;
+    border-end-start-radius: 0 !important;
+}
+
+// When "Copy page" is switched off there is no primary half, so the disclosure
+// owns the whole control — all four corners, and nothing left to divide.
+.betterdocs-ai-actions-no-primary .betterdocs-ai-actions-toggle {
+    border-radius: $bd-ai-radius;
+    padding: $bd-ai-pad-block $bd-ai-pad-inline;
+
+    &::before {
+        content: none;
+    }
+}
+
+// Copy feedback. The live region alone is not enough — a sighted user needs to
+// see that the click did something. The icon swap is CSS rather than
+// JavaScript: all three states ship in the markup and the class on the wrapper
+// picks one, so public/betterdocs.js keeps doing nothing but swapping the label
+// and toggling `is-copied` / `is-failed`.
+// Two classes, not one: `.betterdocs-ai-actions .betterdocs-ai-actions-icon`
+// above lays every icon out at (0,2,0), and a bare `.betterdocs-ai-actions-icon-done`
+// would lose to it — which showed all three icons at once.
+.betterdocs-ai-actions .betterdocs-ai-actions-icon-done,
+.betterdocs-ai-actions .betterdocs-ai-actions-icon-fail {
+    display: none;
+}
+
+.betterdocs-ai-actions.is-copied {
+    .betterdocs-ai-actions-primary {
+        color: $bd-ai-success;
+    }
+
+    .betterdocs-ai-actions-icon-idle {
+        display: none;
+    }
+
+    // (0,3,0), so it outranks the hide rule above whatever the source order.
+    .betterdocs-ai-actions-icon-done {
+        display: inline-flex;
+        color: $bd-ai-success-icon;
+
+        // On the svg as well, not just the wrapper. The Customizer's Icon Color
+        // writes `color` straight onto `.betterdocs-ai-actions-primary svg`, and
+        // a declaration that matches the element always beats a colour the
+        // element merely inherits — the tick would come out in the icon colour.
+        svg {
+            color: $bd-ai-success-icon;
+        }
+    }
+}
+
+.betterdocs-ai-actions.is-failed {
+    .betterdocs-ai-actions-primary {
+        color: $bd-ai-danger;
+    }
+
+    .betterdocs-ai-actions-icon-idle {
+        display: none;
+    }
+
+    .betterdocs-ai-actions-icon-fail {
+        display: inline-flex;
+        color: $bd-ai-danger;
+
+        svg {
+            color: $bd-ai-danger;
+        }
+    }
+}
+
+.betterdocs-ai-actions-menu {
+    position: absolute;
+    inset-block-start: calc(100% + 8px);
+    inset-inline-end: 0;
+    z-index: 999; // the plugin's own band: mobile sidebar/TOC drawers sit at 999
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    // Fixed, not `max-content`: one long description — Google AI Studio's, which
+    // has to mention the account requirement — dragged the whole menu out to
+    // 412px and left every other row swimming. 288px is the design width; a
+    // description that does not fit wraps onto a second line.
+    width: 288px;
+    max-width: calc(100vw - 32px);
+    background-color: #fff;
+    border: 1px solid $bd-ai-menu-border;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px -12px rgba(16, 24, 40, 0.18), 0 2px 6px rgba(16, 24, 40, 0.05);
+    text-align: start;
+
+    // `[hidden]` is (0,1,1) against the class's (0,1,0), so it wins over the
+    // `display: flex` above wherever it is declared.
+    &[hidden] {
+        display: none;
+    }
+
+    li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        &::before,
+        &::marker {
+            content: none;
+        }
+    }
+}
+
+// Between the two things that act on this page and the ones that hand it to
+// somebody else's assistant. Emitted by the view when the group changes, so a
+// registry entry a third party adds lands on the right side of it.
+.betterdocs-ai-actions-separator {
+    height: 1px;
+    margin: 4px 6px;
+    background-color: #f2f4f7;
+}
+
+.betterdocs-ai-actions-item {
+    width: 100% !important;
+    gap: 12px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 8px;
+    align-items: center;
+    text-align: start;
+    // "Copy page" is the one row that is a <button> rather than an <a>, and a
+    // button does not inherit the document's white-space — several UA sheets and
+    // most themes hand it `nowrap`. Its description ran straight through the
+    // menu's right edge while the identical text in a link row wrapped happily.
+    white-space: normal;
+    overflow-wrap: break-word;
+
+    &:hover {
+        background-color: #f9fafb;
+    }
+
+    // A bordered tile, not a bare glyph: at 14px the registry's line icons are
+    // too light to anchor a two-line row, and the tile gives every brand mark
+    // the same footprint however busy its path is.
+    .betterdocs-ai-actions-icon {
+        width: 32px;
+        height: 32px;
+        border: 1px solid $bd-ai-menu-border;
+        border-radius: 8px;
+        background-color: #fff;
+        color: $bd-ai-tile-icon;
+
+        svg {
+            width: 15px;
+            height: 15px;
+        }
+    }
+}
+
+.betterdocs-ai-actions-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.betterdocs-ai-actions-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: $bd-ai-menu-title;
+    line-height: 1.35;
+}
+
+.betterdocs-ai-actions-desc {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: $bd-ai-muted;
+    line-height: 1.4;
+}
+
+@media only screen and (max-width: 767px) {
+    // Once the row has wrapped the button sits on the leading edge (doc-meta.scss
+    // drops the auto margin there), so the menu has to open the other way or it
+    // hangs off the screen.
+    .betterdocs-ai-actions-menu {
+        inset-inline-end: auto;
+        inset-inline-start: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .betterdocs-ai-actions-primary,
+    .betterdocs-ai-actions-toggle,
+    .betterdocs-ai-actions-item,
+    .betterdocs-ai-actions-toggle svg {
+        transition: none;
+    }
+}

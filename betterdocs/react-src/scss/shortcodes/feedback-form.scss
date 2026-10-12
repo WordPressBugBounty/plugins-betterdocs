@@ -1,0 +1,103 @@
+// CHECKED:
+.feedback-form-link {
+    display: flex;
+    align-items: center;
+    color: #566e8b;
+    .feedback-form-icon {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 10px;
+        svg {
+            width: 26px;
+        }
+    }
+}
+
+.betterdocs-modalwindow {
+    position: fixed;
+    display: none;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    .modal-inner {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 4px;
+        transition: -webkit-transform 0.3s ease-out;
+        transition: transform 0.3s ease-out;
+        transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+        -webkit-transform: translate(0, 20%);
+        transform: translate(0, 20%);
+    }
+    .close {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        display: inline-block;
+        padding: 10px;
+        line-height: 1;
+        color: #000000;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    h2 {
+        margin: 10px 0;
+        font-size: 21px;
+    }
+}
+
+.betterdocs-feedback-form {
+    %inputStyle {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e7ecf4;
+        margin-top: 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        @extend %inputStyle;
+    }
+    textarea {
+        height: 150px;
+    }
+    #feedback_form_submit_btn {
+        background-color: #528ffe;
+        color: #fff;
+        border: none;
+        box-shadow: none;
+        padding: 15px;
+        font-size: 16px;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    label {
+        color: #7e8da2;
+        font-size: 14px;
+        width: 100%;
+    }
+    .val-error {
+        border: 1px solid #de071c;
+    }
+    .error-message {
+        color: #de071c;
+        display: block;
+    }
+}

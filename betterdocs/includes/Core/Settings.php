@@ -240,6 +240,10 @@ class Settings extends Base {
             'tag_slug' => 'docs-tag',
             'permalink_structure' => 'docs/',
             'enable_faq_schema' => false,
+            'analytics_from' => 'everyone',
+            'unique_visitor_count' => true,
+            'exclude_bot_analytics' => true,
+            'child_category_exclude' => false,
             'live_search' => true,
             'advance_search' => false,
             'popular_keyword_limit' => 5,
@@ -982,26 +986,23 @@ class Settings extends Base {
                                         'registered_users' => __( 'Registered Users Only', 'betterdocs' )
                                     ) ),
                                     'default' => 'everyone',
-                                    'priority' => 13,
-                                    'is_pro' => true
+                                    'priority' => 13
                                 ),
                                 'unique_visitor_count' => array(
                                     'name' => 'unique_visitor_count',
                                     'type' => 'toggle',
                                     'label' => __( 'Unique Visitor Count', 'betterdocs' ),
                                     'enable_disable_text_active' => true,
-                                    'default' => false,
-                                    'priority' => 14,
-                                    'is_pro' => true
+                                    'default' => true,
+                                    'priority' => 14
                                 ),
                                 'exclude_bot_analytics' => array(
                                     'name' => 'exclude_bot_analytics',
                                     'type' => 'toggle',
                                     'label' => __( 'Exclude Bot Analytics', 'betterdocs' ),
                                     'enable_disable_text_active' => true,
-                                    'default' => false,
-                                    'priority' => 15,
-                                    'is_pro' => true
+                                    'default' => true,
+                                    'priority' => 15
                                 )
 
                             )
@@ -1226,9 +1227,8 @@ class Settings extends Base {
                                                                     'type' => 'toggle',
                                                                     'label' => __( 'Exclude Child Terms In Category Search', 'betterdocs' ),
                                                                     'enable_disable_text_active' => true,
-                                                                    'default' => '',
-                                                                    'priority' => 3,
-                                                                    'is_pro' => true
+                                                                    'default' => false,
+                                                                    'priority' => 3
                                                                 ) ),
                                                                 'popular_keyword_limit' => apply_filters( 'betterdocs_popular_keyword_limit_settings', array(
                                                                     'name' => 'popular_keyword_limit',
@@ -2974,13 +2974,9 @@ class Settings extends Base {
             'multiple_kb' => false,
             'enable_glossaries' => false,
             'enable_encyclopedia' => false,
-            'analytics_from' => false,
-            'unique_visitor_count' => false,
-            'exclude_bot_analytics' => false,
             'show_attachment' => false,
             'show_related_docs' => false,
             'advance_search' => false,
-            'child_category_exclude' => false,
             'kb_based_search' => false,
             'enable_disable' => false,
             'enable_content_restriction' => false

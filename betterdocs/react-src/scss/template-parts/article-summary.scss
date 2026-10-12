@@ -1,0 +1,126 @@
+@import "../common";
+
+/**Article Summary**/
+.betterdocs-article-summary {
+    margin: 20px 0;
+    border: 1px solid #EAECF0;
+    border-radius: 8px;
+    overflow: hidden;
+	background-color: #FFFFFF;
+	width: 100%;
+
+    .betterdocs-summary-header {
+        cursor: pointer;
+        padding: 15px 20px;
+        background: #F9FAFB;
+
+        .betterdocs-summary-title {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 500;
+			color: #344054;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 10px;
+
+			.title-content {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.betterdocs-summary-arrow {
+				margin-left: auto;
+				flex-shrink: 0;
+
+				.angle-icon {
+					width: 14px;
+					height: 14px;
+					transition: transform 0.2s ease;
+					flex-shrink: 0;
+
+					&.angle-right {
+						display: block;
+					}
+
+					&.angle-down {
+						display: none;
+					}
+				}
+			}
+		}
+    }
+
+    .betterdocs-summary-content {
+        padding: 20px;
+        .betterdocs-summary-loading {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: left;
+			font-size: 14px;
+			display: flex;
+			align-items: center;
+            text-align: left;
+			gap: 1px;
+			img {
+				width: 30px;
+    			display: inline-block;
+				height: auto;
+			}
+        }
+
+        .betterdocs-summary-text {
+            .summary-content {
+                line-height: 1.6;
+                color: #4d4d4d;
+
+                p {
+					margin-top: 0;
+                    margin-bottom: 12px;
+					color: #4d4d4d;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+
+                ul, ol {
+                    margin: 12px 0;
+                    padding-left: 20px;
+
+                    li {
+                        margin-bottom: 6px;
+                    }
+                }
+            }
+
+            .summary-error {
+                color: #e74c3c;
+                font-style: italic;
+                text-align: center;
+                padding: 10px;
+                background: #fdf2f2;
+                border: 1px solid #f5c6cb;
+                border-radius: 4px;
+                margin: 0;
+				font-size: 14px;
+            }
+        }
+    }
+
+    @include responsive-below("tablet") {
+        margin: 15px 0;
+
+        .betterdocs-summary-header {
+            padding: 12px 15px;
+
+            .betterdocs-summary-title {
+                font-size: 15px;
+            }
+        }
+
+        .betterdocs-summary-content {
+            padding: 15px;
+        }
+    }
+}

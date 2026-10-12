@@ -214,7 +214,7 @@ class SetupWizard extends Base {
 			'is_pro_active' => betterdocs()->is_pro_active(),
 			'logoURL'       => betterdocs()->assets->icon( 'betterdocs-icon.svg', true ),
 			'layout'        => 'vertical',
-			'values'        => betterdocs()->is_pro_active() ? array_merge( betterdocs()->settings->get_all(), [ 'enable_credit' => true ] ) : array_merge( betterdocs()->settings->get_all(), [ 'enable_credit' => true ], $this->pro_settings_default_values() ),
+			'values'        => betterdocs()->is_pro_active() ? betterdocs()->settings->get_all() : array_merge( betterdocs()->settings->get_all(), $this->pro_settings_default_values() ),
 			'config'        => [
 				'save_locally'    => true,
 				'save'            => true,
@@ -413,7 +413,7 @@ class SetupWizard extends Base {
 											'type'     => 'toggle',
 											'label'    => __( 'Show Powered by BetterDocs', 'betterdocs' ),
 											'enable_disable_text_active' => true,
-											'default'  => true,
+											'default'  => false,
 											'priority' => 7
 										],
 										'enable_faq_schema' => [
@@ -621,13 +621,9 @@ class SetupWizard extends Base {
 			'multiple_kb'                => false,
 			'enable_glossaries'          => false,
 			'enable_encyclopedia'        => false,
-			'analytics_from'             => false,
-			'unique_visitor_count'       => false,
-			'exclude_bot_analytics'      => false,
 			'show_attachment'            => false,
 			'show_related_docs'          => false,
 			'advance_search'             => false,
-			'child_category_exclude'     => false,
 			'kb_based_search'            => false,
 			'enable_disable'             => false,
 			'enable_content_restriction' => false

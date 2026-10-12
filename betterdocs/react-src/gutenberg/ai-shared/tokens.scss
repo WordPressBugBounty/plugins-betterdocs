@@ -1,0 +1,265 @@
+// ===== ai-shared/tokens.scss — design tokens + keyframes for the BetterDocs AI surfaces =====
+// Ported from the "BetterDocs AI Studio" mockup. The kit components (kit.js,
+// PreviewAccept.js) reference these CSS custom properties via inline `var(--x)`
+// styles, so the variables are scoped to `.bd-ai-scope` — every portal root the
+// kit renders (modal overlay, injected header button) carries that class, and
+// CSS custom properties inherit down the DOM subtree of the portal element.
+
+.bd-ai-scope {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --border: #e6e8ec;
+    --border-soft: #eef0f3;
+    --ink: #0f172a;
+    --ink-2: #1f2937;
+    --muted: #6b7280;
+    --muted-2: #94a3b8;
+    --green: #00b884;
+    --green-600: #00956b;
+    --green-700: #007557;
+    --green-50: #e0f6ef;
+    --green-100: #b8ecdb;
+    --rose-50: #feecec;
+    --rose-700: #b91c1c;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.18);
+    --shadow-pop: 0 12px 34px rgba(15, 23, 42, 0.16);
+    --radius: 16px;
+    --radius-sm: 10px;
+    // AI accent — aligned to the BetterDocs green design system (was pink).
+    --ai: #00b884;
+    --ai-600: #00956b;
+    --ai-100: #b8ecdb;
+    --ai-50: #e0f6ef;
+    // WP-admin notice + link
+    --wp-red: #d63638;
+    --wp-red-50: #fbebed;
+    --wp-blue: #3858e9;
+
+    // BetterDocs admin neutral ramp (mirrored from react-src/admin/scss/utils/
+    // _common.scss) so the shared FAQ-builder markup reused here (dropdown,
+    // page-tabs, close button) resolves the same `--text-color-*` tokens.
+    --text-color-25: #fcfcfd;
+    --text-color-50: #f9fafb;
+    --text-color-100: #f0f0f0;
+    --text-color-150: #eff2f7;
+    --text-color-200: #eaecf0;
+    --text-color-300: #dde2e4;
+    --text-color-400: #d0d5dd;
+    --text-color-500: #98a2b3;
+    --text-color-600: #667085;
+    --text-color-700: #344054;
+    --text-color-800: #202223;
+    --text-color-850: #475467;
+    --text-color-900: #101828;
+    --text-color-950: #1d2939;
+
+    // Match the BetterDocs admin design system font (was "Plus Jakarta Sans").
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    // Native <select> styled to match the BetterDocs dashboard select control
+    // (.bd-faq-select__control): white surface, 1px neutral border, 8px radius,
+    // 40px control height, subtle shadow, green focus ring. Used by every picker
+    // in the AI modals (language, source, git, tone, length).
+    .bd-ai-select {
+        width: 100%;
+        appearance: none;
+        -webkit-appearance: none;
+        height: 40px;
+        min-height: 40px;
+        padding: 0 34px 0 14px;
+        border: 1px solid #d0d5dd; // --text-color-400
+        border-radius: 8px;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: var(--ink-2);
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.14s, box-shadow 0.14s;
+
+        &:hover {
+            border-color: #98a2b3; // --text-color-500
+        }
+        &:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.16);
+        }
+        &:disabled {
+            background: var(--bg);
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+    }
+
+    // react-select dropdown that mirrors the BetterDocs dashboard
+    // "betterdocs-dropdown" control (FAQ order / bulk actions): 1px neutral
+    // border, 8px radius, 40px control, green focus ring, and a styled option
+    // menu with rounded "pill" options + a green tick on the selected one.
+    // Used for the source / git / language pickers in the AI modals.
+    .betterdocs-dropdown-wrapper {
+        position: relative;
+
+        .betterdocs-dropdown-select {
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 500;
+
+            .betterdocs-dropdown__control {
+                min-height: 36px;
+                border: 1px solid #d0d5dd;
+                border-radius: 8px;
+                background-color: var(--card);
+                color: var(--ink);
+                box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+                cursor: pointer;
+                transition: border-color 0.14s, box-shadow 0.14s;
+
+                &:hover {
+                    border-color: #98a2b3;
+                }
+                &--is-focused {
+                    border-color: var(--green);
+                    box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.16);
+                    outline: none;
+                }
+            }
+
+            .betterdocs-dropdown__value-container {
+                padding: 0 6px 0 12px;
+            }
+            .betterdocs-dropdown__single-value {
+                color: var(--ink-2);
+            }
+            .betterdocs-dropdown__placeholder {
+                color: var(--muted);
+            }
+            .betterdocs-dropdown__input-container {
+                color: var(--ink-2);
+            }
+            // react-select renders a bare <input class="betterdocs-dropdown__input">
+            // for typing/search. wp-admin's global `input:focus` paints its blue ring
+            // on that input — reset it so the only focus indicator is the green ring on
+            // .betterdocs-dropdown__control--is-focused. Applies to every react-select
+            // input in the AI modals (source / git / language pickers).
+            .betterdocs-dropdown__input,
+            .betterdocs-dropdown__input:focus,
+            .betterdocs-dropdown__input input,
+            .betterdocs-dropdown__input input:focus {
+                border: 0 !important;
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            .betterdocs-dropdown__indicator-separator {
+                display: none;
+            }
+            .betterdocs-dropdown__dropdown-indicator {
+                color: var(--muted);
+                padding: 0 10px 0 4px;
+
+                svg {
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+
+            .betterdocs-dropdown__menu {
+                margin-top: 6px;
+                border-radius: 8px;
+                overflow: hidden;
+                background-color: var(--card);
+                box-shadow: 0 4px 16px rgba(16, 24, 40, 0.12);
+                z-index: 30;
+
+                .betterdocs-dropdown__menu-list {
+                    padding: 8px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                }
+                .betterdocs-dropdown__option {
+                    display: flex;
+                    align-items: center;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    color: var(--ink-2);
+                    background-color: transparent;
+                    cursor: pointer;
+
+                    &--is-focused {
+                        background-color: #f9fafb; // --text-color-50
+                    }
+                    &--is-selected {
+                        background-color: #f9fafb; // --text-color-50 (ash, not green)
+                        color: var(--green-600);
+                        font-weight: 600;
+
+                        &::after {
+                            content: "";
+                            margin-left: auto;
+                            width: 16px;
+                            height: 16px;
+                            flex-shrink: 0;
+                            background: no-repeat center / contain
+                                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300956b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #d8dde3;
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+}
+
+// Keyframes are global by spec — define once; referenced from inline `animation`.
+@keyframes bd-ai-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes bd-ai-modalIn {
+    from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes bd-ai-popIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bd-ai-barIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bd-ai-spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes bd-ai-shimmer {
+    0% { background-position: -480px 0; }
+    100% { background-position: 480px 0; }
+}
+@keyframes bd-ai-blockIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bd-ai-dotPulse {
+    0%, 80%, 100% { opacity: 0.25; }
+    40% { opacity: 1; }
+}

@@ -1,0 +1,178 @@
+.btd-pagination-wrapper {
+    display: flex;
+    align-items: center;
+	justify-content: space-between;
+    margin-top: 10px;
+    $pagination-prefix-cls: rc-pagination;
+
+	.btd-groups{
+		display: flex;
+		justify-content: space-around;
+		gap: 10px;
+	}
+
+    .#{$pagination-prefix-cls} {
+        display: flex;
+        > *:not(:last-child) {
+            margin-right: 5px;
+        }
+        &:after {
+            display: block;
+            clear: both;
+            height: 0;
+            overflow: hidden;
+            visibility: hidden;
+            content: "";
+        }
+        &-total-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+        }
+        &-item {
+            display: flex;
+            min-width: 30px;
+            height: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color-900);
+            cursor: pointer;
+            user-select: none;
+            border-radius: 3px;
+            padding: 5px;
+            box-sizing: border-box;
+            background: var(--base-background);
+            border: 1px solid var(--text-color-150);
+            transition: none;
+            button,
+            a {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                color: var(--text-color-900);
+                transition: none;
+            }
+            &:focus,
+            &-active,
+            &:hover {
+                background: var(--base-color-700);
+                border-color: var(--base-color-700);
+                a {
+                    color: #fff;
+                }
+            }
+        }
+
+        &-jump-prev,
+        &-jump-next {
+            cursor: pointer;
+            border-radius: 3px;
+            user-select: none;
+            background: transparent;
+            border: 1px solid transparent;
+            transition: none;
+            .#{$pagination-prefix-cls}-item-link,
+            button {
+                background: none;
+                border-color: transparent;
+                cursor: pointer;
+                &:after {
+                    display: block;
+                    content: "•••";
+                    color: var(--text-color-900);
+                    font-size: 14px;
+                    transition: none;
+                }
+            }
+            &:focus,
+            &:hover {
+                background: var(--base-color-700);
+                border-color: var(--base-color-700);
+                .#{$pagination-prefix-cls}-item-link,
+                button {
+                    &:after {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        &-prev,
+        &-next,
+        &-jump-prev,
+        &-jump-next {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 30px;
+            height: 30px;
+            color: var(--text-color-900);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        &-prev,
+        &-next {
+            button {
+                cursor: pointer;
+                user-select: none;
+            }
+            .#{$pagination-prefix-cls}-item-link {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--base-color-700);
+                background: var(--base-background);
+                border: 1px solid var(--text-color-150);
+                transition: none;
+            }
+            &:focus .#{$pagination-prefix-cls}-item-link,
+            &:hover .#{$pagination-prefix-cls}-item-link {
+                border-color: var(--base-color-700);
+            }
+            &:focus,
+            &-active,
+            &:hover {
+                &:not([aria-disabled="true"]) {
+                    background: var(--base-color-700);
+                    border-radius: 3px;
+                    color: #fff;
+                }
+            }
+        }
+        &-prev button:after {
+            font-size: 18px;
+            display: inline-block;
+        }
+
+        &-next button:after {
+            font-size: 18px;
+            display: block;
+        }
+
+        &-disabled {
+            color: var(--text-color-200);
+            &:hover,
+            &:focus {
+                cursor: not-allowed;
+            }
+        }
+
+        &-simple &-prev,
+        &-simple &-next {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .#{$pagination-prefix-cls}-item-link {
+                height: 24px;
+                &::after {
+                    height: 24px;
+                }
+            }
+        }
+    }
+}

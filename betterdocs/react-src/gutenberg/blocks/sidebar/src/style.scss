@@ -1,0 +1,14 @@
+.betterdocs-sidebar-layout-5 {
+    &.betterdocs-sidebar{
+        &.betterdocs-full-sidebar-left{
+            .betterdocs-sidebar-content{
+                box-shadow: 0px 8px 20px rgba(0, 1, 35, 0.1);
+                border-radius: 5px;
+                .betterdocs-category-grid-wrapper{
+                    box-shadow: 0px 8px 20px rgba(0, 1, 35, 0.1);
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+}

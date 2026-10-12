@@ -1,0 +1,171 @@
+// CHECKED:
+
+@import "../common/index";
+
+@import "../template-parts/sidebar.scss";
+
+@import "../template-parts/breadcrumb.scss";
+
+@import "../template-parts/title.scss";
+@import "../template-parts/content.scss";
+@import "../template-parts/article-summary.scss";
+
+@import "../template-parts/nav.scss";
+
+@import "../template-parts/footer.scss";
+
+@import "../template-parts/credit.scss";
+.betterdocs-single-layout-5 .betterdocs-content-full {
+    padding-top: 30px;
+    padding-right: 0;
+    padding-bottom: 30px;
+    padding-left: 0;
+    .betterdocs-content-wrapper {
+        padding: 0 !important;
+    }
+}
+.betterdocs-content-wrapper {
+    @include for(".betterdocs-single-layout-5") {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        grid-gap: 30px;
+        // See the fluid wrapper below.
+        @include responsive-from("tablet") {
+            column-gap: 0;
+        }
+    }
+    @include for(".betterdocs-wrapper") {
+        // if content wrapper has not fluid feature
+        @include if(".betterdocs-wrapper", ":not(.betterdocs-fluid-wrapper)") {
+            width: 100%;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2.5em 1.5em;
+        }
+        // if content wrapper has fluid feature
+        @include if(".betterdocs-wrapper", ".betterdocs-fluid-wrapper") {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-gap: 30px;
+            padding-left: 15px;
+            padding-right: 15px;
+            // Up to tablet everything spans all 12 columns (1 / 13), and a
+            // full-width item can't be narrower than the 11 column gaps
+            // (330px): wider than a phone, so the page scrolled sideways.
+            @include responsive-from("tablet") {
+                column-gap: 0;
+            }
+        }
+        // for single docs layout 4
+        @include if(
+            ".betterdocs-wrapper",
+            ".betterdocs-single-wrapper.betterdocs-single-layout-4"
+        ) {
+            padding-left: 0;
+            padding-right: 0;
+            gap: 15px;
+        }
+        // for single docs layout 2
+        @include if(
+            ".betterdocs-wrapper",
+            ".betterdocs-single-wrapper.betterdocs-single-layout-2"
+        ) {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        // for single docs layout 3
+        @include if
+            (
+                ".betterdocs-wrapper",
+                ".betterdocs-single-wrapper.betterdocs-single-layout-3"
+            ) {
+                padding-top: 0;
+                padding-bottom: 0;
+        }
+        // for single docs layout 6
+        @include if
+            (
+                ".betterdocs-wrapper",
+                ".betterdocs-single-wrapper.betterdocs-single-layout-6"
+            ) {
+            display: flex;
+        }
+    }
+}
+
+.betterdocs-sidebar {
+    &.betterdocs-full-sidebar-left {
+        grid-column: 1 / span 3;
+        @include for(".betterdocs-fluid-wrapper") {
+            @include if(
+                ".betterdocs-fluid-wrapper",
+                ".betterdocs-single-layout-4"
+            ) {
+                grid-column: 1 / span 3;
+            }
+        }
+    }
+    &.betterdocs-full-sidebar-right {
+        grid-column: 10 / span 3;
+        list-style: none;
+        @include for(".betterdocs-fluid-wrapper") {
+            @include if(
+                ".betterdocs-fluid-wrapper",
+                ".betterdocs-single-layout-4"
+            ) {
+                grid-column: 11 / span 2;
+            }
+            @include if(
+                ".betterdocs-fluid-wrapper",
+                ".betterdocs-single-layout-5"
+            ) {
+                grid-column: 11 / span 2;
+            }
+            @include if(
+                ".betterdocs-fluid-wrapper",
+                ".betterdocs-single-layout-2"
+            ) {
+                grid-column: 11 / span 2;
+            }
+            @include if(
+                ".betterdocs-fluid-wrapper",
+                ".betterdocs-single-layout-3"
+            ) {
+                grid-column: 11 / span 2;
+            }
+        }
+    }
+}
+
+.feedback-update-form {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0;
+
+    @include responsive-below("tablet") {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .feedback-form{
+        @include responsive-below("tablet") {
+            align-self: center;
+        }
+    }
+
+    .update-date {
+        color: #566e8b;
+        font-size: 14px;
+        font-style: italic;
+
+        @include responsive-below("tablet") {
+            align-self: center;
+        }
+    }
+}
+
+@import "../partials/content-area.scss";

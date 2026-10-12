@@ -1,0 +1,11 @@
+.betterdocs-content-area.block-archive-list {
+    padding: 0;
+    .betterdocs-content-inner-area {
+        .betterdocs-entry-title {
+            margin-bottom: 20px !important;
+            &.editor-mode {
+                padding-bottom: 0px;
+            }
+        }
+    }
+}

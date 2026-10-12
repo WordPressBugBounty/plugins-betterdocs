@@ -1,0 +1,772 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+// base 
+.betterdocs-chatbot-container {
+    max-width    : 1170px;
+    margin       : 0 auto;
+    padding-left : 12px;
+    padding-right: 12px;
+}
+
+.betterdocs-overview-section {
+    margin-bottom: 64px;
+    padding      : 32px 36px;
+    background   : var(--base-background);
+    width        : 100%;
+    border-radius: 8px;
+    border       : 1px solid var(--text-color-150);
+    position     : relative;
+    width: 100%;
+    img {
+        width : 100%;
+        height: auto;
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 1024px) {
+        margin-bottom: 20px;
+        padding      : 20px;
+    }
+}
+
+.betterdocs-overview-col {
+    padding-left : 12px;
+    padding-right: 12px;
+    width        : 100%;
+    min-height   : 1px;
+
+}
+
+@media (max-width: 1012px) {
+    .betterdocs-col-4 {
+        flex     : 0 0 100%;
+        max-width: 100%;
+
+    }
+}
+
+@media (max-width: 600px) {
+    .betterdocs-col-6 {
+        flex     : 0 0 100%;
+        max-width: 100%;
+
+    }
+}
+
+.betterdocs-chatbot-section-btn {
+    background-color: var(--base-color-700);
+    padding         : 15px;
+    font-size       : 16px;
+    font-weight     : 600;
+    color           : #ffffff;
+    text-decoration : none;
+    border-radius   : 8px;
+    cursor          : pointer;
+    display         : inline-block;
+	&:hover {
+		color           : #ffffff;
+	}
+	&:focus {
+		box-shadow: none;
+		outline: none;
+	}
+
+    @media (max-width: 1024px) {
+        padding: 10px 15px;
+    }
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.betterdocs-section-title {
+    color      : var(--text-color-900);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size  : 40px;
+    line-height: 1.2;
+
+    @media (max-width: 1024px) {
+        font-size: 30px;
+    }
+
+    .betterdocs-title-style {
+        font-family: 'DM Sans', sans-serif;
+        line-height: 1.35;
+    }
+}
+
+.betterdocs-section-description {
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 140%;
+	color: var(--text-color-600);
+	margin-bottom: 16px;
+}
+
+.betterdocs-section-sub-title {
+    color        : var(--text-color-800);
+    font-family  : "IBM Plex Sans", sans-serif;
+    font-weight  : 400;
+    font-size    : 16px;
+    line-height  : 1.4;
+    margin-bottom: 16px;
+}
+
+.betterdocs-overview-card-header {
+    font-size  : 24px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 500;
+    line-height: 1.33;
+    color      : var(--text-color-900);
+    text-align : left;
+}
+
+// video section 
+.betterdocs-chatbot-video-section {
+
+    .betterdocs-svg-icon {
+        line-height: 0;
+    }
+
+    .betterdocs-content-left {
+        @media (max-width: 600px) {
+            margin-bottom: 20px;
+        }
+
+        .betterdocs-chatbot-video-section-tag {
+            background   : var(--base-background);
+            border       : 1px solid var(--text-color-200);
+            padding      : 4px 8px 4px 4px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            width        : fit-content;
+
+            .card-title {
+                color      : var(--text-color-850);
+                font-weight: 500;
+                font-size  : 12px;
+                font-family: "Inter", sans-serif;
+            }
+        }
+
+        .betterdocs-section-title {
+            margin-bottom: 8px;
+            margin-bottom: 16px;
+
+            .betterdocs-title-style {
+                display                : block;
+                background             : linear-gradient(90deg, #3852FF 6.70%, #C891FC 21%, #FFCE9D 36%, #00DE9F 45%, #54B8FF 56%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+
+    .betterdocs-content-right {
+        .popup-trigger {
+            text-align: right;
+            cursor: pointer;
+        }
+        .betterdocs-popup-overlay {
+            height    : 100vh;
+            width     : 100vw;
+            position  : fixed;
+            top       : 0;
+            left      : 0;
+            z-index   : 999;
+            overflow-y  : auto;
+            padding: 12px;
+            background: rgb(0, 0, 0, 0.6);
+
+            .betterdocs-popup-wrapper {
+                max-width : 100%;
+                width     : max-content;
+                height    : auto;
+                margin    : 150px auto 0;
+                text-align: center;
+                position  : relative;
+
+                .betterdocs-popup-video-content {
+                    .betterdocs-popu-close-btn {
+                        position        : absolute;
+                        right           : -55px;
+                        top             : 0;
+                        background-color: #ffffff;
+                        display         : flex;
+                        justify-content : center;
+                        align-items     : center;
+                        border-radius   : 50%;
+                        width: 40px;
+                        height: 40px;
+                        border          : none;
+                        cursor          : pointer;
+                        @media (max-width: 999px) {
+                           right: 0;
+                           top: -55px;
+                        }
+                    }
+                    .betterdocs-popup-video{
+                        iframe{
+                            max-width: 1000px;
+                            width: 600px;
+                            aspect-ratio: 16 / 9;
+                            @media (min-width: 1200px) {
+                                width: 1000px;
+                            }
+
+                            @media (max-width: 600px) {
+                                width: 300px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+// benefits-chatbot-section
+.betterdocs-benefits-chatbot-section {
+    background-image   : url("data:image/svg+xml,%3Csvg width='458' height='272' viewBox='0 0 458 272' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M100.284 -46.7707C-70.0347 -5.59211 -188.682 95.4095 -163.736 178.481C-138.789 261.553 19.3967 295.623 189.715 254.445C360.033 213.266 478.681 112.265 453.734 29.1928C428.787 -53.8789 270.602 -87.9494 100.284 -46.7707Z' fill='%23F5FFF5'/%3E%3C/svg%3E");
+    background-repeat  : no-repeat;
+    background-position: left top;
+
+    .betterdocs-chatbot-section-header {
+        margin-bottom: 32px;
+
+        .betterdocs-section-title {
+            text-align   : center;
+            margin-bottom: 8px;
+
+            .betterdocs-title-style {
+                background             : linear-gradient(125deg, #3852FF 20%, #C891FC 35%, #FFCE9D 64%, #00DE9F 80%, #54B8FF 87%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        .betterdocs-section-sub-title {
+            text-align: center;
+        }
+
+    }
+
+    .betterdocs-chatbot-section-content {
+        .betterdocs-benefits-card {
+            border          : 1px solid var(--text-color-200);
+            margin-bottom   : 24px;
+            border-radius   : 16px;
+            overflow        : hidden;
+            background-color: var(--text-color-970);
+
+            .benefits-card-img-wrapper {
+                line-height: 0;
+                padding    : 24px 0 0 24px;
+
+                &.benefits-card-left-bg {
+                    background: linear-gradient(214.17deg, #DCF9FF 15.12%, #F7F7FF 88.76%);
+
+                }
+
+                &.benefits-card-right-bg {
+                    background: linear-gradient(214.17deg, #FFEBFF 15.12%, #EEECFF 88.76%);
+
+                }
+
+                img {
+                    width : 100%;
+                    height: auto;
+                }
+            }
+
+            .benefits-card-header-wrapper {
+                padding: 24px;
+            }
+        }
+
+    }
+}
+
+// analytics-reporting-section
+.betterdocs-analytics-reporting-section {
+    background: linear-gradient(190deg, #DCF9FF -100%, #FFFFFF 100%);
+    padding   : 64px 0;
+
+    .betterdocs-chatbot-section-header {
+        margin-bottom: 32px;
+
+        .betterdocs-section-title {
+            text-align   : center;
+            margin-bottom: 8px;
+
+            .betterdocs-title-style {
+                margin-left            : 7px;
+                background             : linear-gradient(125deg, #3852FF 35%, #C891FC 68%, #FFCE9D 82%, #00DE9F 89%, #54B8FF 94%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        .betterdocs-section-sub-title {
+            text-align: center;
+        }
+
+    }
+
+    .betterdocs-chatbot-section-content {
+        position: relative;
+        overflow: hidden;
+
+        .betterdocs-slider-wrapper {
+            overflow: hidden;
+            width   : 100%;
+            display : flex;
+
+            .slider-container {
+                max-width: 100%;
+                margin   : 0 auto;
+                padding  : 0;
+
+            }
+
+            .betterdocs-slider-item-wrapper {
+                padding: 0 12px;
+            }
+            .betterdocs-slider-item {
+                // min-width       : 494px;
+                width           : 100%;
+                flex-shrink     : 0;
+                opacity         : 1;
+                border-radius   : 16px;
+                background-color: var(--text-color-970);
+                border          : 1px solid var(--text-color-150);
+                .benefits-card-header-wrapper {
+                    padding: 24px;
+
+                    .betterdocs-section-sub-title {
+                        font-size: 14px;
+                        color    : var(--text-color-850);
+						margin-top: 12px;
+                    }
+                }
+            }
+        }
+
+        .slick-arrow {
+            position        : absolute;
+            z-index         : 99;
+            width           : 64px;
+            height          : 64px;
+            background-color: var(--base-background);
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            border-radius   : 50%;
+            border          : none;
+            cursor          : pointer;
+            box-shadow      : 0px 12px 24px 0px rgba(0, 1, 35, 0.12);
+
+            @media (max-width: 600px) {
+                width           : 35px;
+                height          : 35px;
+            }
+            &::before {
+                content            : '';
+                display            : inline-block;
+                width              : 24px;
+                height             : 24px;
+                background-repeat  : no-repeat;
+                background-size    : contain;
+                background-position: center;
+            }
+
+            &.slick-prev {
+                left: 48px;
+
+                @media (max-width: 600px) {
+                    left: 20px;
+                }
+
+                &::before {
+
+                    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 18L9 12L15 6' stroke='%2398A2B3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+                }
+            }
+
+            &.slick-next {
+                right: 48px;
+                @media (max-width: 600px) {
+                    right: 20px;
+                }
+                &::before {
+
+                    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 6L15 12L9 18' stroke='%2398A2B3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+                }
+            }
+
+            &:hover {
+                svg path {
+                    stroke: #344054;
+                }
+            }
+        }
+
+    }
+
+
+
+}
+
+// betterdocs-tour__section
+
+.betterdocs-tour__section {
+    .betterdocs-chatbot-section-header {
+        .betterdocs-section-title {
+            text-align   : center;
+            margin-bottom: 8px;
+
+            .betterdocs-title-style {
+                background             : linear-gradient(125deg, #3852FF 10%, #C891FC 30%, #FFCE9D 55%, #00DE9F 75%, #54B8FF 82%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        }
+
+        .betterdocs-section-sub-title {
+            text-align: center;
+        }
+    }
+
+    .betterdocs-chatbot-section-content {
+        padding-top   : 9px;
+        padding-bottom: 21px;
+
+        .betterdocs-tour-card {
+            padding: 7px;
+
+            @media (max-width: 1024px) {
+                display       : flex;
+                flex-direction: row-reverse;
+                align-items   : center;
+            }
+
+            @media (max-width: 600px) {
+                display       : flex;
+                flex-direction: column;
+                margin-bottom : 20px;
+            }
+
+            .tour-card-img-wrapper {
+                margin-bottom: 20px;
+
+                img {
+                    width : 100%;
+                    height: auto;
+                }
+
+                @media (max-width: 1024px) {
+                    width: 50%;
+                }
+
+                @media (max-width: 600px) {
+                    width: 100%;
+
+                }
+            }
+
+
+            .tour-card-header-wrapper {
+                @media (max-width: 1024px) {
+                    width: 50%;
+                }
+
+                @media (max-width: 600px) {
+                    width: 100%;
+                }
+
+                .betterdocs-tour-card-header {
+                    font-size  : 18px;
+                    font-weight: 600;
+                    color      : var(--text-color-900);
+                    font-family: "IBM Plex Sans", sans-serif;
+                    display    : flex;
+                    align-items: center;
+                    gap        : 12px;
+                    line-height: 1.55;
+
+
+                    .betterdocs-step-badge {
+                        min-width       : 40px;
+                        min-height      : 40px;
+                        border-radius   : 50%;
+                        display         : flex;
+                        align-items     : center;
+                        justify-content : center;
+                        font-weight     : bold;
+                        font-size       : 18px;
+                        font-family     : "DM Sans", sans-serif;
+                        color           : #FFFFFF;
+                        background-color: var(--base-color-700);
+                        font-weight     : 400;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+// chatbot-promo-section
+.betterdocs-chatbot-promo-section {
+    padding   : 56px 75px;
+    background: linear-gradient(220.35deg, #DCF9FF -21%, #FFFFFF 50.57%);
+    position  : relative;
+
+    @media (max-width: 1024px) {
+        padding: 30px;
+    }
+
+    &::after {
+        content            : '';
+        position           : absolute;
+        inset              : 0;
+        background-image   : url("data:image/svg+xml,%3Csvg width='649' height='469' viewBox='0 0 649 469' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg filter='url(%23filter0_f_11660_69306)'%3E%3Ccircle cx='335' cy='335' r='135' fill='%23B6B4FF' /%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11660_69306' x='0' y='0' width='670' height='670' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix' /%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape' /%3E%3CfeGaussianBlur stdDeviation='100' result='effect1_foregroundBlur_11660_69306' /%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+        background-repeat  : no-repeat;
+        background-position: bottom right;
+        z-index            : 0;
+
+        @media (max-width: 1024px) {
+            display: none;
+        }
+    }
+
+    &::before {
+        content            : '';
+        position           : absolute;
+        background-image   : url("data:image/svg+xml,%3Csvg width='432' height='441' viewBox='0 0 432 441' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg filter='url(%23filter0_f_11660_69305)'%3E%3Ccircle cx='310.5' cy='130.5' r='110.5' fill='%2380F3AA'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11660_69305' x='0' y='-180' width='621' height='621' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='100' result='effect1_foregroundBlur_11660_69305'/%3E%3C/filter%3E%3C/defs%3E%3C/svg%3E");
+        background-repeat  : no-repeat;
+        background-position: right top;
+        inset              : 0;
+        z-index            : 0;
+        @media (max-width: 600px) {
+            display: none;
+        }
+
+    }
+
+    .betterdocs-content-left {
+        padding  : 10px;
+        max-width: 431px;
+        width    : 100%;
+
+        .betterdocs-section-title {
+            margin-bottom: 16px;
+            line-height  : 1.30;
+
+            .betterdocs-title-style {
+                display                : block;
+                margin-right           : 7px;
+                background             : linear-gradient(90deg, #3852FF 15%, #C891FC 21%, #FFCE9D 57%, #00DE9F 70%, #54B8FF 82%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+
+        .betterdocs-section-sub-title {
+            color      : var(--text-color-600);
+            line-height: 1.66;
+        }
+
+    }
+
+    .betterdocs-content-right {
+        display        : flex;
+        justify-content: flex-end;
+
+        @media (max-width: 600px) {
+            justify-content: flex-start;
+        }
+
+        .betterdocs-pricing-card {
+            max-width       : 418px;
+            width           : 100%;
+            background-color: var(--base-background);
+            border          : 1px solid #DFE7F5;
+            border-radius   : 8px;
+            z-index         : 3;
+
+            @media (max-width: 1024px) {
+                max-width: 100%;
+            }
+
+
+            .betterdocs-pricing-card-content {
+                width        : 100%;
+                padding      : 29px 32px;
+                border-bottom: 1px solid #DFE7F5;
+
+                @media (max-width: 1024px) {
+                    padding: 20px;
+                }
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                .card-name {
+                    font-size    : 20px;
+                    font-family  : "Inter", sans-serif;
+                    font-weight  : 500;
+                    line-height  : 1.30;
+                    color        : var(--text-color-700);
+                    margin-bottom: 24px;
+                }
+
+                .betterdocs-price {
+                    .price {
+                        font-size  : 28px;
+                        font-family: "Inter", sans-serif;
+                        font-weight: 600;
+                        line-height: 1.30;
+                        color      : var(--text-color-900);
+                    }
+                }
+
+                .form-data-name-control {
+                    font-size  : 14px;
+                    font-family: "Inter", sans-serif;
+                    font-weight: 400;
+                    line-height: 1.30;
+                    color      : var(--text-color-700);
+                    margin     : 0 4px;
+                }
+
+                .betterdocs-price-toggle-switch {
+                    gap          : 9px;
+                    margin-bottom: -7px;
+
+                    .switch {
+                        position: relative;
+                        display : inline-block;
+                        width   : 42px;
+                        height  : 22px;
+
+                        input {
+                            opacity: 0;
+                            width  : 0;
+                            height : 0;
+
+                            &:checked+.slider {
+                                background-color: #00B884;
+
+                                &::before {
+                                    background-color: var(--base-background);
+                                }
+                            }
+
+                            &:focus+.slider {
+                                box-shadow: none;
+                            }
+
+                            &:checked+.slider:before {
+                                -webkit-transform: translateX(20px);
+                                -ms-transform    : translateX(20px);
+                                transform        : translateX(20px);
+                            }
+
+                        }
+
+                        .slider {
+                            position          : absolute;
+                            cursor            : pointer;
+                            top               : 0;
+                            left              : 0;
+                            right             : 0;
+                            bottom            : 0;
+                            background-color  : var(--base-background);
+                            border            : 1px solid #DFE7F5;
+                            -webkit-transition: .4s;
+                            transition        : .4s;
+
+                            &:before {
+                                position: absolute;
+                                content : "";
+                                height  : 14px;
+                                width   : 14px;
+                                left    : 3px;
+
+                                top               : 3px;
+                                background-color  : var(--base-color-700);
+                                -webkit-transition: .4s;
+                                transition        : .4s;
+                            }
+
+                            &.round {
+                                border-radius: 34px;
+
+                                &:before {
+                                    border-radius: 50%;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                .betterdocs-pricing-features-list {
+                    .betterdocs-pricing-features-list-item {
+                        display      : flex;
+                        align-items  : center;
+                        gap          : 8px;
+                        margin-bottom: 18px;
+                        font-family  : "Inter", sans-serif;
+                        font-weight  : 400;
+                        color        : var(--text-color-980);
+                        list-style   : none;
+                        line-height  : 1.40;
+
+                        .betterdocs-features-list-svg-icon {
+                            line-height: 0;
+                        }
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                    }
+                }
+
+                .betterdocs-pricing-card-btn {
+                    width          : 100%;
+                    display        : flex;
+                    justify-content: center;
+                    border-radius  : 16px;
+                }
+
+            }
+        }
+    }
+}
+.betterdocs-dark-mode {
+	.betterdocs-benefits-chatbot-section {
+		background-image: none;
+	}
+	.betterdocs-analytics-reporting-section,
+	.betterdocs-chatbot-promo-section {
+		background: #0A0A0A;
+	}
+}
+

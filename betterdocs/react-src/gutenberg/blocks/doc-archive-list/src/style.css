@@ -1,0 +1,9 @@
+.betterdocs-content-area.block-archive-list {
+  padding: 0;
+}
+.betterdocs-content-area.block-archive-list .betterdocs-content-inner-area .betterdocs-entry-title {
+  margin-bottom: 20px !important;
+}
+.betterdocs-content-area.block-archive-list .betterdocs-content-inner-area .betterdocs-entry-title.editor-mode {
+  padding-bottom: 0px;
+}/*# sourceMappingURL=style.css.map */

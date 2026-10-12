@@ -1,0 +1,808 @@
+// The page tabs beside the "FAQ Builder" title (FAQ Builder / WooCommerce) and
+// the WooCommerce sub-tabs (Product FAQ Groups / Assignments / Display Settings)
+// are the same kind of pill-strip, so they share one style.
+// "SegmentedTabs" — match the Doc Categories language tabs (.bd-dc-lang-tabs-list):
+// a white pill-group with a border + subtle shadow, and a gray active pill.
+.betterdocs-faq-page-tabs,
+.betterdocs-woo-faq-subtabs {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 2px;
+	padding: 4px;
+	background: var(--base-background, #fff);
+	border: 1px solid var(--text-color-200);
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+	.betterdocs-faq-page-tab,
+	.betterdocs-woo-faq-subtab {
+		appearance: none;
+		border: none;
+		cursor: pointer;
+		background: transparent;
+		color: var(--text-color-600);
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1;
+		white-space: nowrap;
+		padding: 7px 13px;
+		border-radius: 9px;
+		transition: background 0.12s ease, color 0.12s ease;
+
+		&:hover {
+			color: var(--text-color-900);
+		}
+
+		&.active {
+			background-color: var(--text-color-50);
+			color: var(--base-color-700);
+		}
+	}
+}
+
+// Page tabs sit inline next to the title.
+.betterdocs-faq-page-tabs {
+	margin-left: 20px;
+
+	@media (max-width: 600px) {
+		margin-left: 0;
+		margin-top: 12px;
+	}
+}
+
+// WooCommerce tab body.
+.betterdocs-woo-faq {
+	width: 100%;
+
+	// Sub-tabs share the page-tab pill style above; only their layout
+	// (block-level, with bottom spacing) differs.
+	.betterdocs-woo-faq-subtabs {
+		max-width: 100%;
+		margin-bottom: 24px;
+	}
+
+	// Multi-select chips (shared with the Create/Update FAQ Group modal).
+	@import "./multiselect-chips";
+
+	// Loading skeletons matching the Assignments table and Display Settings form.
+	.betterdocs-woo-skeleton {
+		.bd-woo-skel {
+			display: block;
+			border-radius: 6px;
+			background: linear-gradient(
+				90deg,
+				var(--text-color-200) 25%,
+				var(--text-color-100) 37%,
+				var(--text-color-200) 63%
+			);
+			background-size: 400% 100%;
+			animation: bd-faq-skeleton-shimmer 1.4s ease infinite;
+		}
+
+		&__head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 24px;
+
+			.bd-woo-skel--title {
+				width: 220px;
+				height: 20px;
+			}
+
+			.bd-woo-skel--search {
+				width: 240px;
+				height: 36px;
+				border-radius: 6px;
+			}
+		}
+
+		&__table {
+			background: var(--base-background);
+			border: 1px solid var(--text-color-100);
+			border-radius: 12px;
+			overflow: hidden;
+		}
+
+		&__row {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			padding: 16px;
+			border-top: 1px solid var(--text-color-100);
+
+			&:first-child {
+				border-top: none;
+			}
+
+			.bd-woo-skel--name {
+				flex: 1;
+				height: 16px;
+			}
+
+			.bd-woo-skel--count {
+				width: 60px;
+				height: 16px;
+			}
+
+			.bd-woo-skel--select {
+				width: 50%;
+				height: 40px;
+				border-radius: 5px;
+			}
+		}
+
+		&__form {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+			max-width: 560px;
+			background: var(--base-background);
+			border: 1px solid var(--text-color-100);
+			border-radius: 12px;
+			padding: 24px;
+		}
+
+		&__field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+
+			.bd-woo-skel--label {
+				width: 160px;
+				height: 14px;
+			}
+
+			.bd-woo-skel--field {
+				width: 100%;
+				height: 40px;
+				border-radius: 6px;
+			}
+		}
+
+		.bd-woo-skel--button {
+			align-self: flex-end;
+			width: 130px;
+			height: 40px;
+			border-radius: 6px;
+		}
+	}
+
+	.betterdocs-woo-faq-placeholder {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		text-align: center;
+		padding: 80px 24px;
+		background: var(--base-background);
+		border: 1px dashed var(--text-color-300);
+		border-radius: 12px;
+
+		h3 {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 600;
+			color: var(--text-color-900);
+		}
+
+		p {
+			margin: 0;
+			font-size: 14px;
+			color: var(--text-color-600);
+		}
+	}
+
+	// Category Assignments table (shared look reused by the locked Product
+	// Assignments teaser, which has the same Product / meta / FAQ-groups shape).
+	.betterdocs-woo-category-assignments,
+	.betterdocs-woo-faq-teaser {
+		.betterdocs-woo-assignments-head {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 24px;
+
+			@media (max-width: 600px) {
+				flex-direction: column;
+				align-items: stretch;
+
+				.search-input {
+					min-width: 0;
+					width: 100%;
+				}
+			}
+
+			h3 {
+				margin: 0 0 4px;
+				font-size: 16px;
+				font-weight: 600;
+				color: var(--text-color-900);
+			}
+
+			p {
+				margin: 0;
+				font-size: 13px;
+				color: var(--text-color-600);
+				max-width: 560px;
+			}
+
+			.search-input {
+				min-width: 240px;
+				padding: 8px 12px;
+				border: 1px solid var(--text-color-300);
+				border-radius: 6px;
+			}
+		}
+
+		.betterdocs-woo-assignments-table {
+			width: 100%;
+			table-layout: fixed;
+			border-collapse: collapse;
+			background: var(--base-background);
+			border: 1px solid var(--text-color-100);
+			border-radius: 12px;
+			overflow: hidden;
+
+			thead th {
+				text-align: left;
+				font-size: 12px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				color: var(--text-color-600);
+				padding: 14px 16px;
+				background: var(--text-color-100);
+
+				// Fixed column widths so the FAQ-groups select can't stretch
+				// the table as more chips are added (chips wrap instead).
+				&:nth-child(2) {
+					width: 90px;
+				}
+
+				&:nth-child(3) {
+					width: 50%;
+				}
+
+				@media (max-width: 600px) {
+					padding: 10px 8px;
+					font-size: 11px;
+
+					&:nth-child(2) {
+						width: 52px;
+					}
+
+					&:nth-child(3) {
+						width: 46%;
+					}
+				}
+			}
+
+			tbody {
+				&.is-loading {
+					opacity: 0.6;
+					pointer-events: none;
+				}
+
+				tr {
+					border-top: 1px solid var(--text-color-100);
+				}
+
+				td {
+					padding: 24px 16px;
+					vertical-align: middle;
+					font-size: 14px;
+					color: var(--text-color-700);
+
+					@media (max-width: 600px) {
+						padding: 14px 8px;
+						font-size: 13px;
+					}
+
+					&.col-name {
+						font-weight: 500;
+						color: var(--text-color-900);
+						overflow-wrap: break-word;
+						word-break: break-word;
+					}
+
+					&.col-count {
+						width: 90px;
+						color: var(--text-color-600);
+
+						@media (max-width: 600px) {
+							width: 52px;
+						}
+					}
+
+					&.col-groups {
+						width: 50%;
+
+						@media (max-width: 600px) {
+							width: 46%;
+						}
+
+						// Let selected chips wrap onto new lines instead of
+						// stretching the control past the fixed column width.
+						.bd-woo-assign-select {
+							width: 100%;
+
+							.bd-faq-select__control {
+								height: auto;
+								min-height: 40px;
+							}
+
+							.bd-faq-select__value-container {
+								flex-wrap: wrap;
+								padding: 4px 12px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	// Pro-gated Product Assignments teaser (locked behind an upgrade overlay).
+	// Scoped to the teaser-only class so the bare .betterdocs-woo-product-assignments
+	// class (reused by the Pro real UI) doesn't inherit the blur/overlay treatment.
+	.betterdocs-woo-faq-teaser {
+		.betterdocs-woo-teaser-body {
+			position: relative;
+			border-radius: 12px;
+			overflow: hidden;
+
+			.betterdocs-woo-assignments-table {
+				filter: blur(2px);
+				pointer-events: none;
+				user-select: none;
+			}
+
+			.overlay {
+				position: absolute;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				inset: 0;
+				background-color: rgba(255, 255, 255, 0.7);
+
+				.overlay-content {
+					width: 60%;
+					max-width: 520px;
+					margin: 0 auto;
+
+					@media (max-width: 600px) {
+						width: 92%;
+						padding: 20px 16px 28px;
+
+						h3 {
+							font-size: 18px;
+							line-height: 24px;
+						}
+
+						.teaser-text {
+							font-size: 14px;
+							line-height: 22px;
+						}
+					}
+					background: var(--base-background);
+					color: var(--text-color-900);
+					box-shadow: 0 30px 60px rgba(0, 1, 35, 0.18);
+					border-radius: 15px;
+					padding: 24px 24px 40px;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+
+					h3 {
+						font-weight: 500;
+						font-size: 22px;
+						line-height: 28px;
+						color: var(--text-color-900);
+						text-align: center;
+						margin: 0.5em 0;
+
+						#img-teaser {
+							width: 14px;
+							height: auto;
+							display: inline;
+						}
+					}
+
+					.teaser-text {
+						font-weight: 400;
+						font-size: 15px;
+						line-height: 26px;
+						text-align: center;
+						color: var(--text-color-600);
+						margin: 0;
+					}
+
+					.teaser-desc {
+						margin-bottom: 24px;
+					}
+
+					.analytics-upgrade-btn {
+						display: flex;
+						background-color: var(--base-color-700);
+						box-shadow: 0 10px 60px rgba(0, 1, 35, 0.3);
+						border-radius: 12px;
+						justify-content: center;
+						align-items: center;
+
+						a {
+							color: #ffffff;
+							font-weight: 500;
+							font-size: 16px;
+							line-height: 1;
+							padding: 16px 32px;
+							text-decoration: none;
+
+							&:focus {
+								box-shadow: none;
+								outline: none;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Display Settings form.
+	.betterdocs-woo-display-settings {
+		.betterdocs-woo-assignments-head {
+			display: flex;
+			align-items: flex-start;
+			margin-bottom: 24px;
+
+			h3 {
+				margin: 0 0 4px;
+				font-size: 16px;
+				font-weight: 600;
+				color: var(--text-color-900);
+			}
+
+			p {
+				margin: 0;
+				font-size: 13px;
+				color: var(--text-color-600);
+			}
+		}
+
+		.betterdocs-woo-settings-form {
+			display: flex;
+			align-items: flex-start;
+			gap: 24px;
+			background: var(--base-background);
+			border: 1px solid var(--text-color-100);
+			border-radius: 12px;
+			padding: 24px;
+
+			// Fields column.
+			.bd-woo-settings-main {
+				flex: 1 1 auto;
+				min-width: 0;
+				max-width: 560px;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+			}
+
+			// Live layout preview — mirrors the customizer "Select FAQ Layout"
+			// images and swaps as the Layout select changes.
+			.bd-woo-settings-preview {
+				max-width: 100%;
+				position: sticky;
+				top: 24px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 10px;
+				padding: 16px;
+				background: var(--text-color-50);
+				border: 1px solid var(--text-color-100);
+				border-radius: 12px;
+
+				.bd-woo-settings-preview-img {
+					width: 100%;
+					height: auto;
+					display: block;
+					border-radius: 8px;
+					border: 1px solid var(--text-color-100);
+					background: var(--base-background);
+				}
+
+				.bd-woo-settings-preview-caption {
+					font-size: 13px;
+					font-weight: 600;
+					color: var(--text-color-700);
+				}
+			}
+
+			// Stack the preview under the fields on narrow screens.
+			@media (max-width: 900px) {
+				flex-direction: column;
+
+				.bd-woo-settings-main {
+					max-width: none;
+					width: 100%;
+				}
+
+				.bd-woo-settings-preview {
+					position: static;
+					flex-basis: auto;
+					width: 100%;
+					max-width: 360px;
+				}
+			}
+		}
+
+		.bd-woo-field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+
+			.bd-woo-field-label {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+
+				strong {
+					font-size: 14px;
+					font-weight: 600;
+					color: var(--text-color-900);
+				}
+
+				span {
+					font-size: 13px;
+					color: var(--text-color-600);
+				}
+			}
+
+			.bd-woo-text-input {
+				width: 100%;
+				padding: 8px 12px;
+				border: 1px solid var(--text-color-400);
+				border-radius: 6px;
+				font-size: 14px;
+				outline: none;
+				// Use design-system tokens so the field follows dark mode, matching
+				// the adjacent .bd-faq-select control (which is otherwise the only
+				// dark-aware field in this form).
+				background-color: var(--base-background);
+				color: var(--text-color-900);
+				transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+				&::placeholder {
+					color: var(--text-color-500);
+				}
+
+				&:focus {
+					border-color: var(--base-color-700);
+					box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15);
+					outline: none;
+				}
+			}
+
+			// The Placement/Layout selects open the menu on click — show a hand
+			// cursor across the whole control, matching the group modal selects.
+			.bd-faq-select__control,
+			.bd-faq-select__value-container,
+			.bd-faq-select__placeholder,
+			.bd-faq-select__single-value {
+				cursor: pointer;
+			}
+		}
+
+		.bd-woo-field-toggle {
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 12px;
+		}
+
+		// Compact on/off switch.
+		.bd-woo-switch {
+			position: relative;
+			display: inline-flex;
+			flex: 0 0 auto;
+			width: 40px;
+			height: 22px;
+			margin-top: 2px;
+			cursor: pointer;
+
+			input {
+				position: absolute;
+				opacity: 0;
+				width: 0;
+				height: 0;
+			}
+
+			.bd-woo-switch-slider {
+				position: absolute;
+				inset: 0;
+				background: var(--text-color-300);
+				border-radius: 22px;
+				transition: background 0.15s ease-in-out;
+
+				&::before {
+					content: "";
+					position: absolute;
+					left: 3px;
+					top: 3px;
+					width: 16px;
+					height: 16px;
+					background: #ffffff;
+					border-radius: 50%;
+					transition: transform 0.15s ease-in-out;
+				}
+			}
+
+			input:checked + .bd-woo-switch-slider {
+				background: var(--base-color-700);
+
+				&::before {
+					transform: translateX(18px);
+				}
+			}
+		}
+
+		.bd-woo-settings-actions {
+			display: flex;
+			justify-content: flex-start;
+
+			.bd-woo-save-btn {
+				appearance: none;
+				border: none;
+				cursor: pointer;
+				background: var(--base-color-700);
+				color: #ffffff;
+				font-size: 14px;
+				font-weight: 500;
+				width: 134px; padding: 10px 0px; text-align: center;
+				border-radius: 6px;
+				transition: opacity 0.15s ease-in-out;
+
+				&:hover {
+					opacity: 0.9;
+				}
+
+				&:disabled {
+					opacity: 0.6;
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+}
+
+// The Create/Update FAQ Group modal (react-modal) is portaled to document.body,
+// so it renders OUTSIDE .betterdocs-faq-wrapper (where the select control styles
+// are scoped) and .betterdocs-woo-faq (where the chips are). Re-apply both here
+// so the Product FAQ assignment selects match the Category Assignments table —
+// same control border, green focus ring, and no stray core input-focus outline.
+.bd-faq-ctg-modal {
+	@import "./utils/select";
+	@import "./multiselect-chips";
+
+	.bd-faq-cgt-field .bd-faq-multiselect {
+		// Let the chips/control wrap inside the modal's fixed width.
+		.bd-faq-select__control {
+			height: auto;
+			min-height: 40px;
+			// The whole field opens the menu on click — show a hand cursor.
+			cursor: pointer;
+		}
+
+		.bd-faq-select__value-container,
+		.bd-faq-select__placeholder {
+			flex-wrap: wrap;
+			cursor: pointer;
+		}
+	}
+
+	// Targeting-scope radios: "All products" vs "Specific products".
+	// Follows the design system's selection pattern (neutral surface + green ACCENT,
+	// as with the select-menu options and the sample-docs layout cards) — green is the
+	// radio dot and the border only, never a full fill.
+	.bd-faq-scope-choices {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.bd-faq-scope-choice {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 13px 15px;
+		border: 1.5px solid var(--text-color-300, #dde2e4);
+		border-radius: 10px;
+		background: var(--base-background, #fff);
+		cursor: pointer;
+		transition: border-color 0.15s ease, background 0.15s ease;
+
+		&:hover:not(:has(input:checked)) {
+			border-color: var(--text-color-400, #d0d5dd);
+		}
+
+		// Custom radio — brand green when checked, never the browser's blue accent.
+		input[type="radio"] {
+			appearance: none;
+			-webkit-appearance: none;
+			flex: 0 0 auto;
+			width: 18px;
+			height: 18px;
+			margin: 1px 0 0;
+			border: 2px solid var(--text-color-400, #d0d5dd);
+			border-radius: 50%;
+			background: var(--base-background, #fff);
+			cursor: pointer;
+			position: relative;
+			transition: border-color 0.15s ease;
+
+			// WordPress core paints a blue border + box-shadow on input:focus, which
+			// showed through even on this appearance:none radio (the blue ring on click).
+			// Kill it here — no blue, ever.
+			&:focus {
+				border-color: var(--text-color-400, #d0d5dd);
+				box-shadow: none;
+				outline: none;
+			}
+
+			&:checked {
+				border-color: var(--base-color-700, #00b884);
+
+				// Keep the border green when the checked radio also has focus (core's
+				// blue :focus border would otherwise win).
+				&:focus {
+					border-color: var(--base-color-700, #00b884);
+				}
+
+				&::after {
+					content: "";
+					position: absolute;
+					inset: 3px;
+					border-radius: 50%;
+					background: var(--base-color-700, #00b884);
+				}
+			}
+
+			// Keyboard focus keeps an accessible ring — brand green, not blue.
+			&:focus-visible {
+				outline: 2px solid var(--base-color-700, #00b884);
+				outline-offset: 2px;
+				box-shadow: none;
+			}
+		}
+
+		span {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		strong {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--text-color-900, #101828);
+		}
+
+		em {
+			font-size: 12px;
+			font-style: normal;
+			color: var(--text-color-600, #667085);
+		}
+
+		// Selected: green border + a subtle NEUTRAL highlight (the same treatment the
+		// select-menu uses for a chosen option), not a green wash.
+		&:has(input:checked) {
+			border-color: var(--base-color-700, #00b884);
+			background: var(--text-color-50, #f9fafb);
+		}
+	}
+}

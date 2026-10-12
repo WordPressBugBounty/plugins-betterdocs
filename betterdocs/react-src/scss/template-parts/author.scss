@@ -1,0 +1,61 @@
+.betterdocs-author-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 16px;
+    margin-top: 24px;
+    border-top: 1px solid #EAECF0;
+    border-bottom: 1px solid #EAECF0;
+
+    @media only screen and (max-width: 1280px) {
+        gap: 20px;
+        padding: 12px;
+        margin-top: 18px;
+    }
+
+    .betterdocs-author {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        @media only screen and (max-width: 1280px) {
+            gap: 12px;
+        }
+
+        .author-avatar {
+            img {
+                max-width: 100%;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+
+                @media only screen and (max-width: 1280px) {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+
+        >span {
+            font-size: 16px;
+            color: #667085;
+
+            @media only screen and (max-width: 1280px) {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .update-date {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 0;
+        padding-top: 0;
+        border-top: none;
+        color: #475467;
+        font-size: 14px;
+        line-height: 20px;
+    }
+}

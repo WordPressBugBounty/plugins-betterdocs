@@ -1,0 +1,42 @@
+@import "../common";
+@import "./common";
+// CHECKED:
+
+.betterdocs-entry-title {
+    margin-bottom: 20px;
+    .betterdocs-entry-heading {
+        line-height: 1;
+        @at-root .betterdocs-content-area .betterdocs-content-inner-area #{&} {
+            color: #566e8b;
+            font-size: 20px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+        }
+    }
+    p {
+        line-height: 1.7;
+        @at-root .betterdocs-content-area .betterdocs-content-inner-area #{&} {
+            color: #566e8b;
+            font-size: 14px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 10px;
+            margin-left: 0px;
+        }
+    }
+    @at-root .docs-single-title #{&} {
+        color: #3f5876;
+        font-size: 36px;
+        text-transform: uppercase;
+        letter-spacing: 0.035em;
+        margin: 10px auto;
+        padding-bottom: 40px;
+        @include for(
+            ".betterdocs-single-layout-6 .betterdocs-content-wrapper .betterdocs-content-area .betterdocs-entry-header"
+        ) {
+            padding-bottom: 0;
+        }
+    }
+}

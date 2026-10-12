@@ -1,0 +1,2898 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+@import "utils/common";
+@import "utils/mixin";
+
+@import './fields/better-repeater';
+
+.betterdocs-admin {
+    .betterdocs-settings-wrap {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .betterdocs-left-right-settings {
+        .betterdocs-settings {
+            .betterdocs-settings-content {
+                padding-left: 40px;
+                padding-right: 40px;
+                padding-top: 0;
+                padding-bottom: 0;
+                .betterdocs-settings-form-wrapper {
+                    padding-top: 24px;
+                    padding-bottom: 24px;
+                    box-shadow: none;
+                    background-color: transparent;
+                    .betterdocs-pro-alert-container {
+                        background: rgba(#000, 0.5);
+                        padding: 50px 10px;
+                        .betterdocs-pro-alert-popup {
+                            width: 100%;
+                            max-width: 650px;
+                            margin-right: 55px;
+                            border-radius: 8px;
+                            background: var(--base-background);
+                            padding: 40px;
+                            position: relative;
+                            .betterdocs-pro-alert-close-button {
+                                width: 40px;
+                                height: 40px;
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 50%;
+                                background: var(--base-background);
+                                color: var(--text-color-700);
+                                position: absolute;
+                                top: 0;
+                                right: -55px;
+                                transition: all 0.2s ease-in-out;
+                                box-shadow: none !important;
+                                &:hover {
+                                    background: var(--text-color-300);
+                                    color: var(--text-color-900);
+                                }
+                            }
+                            .betterdocs-pro-alert-html {
+                                margin: 0;
+                                padding: 0;
+                                display: flex !important;
+                                flex-direction: column;
+                                align-items: flex-start;
+                                .icon {
+                                    height: 56px;
+                                    width: 56px;
+                                    display: inline-flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    border-radius: 50%;
+                                    font-size: 35px !important;
+                                    background-color: var(--warning-100);
+                                    color: var(--warning-400);
+                                    &:not(:last-child) {
+                                        margin-bottom: 8px;
+                                    }
+                                }
+                                .title {
+                                    color: var(--text-color-900);
+                                    font-size: 24px;
+                                    font-weight: 500;
+                                    line-height: 1.5;
+                                    margin: 0;
+                                    text-align: left!important;
+                                    &:not(:last-child) {
+                                        margin-bottom: 16px;
+                                    }
+                                }
+                                .description {
+                                    color: var(--text-color-600);
+                                    font-size: 16px;
+                                    line-height: 1.6;
+                                    text-align: left;
+                                    &:not(:last-child) {
+                                        margin-bottom: 24px;
+                                    }
+                                }
+                                .features {
+                                    display: flex;
+                                    padding: 16px;
+                                    flex-direction: column;
+                                    gap: 16px;
+                                    border-radius: 8px;
+                                    background: var(--text-color-50);
+                                    width: 100%;
+                                    box-sizing: border-box;
+                                    text-align: left;
+                                    &:not(:last-child) {
+                                        margin-bottom: 24px;
+                                    }
+                                    .feature-title {
+                                        color: var(--text-color-900);
+                                        font-size: 16px;
+                                        line-height: 1.25;
+                                        font-weight: 600;
+                                        margin: 0;
+                                    }
+                                    .feature-list {
+                                        display: grid;
+                                        grid-template-columns: repeat(2, 1fr);
+                                        gap: 16px;
+                                        margin: 0;
+                                        .list-item {
+                                            margin: 0;
+                                            padding: 0;
+                                            color: var(--text-color-600);
+                                            font-size: 16px;
+                                            line-height: 1.25;
+                                            font-weight: 400;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            gap: 8px;
+                                            &:before {
+                                                content: "\e90a";
+                                                font-family: "btd-icon";
+                                                height: 24px;
+                                                width: 24px;
+                                                border-radius: 50%;
+                                                flex-shrink: 0;
+                                                background-color: var(--base-color-100);
+                                                color: var(--base-color-700);
+                                                display: inline-flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                font-size: 12px;
+                                            }
+                                        }
+                                        .more {
+                                            margin: 0;
+                                            padding: 0;
+                                            a {
+                                                @include set-mode(color, var(--primary-700), var(--base-color-700));
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.25;
+                                                text-decoration-line: underline;
+                                            }
+                                        }
+                                    }
+                                }
+                                .footer {
+                                    display: flex;
+                                    align-items: center;
+                                    width: 100%;
+                                    a {
+                                        margin-left: auto;
+                                        min-height: 40px;
+                                        display: inline-flex;
+                                        padding: 2px 24px;
+                                        justify-content: center;
+                                        align-items: center;
+                                        flex-shrink: 0;
+                                        border-radius: 8px;
+                                        border: 1px solid var(--base-color-700);
+                                        background: var(--base-color-700);
+                                        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                        @include set-mode(color, var(--base-background), #fff);
+                                        font-size: 14px;
+                                        font-weight: 600;
+                                        line-height: 1.43;
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .betterdocs-quick-builder-wrapper {
+                        .wprf-tabs-wrapper {
+                            border: none;
+                            background: transparent;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            .betterdocs-settings-documentation {
+                background: transparent !important;
+                margin: 0px auto 0px auto;
+                max-width: 1200px;
+                width: 100%;
+
+                .betterdocs-admin-block {
+                    background-color: var(--base-background);
+                    border-radius: 16px;
+                    @include set-mode(box-shadow, 0 0 20px 0px #f2f2f2, none);
+                    .betterdocs-admin-block-header-icon {
+                        @include set-mode(background-color, #ecfdf3, #1f283d);
+                    }
+                    .betterdocs-admin-title {
+                        color: var(--text-color-800);
+                    }
+                    p {
+                        color: var(--text-color-600);
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 20px;
+                    }
+                }
+            }
+        }
+    }
+    .wp-react-form.wprf-tabs-wrapper {
+        &.wprf-tab-menu-as-sidebar {
+            display: flex;
+            .wprf-tab-menu-sidebar {
+                flex-basis: 25%;
+                max-width: 25%;
+            }
+            > .wprf-tab-content-wrapper {
+                flex-basis: 75%;
+                max-width: 75%;
+            }
+        }
+    }
+    .wprf-tab-menu-as-sidebar .wprf-tab-menu-sidebar {
+        background-color: var(--base-color-50) !important;
+        border-right: 1px solid var(--text-color-400);
+        padding: 20px;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        box-sizing: border-box;
+        .wprf-tab-nav {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            .wprf-tab-nav-item {
+                min-height: 40px !important;
+                padding: 2px 20px !important;
+                width: 100% !important;
+                border: none !important;
+                margin: 0 !important;
+                background-color: transparent !important;
+                color: var(--text-color-600) !important;
+                font-size: 15px !important;
+                font-style: normal !important;
+                font-weight: 500 !important;
+                line-height: 1.5 !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px;
+                border-radius: 8px !important;
+                transition:
+                    background-color 0.3s ease-in-out,
+                    color 0.3s ease-in-out;
+                .wprf-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 4px 6px 4px 4px;
+                    border-radius: 50px;
+                    background-color: var(--warning-50);
+                    gap: 5px;
+                    cursor: pointer;
+                    box-sizing: border-box;
+                    .wprf-badge-icon {
+                        height: 16px;
+                        width: 16px;
+                        border-radius: 50px;
+                        font-size: 12px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: var(--warning-100);
+                        color: var(--warning-400);
+                    }
+                    .wprf-badge-item {
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 1.1;
+                        color: var(--warning-400);
+                    }
+                }
+                &.wprf-active-nav {
+                    background-color: var(--base-color-700) !important;
+                    @include set-mode(color, var(--base-background), #ffffff, true);
+
+                    &:hover {
+                        background-color: var(--base-color-700) !important;
+                        @include set-mode(color, var(--base-background), #ffffff, true);
+                    }
+                }
+                &:hover {
+                    @include set-mode(background-color, #edf7f4, var(--base-color-700), true);
+                    @include set-mode(color, var(--text-color-600), #ffffff, true);
+                }
+            }
+        }
+    }
+    .wprf-tab-menu-as-sidebar .wprf-tab-content-wrapper {
+        background-color: var(--base-background) !important;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
+        padding: 0 !important;
+        .wprf-tab-flex {
+            &:last-child {
+                height: 100%;
+            }
+            .wprf-tab-contents {
+                height: auto;
+                .wprf-tab-content {
+                    height: auto;
+                    .wprf-tab-heading-wrapper {
+                        display: none;
+                    }
+                    > .wprf-control-section {
+                        border: none !important;
+                        margin: 0;
+                        padding: 0;
+                        .wprf-section-title {
+                            padding: 26px 40px;
+                            color: var(--text-color-800);
+                            font-size: 24px;
+                            font-weight: 600;
+                            line-height: 1.3;
+                            font-style: normal;
+                            border-bottom: 1px solid var(--text-color-400);
+                            h3,
+                            h4,
+                            h5 {
+                                margin: 0;
+                                padding: 0;
+                                font-size: inherit;
+                                line-height: inherit;
+                                font-weight: inherit;
+                                color: inherit;
+                                background: transparent;
+                                text-transform: capitalize;
+                                font-style: inherit;
+                                letter-spacing: normal;
+                            }
+                        }
+                        .wprf-section-fields {
+                            padding: 20px 40px 0;
+                            > div:first-child {
+                                margin-bottom: 20px;
+                                // display: inline-block;
+                            }
+                            .wprf-control-wrapper:not(.wprf-section-header) {
+                                padding: 24px 16px;
+                                margin: 0;
+                                background-color: var(--base-background);
+                                display: flex;
+                                align-items: center;
+                                border-bottom: 1px solid var(--text-color-200);
+                                gap: 5%;
+                                flex-wrap: nowrap;
+                                .wprf-badge-wrapper {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 5%;
+                                    .wprf-control-label {
+                                        .wprf-label-with-badge {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 10px;
+                                            .wprf-badge {
+                                                display: inline-flex;
+                                                align-items: center;
+                                                padding: 4px 6px 4px 4px;
+                                                border-radius: 50px;
+                                                background-color: var(--warning-50);
+                                                gap: 5px;
+                                                cursor: pointer;
+                                                .wprf-badge-icon {
+                                                    height: 16px;
+                                                    width: 16px;
+                                                    border-radius: 50px;
+                                                    font-size: 12px;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    background: var(--warning-100);
+                                                    color: var(--warning-400);
+                                                }
+                                                .wprf-badge-item {
+                                                    font-size: 14px;
+                                                    font-style: normal;
+                                                    font-weight: 500;
+                                                    line-height: 1.1;
+                                                    color: var(--warning-400);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                &:hover {
+                                    background: var(--text-color-50);
+                                }
+                                .wprf-control-label {
+                                    width: 42.5%;
+                                    flex-basis: 42.5%;
+                                    gap: 6px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    font-weight: initial;
+                                    label {
+                                        color: var(--text-color-700);
+                                        font-size: 14px;
+                                        font-weight: 500;
+                                        line-height: 1.43;
+                                    }
+                                    .wprf-label-subtitle {
+                                        width: 100%;
+                                        color: var(--text-color-600);
+                                        font-size: 14px;
+                                        font-weight: 400;
+                                        line-height: 1.43;
+                                        margin-top: 0;
+                                        margin-bottom: 0;
+                                    }
+                                }
+                                .wprf-control-field {
+                                    box-sizing: border-box;
+                                    width: 52.5%;
+                                    flex-basis: 52.5%;
+                                }
+                            }
+                            .wprf-control-wrapper {
+                                &.wprf-type-toggle {
+                                    .wprf-control-field {
+                                        display: flex;
+                                        flex-direction: row-reverse;
+                                        justify-content: space-between;
+                                        flex-wrap: nowrap;
+                                        gap: 10px;
+                                        padding: 12px 16px;
+                                        border: 1px solid var(--text-color-400);
+                                        border-radius: 8px;
+                                        .wprf-description {
+                                            color: var(--text-color-700);
+                                            font-size: 14px;
+                                            font-weight: 500;
+                                            line-height: 1.43;
+                                            margin: 0;
+                                            padding: 0;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                        }
+                                        .wprf-toggle-wrap {
+                                            position: relative;
+                                            display: inline-flex;
+                                            width: 44px;
+                                            height: 24px;
+                                            input[type="checkbox"] {
+                                                display: block !important;
+                                                position: absolute;
+                                                inset: 0;
+                                                opacity: 0 !important;
+                                            }
+                                            .wprf-input-label {
+                                                margin: 0;
+                                                width: 44px;
+                                                position: relative;
+                                                min-height: 24px;
+                                                height: 24px;
+                                                max-height: 24px;
+                                                cursor: pointer;
+                                                display: inline-block;
+                                                &:before {
+                                                    background: var(--text-color-300);
+                                                    width: 44px;
+                                                    height: 24px;
+                                                    border: none;
+                                                    left: 0;
+                                                    top: 0;
+                                                    border-radius: 20px;
+                                                    transition: all 0.4s ease;
+                                                }
+                                                &:after {
+                                                    left: 2px;
+                                                    top: 2px;
+                                                    width: 20px;
+                                                    height: 20px;
+                                                    border-radius: 50%;
+                                                    background: #fff;
+                                                    transition:
+                                                        left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                                                        padding 0.3s ease,
+                                                        margin 0.3s ease;
+                                                }
+                                            }
+                                            &.wprf-checked {
+                                                .wprf-input-label {
+                                                    &:before {
+                                                        background: var(--base-color-700);
+                                                    }
+                                                    &:after {
+                                                        left: 22px;
+                                                        right: auto;
+                                                    }
+                                                }
+                                            }
+                                            // input:focus {
+                                            //     + .wprf-input-label:before {
+                                            //         box-shadow:
+                                            //             0px 0px 0px 4px #d0f9ed,
+                                            //             0px 1px 2px 0px
+                                            //                 rgba(#101828, 0.05);
+                                            //     }
+                                            // }
+                                        }
+                                    }
+                                    .wprf-badge-wrapper.pro-deactivated {
+                                        .wprf-control-field {
+                                            .wprf-toggle-wrap {
+                                                .wprf-input-label {
+                                                    &:after {
+                                                        content: "\e907";
+                                                        font-family: "btd-icon";
+                                                        display: inline-flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        font-size: 14px;
+                                                        color: var(--text-color-700);
+                                                    }
+                                                }
+                                                &.wprf-checked {
+                                                    .wprf-input-label {
+                                                        &:before {
+                                                            background: var(--base-color-700);
+                                                        }
+                                                        &:after {
+                                                            left: 22px;
+                                                            right: auto;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .wprf-description {
+                                                color: var(--text-color-500);
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-text,
+                                &.wprf-type-permalink_structure,
+                                &.wprf-type-number {
+                                    .wprf-control-field {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                        > input {
+                                            width: 100%;
+                                            min-height: 44px;
+                                            padding: 2px 14px;
+                                            border-radius: 8px;
+                                            border: 1px solid var(--text-color-400);
+                                            background-color: var(--base-background);
+                                            box-shadow: 0px 1px 2px 0px rgba(#101828, 0.05);
+                                            color: var(--text-color-900);
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            line-height: 1.5;
+                                            &::placeholder {
+                                                color: var(--text-color-600);
+                                            }
+                                            &:focus {
+                                                box-shadow:
+                                                    0px 0px 0px 4px var(--focus-shadow-1),
+                                                    0px 1px 2px 0px var(--focus-shadow-2);
+                                                border-color: var(--base-color-700);
+                                            }
+                                        }
+                                        .wprf-tags-wrapper {
+                                            width: 100%;
+                                            display: flex;
+                                            justify-content: flex-end;
+                                            gap: 8px;
+                                            .button {
+                                                min-height: 22px;
+                                                padding: 2px 8px;
+                                                font-size: 12px;
+                                                line-height: 1;
+                                                color: var(--text-color-700);
+                                                background: var(--text-color-50);
+                                                border: 1px solid var(--text-color-400);
+                                                border-radius: 4px;
+                                                display: inline-flex;
+                                                align-items: center;
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-textarea {
+                                    .wprf-control-field {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                        > textarea {
+                                            width: 100%;
+                                            padding: 10px 14px;
+                                            border-radius: 8px;
+                                            border: 1px solid var(--text-color-400);
+                                            background-color: var(--base-background);
+                                            box-shadow: 0px 1px 2px 0px rgba(#101828, 0.05);
+                                            resize: none;
+                                            color: var(--text-color-900);
+                                            font-size: 16px;
+                                            font-style: normal;
+                                            font-weight: 400;
+                                            line-height: 1.5;
+                                            &::placeholder {
+                                                color: var(--text-color-600);
+                                            }
+                                            &:focus {
+                                                box-shadow:
+                                                    0px 0px 0px 4px var(--focus-shadow-1),
+                                                    0px 1px 2px 0px var(--focus-shadow-2);
+                                                border-color: var(--base-color-700);
+                                            }
+                                        }
+                                        .wprf-tags-wrapper {
+                                            width: 100%;
+                                            display: flex;
+                                            justify-content: flex-end;
+                                            gap: 8px;
+                                            .button {
+                                                min-height: 22px;
+                                                padding: 2px 8px;
+                                                font-size: 12px;
+                                                line-height: 1;
+                                                color: var(--text-color-700);
+                                                background: var(--text-color-50);
+                                                border: 1px solid var(--text-color-400);
+                                                border-radius: 4px;
+                                                display: inline-flex;
+                                                align-items: center;
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-select,
+                                &.wprf-type-embed_model_select,
+                                &.wprf-type-platform_model_select {
+                                    .wprf-control-field {
+                                        .wprf-select-wrapper {
+                                            width: 100%;
+                                            min-width: 180px;
+                                            .wprf-select {
+                                                .wprf-select__control {
+                                                    height: 44px;
+                                                    min-height: 44px;
+                                                    border-radius: 8px;
+                                                    border-color: var(--text-color-400);
+                                                    background-color: transparent;
+                                                    .wprf-select__value-container {
+                                                        padding: 2px 12px;
+                                                        .wprf-select__single-value {
+                                                            color: var(--text-color-700);
+                                                            font-size: 16px;
+                                                            font-weight: 400;
+                                                            list-style: 1.5;
+                                                        }
+                                                        .wprf-select__input {
+                                                            input {
+                                                                box-shadow: none;
+                                                            }
+                                                            &:focus {
+                                                                box-shadow: none;
+                                                            }
+                                                        }
+                                                        .wprf-select__placeholder {
+                                                            color: var(--text-color-600);
+                                                            font-size: 16px;
+                                                            font-weight: 400;
+                                                            line-height: 1.5;
+                                                            text-overflow: ellipsis;
+                                                            width: 20ch;
+                                                            overflow: hidden;
+                                                            white-space: nowrap;
+                                                        }
+                                                    }
+                                                    .wprf-select__indicators {
+                                                        .wprf-select__indicator-separator {
+                                                            display: none;
+                                                        }
+                                                        .wprf-select__indicator {
+                                                            padding-right: 12px;
+                                                            color: var(--text-color-600);
+                                                        }
+                                                    }
+                                                    &--is-focused {
+                                                        box-shadow:
+                                                            0px 0px 0px 4px var(--focus-shadow-1),
+                                                            0px 1px 2px 0px var(--focus-shadow-2) !important;
+                                                        border-color: var(--base-color-700) !important;
+                                                        .wprf-select__indicators {
+                                                            .wprf-select__indicator {
+                                                                color: var(--text-color-700) !important;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-select__menu {
+                                                    background-color: var(--base-background);
+                                                    .wprf-select__menu-list {
+                                                        margin: 0;
+                                                        padding: 20px;
+                                                        display: inline-flex;
+                                                        flex-direction: column;
+                                                        gap: 4px;
+                                                        width: 100%;
+                                                        .wprf-select__option {
+                                                            display: inline-flex;
+                                                            align-items: center;
+                                                            justify-content: flex-start;
+                                                            gap: 8px;
+                                                            padding: 10px 14px;
+                                                            border-radius: 8px;
+                                                            background: transparent;
+                                                            color: var(--text-color-800);
+                                                            font-size: 16px;
+                                                            font-style: normal;
+                                                            font-weight: 500;
+                                                            line-height: 1.5;
+                                                            cursor: pointer;
+                                                            &:hover {
+                                                                background-color: var(--text-color-50);
+                                                                color: var(--text-color-700);
+                                                            }
+                                                            &.wprf-select__option--is-selected {
+                                                                background-color: var(--text-color-50);
+                                                                color: var(--base-color-700);
+                                                                &:after {
+                                                                    margin-left: auto;
+                                                                    content: "\e90a";
+                                                                    font-family: "btd-icon";
+                                                                    font-size: 20px;
+                                                                    line-height: 1;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        .model-wrapper {
+                                            display: flex;
+                                            justify-content: right;
+                                            gap: 10px;
+                                        }
+                                        .sync-docs-wrapper {
+                                            margin: 10px 0;
+                                            text-align: right;
+                                            color: #00b682;
+                                            text-decoration: underline;
+                                            cursor: pointer;
+                                            float: right;
+                                        }
+                                    }
+                                    .pro-deactivated {
+                                        .wprf-control-field {
+                                            .wprf-select-wrapper {
+                                                .wprf-select {
+                                                    .wprf-select__control {
+                                                        .wprf-select__indicators {
+                                                            .wprf-select__indicator {
+                                                                color: var(--text-color-500);
+                                                            }
+                                                        }
+                                                        .wprf-select__single-value {
+                                                            color: var(--text-color-500);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-checkbox-select {
+                                    .wprf-checkbox-select-wrapper {
+                                        width: 100%;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                        .wprf-checkbox-select {
+                                            .wprf-checkbox-select__control {
+                                                min-height: 44px;
+                                                border-radius: 8px;
+                                                border-color: var(--text-color-400);
+                                                background-color: transparent;
+                                                .wprf-checkbox-select__value-container {
+                                                    padding: 0px 12px;
+                                                    .wprf-checkbox-select__input-container {
+                                                        margin: 0;
+                                                    }
+                                                    .wprf-checkbox-select__single-value {
+                                                        color: var(--text-color-700);
+                                                        font-size: 16px;
+                                                        font-weight: 400;
+                                                        list-style: 1.5;
+                                                    }
+                                                    .wprf-checkbox-select__input {
+                                                        input {
+                                                            box-shadow: none;
+                                                        }
+                                                        &:focus {
+                                                            box-shadow: none;
+                                                        }
+                                                    }
+                                                    .wprf-checkbox-select__placeholder {
+                                                        color: var(--text-color-600);
+                                                        font-size: 16px;
+                                                        font-weight: 400;
+                                                        line-height: 1.5;
+                                                        text-overflow: ellipsis;
+                                                        width: 98%;
+                                                        overflow: hidden;
+                                                        white-space: nowrap;
+                                                    }
+                                                }
+                                                .wprf-checkbox-select__indicators {
+                                                    .wprf-checkbox-select__indicator-separator {
+                                                        display: none;
+                                                    }
+                                                    .wprf-checkbox-select__indicator {
+                                                        padding-right: 12px;
+                                                        color: var(--text-color-600);
+                                                    }
+                                                }
+                                                &--is-focused {
+                                                    box-shadow:
+                                                        0px 0px 0px 4px var(--focus-shadow-1),
+                                                        0px 1px 2px 0px var(--focus-shadow-2) !important;
+                                                    border-color: var(--base-color-700) !important;
+                                                    .wprf-checkbox-select__indicators {
+                                                        .wprf-checkbox-select__indicator {
+                                                            color: var(--text-color-700) !important;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .wprf-checkbox-select__menu {
+                                                background-color: var(--base-background);
+                                                .wprf-checkbox-select__menu-list {
+                                                    margin: 0;
+                                                    padding: 20px;
+                                                    display: inline-flex;
+                                                    flex-direction: column;
+                                                    gap: 4px;
+                                                    width: 100%;
+                                                    .wprf-checkbox-select__option {
+                                                        display: inline-flex;
+                                                        align-items: center;
+                                                        justify-content: flex-start;
+                                                        gap: 8px;
+                                                        padding: 10px 14px;
+                                                        border-radius: 8px;
+                                                        background: transparent;
+                                                        color: var(--text-color-800);
+                                                        font-size: 16px;
+                                                        font-style: normal;
+                                                        font-weight: 500;
+                                                        line-height: 1.5;
+                                                        cursor: pointer;
+                                                        &:hover {
+                                                            background-color: var(--text-color-50);
+                                                            color: var(--text-color-700);
+                                                        }
+                                                        &.wprf-checkbox-select__option--is-selected {
+                                                            background-color: var(--text-color-50);
+                                                            color: var(--base-color-700);
+                                                            &:after {
+                                                                margin-left: auto;
+                                                                content: "\e90a";
+                                                                font-family: "btd-icon";
+                                                                font-size: 20px;
+                                                                line-height: 1;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .wprf-selected-options {
+                                            display: flex;
+                                            gap: 8px;
+                                            justify-content: flex-end;
+                                            flex-wrap: wrap;
+                                            margin: 0;
+                                            padding: 0;
+                                            .wprf-selected-option {
+                                                min-height: 22px;
+                                                display: inline-flex;
+                                                margin: 0;
+                                                padding: 1px 8px 1px 10px;
+                                                justify-content: center;
+                                                align-items: center;
+                                                gap: 4px;
+                                                border-radius: 4px;
+                                                background: var(--warning-50);
+                                                color: var(--warning-700);
+                                                text-align: center;
+                                                font-size: 12px;
+                                                font-style: normal;
+                                                font-weight: 500;
+                                                line-height: 1.5;
+                                                button {
+                                                    width: 12px;
+                                                    height: 12px;
+                                                    border: none;
+                                                    margin: 0;
+                                                    padding: 0;
+                                                    background-color: transparent;
+                                                    color: var(--warning-700);
+                                                    display: inline-flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    cursor: pointer;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-button {
+                                    .wprf-control-field {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: flex-end;
+                                        .wprf-button {
+                                            width: auto !important;
+                                            background: transparent !important;
+                                            border-radius: 8px !important;
+                                            border: 1px solid var(--base-color-700) !important;
+                                            color: var(--base-color-700) !important;
+                                            min-height: 36px !important;
+                                            display: inline-flex !important;
+                                            justify-content: center !important;
+                                            align-items: center !important;
+                                            padding: 2px 14px !important;
+                                            font-size: 14px !important;
+                                            font-style: normal !important;
+                                            font-weight: 600 !important;
+                                            line-height: 1.43 !important;
+                                            letter-spacing: 0px !important;
+                                            box-shadow: none !important;
+                                            &:hover {
+                                                box-shadow: 0px 1px 2px 0px rgba(#101828, 0.05) !important;
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-media {
+                                    .wprf-control-field {
+                                        .wprf-media {
+                                            position: relative;
+                                            display: flex;
+                                            justify-content: flex-end;
+                                            .wprf-image-preview {
+                                                box-sizing: border-box;
+                                                width: 96px;
+                                                height: 96px;
+                                                border-radius: 8px;
+                                                border: 1px solid var(--text-color-200);
+                                                background: var(--base-background);
+                                                z-index: 1;
+                                                margin: 0;
+                                                img {
+                                                    width: 100%;
+                                                    height: 100%;
+                                                    object-fit: contain;
+                                                }
+                                            }
+                                            .wprf-image-uploader {
+                                                .wprf-image-upload-btn {
+                                                    width: 100%;
+                                                    padding: 12px 10px 16px;
+                                                    border-radius: 8px;
+                                                    border: 1px solid var(--text-color-200);
+                                                    background: var(--base-background);
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    text-align: center;
+                                                    margin: 0;
+                                                    .icon {
+                                                        height: 40px;
+                                                        width: 40px;
+                                                        border-radius: 50%;
+                                                        background: var(--text-color-200);
+                                                        display: inline-flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        color: var(--text-color-600);
+                                                        font-size: 24px;
+                                                        border: 7px solid var(--text-color-50);
+                                                    }
+                                                    .title {
+                                                        margin-top: 6px;
+                                                        color: var(--base-color-700);
+                                                        font-size: 14px;
+                                                        font-style: normal;
+                                                        font-weight: 600;
+                                                        line-height: 1.43;
+                                                    }
+                                                    .info {
+                                                        margin-top: 4px;
+                                                        color: var(--text-color-600);
+                                                        text-align: center;
+                                                        font-size: 12px;
+                                                        font-style: normal;
+                                                        font-weight: 400;
+                                                        line-height: 1.5;
+                                                    }
+                                                }
+                                                &.uploaded {
+                                                    position: absolute;
+                                                    z-index: 9;
+                                                    top: 0;
+                                                    right: 0;
+                                                    width: 96px;
+                                                    height: 96px;
+                                                    .wprf_image_overlay {
+                                                        box-sizing: border-box;
+                                                        visibility: hidden;
+                                                        opacity: 0;
+                                                        width: 96px;
+                                                        height: 96px;
+                                                        margin-left: auto;
+                                                        display: inline-flex;
+                                                        justify-content: center;
+                                                        align-items: flex-end;
+                                                        text-align: center;
+                                                        background-color: rgba(#000000, 0.5);
+                                                        border-radius: 8px;
+                                                        padding: 6px;
+                                                        gap: 6px;
+                                                        transition: 0.2s ease-in-out;
+                                                        .wprf-btn {
+                                                            display: inline-flex;
+                                                            padding: 2px;
+                                                            background-color: transparent;
+                                                            color: #ffffff;
+                                                            font-size: 16px;
+                                                            margin-right: 0;
+                                                            transition: 0.2s ease-in-out;
+                                                            border-radius: 2px;
+                                                            &.wprf-image-change-btn {
+                                                                &:hover {
+                                                                    background: #ffffff;
+                                                                    color: var(--primary-700);
+                                                                }
+                                                            }
+                                                            &.wprf-image-remove-btn {
+                                                                &:hover {
+                                                                    background: #ffffff;
+                                                                    color: var(--danger-600);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    &:hover {
+                                                        .wprf_image_overlay {
+                                                            visibility: visible;
+                                                            opacity: 1;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                &.wprf-type-colorpicker {
+                                    .wprf-control-field {
+                                        .wprf-colorpicker-wrap {
+                                            position: relative;
+                                            box-sizing: border-box;
+                                            width: 100%;
+                                            max-width: 100%;
+                                            min-width: auto;
+                                            .wprf-colorpicker-screen {
+                                                display: flex;
+                                                flex-direction: row;
+                                                justify-content: space-between;
+                                                flex-wrap: nowrap;
+                                                gap: 10px;
+                                                padding: 12px 16px;
+                                                border: 1px solid var(--text-color-400);
+                                                border-radius: 8px;
+                                                cursor: pointer;
+                                                .wprf-picker-code {
+                                                    display: inline-flex;
+                                                    align-items: center;
+                                                    color: var(--text-color-700);
+                                                    font-size: 14px;
+                                                    font-weight: 500;
+                                                    line-height: 1.43;
+                                                }
+                                                .wprf-picker-display {
+                                                    margin: 0;
+                                                    padding: 0;
+                                                    height: 24px;
+                                                    width: 24px;
+                                                    flex-shrink: 0;
+                                                    border: 1px solid var(--text-color-100);
+                                                    border-radius: 50%;
+                                                }
+                                            }
+                                            .wprf-colorpicker {
+                                                top: calc(100% + 4px);
+                                                right: 0;
+                                                position: absolute;
+                                                z-index: 99;
+                                                background: var(--base-background);
+                                                border-radius: 4px;
+                                                padding: 16px;
+                                                box-shadow: -15px 15px 50px 4px rgba(129, 129, 129, 0.2);
+                                                width: 350px;
+                                                box-sizing: border-box;
+                                                .components-color-picker {
+                                                    .react-colorful {
+                                                        width: 100%;
+                                                        .react-colorful__saturation {
+                                                            height: 290px;
+                                                            margin-bottom: 12px;
+                                                        }
+                                                        .react-colorful__hue,
+                                                        .react-colorful__alpha {
+                                                            width: calc(100% - 12px);
+                                                            margin-bottom: 12px;
+                                                        }
+                                                    }
+                                                    > div:not(.react-colorful) {
+                                                        display: flex;
+                                                        position: relative;
+                                                        padding: 0;
+                                                        > .components-h-stack {
+                                                            width: 100%;
+                                                            position: relative;
+                                                            .components-input-control__container {
+                                                                background: transparent;
+                                                            }
+                                                            .components-select-control__input {
+                                                                height: 44px;
+                                                                padding: 2px 14px;
+                                                                border-radius: 8px;
+                                                                border: 1px solid var(--text-color-400);
+                                                                background: var(--base-background);
+                                                                color: var(--text-color-900);
+                                                                box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                                            }
+                                                            .components-input-control__suffix {
+                                                                svg {
+                                                                    fill: var(--text-color-900);
+                                                                }
+                                                            }
+                                                            .components-input-control__backdrop {
+                                                                display: none;
+                                                            }
+                                                            button.components-button {
+                                                                position: absolute;
+                                                                right: 8px;
+                                                                top: 50%;
+                                                                transform: translateY(-50%);
+                                                                background: transparent;
+                                                                border: none;
+                                                                padding: 0;
+                                                                z-index: 2;
+                                                                display: inline-flex;
+                                                                i,
+                                                                svg,
+                                                                img {
+                                                                    width: 16px;
+                                                                    font-size: 16px;
+                                                                    fill: var(--text-color-900);
+                                                                }
+                                                            }
+                                                        }
+                                                        > .components-flex:last-child {
+                                                            position: absolute;
+                                                            right: 0;
+                                                            top: 50%;
+                                                            transform: translateY(-50%);
+                                                            z-index: 1;
+                                                            padding: 0;
+                                                            display: inline-flex;
+                                                            flex-direction: row;
+                                                            .components-input-control {
+                                                                height: 44px;
+                                                                display: flex;
+                                                                align-items: center;
+                                                                padding: 2px 14px;
+                                                                border-radius: 8px;
+                                                                border: 1px solid var(--text-color-400);
+                                                                background: var(--base-background);
+                                                                box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                                                .components-input-control__container {
+                                                                    background: transparent;
+                                                                    .components-input-control__prefix {
+                                                                        margin: 0;
+                                                                        &,
+                                                                        & span {
+                                                                            color: var(--text-color-900);
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                    .components-input-control__input {
+                                                                        padding: 0;
+                                                                        min-width: auto;
+                                                                        height: auto;
+                                                                        min-height: auto;
+                                                                        color: var(--text-color-900);
+                                                                    }
+                                                                    .components-input-control__backdrop {
+                                                                        display: none;
+                                                                    }
+                                                                }
+                                                            }
+                                                            .components-h-stack {
+                                                                .components-input-control {
+                                                                    padding-left: 10px;
+                                                                    padding-right: 10px;
+                                                                    .components-input-control__container {
+                                                                        width: 26px;
+                                                                        .components-input-control__prefix {
+                                                                            display: none;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                &:last-child {
+                                                                    .components-input-control {
+                                                                        padding-right: 30px;
+                                                                    }
+                                                                }
+                                                            }
+                                                            .components-range-control {
+                                                                display: none;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-colorpicker-reset-wrap {
+                                                    width: 100%;
+                                                    margin-top: 12px;
+                                                    display: flex;
+                                                    justify-content: flex-end;
+                                                    .wprf-colorpicker-reset {
+                                                        position: static;
+                                                        background: transparent;
+                                                        border: none;
+                                                        padding: 0;
+                                                        color: var(--text-color-600);
+                                                        font-size: 16px;
+                                                        font-weight: 400;
+                                                        line-height: 1.5;
+                                                        text-decoration-line: underline;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .wprf-section-search-form {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 0 20px 20px;
+                                .wprf-section-search {
+                                    max-width: 400px;
+                                    width: 100%;
+                                    position: relative;
+                                    height: 44px;
+                                    border-radius: 8px;
+                                    border: 1px solid var(--text-color-400);
+                                    background: var(--base-background);
+                                    box-shadow: 0px 1px 2px 0px rgba(#101828, 0.05);
+                                    input {
+                                        width: 100%;
+                                        height: 100%;
+                                        margin: 0;
+                                        padding: 2px 14px;
+                                        background: transparent;
+                                        outline: none !important;
+                                        border: none !important;
+                                        box-shadow: none !important;
+                                        color: var(--text-color-900);
+                                        font-size: 16px;
+                                        font-style: normal;
+                                        font-weight: 400;
+                                        line-height: 1.5;
+                                        &::placeholder {
+                                            color: var(--text-color-600);
+                                        }
+                                    }
+                                    &:after {
+                                        content: "\e904";
+                                        font-family: "btd-icon";
+                                        position: absolute;
+                                        right: 14px;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        pointer-events: none;
+                                        font-size: 16px;
+                                        color: var(--text-color-500);
+                                    }
+                                    &:focus-within {
+                                        box-shadow:
+                                            0px 0px 0px 4px var(--focus-shadow-1),
+                                            0px 1px 2px 0px var(--focus-shadow-2);
+                                        border-color: var(--base-color-700);
+                                        &:after {
+                                            color: var(--text-color-600);
+                                        }
+                                    }
+                                }
+                            }
+                            .wprf-section-search-results {
+                                display: grid;
+                                grid-template-columns: repeat(3, 1fr);
+                                gap: 24px;
+                                .wprf-copy-to-clipboard-wrapper {
+                                    display: flex;
+                                    flex-direction: column;
+                                    .wprf-copy-to-clipboard-header {
+                                        padding: 9px 15px;
+                                        border-top-left-radius: 8px;
+                                        border-top-right-radius: 8px;
+                                        background-color: var(--text-color-150);
+                                        border-top: 1px solid var(--text-color-200);
+                                        border-left: 1px solid var(--text-color-200);
+                                        border-right: 1px solid var(--text-color-200);
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 5px;
+                                        .wprf-control-label {
+                                            display: flex;
+                                            width: 100%;
+                                            label {
+                                                overflow: hidden;
+                                                color: var(--text-color-700);
+                                                text-overflow: ellipsis;
+                                                font-size: 16px;
+                                                font-weight: 500;
+                                                line-height: 1.1;
+                                                width: 100%;
+                                            }
+                                        }
+                                        .wprf-clipboard-tooltip {
+                                            position: relative;
+                                            .wprf-clipboard-tooltip-text {
+                                                position: absolute;
+                                                bottom: 100%;
+                                                left: 50%;
+                                                transform: translateX(-50%);
+                                                box-sizing: border-box;
+                                                display: inline-flex;
+                                                visibility: hidden;
+                                                opacity: 0;
+                                                span {
+                                                    position: relative;
+                                                    color: var(--base-background);
+                                                    text-align: center;
+                                                    font-size: 12px;
+                                                    font-weight: 600;
+                                                    line-height: 1.5;
+                                                    background-color: var(--text-color-600);
+                                                    border-radius: 8px;
+                                                    padding: 8px 12px;
+                                                    box-sizing: border-box;
+                                                    display: inline-flex;
+                                                    box-shadow:
+                                                        0px 4px 6px -2px rgba(#101828, 0.03),
+                                                        0px 12px 16px -4px rgba(#101828, 0.08);
+                                                    margin-bottom: 8px;
+                                                    &:after {
+                                                        content: "";
+                                                        position: absolute;
+                                                        top: 100%;
+                                                        left: 50%;
+                                                        transform: translateX(-50%);
+                                                        border-top: 8px solid var(--text-color-600);
+                                                        border-left: 7px solid transparent;
+                                                        border-right: 7px solid transparent;
+                                                    }
+                                                }
+                                            }
+                                            button {
+                                                height: 27px;
+                                                width: 27px;
+                                                display: inline-flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                background-color: var(--text-color-400);
+                                                border: none;
+                                                outline: none;
+                                                box-shadow: none;
+                                                border-radius: 50px;
+                                                font-size: 16px;
+                                                @include set-mode(color, var(--base-background), #ffffff);
+                                                cursor: pointer;
+                                                &:hover {
+                                                    @include set-mode(
+                                                        background-color,
+                                                        var(--text-color-600),
+                                                        var(--text-color-100)
+                                                    );
+                                                }
+                                            }
+                                            &.active {
+                                                .wprf-clipboard-tooltip-text {
+                                                    visibility: visible;
+                                                    opacity: 1;
+                                                }
+                                                button {
+                                                    @include set-mode(
+                                                        background-color,
+                                                        var(--text-color-600),
+                                                        var(--text-color-100)
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .wprf-copy-to-clipboard-body {
+                                        background-color: var(--text-color-50);
+                                        padding: 15px;
+                                        border-left: 1px solid var(--text-color-200);
+                                        border-right: 1px solid var(--text-color-200);
+                                        input {
+                                            height: 40px;
+                                            width: 100%;
+                                            display: inline-flex;
+                                            padding: 2px 10px;
+                                            border-radius: 4px;
+                                            border: 1px solid var(--text-color-400);
+                                            background: var(--text-color-200);
+                                            color: var(--text-color-700);
+                                            font-size: 12px;
+                                            font-weight: 400;
+                                            line-height: 2;
+                                        }
+                                    }
+                                    .wprf-copy-to-clipboard-footer {
+                                        flex-grow: 1;
+                                        background-color: var(--base-background);
+                                        padding: 15px;
+                                        border-left: 1px solid var(--text-color-200);
+                                        border-right: 1px solid var(--text-color-200);
+                                        border-bottom: 1px solid var(--text-color-200);
+                                        border-bottom-left-radius: 8px;
+                                        border-bottom-right-radius: 8px;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 8px;
+                                        i {
+                                            color: var(--text-color-600);
+                                            font-size: 12px;
+                                            font-style: italic;
+                                            font-weight: 400;
+                                            line-height: 1.5;
+                                        }
+                                        .wprf-clipboard-tooltip {
+                                            position: relative;
+                                            .wprf-clipboard-tooltip-text {
+                                                position: absolute;
+                                                top: 50%;
+                                                left: 50%;
+                                                transform: translate(-50%, -50%);
+                                                box-sizing: border-box;
+                                                display: inline-flex;
+                                                visibility: hidden;
+                                                opacity: 0;
+                                                span {
+                                                    color: var(--base-background);
+                                                    text-align: center;
+                                                    font-size: 12px;
+                                                    font-weight: 600;
+                                                    line-height: 1.5;
+                                                    background-color: var(--text-color-600);
+                                                    border-radius: 8px;
+                                                    padding: 8px 12px;
+                                                    box-sizing: border-box;
+                                                    display: inline-flex;
+                                                    box-shadow:
+                                                        0px 4px 6px -2px rgba(#101828, 0.03),
+                                                        0px 12px 16px -4px rgba(#101828, 0.08);
+                                                }
+                                            }
+                                            &.active {
+                                                .wprf-clipboard-tooltip-text {
+                                                    visibility: visible;
+                                                    opacity: 1;
+                                                }
+                                            }
+                                            .wprf-description {
+                                                display: flex;
+                                                margin: 0;
+                                                padding: 8px;
+                                                justify-content: center;
+                                                align-items: center;
+                                                border-radius: 4px;
+                                                border: 1px solid var(--text-color-200);
+                                                background: var(--text-color-50);
+                                                color: var(--text-color-600);
+                                                font-size: 12px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                                cursor: pointer;
+                                            }
+                                        }
+                                    }
+                                    &:hover {
+                                        .wprf-copy-to-clipboard-header {
+                                            .wprf-control-label {
+                                                label {
+                                                    font-weight: 700;
+                                                }
+                                            }
+                                        }
+                                        .wprf-copy-to-clipboard-body input {
+                                            background-color: var(--text-color-600);
+                                            color: var(--base-background);
+                                        }
+                                    }
+                                }
+                                .wprf-result-not-found {
+                                    grid-column: 1 / span 3;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 8px;
+                                    img {
+                                        width: 100%;
+                                        max-width: 140px;
+                                    }
+                                    p {
+                                        color: var(--text-color-900);
+                                        text-align: center;
+                                        font-size: 16px;
+                                        font-weight: 500;
+                                        line-height: 1.5;
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                }
+                            }
+                            .wprf-code-viewer {
+                                display: flex;
+                                flex-direction: column;
+                                width: 100%;
+                                border: 1px solid var(--text-color-300);
+                                border-radius: 6px;
+                                .wprf-code-viewer-header {
+                                    padding: 8px 16px;
+                                    font-size: 14px;
+                                    font-style: normal;
+                                    font-weight: 600;
+                                    line-height: 1.43;
+                                    border-bottom: 1px solid var(--text-color-300);
+                                    color: var(--text-color-800);
+                                }
+                                .wprf-code-viewer-body {
+                                    padding: 8px 36px 8px 16px;
+                                    position: relative;
+                                    pre {
+                                        overflow: auto;
+                                        width: 100%;
+                                        height: 250px;
+                                        color: var(--text-color-800);
+                                        font-size: 14px;
+                                        font-weight: 400;
+                                        line-height: 1.7;
+                                        margin: 0;
+                                    }
+                                    .wprf-clipboard-tooltip {
+                                        position: absolute;
+                                        right: 8px;
+                                        bottom: 8px;
+                                        display: inline-flex;
+                                        .wprf-clipboard-tooltip-text {
+                                            position: absolute;
+                                            bottom: 100%;
+                                            left: 50%;
+                                            transform: translateX(-50%);
+                                            box-sizing: border-box;
+                                            display: inline-flex;
+                                            visibility: hidden;
+                                            opacity: 0;
+                                            span {
+                                                position: relative;
+                                                color: var(--base-background);
+                                                text-align: center;
+                                                font-size: 12px;
+                                                font-weight: 600;
+                                                line-height: 1.5;
+                                                background-color: var(--text-color-600);
+                                                border-radius: 8px;
+                                                padding: 8px 12px;
+                                                box-sizing: border-box;
+                                                display: inline-flex;
+                                                box-shadow:
+                                                    0px 4px 6px -2px rgba(#101828, 0.03),
+                                                    0px 12px 16px -4px rgba(#101828, 0.08);
+                                                margin-bottom: 8px;
+                                                &:after {
+                                                    content: "";
+                                                    position: absolute;
+                                                    top: 100%;
+                                                    left: 50%;
+                                                    transform: translateX(-50%);
+                                                    border-top: 8px solid var(--text-color-600);
+                                                    border-left: 7px solid transparent;
+                                                    border-right: 7px solid transparent;
+                                                }
+                                            }
+                                        }
+                                        button {
+                                            width: 24px;
+                                            height: 24px;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            border: none;
+                                            outline: none;
+                                            box-shadow: none;
+                                            font-size: 16px;
+                                            background: transparent;
+                                            color: var(--text-color-500);
+                                            cursor: pointer;
+                                            padding: 0;
+                                            transition: all 0.15s ease-in-out;
+                                            &:hover {
+                                                color: var(--text-color-900);
+                                            }
+                                        }
+                                        &.active {
+                                            .wprf-clipboard-tooltip-text {
+                                                visibility: visible;
+                                                opacity: 1;
+                                            }
+                                            button {
+                                                color: var(--text-color-900);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .betterdocs-settings-customizer-link {
+                                margin-top: 20px;
+                                margin-bottom: 20px;
+                                border-radius: 8px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 100%;
+                                padding: 0 40px;
+                                gap: 5%;
+                                box-sizing: border-box;
+                                .betterdocs-card-content {
+                                    flex-basis: 50%;
+                                    max-width: 50%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: flex-start;
+                                    justify-content: center;
+                                    gap: 20px;
+                                    padding: 20px 0;
+                                    h2 {
+                                        color: var(--text-color-800);
+                                        font-size: 18px;
+                                        font-weight: 600;
+                                        line-height: 28px;
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    p {
+                                        color: var(--text-color-600);
+                                        font-size: 14px;
+                                        font-weight: normal;
+                                        line-height: 20px;
+                                        margin: 0;
+                                        padding: 0;
+                                    }
+                                    a {
+                                        min-height: 44px;
+                                        display: inline-flex;
+                                        padding: 2px 18px;
+                                        justify-content: center;
+                                        align-items: center;
+                                        gap: 8px;
+                                        border-radius: 8px;
+                                        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                        box-sizing: border-box;
+                                        font-size: 16px;
+                                        font-weight: 600;
+                                        line-height: 1.5;
+                                        text-decoration: none;
+                                    }
+                                }
+                                &.design-gutenberg {
+                                    background-color: var(--base-color-55);
+                                    display: flex;
+                                    a {
+                                        border: 1px solid #1e1e1e;
+                                        background: #1e1e1e;
+                                        color: #ffffff;
+                                    }
+                                }
+                                &.design-elementor {
+                                    background-color: var(--base-color-60);
+                                    a {
+                                        border: 1px solid #881c3f;
+                                        background: #881c3f;
+                                        color: #ffffff;
+                                    }
+                                }
+                                &.design-customizer {
+                                    background-color: var(--base-color-65);
+                                    margin-bottom: 40px;
+                                    a {
+                                        border: 1px solid #f1f2f5;
+                                        background: #ffffff;
+                                        color: #344054;
+                                    }
+                                }
+                                .betterdocs-card-icon {
+                                    flex-basis: 45%;
+                                    max-width: 45%;
+                                    img {
+                                        height: 100%;
+                                        width: auto;
+                                        max-width: 100%;
+                                    }
+                                }
+                            }
+                            .wpdeveloper-licensing-wrapper {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 32px;
+                                padding: 0;
+                                justify-content: center;
+                                align-items: flex-start;
+                                margin: 0;
+                                margin-bottom: 40px;
+                                .wpdeveloper-licensing-header {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                    .wpdeveloper-licensing-left-container {
+                                        margin: 0;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 20px;
+                                        flex-basis: 65%;
+                                        max-width: 65%;
+                                        .icon {
+                                            height: 70px;
+                                            width: 70px;
+                                            flex-shrink: 0;
+                                            border-radius: 50%;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            font-size: 36px;
+                                            &.activated {
+                                                background: var(--base-color-75);
+                                                color: var(--base-color-700);
+                                            }
+                                            &.deactivated {
+                                                background: var(--danger-50);
+                                                color: var(--danger-600);
+                                            }
+                                        }
+                                        .content {
+                                            display: flex;
+                                            flex-direction: column;
+                                            gap: 4px;
+                                            .heading {
+                                                color: var(--text-color-800);
+                                                font-size: 24px;
+                                                font-weight: 700;
+                                                line-height: 1.5;
+                                                margin: 0;
+                                                padding: 0;
+                                            }
+                                            .description {
+                                                margin: 0;
+                                                padding: 0;
+                                                color: var(--text-color-600);
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                            }
+                                        }
+                                    }
+                                    .wpdeveloper-licensing-right-container {
+                                        margin: 0;
+                                        align-self: stretch;
+                                        display: flex;
+                                        justify-content: flex-end;
+                                        .step-button {
+                                            align-self: flex-end;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            margin: 0;
+                                            padding: 0;
+                                            gap: 20px;
+                                            cursor: pointer;
+                                            .text {
+                                                color: var(--text-color-500);
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                                text-decoration-line: underline;
+                                            }
+                                            .icon {
+                                                height: 24px;
+                                                width: 24px;
+                                                border-radius: 50%;
+                                                display: inline-flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                flex-shrink: 0;
+                                                background: var(--text-color-100);
+                                                color: var(--text-color-700);
+                                                font-size: 10px;
+                                                text-decoration: none;
+                                                transition: 0.1s ease-in;
+                                            }
+                                            &.show .icon {
+                                                transform: rotate(0deg);
+                                            }
+                                            &.hide .icon {
+                                                transform: rotate(180deg);
+                                            }
+                                        }
+                                        .active-badge {
+                                            align-self: flex-start;
+                                            margin: 0;
+                                            display: inline-flex;
+                                            padding: 5px 10px;
+                                            justify-content: center;
+                                            align-items: center;
+                                            gap: 4px;
+                                            border-radius: 8px;
+                                            background: var(--base-color-75);
+                                            color: var(--base-color-700);
+                                            font-size: 14px;
+                                            font-weight: 500;
+                                            line-height: 1.43;
+                                            i {
+                                                font-size: 16px;
+                                            }
+                                            &.expired,
+                                            &.disabled,
+                                            &.invalid {
+                                                background: var(--danger-50);
+                                                color: var(--danger-600);
+                                            }
+                                        }
+                                    }
+                                }
+                                .wpdeveloper-licensing-steps-wrapper {
+                                    display: grid;
+                                    margin: 0;
+                                    width: 100%;
+                                    transition: grid-template-rows 0.2s ease-in;
+                                    &.hidden {
+                                        display: none;
+                                    }
+                                    &.hide {
+                                        grid-template-rows: 0fr;
+                                    }
+                                    &.show {
+                                        grid-template-rows: 1fr;
+                                    }
+                                    .wpdeveloper-licensing-steps {
+                                        overflow: hidden;
+                                        margin: 0;
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 20px;
+                                        .wpdeveloper-licensing-step {
+                                            margin: 0;
+                                            display: flex;
+                                            align-items: stretch;
+                                            .wpdeveloper-licensing-step-count {
+                                                min-height: 48px;
+                                                width: 48px;
+                                                background-color: var(--base-color-75);
+                                                color: var(--base-color-700);
+                                                display: inline-flex;
+                                                justify-content: center;
+                                                align-items: center;
+                                                border-top-left-radius: 8px;
+                                                border-bottom-left-radius: 8px;
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                                position: relative;
+                                                &:before {
+                                                    content: "";
+                                                    position: absolute;
+                                                    top: 100%;
+                                                    left: 50%;
+                                                    transform: translateX(-50%);
+                                                    height: 16px;
+                                                    border-right: 2px solid var(--text-color-400);
+                                                }
+                                                &:after {
+                                                    content: "\e90e";
+                                                    font-family: "btd-icon";
+                                                    position: absolute;
+                                                    bottom: -19px;
+                                                    left: 50%;
+                                                    transform: translateX(-50%) rotate(180deg);
+                                                    color: var(--text-color-400);
+                                                    font-size: 8px;
+                                                    display: inline-flex;
+                                                    line-height: 0.8;
+                                                }
+                                            }
+                                            .wpdeveloper-licensing-step-content {
+                                                flex-grow: 1;
+                                                background-color: var(--text-color-50);
+                                                color: var(--text-color-600);
+                                                border-top-right-radius: 8px;
+                                                border-bottom-right-radius: 8px;
+                                                font-size: 16px;
+                                                font-weight: 400;
+                                                line-height: 1.5;
+                                                padding: 12px 16px;
+                                                a {
+                                                    color: var(--base-color-700);
+                                                    text-decoration: none;
+                                                    font-weight: 500;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .wpdeveloper-licensing-form {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    padding: 21px 22px 21px 23px;
+                                    width: 100%;
+                                    border-radius: 8px;
+                                    box-sizing: border-box;
+                                    &.activated {
+                                        background-color: var(--text-color-100);
+                                        .wpdeveloper-licensing-form-inner {
+                                            cursor: initial;
+                                        }
+                                    }
+                                    &.deactivated {
+                                        background-color: var(--danger-50);
+                                        .wpdeveloper-licensing-form-inner {
+                                            cursor: pointer;
+                                        }
+                                    }
+                                    .wpdeveloper-licensing-form-inner {
+                                        border-radius: 8px;
+                                        border: 1px solid var(--text-color-200);
+                                        background: var(--base-background);
+                                        width: 100%;
+                                        align-items: center;
+                                        padding: 6px 6px 6px 16px;
+                                        display: flex;
+                                        gap: 6px;
+                                        .betterdocs-license-icon {
+                                            position: static !important;
+                                            width: 24px;
+                                            height: auto;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            pointer-events: none;
+                                            font-size: 20px;
+                                            color: var(--text-color-500);
+                                        }
+                                        .wpdeveloper-licensing-form-input {
+                                            width: 100%;
+                                            background: transparent;
+                                            border: none !important;
+                                            outline: none !important;
+                                            box-shadow: none !important;
+                                            font-size: 16px;
+                                            font-weight: 400;
+                                            line-height: 1.5;
+                                            color: var(--text-color-700);
+                                            &:disabled,
+                                            &::placeholder {
+                                                color: var(--text-color-500);
+                                            }
+                                        }
+                                        .wpdeveloper-licensing-form-button {
+                                            flex-shrink: 0;
+                                            min-height: 36px;
+                                            display: inline-flex;
+                                            padding: 2px 14px;
+                                            justify-content: center;
+                                            align-items: center;
+                                            gap: 8px;
+                                            border-radius: 8px;
+                                            @include set-mode(color, var(--base-background), #ffffff);
+                                            font-size: 14px;
+                                            font-weight: 600;
+                                            line-height: 1.43;
+                                            cursor: pointer;
+                                            transition: 0.1s ease-in;
+                                            &.activated {
+                                                border: 1px solid var(--danger-600);
+                                                background: var(--danger-600);
+                                            }
+                                            &.deactivated {
+                                                border: 1px solid var(--base-color-700);
+                                                background: var(--base-color-700);
+                                            }
+                                            &:hover {
+                                                box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &.wprf-tab-tab-shortcodes {
+                        > .wprf-control-section {
+                            .wprf-section-fields {
+                                padding-bottom: 50px;
+                            }
+                        }
+                    }
+                    &.wprf-tab-tab-layout {
+                        > .wprf-control-section {
+                            .wprf-section-title {
+                                border-bottom: 0;
+                            }
+                            > .wprf-section-fields {
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                                padding-top: 0 !important;
+                                > .wprf-tabs-wrapper {
+                                    > .wprf-tab-menu-wrapper {
+                                        border-bottom: 1px solid var(--text-color-400);
+                                        .wprf-tab-nav {
+                                            padding-left: 40px !important;
+                                            padding-right: 40px !important;
+                                            display: flex;
+                                            gap: 16px;
+                                            .wprf-tab-nav-item {
+                                                padding: 0 10px 16px 4px;
+                                                border: none;
+                                                border-bottom: 2px solid transparent;
+                                                margin-bottom: -1px;
+                                                background: transparent;
+                                                span {
+                                                    @include set-mode(
+                                                        color,
+                                                        var(--text-color-400),
+                                                        var(--text-color-500)
+                                                    );
+                                                    font-size: 14px;
+                                                    font-weight: 500;
+                                                    line-height: 1.43;
+                                                }
+                                                &.wprf-active-nav {
+                                                    border-color: var(--base-color-700);
+                                                    span {
+                                                        color: var(--base-color-700);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    > .wprf-tab-content-wrapper {
+                                        > .wprf-tab-flex {
+                                            > .wprf-tab-contents {
+                                                > .wprf-tab-content {
+                                                    > .wprf-tab-heading-wrapper {
+                                                        display: none;
+                                                    }
+                                                    > .wprf-tabs-wrapper {
+                                                        > .wprf-tab-menu-wrapper {
+                                                            padding: 0 40px;
+                                                            .wprf-tab-nav {
+                                                                display: inline-flex;
+                                                                gap: 0;
+                                                                border: 1px solid var(--text-color-200);
+                                                                border-top: none;
+                                                                .wprf-tab-nav-item {
+                                                                    padding: 16px 12px;
+                                                                    border: none;
+                                                                    border-bottom: 2px solid transparent;
+                                                                    margin-bottom: -1px;
+                                                                    background: transparent;
+                                                                    span {
+                                                                        @include set-mode(
+                                                                            color,
+                                                                            var(--text-color-400),
+                                                                            var(--text-color-500)
+                                                                        );
+                                                                        font-size: 14px;
+                                                                        font-weight: 500;
+                                                                        line-height: 1.43;
+                                                                    }
+                                                                    &.wprf-active-nav {
+                                                                        border-color: var(--base-color-700);
+                                                                        span {
+                                                                            color: var(--base-color-700);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        > .wprf-tab-content-wrapper {
+                                                            > .wprf-tab-flex {
+                                                                > .wprf-tab-contents {
+                                                                    > .wprf-tab-content {
+                                                                        padding: 20px 40px 0;
+                                                                    }
+                                                                }
+                                                            }
+                                                            padding: 20px 40px 0;
+                                                        }
+                                                    }
+                                                    &.wprf-tab-layout_archive_page {
+                                                        padding: 20px 40px 0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &.wprf-tab-tab-instant-answer,
+                    &.wprf-tab-tab-ai-chatbot,
+                    &.wprf-tab-tab-import-export {
+                        > .wprf-control-section {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            > .wprf-section-fields {
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                                padding-top: 0 !important;
+                                height: 100%;
+                                .wprf-control-section.enable_disable_wrapper,
+                                .wprf-control-section.ai_chatbot_fields {
+                                    margin: 0 !important;
+                                    padding: 0 !important;
+                                    border: none !important;
+                                    .wprf-section-fields {
+                                        .wprf-control-wrapper.wprf-type-toggle.wprf-name-enable_disable,
+                                        .wprf-control-wrapper.wprf-type-toggle.wprf-name-enable_ai_chatbot {
+                                            border-bottom: none !important;
+                                            padding-left: 0 !important;
+                                            padding-right: 0 !important;
+											&:hover {
+												background: none;
+											}
+                                            .wprf-control-field {
+                                                flex: 100% !important;
+                                                width: 100% !important;
+                                            }
+                                        }
+                                    }
+                                }
+                                > .wprf-tabs-wrapper {
+                                    > .wprf-tab-menu-wrapper {
+                                        border-bottom: 1px solid var(--text-color-200);
+                                        .wprf-tab-nav {
+                                            padding-left: 40px !important;
+                                            padding-right: 40px !important;
+                                            display: flex;
+                                            gap: 32px;
+                                            .wprf-tab-nav-item {
+                                                padding: 0 10px 16px 4px;
+                                                border: none;
+                                                border-bottom: 2px solid transparent;
+                                                margin-bottom: -1px;
+                                                background: transparent;
+                                                span {
+                                                    @include set-mode(
+                                                        color,
+                                                        var(--text-color-400),
+                                                        var(--text-color-500)
+                                                    );
+                                                    font-size: 14px;
+                                                    font-weight: 500;
+                                                    line-height: 1.43;
+                                                }
+                                                &.wprf-active-nav {
+                                                    border-color: var(--base-color-700);
+                                                    span {
+                                                        color: var(--base-color-700);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    > .wprf-tab-content-wrapper {
+                                        > .wprf-tab-flex {
+                                            > .wprf-tab-contents {
+                                                > .wprf-tab-content {
+                                                    > .wprf-tab-heading-wrapper {
+                                                        display: none;
+                                                    }
+                                                    > .wprf-tabs-wrapper {
+                                                        .wprf-tab-menu-wrapper {
+                                                            padding: 0 40px;
+                                                            .wprf-tab-nav {
+                                                                display: inline-flex;
+                                                                gap: 0;
+                                                                border: 1px solid var(--text-color-200);
+                                                                border-top: none;
+                                                                .wprf-tab-nav-item {
+                                                                    padding: 16px 12px;
+                                                                    border: none;
+                                                                    border-bottom: 2px solid transparent;
+                                                                    margin-bottom: -1px;
+                                                                    background: transparent;
+                                                                    span {
+                                                                        @include set-mode(
+                                                                            color,
+                                                                            var(--text-color-400),
+                                                                            var(--text-color-500)
+                                                                        );
+                                                                        font-size: 14px;
+                                                                        font-weight: 500;
+                                                                        line-height: 1.43;
+                                                                    }
+                                                                    &.wprf-active-nav {
+                                                                        border-color: var(--base-color-700);
+                                                                        span {
+                                                                            color: var(--base-color-700);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        > .wprf-tab-content-wrapper {
+                                                            > .wprf-tab-flex {
+                                                                > .wprf-tab-contents {
+                                                                    .wprf-tab-content {
+                                                                        &:not(.wprf-tab-home-style):not(
+                                                                                .wprf-tab-style_content
+                                                                            ) {
+                                                                            padding: 20px 40px 0;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            padding: 20px 40px 0;
+                                                        }
+                                                    }
+                                                    .wprf-control-wrapper {
+                                                        gap: 2.5%;
+                                                        .wprf-control-label {
+                                                            width: 47.5%;
+                                                            flex-basis: 47.5%;
+                                                        }
+                                                        .wprf-control-field {
+                                                            width: 50%;
+                                                            flex-basis: 50%;
+                                                        }
+                                                    }
+                                                    &:not(.wprf-tab-ia_message_settings):not(
+                                                            .wprf-tab-ia_resources_settings
+                                                        ):not(.wprf-tab-ia_single_doc):not(.wprf-tab-import):not(
+                                                            .wprf-tab-export
+                                                        ):not(.wprf-tab-initial_content_type_settings) {
+                                                        padding: 20px 40px 0;
+                                                    }
+                                                }
+
+                                                > .wprf-tab-content_home_section {
+                                                    padding: 0 20px !important;
+
+                                                    > .wprf-tabs-wrapper {
+                                                        > .wprf-tab-menu-wrapper {
+                                                            padding: 0 25px;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+					&.wprf-tab-tab-advance-settings,
+                    &.wprf-tab-tab-betterdocs-ai,
+                    &.wprf-tab-tab-import-export,
+                    &.wprf-tab-tab-ai-chatbot,
+                    &.wprf-tab-tab-migration {
+                        > .wprf-control-section {
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            .wprf-section-title {
+                                border-bottom: 0;
+                            }
+                            > .wprf-section-fields {
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                                padding-top: 0 !important;
+                                height: 100%;
+                                .wprf-btn.wprf-control.wprf-button,
+                                .wprf-json-uploaderButton {
+                                    background: var(--base-color-700) !important;
+                                    color: var(--base-background) !important;
+                                }
+                                .wprf-name-import_settings {
+                                    border-bottom: none;
+                                    &:hover {
+                                        background: none;
+                                    }
+                                    .wprf-control-field {
+                                        margin-left: auto;
+                                    }
+                                }
+                                .wprf-name-export_docs_btn {
+                                    border-bottom: none;
+                                    .wprf-control-field {
+                                        width: 100% !important;
+                                        flex-basis: 100% !important;
+                                    }
+                                    &:hover {
+                                        background-color: transparent;
+                                    }
+                                    #export_docs_btn {
+                                        background-color: var(--base-color-700) !important;
+                                        color: #fff !important;
+                                    }
+                                }
+                                > .wprf-tabs-wrapper {
+                                    > .wprf-tab-menu-wrapper {
+                                        border-bottom: 1px solid var(--text-color-200);
+                                        .wprf-tab-nav {
+                                            padding-left: 40px !important;
+                                            padding-right: 40px !important;
+                                            display: flex;
+                                            gap: 32px;
+                                            .wprf-tab-nav-item {
+                                                padding: 0 10px 16px 4px;
+                                                border: none;
+                                                border-bottom: 2px solid transparent;
+                                                margin-bottom: -1px;
+                                                background: transparent;
+                                                span {
+                                                    @include set-mode(
+                                                        color,
+                                                        var(--text-color-400),
+                                                        var(--text-color-500)
+                                                    );
+                                                    font-size: 14px;
+                                                    font-weight: 500;
+                                                    line-height: 1.43;
+                                                }
+                                                &.wprf-active-nav {
+                                                    border-color: var(--base-color-700);
+                                                    span {
+                                                        color: var(--base-color-700);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    > .wprf-tab-content-wrapper {
+                                        > .wprf-tab-flex {
+                                            > .wprf-tab-contents {
+                                                > .wprf-tab-content:not(.wprf-tab-import, .wprf-tab-export) {
+                                                    padding: 20px 40px 0;
+                                                    > .wprf-tab-heading-wrapper {
+                                                        display: none;
+                                                    }
+                                                }
+                                                .wprf-importer-upload-field {
+                                                    margin-left: auto;
+                                                }
+                                                .wprf-json-uploader {
+                                                    margin-left: auto;
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    flex-wrap: wrap;
+                                                    .wpfr-json-file-name-wrapper {
+                                                        padding: 16px;
+                                                        border-radius: 8px;
+                                                        border: none;
+                                                        margin-left: auto;
+                                                        .wpfr-json-file-name {
+                                                            font-size: 16px;
+                                                            font-style: normal;
+                                                            font-weight: 600;
+                                                            line-height: 24px;
+                                                            color: #344054;
+                                                        }
+                                                        .wprf-json-file-delete-button {
+                                                            width: auto;
+                                                            height: auto;
+                                                            background: none;
+                                                        }
+                                                    }
+                                                    label.wprf-importer-upload-button {
+                                                        width: auto !important;
+                                                        background: transparent !important;
+                                                        border-radius: 8px !important;
+                                                        border: none !important;
+                                                        color: var(--base-color-700) !important;
+                                                        min-height: 36px !important;
+                                                        display: inline-flex !important;
+                                                        justify-content: center !important;
+                                                        align-items: center !important;
+                                                        padding: 2px 14px !important;
+                                                        font-size: 14px !important;
+                                                        text-transform: none !important;
+                                                        font-style: normal !important;
+                                                        font-weight: 600 !important;
+                                                        line-height: 1.43 !important;
+                                                        letter-spacing: 0px !important;
+                                                        box-shadow: none !important;
+                                                        .icon {
+                                                            margin-right: 10px;
+                                                        }
+                                                        input[type="file"] {
+                                                            display: none;
+                                                        }
+                                                    }
+                                                    button {
+                                                        margin-left: auto;
+                                                        margin-top: 20px;
+                                                        background-color: var(--base-color-700) !important;
+                                                        color: #fff !important;
+                                                    }
+                                                    .error {
+                                                        margin-left: 0;
+                                                        margin-right: 0;
+                                                        padding: 16px;
+                                                        background-color: #f2f4f7;
+                                                        border: 1px solid #f2f4f7;
+                                                        border-left-width: 1px;
+                                                        border-left-color: #e31b54;
+                                                        border-radius: 0px 8px 8px 0px;
+                                                        label {
+                                                            margin-right: 24px;
+                                                            input[type="radio"] {
+                                                                border: 1px solid var(--base-color-700);
+                                                            }
+                                                            input[type="radio"]:checked::before {
+                                                                background-color: var(--base-color-700);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                .wprf-name-run_import_docs,
+                                                .wprf-name-run_import_settings {
+                                                    .wprf-control-field {
+                                                        width: 100%;
+                                                        flex-basis: 100%;
+                                                    }
+                                                }
+                                                .wprf-name-helpscout_action {
+                                                    border-bottom: none;
+                                                    padding-left: 0;
+                                                    padding-right: 0;
+                                                    .wprf-control-field {
+                                                        width: 100%;
+                                                        flex-basis: 100%;
+                                                    }
+                                                    &:hover {
+                                                        background-color: transparent;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Second-level nested subtabs inside AI Content Suite (e.g. Write with AI → Configuration | Personalize).
+                    // The shared block above only styles the first-level nav; this restyles the inner tabs to match.
+                    &.wprf-tab-tab-betterdocs-ai {
+                        .wprf-tab-content {
+                            .wprf-tabs-wrapper {
+                                .wprf-tab-menu-wrapper {
+                                    border-bottom: 1px solid var(--text-color-200);
+                                    margin-bottom: 20px;
+                                    .wprf-tab-nav {
+                                        display: flex;
+                                        gap: 24px;
+                                        .wprf-tab-nav-item {
+                                            padding: 0 4px 14px;
+                                            border: none;
+                                            border-bottom: 2px solid transparent;
+                                            margin-bottom: -1px;
+                                            background: transparent !important;
+                                            border-radius: 0;
+                                            box-shadow: none;
+                                            span {
+                                                @include set-mode(
+                                                    color,
+                                                    var(--text-color-400),
+                                                    var(--text-color-500)
+                                                );
+                                                font-size: 14px;
+                                                font-weight: 500;
+                                                line-height: 1.43;
+                                            }
+                                            &.wprf-active-nav {
+                                                border-color: var(--base-color-700);
+                                                background: transparent !important;
+                                                span {
+                                                    color: var(--base-color-700);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                > .wprf-tab-content-wrapper
+                                    > .wprf-tab-flex
+                                    > .wprf-tab-contents
+                                    > .wprf-tab-content {
+                                    padding: 0;
+                                    > .wprf-tab-heading-wrapper {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &.wprf-tab-tab-migration {
+                        .wprf-section-header {
+                            display: flex;
+                            gap: 24px;
+                            padding-top: 20px;
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+                            &:not(:last-child) {
+                                margin-bottom: 40px;
+                            }
+                            &.wprf-direction-row {
+                                flex-direction: row;
+                                justify-content: flex-start;
+                                align-items: flex-start;
+                            }
+                            &.wprf-direction-column {
+                                flex-direction: column;
+                                align-items: center;
+                                justify-self: center;
+                                text-align: center;
+                            }
+                            .wprf-icon {
+                                display: inline-flex;
+                                border-radius: 8px;
+                                background-color: #fafbfb;
+                                padding: 12px;
+                                img {
+                                    display: inline-flex;
+                                    width: 40px;
+                                    height: auto;
+                                }
+                            }
+                            .wprf-content {
+                                display: inline-flex;
+                                flex-direction: column;
+                                gap: 16px;
+                                @include if(".wprf-tab-content", ".wprf-tab-getting-started") {
+                                    max-width: 450px;
+                                }
+                                @include if(".wprf-tab-content", ".wprf-tab-migration") {
+                                    max-width: 590px;
+                                }
+                                .wprf-title {
+                                    margin: 0;
+                                    color: var(--text-color-800);
+                                    font-size: 32px;
+                                    font-weight: 600;
+                                    line-height: 1;
+                                }
+                                .wprf-description {
+                                    margin: 0;
+                                    color: var(--text-color-600);
+                                    text-align: center;
+                                    font-size: 16px;
+                                    font-weight: 400;
+                                    line-height: 1.5;
+                                }
+                            }
+                            .wprf-link-wrapper {
+                                margin-left: auto;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: flex-end;
+                                gap: 8px;
+                                a {
+                                    display: inline-flex;
+                                    padding: 10px 16px 10px 10px;
+                                    justify-content: center;
+                                    align-items: center;
+                                    gap: 8px;
+                                    border-radius: 8px;
+                                    border: 1px solid #d0d5dd;
+                                    background: #fff;
+                                    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                                    color: #344054;
+                                    font-size: 14px;
+                                    font-style: normal;
+                                    font-weight: 600;
+                                    line-height: 1.43;
+                                    text-decoration: none;
+                                    box-sizing: border-box;
+                                }
+                            }
+                        }
+                        .kb-migration-section {
+                            border: none;
+                            .wprf-section-fields {
+                                padding: 0;
+                                .wprf-control-field {
+                                    width: 100% !important;
+                                    flex-basis: 100% !important;
+                                    align-items: center !important;
+                                }
+                                .wprf-name-migration_action {
+                                    border-bottom: none;
+                                    &:hover {
+                                        background-color: transparent;
+                                    }
+                                    #migration_action {
+                                        background-color: var(--base-color-700) !important;
+                                        color: #fff !important;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .wprf-submit {
+            margin: 0;
+            padding: 24px 40px 32px;
+            display: flex;
+            box-sizing: border-box;
+            &.wprf-importer-submit {
+                padding: 20px 0px 20px;
+            }
+            .wprf-submit-button {
+                background: var(--base-color-700);
+                color: var(--base-background);
+                @include set-mode(color, var(--base-background), #ffffff);
+                margin-left: auto;
+                min-height: 40px;
+                // Hold a stable width across the "Save Changes" → "Saving…" →
+                // saved label swaps. The button is right-aligned (margin-left:
+                // auto), so without this the shrinking label snaps the left edge
+                // inward — the abrupt jerk QA reported. The label stays centered.
+                min-width: 105px;
+                padding: 2px 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                border: none;
+                outline: none;
+                box-sizing: none;
+                font-size: 14px;
+                border-radius: 8px;
+                font-weight: 600;
+                line-height: 1.42;
+                cursor: pointer;
+                box-shadow: 0px 1px 2px 0px rgba(#101828, 0.05);
+                // Ease the state changes (background / colour / disabled fade /
+                // shadow) instead of snapping between them.
+                transition: background-color 0.2s ease, color 0.2s ease,
+                    opacity 0.2s ease, box-shadow 0.2s ease;
+
+                &:hover:not(:disabled) {
+                    background: var(--base-color-800, #009a6e);
+                }
+
+                // "Saving…" state — soften and lock the cursor; the opacity
+                // change rides the transition above so it fades in smoothly.
+                &:disabled {
+                    opacity: 0.8;
+                    cursor: default;
+                }
+            }
+        }
+    }
+    @each $name, $color in $color25List {
+        .wprf-selected-option-#{$name} {
+            background: $color !important;
+        }
+    }
+    @each $name, $color in $color700List {
+        .wprf-selected-option-#{$name} {
+            color: $color !important;
+            button {
+                color: $color !important;
+            }
+        }
+    }
+}
+
+.wprf-tab-tab-ai-chatbot {
+    .wprf-control-wrapper.wprf-type-button,
+    .wprf-control-wrapper.wprf-type-reembed_confirm_button {
+        padding: 24px 0px !important;
+        &:hover {
+            background-color: transparent !important;
+        }
+    }
+    .wprf-type-button,
+    .wprf-type-reembed_confirm_button {
+        justify-content: right;
+        border-bottom: none !important;
+
+        button#ai_chatbot_chat_submit,
+        button#ai_chatbot_api_settings_submit,
+        button#ai_chatbot_appearance_submit,
+        button#ai_powered_search_settings_submit {
+            background: var(--base-color-700) !important;
+            color: var(--base-background) !important;
+            margin-left: auto;
+            min-height: 40px !important;
+            // Stable width across the label state swaps (see .wprf-submit-button).
+            min-width: 105px;
+            padding: 2px 0 !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            outline: none;
+            box-sizing: none;
+            font-size: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            line-height: 1.42;
+            cursor: pointer;
+            box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+            transition: background-color 0.2s ease, color 0.2s ease,
+                opacity 0.2s ease, box-shadow 0.2s ease;
+
+            &:hover:not(:disabled) {
+                background: var(--base-color-800, #009a6e) !important;
+            }
+
+            &:disabled {
+                opacity: 0.8;
+                cursor: default;
+            }
+        }
+    }
+
+    .wprf-submit.wprf-control {
+        display: none !important;
+    }
+}
+
+// Write/Edit AI Personalize save themselves from their modals, so hide the
+// page-level Save button while either subtab is active (the other AI subtabs
+// keep it). Falls back gracefully (button stays visible) where :has() is unsupported.
+.wprf-tab-tab-betterdocs-ai:has(.wprf-tab-content.wprf-tab-wwa-personalize.wprf-active),
+.wprf-tab-tab-betterdocs-ai:has(.wprf-tab-content.wprf-tab-edit-ai-personalize.wprf-active) {
+    .wprf-submit.wprf-control {
+        display: none !important;
+    }
+}
+
+// Personalize repeaters (Write AI Instructions, Edit AI Actions): stack full-width
+// (note → list → add button) instead of the default label-left / field-right split.
+.wprf-tab-tab-betterdocs-ai .wprf-control-wrapper.wprf-name-write_with_ai_instructions,
+.wprf-tab-tab-betterdocs-ai .wprf-control-wrapper.wprf-name-ai_edit_actions {
+    flex-direction: column;
+    align-items: stretch;
+    > .wprf-control-label,
+    > .wprf-control-field {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+    > .wprf-control-label {
+        margin-bottom: 16px;
+    }
+    // .wprf-control-field is a flex container — make its content fill the row,
+    // then stretch the repeater list rows to full width.
+    > .wprf-control-field {
+        display: block !important;
+    }
+    .wwa-instructions-field,
+    .edit-ai-actions-field,
+    .wprf-repeater-control,
+    .wprf-repeater-content,
+    .wprf-repeater-field,
+    .wprf-repeater-inner-field.betterdocs {
+        width: 100% !important;
+    }
+}
+
+.wprf-select__menu {
+    background-color: red;
+}
+
+// Compact inline warning rendered directly under the AI Platform / Embed Model
+// field (rendered by the ReembedNotice field), matching the AI Content Suite
+// max-token notice. Warns about the full re-embed — and its time/credit cost —
+// that saving will trigger.
+// When a re-embed notice follows a field, the notice belongs to THAT field:
+// drop the field's own divider and let the notice row carry the divider below,
+// so the field + notice read as one cell (instead of the notice looking like
+// the next setting). When no notice shows, the component renders nothing, this
+// selector doesn't match, and the field keeps its normal border.
+.wprf-control-wrapper:has(+ .betterdocs-reembed-notice-row) {
+    border-bottom: none;
+    padding-bottom: 8px;
+}
+
+.betterdocs-reembed-notice-row {
+    padding: 0 16px 24px; // align the box to the field content (16px); divider sits below
+    background-color: var(--base-background);
+    border-bottom: 1px solid var(--text-color-200);
+}
+
+.betterdocs-reembed-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 0; // hug the field above
+    padding: 12px 14px;
+    border: 1px solid var(--warning-400);
+    border-radius: 8px;
+    background-color: var(--warning-50);
+    box-shadow: 0 1px 2px rgba(181, 71, 8, 0.05); // soft amber-tinted lift
+
+    // Amber-tinted icon chip — the single accent that anchors the notice.
+    &__icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background-color: var(--warning-100);
+        color: var(--warning-700);
+
+        svg {
+            display: block;
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding-top: 1px; // optically center the first line against the icon chip
+        min-width: 0;
+    }
+
+    &__title {
+        color: var(--warning-700);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    &__text {
+        color: var(--text-color-700);
+        font-size: 12px;
+        line-height: 1.55;
+    }
+}
+

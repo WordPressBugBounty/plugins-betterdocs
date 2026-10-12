@@ -1,0 +1,140 @@
+// CHECKED:
+
+@use "sass:selector";
+@use "sass:string";
+@use "sass:list";
+
+@mixin editor($class: "", $current_editor: "elementor", $root_space: " ") {
+    @if $current_editor == elementor {
+        @at-root #{$class} .betterdocs-elementor#{$root_space}#{&} {
+            @content;
+        }
+    } @else if $current_editor == gutenberg {
+        @at-root #{$class} .betterdocs-gutenberg#{$root_space}#{&} {
+            @content;
+        }
+    } @else if $current_editor == shortcode {
+        @at-root #{$class} .betterdocs-shortcode#{$root_space}#{&} {
+            @content;
+        }
+    }
+}
+
+@mixin responsive-elementor($size: "desktop") {
+    @if $size == phone {
+        @media only screen and (max-width: 767px) {
+            @content;
+        }
+    } @else if $size == tablet {
+        @media only screen and (max-width: 1024px) and (min-width: 766px) {
+            @content;
+        }
+    } @else if $size == desktop {
+        @media only screen and (min-width: 1025px) {
+            @content;
+        }
+    }
+}
+
+@mixin responsive($size: "desktop") {
+    @if $size == phone {
+        @media only screen and (max-width: 670px) {
+            @content;
+        }
+    } @else if $size == tablet {
+        @media only screen and (max-width: 767px) and (min-width: 671px) {
+            @content;
+        }
+    } @else if $size == desktop {
+        @media only screen and (min-width: 768px) {
+            @content;
+        }
+    }
+}
+
+@mixin responsive-below($size: "desktop") {
+    @if $size == phone {
+        @media only screen and (max-width: 670px) {
+            @content;
+        }
+    } @else if $size == tablet {
+        @media only screen and (max-width: 767px) {
+            @content;
+        }
+    } @else if $size == "small-laptop" {
+        @media only screen and (max-width: 959px) {
+            @content;
+        }
+    } @else if $size == laptop {
+        @media only screen and (max-width: 1199px) {
+            @content;
+        }
+    }
+}
+
+@mixin responsive-from($size: "desktop") {
+    @if $size == phone {
+        @media only screen and (max-width: 670px) {
+            @content;
+        }
+    } @else if $size == tablet {
+        @media only screen and (max-width: 768px) {
+            @content;
+        }
+    } @else if $size == "small-laptop" {
+        @media only screen and (max-width: 1000px) {
+            @content;
+        }
+    } @else if $size == laptop {
+        @media only screen and (max-width: 1200px) {
+            @content;
+        }
+    }
+}
+
+@function str-replace($search, $replace: "", $string: "#{&}") {
+    $index: str-index($string, $search);
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace +
+            str-replace(
+                str-slice($string, $index + str-length($search)),
+                $search,
+                $replace
+            );
+    }
+    @return $string;
+}
+
+@mixin if($search, $replace) {
+    $string: "#{&}";
+    $index: str-index($string, $search);
+
+    $classes: string.split($string, " ");
+    $results: ();
+    @for $i from 1 through length($classes) {
+        @if nth($classes, $i) == $search {
+            $_replace: $search + $replace;
+            $results: list.append($results, $_replace);
+        } @else {
+            $results: list.append($results, nth($classes, $i));
+        }
+    }
+
+    @at-root #{$results} {
+        @content;
+    }
+}
+
+@mixin for($parent) {
+    $string: "#{&}";
+    $index: str-index($string, $parent);
+    @if ($index == null) {
+        @at-root #{$parent} & {
+            @content;
+        }
+    } @else {
+        & {
+            @content;
+        }
+    }
+}

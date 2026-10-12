@@ -1,0 +1,98 @@
+.betterdocs-title-excerpt-lists {
+    margin-top: 60px;
+    .betterdocs-title-excerpt-list {
+        padding: 24px;
+        border-bottom: 1px solid #EAECF0;
+        background: #FFFFFF;
+        transition: ease-in-out .35s;
+        // &:last-child{
+        //     border-bottom: none;
+        // }
+        @media only screen and (max-width: 1024px) {
+            padding: 16px;
+            margin-top: 40px;
+        }
+
+        &:hover {
+            background: #F6FEF9;
+        }
+
+        .betterdocs-entry-title {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+
+            @media only screen and (max-width: 1024px) {
+                margin-bottom: 16px;
+            }
+
+            span {
+                display: inline-flex;
+                height: 32px;
+                aspect-ratio: 1;
+                justify-content: center;
+                align-items: center;
+                background: #F2F4F7;
+                border-radius: 6px;
+
+                svg {
+                    width: 18px;
+                }
+            }
+
+            a {
+                font-size: 24px;
+                line-height: 1.4em;
+                font-weight: 500;
+                color: #1D2939;
+                text-decoration: none;
+                &:focus {
+                    outline: none;
+                }
+                @media only screen and (max-width: 1024px) {
+                    font-size: 18px;
+                }
+            }
+        }
+
+        .update-date {
+            padding: 8px;
+            background: #FFFCF5;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #475467;
+            line-height: 1.4em;
+            display: inline-block;
+            margin-bottom: 24px;
+
+            @media only screen and (max-width: 1024px) {
+                margin-bottom: 16px;
+            }
+        }
+
+        p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5em;
+            color: #475467;
+            margin: 0;
+
+            @media only screen and (max-width: 1024px) {
+                font-size: 14px;
+            }
+        }
+    }
+	&.betterdocs-title-excerpt-grid {
+		display: grid;
+    	gap: calc(var(--gap, 24) * 1px);
+		grid-template-columns: repeat(2, 1fr);
+		@media only screen and (max-width: 768px) {
+			grid-template-columns: repeat(1, 1fr);
+			.betterdocs-title-excerpt-list {
+				margin-top: 20px;
+			}
+		}
+	}
+}

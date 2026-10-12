@@ -1,0 +1,68 @@
+.bd-faq-select {
+    z-index: 2;
+    .bd-faq-select__control {
+		background-color: var(--base-background);
+		border: 1px solid var(--text-color-400);
+		border-radius: 8px;
+		box-shadow: 0 1px 2px 0 var(--focus-shadow-2);
+		color: var(--text-color-900);
+        min-height: 40px;
+        .bd-faq-select__value-container {
+            padding: 0 15px;
+        }
+        .bd-faq-select__placeholder {
+            color: var(--text-color-500) !important;
+        }
+        .bd-faq-select__single-value {
+            font-weight: 500;
+            color: var(--text-color-900) !important;
+        }
+        .bd-faq-select__multi-value {
+            background-color: var(--base-color-50);
+            border-radius: 6px;
+            .bd-faq-select__multi-value__label {
+                color: var(--base-color-700);
+                font-weight: 500;
+            }
+            .bd-faq-select__multi-value__remove {
+                color: var(--base-color-700);
+                border-radius: 0 6px 6px 0;
+                cursor: pointer;
+                &:hover {
+                    background-color: var(--base-color-100);
+                    color: var(--base-color-700);
+                }
+            }
+        }
+        .bd-faq-select__input {
+			min-height: auto;
+            &:focus {
+                box-shadow: none;
+                outline: none;
+                border: none;
+                box-shadow: none !important;
+                color: var(--text-color-900) !important;
+            }
+        }
+        .bd-faq-select__indicator-separator {
+            @include set-mode(
+                background-color,
+                var(--text-color-300),
+                var(--text-color-100)
+            );
+        }
+        .bd-faq-select__indicator {
+            color: var(--text-color-500);
+        }
+        &--is-focused {
+            border-color: var(--base-color-700) !important;
+			box-shadow: 0 0 0 3px rgba(0, 184, 132, 0.15) !important;
+            .bd-faq-select__indicator-separator {
+                background: var(--base-color-700);
+            }
+            .bd-faq-select__indicator {
+                color: var(--base-color-700);
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+// Toast notifications (Doc Categories + Doc Tags create/update/delete) — use the
+// BetterDocs brand colors instead of react-toastify's default green/red.
+.bd-doc-categories-wrapper,
+.bd-doc-tags-wrapper {
+	.Toastify__toast--success {
+		background: var(--base-color-700) !important;
+	}
+	.Toastify__toast--error {
+		background: var(--danger-600) !important;
+	}
+}

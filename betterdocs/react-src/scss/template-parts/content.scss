@@ -1,0 +1,103 @@
+// CHECKED:
+
+.betterdocs-print-pdf {
+    float: right;
+    margin-right: 10px;
+    margin-top: -15px;
+	margin-bottom: 10px;
+    .betterdocs-print-btn {
+        background-color: #fafafa;
+        padding: 6px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        @include responsive-below("tablet") {
+            margin: 0px 0px 10px 0px;
+        }
+    }
+}
+
+.betterdocs-content {
+    color: #4d4d4d;
+    font-size: 16px;
+    .batterdocs-anchor {
+        position: relative;
+        display: inline-block;
+        @at-root .betterdocs-single-wrapper #{&} {
+            margin-left: 5px;
+            font-size: 0.9em;
+        }
+        .tooltip-box {
+            visibility: hidden;
+            width: 90px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -44px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+            &:after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+        }
+        &:hover {
+            .tooltip-box {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+    }
+    a.batterdocs-anchor {
+        display: none !important;
+        line-height: 1;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        &:hover {
+            a.batterdocs-anchor {
+                display: inline-block !important;
+            }
+        }
+    }
+}
+
+/**Print Button Layout 2**/
+.betterdocs-print-pdf-2 {
+    cursor: pointer;
+
+    .betterdocs-print-btn-2 {
+        background: #F2F4F7;
+        border-radius: 4px;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            width: 18px;
+        }
+    }
+}

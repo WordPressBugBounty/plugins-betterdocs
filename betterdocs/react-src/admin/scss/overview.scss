@@ -1,0 +1,789 @@
+.betterdocs-dashboard-container {
+    position: relative;
+
+    //     .betterdocs-overlay{
+    // position: absolute;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+    // top: 0;
+    // background-color: #2BA7FF;
+    // z-index: 1;
+    //     }
+
+    img {
+        width : 100%;
+        height: auto;
+    }
+
+    .betterdocs-bold-title {
+        font-weight: 700;
+        color      : var(--text-color-600);
+    }
+
+    .betterdocs-flex {
+        display: flex;
+
+    }
+
+
+    .justify-content-space-between {
+        justify-content: space-between;
+    }
+
+    .align-items-center {
+        align-items: center;
+    }
+
+	// @conflicting with all Docs Grid Loader
+    // span {
+    //     display: inline-block;
+    // }
+
+    .betterdocs-content-left {
+        display        : flex;
+        align-items    : flex-start;
+        flex-direction : column;
+        justify-content: center;
+    }
+
+
+    .betterdocs-content-right {
+        display        : flex;
+        align-items    : flex-end;
+        justify-content: center;
+        flex-direction : column;
+    }
+
+    .betterdocs-overview-col {
+        padding-left : 12px;
+        padding-right: 12px;
+        position     : relative;
+        width        : 100%;
+        min-height   : 1px;
+    }
+
+	.betterdocs-recent-section {
+		.betterdocs-row {
+			flex-direction: row;
+			.betterdocs-recent-col {
+				max-width: 100%;
+				flex: 1 1 0%;
+			}
+		}
+	}
+
+    .betterdocs-col-3 {
+        width: 25%;
+    }
+
+    .betterdocs-col-5 {
+        width: 41.6666666667%;
+    }
+
+    .betterdocs-col-6 {
+        width: 50%;
+    }
+
+    .betterdocs-col-7 {
+        width: 58.3333333333%;
+    }
+
+    .betterdocs-col-9 {
+        width: 75%;
+    }
+
+    .betterdocs-col-3,
+    .betterdocs-col-9 {
+        @media (max-width: 1024px) {
+            width: 50%;
+        }
+
+        @media (max-width: 600px) {
+            width: 100% !important;
+        }
+
+    }
+
+
+    .betterdocs-overview-header {
+        margin-bottom: 24px;
+
+        @media (max-width: 600px) {
+            .betterdocs-flex {
+                flex-direction : column;
+                justify-content: flex-start;
+                align-items    : flex-start;
+
+                .betterdocs-content-right {
+                    justify-content: flex-start;
+
+                    .betterdocs-addNewItems-button {
+                        margin-left: 0px;
+                    }
+                }
+            }
+        }
+
+        .betterdocs-overview-header-title {
+            font-size  : 24px;
+            font-weight: 600;
+            font-family: "IBM Plex Sans", sans-serif;
+            color      : var(--text-color-900);
+            line-height: 1.0;
+
+            @media (max-width: 1024px) {
+                font-size    : 20px;
+                margin-bottom: 16px;
+            }
+        }
+
+        .betterdocs-addNewItems-button-group {
+            display: flex;
+
+            .betterdocs-addNewItems-button {
+                margin         : 0 8px;
+                padding        : 10px 14px;
+                text-decoration: none;
+                font-family    : "IBM Plex Sans", sans-serif;
+                font-weight    : 600;
+                font-size      : 16px;
+                border-radius  : 8px;
+                display        : flex;
+                align-items    : center;
+                cursor         : pointer;
+                @media (max-width: 1024px) {
+                    font-size      : 14px;
+                 }
+
+                .plus-icon {
+                    margin: 0 4px;
+                }
+
+                &.betterdocs-faq-button {
+                    color     : var(--text-color-700);
+                    border    : 1px solid #D0D5DD;
+                    box-shadow: 0px 1px 2px 0px #1018280D;
+                }
+
+                &.betterdocs-doc-button {
+                    color           : #ffffff;
+                    background-color: var(--base-color-700);
+                    box-shadow      : 0px 1px 2px 0px #1018280D;
+                }
+            }
+        }
+    }
+
+    .betterdocs-overview-card {
+        margin-bottom: 14px;
+
+        .betterdocs-col-3 {
+            @media (max-width: 1024px) {
+                width: 50%;
+            }
+
+            @media (max-width: 524px) {
+                width: 100%;
+            }
+
+        }
+
+        .betterdocs-card-wrapper {
+            display            : flex;
+            justify-content    : space-between;
+            align-items        : center;
+            padding            : 20px;
+            border-radius      : 8px;
+            border             : 1px solid var(--text-color-150);
+            background-color   : var(--base-background);
+            margin-bottom      : 10px;
+            width              : 100%;
+            background-position: left top;
+            background-repeat  : no-repeat;
+
+            &.created-docs {
+                background-image: url("data:image/svg+xml,%3Csvg width='132' height='88' viewBox='0 0 132 88' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_11538_8646)'%3E%3Cpath d='M96 -3.50001L-0.750021 52.3586L-0.750016 -59.3586L96 -3.50001Z' fill='url(%23paint0_linear_11538_8646)'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11538_8646' x='-35.9468' y='-94.5562' width='167.144' height='182.112' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='17.5984' result='effect1_foregroundBlur_11538_8646'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_11538_8646' x1='96' y1='-3.50001' x2='-33' y2='-3.50001' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%2300B884'/%3E%3Cstop offset='1' stop-color='%23FFE600' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+            }
+
+            &.published-docs {
+                background-image: url("data:image/svg+xml,%3Csvg width='132' height='88' viewBox='0 0 132 88' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_11538_17884)'%3E%3Cpath d='M96 -3.50001L-0.750021 52.3586L-0.750016 -59.3586L96 -3.50001Z' fill='url(%23paint0_linear_11538_17884)'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11538_17884' x='-35.9468' y='-94.5562' width='167.144' height='182.112' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='17.5984' result='effect1_foregroundBlur_11538_17884'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_11538_17884' x1='96' y1='-3.50001' x2='-33' y2='-3.50001' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%231C7BFF'/%3E%3Cstop offset='1' stop-color='%23FFE600' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+            }
+
+            &.created-FAQs {
+                background-image: url("data:image/svg+xml,%3Csvg width='132' height='88' viewBox='0 0 132 88' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.2' filter='url(%23filter0_f_11442_165715)'%3E%3Cpath d='M96 -3.50001L-0.750021 52.3586L-0.750016 -59.3586L96 -3.50001Z' fill='url(%23paint0_linear_11442_165715)'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11442_165715' x='-35.9468' y='-94.5562' width='167.144' height='182.112' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='17.5984' result='effect1_foregroundBlur_11442_165715'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_11442_165715' x1='96' y1='-3.50001' x2='-33' y2='-3.50001' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%237F56D9'/%3E%3Cstop offset='1' stop-color='%23FFE600' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+            }
+
+            &.published-FAQs {
+                background-image: url("data:image/svg+xml,%3Csvg width='132' height='88' viewBox='0 0 132 88' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg opacity='0.12' filter='url(%23filter0_f_11442_165729)'%3E%3Cpath d='M96 -3.50001L-0.750021 52.3586L-0.750016 -59.3586L96 -3.50001Z' fill='url(%23paint0_linear_11442_165729)'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_f_11442_165729' x='-35.9468' y='-94.5562' width='167.144' height='182.112' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeGaussianBlur stdDeviation='17.5984' result='effect1_foregroundBlur_11442_165729'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_11442_165729' x1='96' y1='-3.50001' x2='-33' y2='-3.50001' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23E31B54'/%3E%3Cstop offset='1' stop-color='%23FFE600' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+            }
+
+            .betterdocs-card-left {
+                .betterdocs-card-counter {
+                    font-size    : 30px;
+                    font-weight  : 600;
+                    font-family  : "IBM Plex Sans", sans-serif;
+                    margin-bottom: 6px;
+                    line-height  : 38px;
+                    color        : var(--text-color-900);
+                }
+
+                .betterdocs-card-sub-header {
+                    font-family: "IBM Plex Sans", sans-serif;
+                    font-weight: 500;
+                    font-size  : 16px;
+                    color      : var(--text-color-600);
+                }
+            }
+
+            .betterdocs-card-right {
+                .betterdocs-card-icon {
+                    border         : 1px solid #F1F1F1;
+                    width          : 56px;
+                    height         : 56px;
+                    border-radius  : 5px;
+                    display        : flex;
+                    align-items    : center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+
+    .betterdocs-overview-content {
+
+        .betterdocs-col-9 {
+            @media (max-width: 1024px) {
+                width: 50%;
+            }
+
+            @media (max-width: 524px) {
+                width: 100%;
+            }
+        }
+
+        .betterdocs-col-3 {
+            @media (max-width: 1024px) {
+                width: 50%;
+            }
+
+            @media (max-width: 524px) {
+                width: 100%;
+            }
+        }
+
+        .betterdocs-recent-wrapper,
+        .betterdocs-aiChatbot-section,
+        .betterdocs-video-section {
+            margin-bottom: 24px;
+            padding      : 24px;
+            background   : var(--base-background);
+            width        : 100%;
+            border-radius: 8px;
+            border       : 1px solid var(--text-color-150);
+            position     : relative;
+
+            @media (max-width: 1024px) {
+                margin-bottom: 20px;
+                padding      : 20px;
+
+                .betterdocs-content-right {
+                    align-items: flex-start;
+                }
+            }
+
+            @media (max-width: 524px) {
+                margin-bottom: 24px;
+                padding      : 24px;
+            }
+
+            .betterdocs-col-6 {
+                @media (max-width: 1024px) {
+                    width: 100%;
+                }
+            }
+
+            .betterdocs-section-title {
+                font-family  : "IBM Plex Sans", sans-serif;
+                color        : var(--text-color-900);
+                font-size    : 28px;
+                font-weight  : 600;
+                margin-bottom: 8px;
+                line-height  : 1.35;
+
+                @media (max-width: 1024px) {
+                    font-size: 24px;
+                }
+
+                .betterdocs-title-icon {
+                    margin: 0 8px;
+                    line-height: 0;
+                }
+
+                .betterdocs-title-style {
+                    background             : linear-gradient(90deg, #3852FF 5.64%, #C891FC 36.75%, #FFAE5C 58.86%, #2BA7FF 67.5%, #70FEA3 97%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    line-height            : 1.35;
+                }
+            }
+
+            .betterdocs-section-sub-title {
+                font-family  : "IBM Plex Sans", sans-serif;
+                font-weight  : 400;
+                color        : var(--text-color-600);
+                font-size    : 14px;
+                margin-bottom: 24px;
+                line-height  : 1.4;
+            }
+
+            .betterdocs-video-button {
+                display        : flex;
+                gap            : 6px;
+                text-decoration: none;
+                font-size      : 16px;
+                font-weight    : 600;
+                font-family    : "IBM Plex Sans", sans-serif;
+                cursor         : pointer;
+                color          : var(--base-color-700);
+
+                @media (max-width: 1024px) {
+                    margin-bottom: 24px;
+                }
+            }
+
+            .betterdocs-chartbort-button {
+                color           : #ffffff;
+                background-color: var(--base-color-700);
+                padding         : 10px 18px;
+                text-decoration : none;
+                font-size       : 16px;
+                font-weight     : 600;
+                font-family     : "IBM Plex Sans", sans-serif;
+                border-radius   : 8px;
+            }
+
+            .popup-trigger {
+                cursor: pointer;
+            }
+
+            .betterdocs-popup-overlay {
+                height    : 100vh;
+                width     : 100vw;
+                position  : fixed;
+                top       : 0;
+                left      : 0;
+                z-index   : 999;
+                overflow-y  : auto;
+                padding: 12px;
+                background: rgb(0, 0, 0, 0.6);
+
+                .betterdocs-popup-wrapper {
+                    max-width : 100%;
+                    width     : max-content;
+                    height    : auto;
+                    margin    : 150px auto 0;
+                    text-align: center;
+                    position  : relative;
+
+                    .betterdocs-popup-video-content {
+                        .betterdocs-popu-close-btn {
+                            position        : absolute;
+                            right           : -55px;
+                            top             : 0;
+                            background-color: #ffffff;
+                            display         : flex;
+                            justify-content : center;
+                            align-items     : center;
+                            border-radius   : 50%;
+                            width: 40px;
+                            height: 40px;
+                            border          : none;
+                            cursor          : pointer;
+                            @media (max-width: 999px) {
+                               right: 0;
+                               top: -55px;
+                            }
+                        }
+                        .betterdocs-popup-video{
+                            iframe{
+                                max-width: 1000px;
+                                width: 600px;
+                                aspect-ratio: 16 / 9;
+                                @media (min-width: 1200px) {
+                                    width: 1000px;
+                                }
+
+                                @media (max-width: 600px) {
+                                    width: 300px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .betterdocs-aiChatbot-section {
+            padding: 0 40px;
+
+            @media (max-width: 1024px) {
+                padding: 20px 20px 0 20px;
+
+                .betterdocs-col-5,
+                .betterdocs-col-7 {
+                    width: 100%;
+                }
+            }
+
+            .aichatbotThump-wrapper {
+                margin-bottom: -5px;
+                width        : 100%;
+
+                .aichatbotThump-bg-icon {
+                    position: absolute;
+                    bottom  : 0;
+
+                    @media (max-width: 1024px) {
+                        display: none;
+                    }
+                }
+
+                .aichatbotThump-card-img {
+                    margin-left: 40px;
+
+                    @media (max-width: 1024px) {
+                        margin-left: 0px;
+                    }
+                }
+            }
+        }
+.betterdocs-recent-section{
+
+    @media (max-width: 1024px) {
+        .betterdocs-col-6{
+            width: 100%;
+        }
+    }
+
+            .betterdocs-recent-wrapper {
+                padding: 20px 16px;
+
+                .betterdocs-recent-header {
+                    margin-bottom: 20px;
+
+                    .betterdocs-recent-title {
+                        font-family: "IBM Plex Sans", sans-serif;
+                        font-weight: 500;
+                        font-size  : 18px;
+                        color      : var(--text-color-900);
+                        line-height: 1.0;
+
+                        @media (max-width: 1024px) {
+                            font-size: 15px;
+                        }
+                    }
+
+                    .betterdocs-view-all,
+                    .betterdocs-see-all {
+                        display        : flex;
+                        align-items    : center;
+                        font-family    : "IBM Plex Sans", sans-serif;
+                        font-weight    : 500;
+                        size           : 12px;
+                        text-decoration: none;
+                        color          : var(--base-color-700);
+                        cursor         : pointer;
+                    }
+
+                    .betterdocs-view-all {
+                        color: var(--text-color-600);
+                    }
+
+                }
+
+        .betterdocs-recent-docs-list {
+            .betterdocs-recent-docs-list-items {
+                padding         : 15px 16px;
+                background-color: var(--page-background);
+                border          : 1px solid var(--text-color-100);
+                margin-bottom   : 8px;
+                border-radius   : 4px;
+                display         : flex;
+                justify-content : space-between;
+                align-items     : center;
+						a {
+							display: flex;
+							justify-content: space-between;
+							align-items: center; /* Vertical alignment */
+							text-decoration: none;
+							width: 100%;
+						}
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        .recent-docs-title {
+                            font-family: "IBM Plex Sans", sans-serif;
+                            font-size  : 14px;
+                            font-weight: 600;
+                            color      : var(--text-color-950);
+							flex: 1 1 auto;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+							margin-right: 8px;
+							line-height: 1.4;
+
+							@media (max-width: 1024px) {
+								font-size: 14px;
+							}
+
+							.recent-docs-icon {
+								margin-right: 8px;
+								line-height: 0;
+							}
+                        }
+
+                        .recent-docs-tag {
+                            font-family  : "IBM Plex Sans", sans-serif;
+                            font-size    : 12px;
+                            font-weight  : 500;
+                            border-radius: 4px;
+                            padding      : 2px 12px;
+							flex		 : 0 0 auto;
+    						margin-left	 : auto;
+
+                            &.tag-published {
+                                color           : #027A48;
+                                background-color: #F5FFF5;
+                                border          : 1px solid #D1FADF;
+                            }
+
+                            &.tag-unpublished {
+                                color           : #C01048;
+                                background-color: #FFF5F6;
+                                border          : 1px solid #FEE4E2;
+                            }
+
+                            &.tag-drafted {
+                                color           : #F79009;
+                                background-color: #FFFAF5;
+                                border          : 1px solid #FEF0C7;
+                            }
+
+							&.tag-private {
+								color           : #6941C6;
+								background-color: #F9F5FF;
+								border          : 1px solid #E9D7FE;
+							}
+
+							&.tag-scheduled {
+								color           : #026AA2;
+								background-color: #F0F9FF;
+								border          : 1px solid #B9E6FE;
+							}
+                        }
+                    }
+                }
+            }
+        }
+
+        .betterdocs-card {
+            margin-bottom: 24px;
+            padding      : 24px;
+            background   : var(--base-background);
+            width        : 100%;
+            border-radius: 8px;
+            border       : 1px solid var(--text-color-150);
+
+            .betterdocs-card-title {
+                font-family  : "IBM Plex Sans", sans-serif;
+                font-weight  : 600;
+                font-size    : 16px;
+                color        : var(--text-color-900);
+                margin-bottom: 16px;
+                line-height  : 1.55;
+            }
+
+            .card-list-icon {
+                background-color: var(--base-color-700);
+                width           : 16px;
+                height          : 16px;
+                border-radius   : 50%;
+                display         : flex;
+                justify-content : center;
+                align-items     : center;
+            }
+
+            .card-list-title {
+                font-size  : 14px;
+                font-weight: 400;
+                font-family: "IBM Plex Sans", sans-serif;
+                color      : var(--text-color-850);
+                line-height: 1.4;
+            }
+
+            &.features-list-bg {
+                background-image   : url('data:image/svg+xml;utf8,<svg width="267" height="300" viewBox="0 0 267 300" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.4" d="M202.355 -4.34312C89.4362 22.3397 10.7741 87.7866 27.3135 141.615C43.8529 195.444 148.728 217.521 261.647 190.838C374.567 164.155 453.229 98.7083 436.689 44.8796C420.15 -8.94909 315.275 -31.026 202.355 -4.34312Z" fill="%23FFFAEB"/><g filter="url(%23filter0_f_11426_51078)"><path d="M279 26.5L182.25 82.3586L182.25 -29.3586L279 26.5Z" fill="url(%23paint0_linear_11426_51078)"/></g><defs><filter id="filter0_f_11426_51078" x="147.053" y="-64.5562" width="167.144" height="182.112" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"/><feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/><feGaussianBlur stdDeviation="17.5984" result="effect1_foregroundBlur_11426_51078"/></filter><linearGradient id="paint0_linear_11426_51078" x1="279" y1="26.5" x2="150" y2="26.5" gradientUnits="userSpaceOnUse"><stop stop-color="%23FECB11" stop-opacity="0.9"/><stop offset="1" stop-color="%23FFE600" stop-opacity="0"/></linearGradient></defs></svg>');
+                background-position: top right;
+                background-repeat  : no-repeat;
+
+                .betterdocs-card-list {
+                    .betterdocs-card-list-item {
+                        display      : flex;
+                        gap          : 8px;
+                        margin-bottom: 12px;
+
+                        &:last-child {
+                            margin-bottom: 0px;
+                        }
+                    }
+
+
+                }
+
+                .betterdocs-pro-user {
+                    display      : flex;
+                    gap          : 8px;
+                    align-items  : center;
+                    margin-bottom: 16px;
+
+                    .betterdocs-pro-user-icon {
+                        line-height: 0;
+                    }
+
+                    .betterdocs-pro-user-count {
+                        color      : var(--text-color-700);
+                        font-family: "IBM Plex Sans", sans-serif;
+                        font-weight: 700;
+                        font-size  : 16px;
+                    }
+                }
+				.betterdocs-goto-pro-section {
+					margin-top : 20px;
+					padding-top : 20px;
+					border-top : 1px solid #EDEBF5;
+				}
+                .betterdocs-goto-pro-button {
+                    color           : #ffffff;
+                    background-color: #FDB022;
+                    padding         : 12px 16px;
+                    border-radius   : 8px;
+                    display         : flex;
+                    align-items     : center;
+                    justify-content : center;
+                    gap             : 8px;
+                    font-family     : "IBM Plex Sans", sans-serif;
+                    font-weight     : 600;
+                    font-size       : 16px;
+                    text-decoration : none;
+
+                    .pro-btn-icon {
+                        width           : 24px;
+                        height          : 24px;
+                        display         : flex;
+                        justify-content : center;
+                        align-items     : center;
+                        border-radius   : 50%;
+                        background-color: #ffffff;
+                    }
+                }
+            }
+
+            &.betterdocs-notice-board {
+                padding: 24px 0;
+
+                .features-list-header {
+                    display      : flex;
+                    gap          : 8px;
+                    padding      : 0 24px 16px;
+                    margin-bottom: 24px;
+                    border-bottom: 1px solid #EDEBF5;
+					.betterdocs-card-icon {
+						line-height: 1;
+					}
+                    .betterdocs-card-icon,
+                    .betterdocs-card-title {
+                        margin: 0;
+                    }
+                }
+
+                .betterdocs-card-list {
+                    padding: 0 24px;
+
+                    .betterdocs-card-list-item {
+                        display      : flex;
+                        gap          : 8px;
+                        margin-bottom: 12px;
+
+                        .card-list-icon {
+                            background-color: var(--base-color-100);
+                        }
+                    }
+                }
+
+                .betterdocs-learn-more-button {
+                    margin: 0 24px;
+                }
+
+
+            }
+
+            &.show-love-card {
+                padding: 18px;
+
+                .betterdocs-card-sub-title {
+                    font-family  : "IBM Plex Sans", sans-serif;
+                    font-weight  : 400;
+                    font-size    : 15px;
+                    color        : var(--text-color-600);
+                    margin-bottom: 20px;
+                    line-height  : 1.45;
+                }
+            }
+
+            .betterdocs-card-icon {
+                margin-bottom: 8px;
+            }
+        }
+    }
+}
+
+.betterdocs-dark-mode {
+    .plus-icon {
+        svg {
+            path {
+                fill: #fcfcfd;
+            }
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .betterdocs-responsive-col {
+            width: 50%;
+        }
+    }
+
+    @media (max-width: 524px) {
+        .betterdocs-responsive-col {
+            width: 100%;
+        }
+    }
+
+
+
+
+
+
+
+    // removed code
+    .betterdocs-dashboard-container {
+        .betterdocs-overview-card {
+            .betterdocs-card-wrapper {
+                background-color: #232222;
+            }
+        }
+    }
+}
+

@@ -1,0 +1,186 @@
+// Define breakpoints
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+@media (max-width: $breakpoint-md) {
+    .betterdocs-admin {
+        .betterdocs-settings-wrapper {
+            .betterdocs-quick-builder-wrapper {
+                .wprf-tabs-wrapper {
+                    flex-direction: column;
+                    .wprf-tab-menu-wrapper {
+                        flex-basis: 100%;
+                        max-width: 100%;
+                        margin-bottom: 10px;
+                        border-radius: 0;
+                        border-right: none;
+                        .wprf-tab-nav {
+                            flex-direction: row !important;
+                            gap: 5px !important;
+                            flex-wrap: wrap;
+                            .wprf-tab-nav-item {
+                                flex-basis: 32% !important;
+                                max-width: 32% !important;
+                            }
+                        }
+                    }
+                    .wprf-tab-content-wrapper {
+                        flex-basis: 100%;
+                        max-width: 100%;
+                        .wprf-tab-flex {
+                            .wprf-tab-contents {
+                                .wprf-tab-content {
+                                    > .wprf-control-section {
+                                        .wprf-section-fields {
+                                            .betterdocs-settings-customizer-link {
+                                                flex-wrap: wrap;
+                                                flex-direction: row-reverse;
+                                                padding: 0 40px 20px !important;
+                                                .betterdocs-card-content,
+                                                .betterdocs-card-icon {
+                                                    flex-basis: 100% !important;
+                                                    max-width: 100% !important;
+                                                }
+                                            }
+                                            .wprf-code-viewer {
+                                                .wprf-code-viewer-body {
+                                                    pre {
+                                                        width: 500px;
+                                                        white-space: pre-wrap;
+                                                        word-wrap: break-word;
+                                                        overflow-wrap: break-word;
+                                                        box-sizing: border-box;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .betterdocs-dashboard-container {
+        .betterdocs-row {
+            .betterdocs-col.betterdocs-col-md-4 {
+                width: 50%;
+            }
+
+            // From tablet down, stack the FAQ Builder header columns full-width
+            // (the 40/60 split squeezes the right-side toolbar into the tabs).
+            .betterdocs-col.betterdocs-header-left,
+            .betterdocs-col.betterdocs-header-right {
+                width: 100%;
+            }
+
+            .betterdocs-col.betterdocs-header-left {
+                margin-bottom: 16px;
+            }
+
+            // Let the toolbar (search, order, Classic UI, theme toggle) wrap to a
+            // second line and align from the left instead of crowding the right.
+            .betterdocs-col.betterdocs-header-right.betterdocs-d-flex {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                row-gap: 10px;
+            }
+        }
+        .betterdocs-dashboard-category-list-filter {
+            .betterdocs-row {
+                .betterdocs-col-md-3,
+                .betterdocs-col-md-9 {
+                    width: 100%;
+                }
+                .betterdocs-col-md-3 {
+                    margin-bottom: 10px;
+                }
+                .betterdocs-dashboard-filter-wrap {
+                    .betterdocs-dashboard-filter-list {
+                        li {
+                            padding: 0 2px;
+                            &.order {
+                                max-width: 15%;
+                                min-width: 15%;
+                            }
+                            &.doc_category {
+                                max-width: 25%;
+                                min-width: 25%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .betterdocs-dashboard-item-list-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 1rem;
+            .betterdocs-dashboard-list-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .betterdocs-dashboard-logo {
+        svg {
+            width: 180px;
+        }
+    }
+    .betterdocs-dashboard-container {
+        .betterdocs-row {
+            .betterdocs-col.betterdocs-col-md-4,
+            .betterdocs-col.betterdocs-header-left,
+            .betterdocs-col.betterdocs-header-right {
+                width: 100%;
+            }
+            .betterdocs-col.betterdocs-header-left {
+                margin-bottom: 16px;
+                justify-content: space-between;
+            }
+            .betterdocs-col.betterdocs-header-right {
+                &.betterdocs-d-flex {
+                    flex-wrap: wrap;
+                    justify-content: flex-start;
+                    row-gap: 10px;
+                }
+            }
+        }
+        .betterdocs-dashboard-category-list-filter {
+            .betterdocs-row {
+                .betterdocs-dashboard-filter-wrap {
+                    .betterdocs-dashboard-filter-list {
+                        flex-wrap: wrap;
+                        li {
+                            max-width: 50% !important;
+                            min-width: 50% !important;
+                        }
+                    }
+                }
+            }
+        }
+        .betterdocs-dashboard-item-list-wrap {
+            .doc-list-pagination {
+                flex-wrap: wrap;
+                .doc-list-count {
+                    flex-basis: 100%;
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+                .doc-list-pagination-wrap {
+                    flex-basis: 100%;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

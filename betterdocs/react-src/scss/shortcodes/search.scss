@@ -1,0 +1,283 @@
+// CHECKED:
+
+@import "../common/index";
+
+@keyframes slideDown {
+    0% {
+        max-height: 0;
+    }
+    100% {
+        max-height: 400px;
+    }
+}
+
+.betterdocs-search-form-wrapper {
+    &:not(.betterdocs-elementor, .betterdocs-blocks) {
+        border-bottom: 1px solid #f1f1f1;
+    }
+    background-color: #f7f7f7;
+    padding: 50px 20px;
+    .betterdocs-live-search {
+        width: 100%;
+        max-width: 800px;
+        display: block;
+        margin: 0 auto;
+        position: relative;
+    }
+}
+
+.betterdocs-live-search {
+    position: relative;
+    .docs-search-result {
+        background-color: #fff;
+        border: 1px solid #f1f1f1;
+        min-width: 300px;
+        position: absolute;
+        top: auto;
+        margin: 15px 0 0;
+        padding: 0;
+        list-style: none;
+        max-height: 400px;
+        overflow-y: scroll;
+        z-index: 999;
+        animation: slideDown 400ms ease-in-out;
+        li {
+            border-bottom: 1px solid #f5f5f5;
+            padding: 5px;
+            display: flex;
+            flex-direction: row;
+            img {
+                align-self: center;
+                width: 80px;
+                height: auto;
+            }
+            span {
+                font-size: 0.8em;
+                color: #444b54;
+            }
+            a {
+                display: block;
+                color: #444;
+                padding: 10px;
+                white-space: nowrap;
+                text-decoration: none;
+            }
+
+            &:hover {
+                background: #f5f5f5;
+            }
+            &:only-child {
+                border: none;
+                padding: 15px;
+            }
+        }
+    }
+}
+
+.betterdocs-search-heading {
+    text-align: center;
+    .heading {
+        line-height: 1.2;
+        font-size: 40px;
+        color: #566e8b;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 20px;
+        margin-left: 0px;
+    }
+    .subheading {
+        line-height: 1.2;
+        font-size: 16px;
+        color: #566e8b;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 20px;
+        margin-left: 0px;
+    }
+}
+
+.betterdocs-searchform {
+    width: 100%;
+    // Keep the padding and border inside the 100% width; without it the
+    // form was 32px wider than its container and scrolled phones sideways.
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #f1f1f1;
+    position: relative;
+    border-radius: 8px;
+    padding: 22px 15px;
+    @include responsive-below("tablet") {
+        flex-direction: column;
+    }
+
+    svg {
+        height: 30px;
+        fill: #444b54;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: all 0.3s;
+        &.docs-search-icon {
+            margin-left: 15px;
+            @include responsive-below("tablet") {
+                margin-left: 0;
+            }
+        }
+        &.docs-search-loader {
+            display: none;
+            margin-right: 15px;
+            height: 30px;
+        }
+        &.docs-search-close {
+            display: none;
+            margin-right: 13px;
+        }
+    }
+
+    .betterdocs-search-field {
+        width: 100%;
+        // Let the field shrink inside the flex row on narrow screens instead
+        // of holding its intrinsic width and pushing the box wider.
+        min-width: 0;
+        background: none;
+        color: #595959;
+        font-size: 1em;
+        padding: 0 15px;
+        border: none;
+        position: relative;
+        outline: 0;
+        margin: 0;
+        box-shadow: none !important;
+        &:focus {
+            border: none;
+            background: none;
+        }
+    }
+    select {
+        appearance: none;
+        border: none;
+        background-color: transparent;
+        border-left: 1px solid #d3d9ef;
+        padding-left: 21px;
+        padding-right: 21px;
+        color: #595959;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 1.4em;
+        max-width: 170px;
+        &:not(:focus) {
+            outline: none;
+            box-shadow: none;
+        }
+        background-image: url('../../../assets/static/images/select-dropdown.svg');
+        background-repeat: no-repeat, repeat;
+        background-position: right .7em top 50%, 0 0;
+        background-size: 1.3em auto, 100%;
+
+    }
+    .betterdocs-search-category {
+        @include responsive-below("tablet") {
+            max-width: 100%;
+            width: 100%;
+            border: 1px solid #d3d9ef;
+            margin-bottom: 10px;
+            height: 50px;
+        }
+    }
+
+    .betterdocs-search-submit {
+        margin-left: 30px;
+        background-color: #24cc8f;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 24px;
+        color: #ffffff;
+        font-style: normal;
+        border-radius: 7px;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        padding-right: 25px;
+        padding-left: 25px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border: none;
+        @include responsive-below("tablet") {
+            margin-left: 0;
+            width: 100%;
+        }
+        &:hover {
+            background-color: #528ffe;
+            color: #fff;
+        }
+    }
+}
+
+.betterdocs-searchform-input-wrap {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    @include responsive-below("tablet") {
+        // The form is a centred column here; `width: 100%` plus this padding
+        // and border made the box 22px wider than the form. Stretch it to the
+        // form instead (height is unchanged).
+        width: auto;
+        align-self: stretch;
+        padding: 10px;
+        border: 1px solid #d3d9ef;
+        margin-bottom: 10px;
+        height: 50px;
+    }
+}
+
+.betterdocs-search-result-wrap {
+    position: absolute;
+    z-index: 9999;
+    width: 100%;
+    left: 0;
+    bottom: 2px;
+
+    &::before {
+        border-color: transparent transparent #fff;
+        z-index: 9999;
+        border-style: solid;
+        border-width: 12px;
+        content: "";
+        height: 0;
+        left: 47px;
+        position: absolute;
+        top: -8px;
+        width: 0;
+    }
+
+    &.hideArrow::before {
+        display: none;
+    }
+}
+
+.betterdocs-popular-search-keyword {
+    margin-top: 24px;
+    display: block;
+    .popular-keyword {
+        font-size: 14px;
+        padding: 8px 25px;
+        background-color: #fff;
+        border: 1px solid #dddeff;
+        color: #99a3ca;
+        cursor: pointer;
+        display: inline-block;
+    }
+    .popular-search-title {
+        color: #8588a6;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        margin-right: 16px;
+
+        @include responsive-below("tablet") {
+            margin-right: 0px;
+        }
+    }
+}

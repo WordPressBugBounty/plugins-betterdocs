@@ -1,0 +1,65 @@
+// ── Skeleton loading state ────────────────────────────────────────────────────
+// Mirrors the real tree-table / tag-list layout: the skeleton reuses the
+// structural classes from _tree-table.scss (.bd-dc-tree-card, .bd-dc-table-header,
+// .bd-dc-row, .bd-dc-cell-*) so alignment matches the loaded design exactly.
+// Shimmer placeholders use .bd-dc-skel.
+
+@keyframes bd-dc-skeleton-shimmer {
+    0%   { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+.bd-dc-skel {
+    display: block;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: linear-gradient(
+        90deg,
+        var(--text-color-200) 25%,
+        var(--text-color-100) 37%,
+        var(--text-color-200) 63%
+    );
+    background-size: 400% 100%;
+    animation: bd-dc-skeleton-shimmer 1.4s ease infinite;
+}
+
+// Non-interactive — disable hover/selected affordances on skeleton rows
+.bd-dc-row--skel {
+    cursor: default;
+    &:hover { background: transparent; }
+}
+
+.bd-dc-skel-grip    { width: 6px;  height: 16px; border-radius: 3px; }
+.bd-dc-skel-check   { width: 15px; height: 15px; border-radius: 3px; }
+.bd-dc-skel-chevron { width: 22px; height: 22px; border-radius: 6px; }
+.bd-dc-skel-count   { width: 26px; height: 26px; border-radius: 999px; }
+.bd-dc-skel-action  { width: 28px; height: 28px; border-radius: 6px; }
+
+// Connector spacer for tree rows — matches depth-0 connector offset (8px)
+.bd-dc-skel-connector { width: 8px; flex-shrink: 0; }
+
+.bd-dc-skel-line {
+    height: 13px;
+    border-radius: 4px;
+
+    &.bd-dc-skel-line--title { height: 14px; }
+    &.bd-dc-skel-line--meta  { height: 11px; margin-top: 8px; }
+}
+
+// Toolbar skeleton bits
+.bd-dc-skel-toolbar-chip   { width: 150px; height: 22px; border-radius: 999px; }
+.bd-dc-skel-toolbar-select { width: 120px; height: 28px; border-radius: 6px; }
+.bd-dc-skel-toolbar-apply  { width: 64px;  height: 32px; border-radius: 6px; }
+
+// ── Dark mode ─────────────────────────────────────────────────────────────────
+// --text-color-200 is ≈ the dark base background (invisible). Shimmer between
+// the next two lighter grays so the placeholders read on the dark card.
+.betterdocs-admin.betterdocs-dark-mode .bd-dc-skel {
+    background: linear-gradient(
+        90deg,
+        var(--text-color-100) 25%,
+        var(--text-color-300) 37%,
+        var(--text-color-100) 63%
+    );
+    background-size: 400% 100%;
+}

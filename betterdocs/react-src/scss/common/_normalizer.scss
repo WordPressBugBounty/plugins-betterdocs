@@ -1,0 +1,1198 @@
+// CHECKED:
+
+.betterdocs-display-flex {
+    display: flex;
+    flex-direction: row;
+
+    @include responsive-below("tablet") {
+        display: block;
+    }
+}
+
+.betterdocs-sidebar {
+    flex: 0 0 30%;
+    @include for(".betterdocs-single-wrapper:not(.betterdocs-fluid-wrapper) .betterdocs-content-wrapper"
+
+    ) {
+        max-width: 400px;
+    }
+
+    @include for(".betterdocs-taxonomy-wrapper:not(.betterdocs-fluid-wrapper) .betterdocs-content-wrapper"
+
+    ) {
+        max-width: 400px;
+    }
+}
+
+.betterdocs-content-area {
+    flex: 1 1 70%;
+    padding: 0 20px 20px;
+}
+
+.betterdocs-wrapper {
+    background-color: #fff;
+    flex: auto;
+
+    &.betterdocs-taxonomy-wrapper {
+        background-color: $tax-archive-bg;
+
+        &.betterdocs-archive-layout-7{
+            margin: 0 auto;
+            background-color: #fff;
+        }
+    }
+
+    &.betterdocs-single-wrapper {
+        background-color: $single-article-bg;
+    }
+
+    &.betterdocs-single-layout-8 {
+        background: #FFFFFF;
+
+        .betterdocs-content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+			@include if(".betterdocs-wrapper",
+				".betterdocs-single-layout-10"
+			) {
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+            @media only screen and (max-width: 1280px) {
+                gap: 20px;
+            }
+
+            .betterdocs-sidebar-layout-7 {
+                border-right: 1px solid #EAECF0;
+                z-index: 1;
+                @media only screen and (max-width: 1024px) {
+                    grid-column: 1 / span 4;
+                }
+
+                @media only screen and (max-width: 768px) {
+                    grid-column: 1 / span 12;
+                    border-right: none;
+                    display: none;
+                }
+            }
+
+            .docs-content-full-main {
+                padding-top: 57px;
+                padding-right: 10px;
+                padding-left: 24px;
+                padding-bottom: 57px;
+
+                @media only screen and (max-width: 1280px) {
+                    padding-top: 30px;
+                    padding-right: 10px;
+                    padding-left: 16px;
+                    padding-bottom: 40px;
+                }
+
+                @media only screen and (max-width: 1024px) {
+                    grid-column-start: 5;
+                }
+
+
+                @media only screen and (max-width: 767px) {
+                    padding: 0 !important;
+                }
+
+                .betterdocs-content-inner-area {
+                    padding: 0;
+
+                    .betterdocs-entry-header {
+                        .betterdocs-entry-title {
+                            font-size: 42px;
+                            font-weight: 700;
+                            line-height: 1.2em;
+                            color: #1D2939;
+                            text-transform: unset;
+                            margin: 0;
+                            padding-bottom: 24px;
+
+                            @media only screen and (max-width: 1280px) {
+                                font-size: 30px;
+                                padding-bottom: 18px;
+                            }
+                        }
+                    }
+
+                    .betterdocs-entry-content {
+                        .betterdocs-print-pdf {
+                            display: none;
+                        }
+                    }
+
+                    .betterdocs-author-date {
+                        .update-date {
+                            margin: 0;
+                            padding-top: 0;
+                            border-top: none;
+                        }
+                    }
+					.betterdocs-print-date {
+						margin: 24px 0 0;
+                        padding-top: 16px;
+                        border-top: 1px solid #EAECF0;
+						display: flex;
+                        flex-direction: row;
+						align-items: center;
+						@media only screen and (max-width: 1280px) {
+                            margin: 18px 0 0;
+                            padding-top: 12px;
+                        }
+						.update-date {
+							color: #475467;
+							font-size: 14px;
+							line-height: 20px;
+							margin-left: auto;
+							@media only screen and (max-width: 1280px) {
+								font-size: 12px;
+								line-height: 16px;
+							}
+						}
+					}
+
+                    .betterdocs-entry-footer {
+
+                        .related-articles-title,
+                        .betterdocs-attachment-heading {
+                            font-size: 32px;
+                            line-height: 1.3em;
+                            font-weight: 500;
+                            color: #1D2939;
+                            margin: 0;
+                            padding-bottom: 20px;
+
+                            @media only screen and (max-width: 1280px) {
+                                font-size: 24px;
+                                padding-bottom: 16px;
+                            }
+                        }
+
+                        .betterdocs-tags-print {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            gap: 60px;
+                            margin-top: 40px;
+                            margin-right: 8px;
+
+                            @media only screen and (max-width: 1280px) {
+                                gap: 50px;
+                                margin-top: 30px;
+                            }
+
+                            .betterdocs-tags {
+                                margin: 0;
+                                display: flex;
+                                flex-wrap: wrap;
+                                gap: 8px;
+
+                                a {
+                                    color: #475467;
+                                    font-size: 14px;
+                                    line-height: 20px;
+                                    font-weight: 400;
+                                    padding: 4px 8px;
+                                    background: #F2F4F7;
+                                    border-radius: 4px;
+                                }
+                            }
+
+                            .betterdocs-print-pdf-2 {
+
+                                .betterdocs-print-btn-2 {
+                                    background: #F2F4F7;
+                                    border-radius: 4px;
+                                    width: 28px;
+                                    height: 28px;
+                                    display: inline-flex;
+                                    justify-content: center;
+                                    align-items: center;
+
+                                    svg {
+                                        width: 18px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-article-reactions {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 20px;
+                            padding: 0;
+                            margin-top: 40px;
+
+                            @media only screen and (max-width: 1280px) {
+                                gap: 16px;
+                                margin-top: 30px;
+                            }
+
+                            .betterdocs-article-reactions-heading {
+
+                                .betterdocs-reactions-title-tag {
+                                    font-size: 32px;
+                                    line-height: 1.3em;
+                                    font-weight: 500;
+                                    color: #1D2939;
+                                    margin: 0;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        font-size: 24px;
+                                    }
+                                }
+                            }
+
+                            .betterdocs-article-reactions-box {
+                                padding: 40px 40px 40px 24px;
+                                border-radius: 4px;
+                                border: 1px solid #EAECF0;
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                flex: 1;
+                                gap: 20px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    padding: 30px 30px 30px 18px;
+                                    gap: 16px;
+                                }
+
+                                // Phones: the emoji list keeps its width, so side by side the heading got
+                                // ~26 px and broke into fragments ("W / ha / t ..."). Stack them instead.
+                                @media only screen and (max-width: 600px) {
+                                    flex-direction: column;
+                                    align-items: flex-start;
+                                    padding: 20px;
+
+                                    p {
+                                        word-break: normal;
+                                        overflow-wrap: normal;
+                                    }
+                                }
+
+                                p {
+                                    font-size: 18px;
+                                    line-height: 1.2em;
+                                    color: #475467;
+                                    margin: 0;
+                                    text-align: left;
+                                    &.feedback-message {
+                                        text-align: center;
+                                    }
+
+                                    @media only screen and (max-width: 1280px) {
+                                        font-size: 16px;
+                                    }
+                                }
+
+                                .layout-2 {
+                                    list-style: none;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 16px;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        gap: 12px;
+                                    }
+
+                                    li {
+                                        position: relative;
+
+                                        &:hover {
+                                            .betterdocs-tooltip {
+                                                visibility: visible;
+                                                opacity: 1;
+                                            }
+                                        }
+
+                                        a.betterdocs-emoji {
+                                            display: inline-flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            width: 40px;
+                                            height: 40px;
+                                            background: #F2F4F7;
+                                            border-radius: 50%;
+
+                                            @media only screen and (max-width: 1280px) {
+                                                width: 32px;
+                                                height: 32px;
+                                            }
+
+                                            &:focus-within,
+                                            &:focus-visible {
+                                                outline: 0;
+                                                box-shadow: none;
+                                            }
+                                            img {
+                                                max-width: 25px;
+                                            }
+                                        }
+
+                                        .betterdocs-tooltip {
+                                            position: absolute;
+                                            top: 50%;
+                                            right: 56px;
+                                            transform: translateY(-50%);
+                                            padding: 10px 12px;
+                                            width: 70px;
+                                            border-radius: 10px;
+                                            background: #FFFFFF;
+                                            font-size: 12px;
+                                            font-weight: 600;
+                                            line-height: 1.3em;
+                                            color: #667085;
+                                            text-align: center;
+                                            box-shadow: 0px 0px 24px rgba(16, 24, 40, 0.031372549), 0px 0px 36px rgba(16, 24, 40, 0.0784313725);
+                                            transition: all .35s ease-in-out;
+                                            visibility: hidden;
+                                            opacity: 0;
+
+                                            &::after {
+                                                content: "";
+                                                position: absolute;
+                                                right: -16px;
+                                                top: 50%;
+                                                transform: translateY(-50%);
+                                                border-width: 8px;
+                                                border-style: solid;
+                                                border-color: transparent transparent transparent #FFF;
+                                                width: 16px;
+                                                height: 10px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-attachment-wrapper {
+                            margin: 0;
+                            padding: 0;
+                            margin-top: 40px;
+
+                            @media only screen and (max-width: 1280px) {
+                                margin-top: 30px;
+                            }
+
+                            .attachment-list {
+                                flex-direction: column;
+                                gap: 24px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    gap: 18px;
+                                }
+
+                                .attachment-details {
+                                    flex: 70%;
+                                    width: 70%;
+                                    padding: 12px;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        padding: 8px;
+                                    }
+
+                                    a {
+                                        gap: 4px;
+                                        display: inline-flex;
+
+                                        .attachment-name {
+                                            color: #000;
+                                        }
+
+                                        .attachment-size {
+                                            color: #98A2B3;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-related-articles-container-front {
+                            margin: 0;
+                            padding: 0;
+                            margin-top: 40px;
+
+                            @media only screen and (max-width: 1280px) {
+                                margin-top: 30px;
+                            }
+
+                            .related-articles-list {
+                                flex-direction: column;
+                                gap: 24px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    gap: 18px;
+                                }
+
+                                li {
+                                    border: none;
+                                    flex: 70%;
+                                    width: 70%;
+                                    padding: 0;
+                                    gap: 0;
+                                    padding-left: 18px;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        padding-left: 14px;
+                                    }
+
+                                    a {
+                                        font-size: 16px;
+                                        line-height: 1.2em;
+                                        font-weight: 500;
+                                        color: #667085;
+                                        transition: ease-in-out .35s;
+                                        display: inline-flex;
+                                        position: relative;
+
+                                        @media only screen and (max-width: 1280px) {
+                                            font-size: 14px;
+                                        }
+
+                                        &:hover {
+                                            color: #344054;
+                                            text-decoration: underline;
+
+                                            &::before {
+                                                background: #98A2B3;
+                                            }
+                                        }
+
+                                        &::before {
+                                            content: '';
+                                            position: absolute;
+                                            top: 50%;
+                                            left: -18px;
+                                            transform: translateY(-50%);
+                                            width: 14px;
+                                            height: 14px;
+                                            border-radius: 4px;
+                                            background: #EAECF0;
+                                            transition: ease-in-out .35s;
+
+                                            @media only screen and (max-width: 1280px) {
+                                                left: -14px;
+                                                width: 12px;
+                                                height: 12px;
+                                            }
+                                        }
+
+                                        &:last-child {
+                                            display: none;
+                                        }
+                                    }
+
+                                    svg {
+                                        display: none;
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-social-share {
+                            display: flex;
+                            flex-flow: row wrap;
+                            flex-direction: column;
+                            gap: 24px;
+                            margin-top: 40px;
+
+                            @media only screen and (max-width: 1280px) {
+                                gap: 18px;
+                                margin-top: 30px;
+                            }
+
+                            .betterdocs-social-share-heading {
+                                .betterdocs-social-share-title-tag {
+                                    font-size: 32px;
+                                    line-height: 1.2em;
+                                    font-weight: 500;
+                                    color: #1D2939;
+                                    margin: 0;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        font-size: 24px;
+                                    }
+                                }
+                            }
+
+                            .betterdocs-social-share-links {
+                                padding: 0;
+                                margin: 0;
+                                flex: 1;
+                                align-items: center;
+                                display: flex;
+                                justify-content: flex-start;
+                                gap: 16px;
+                                padding: 40px 24px;
+                                border: 1px solid #EAECF0;
+                                border-radius: 4px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    gap: 12px;
+                                    padding: 30px 18px;
+                                }
+
+                                li {
+                                    list-style: none;
+                                    padding: 0;
+                                    text-align: center;
+                                    flex: unset;
+                                    cursor: pointer;
+                                    margin: 0;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        width: 30px;
+                                        height: 30px;
+                                    }
+
+                                    a {
+                                        width: 40px;
+                                        height: 40px;
+                                        display: inline-flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        border-radius: 50%;
+                                        background: #EAECF0;
+
+                                        @media only screen and (max-width: 1280px) {
+                                            width: 30px;
+                                            height: 30px;
+                                        }
+
+                                        img {
+                                            height: 24px;
+                                            width: 24px;
+
+                                            @media only screen and (max-width: 1280px) {
+                                                width: 18px;
+                                                height: 18px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .feedback-update-form {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin: 40px 0;
+                            padding: 16px;
+                            border-top: 1px solid #EAECF0;
+
+                            @media only screen and (max-width: 1280px) {
+                                margin: 30px 0;
+                                padding: 12px;
+                            }
+
+                            .update-date {
+                                color: #475467;
+                                font-size: 14px;
+                                font-style: italic;
+
+                                @media only screen and (max-width: 1280px) {
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+
+                    .docs-navigation {
+                        padding: 14px 16px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        background-color: #F9FAFB;
+                        border-radius: 4px;
+                        margin: 40px 0;
+						gap: 10px;
+
+                        @media only screen and (max-width: 1280px) {
+                            padding: 10px 12px;
+                            margin: 30px 0;
+                        }
+
+                        a {
+                            display: inline-flex;
+                            margin: 0;
+                            font-size: 14px;
+                            color: #344054;
+
+                            @media only screen and (max-width: 1280px) {
+                                font-size: 12px;
+                            }
+
+                            svg {
+                                fill: #667085;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .betterdocs-full-sidebar-right {
+                padding-left: 0;
+                padding-top: 54px;
+
+                @media only screen and (max-width: 1280px) {
+                    padding-top: 34px;
+                }
+
+                .right-sidebar-toc-container {
+                    top: 50px;
+                    padding-left: 20px;
+                    padding-bottom: 80px;
+
+                    @media only screen and (max-width: 1280px) {
+                        top: 40px;
+                        padding-left: 20px;
+                        padding-bottom: 50px;
+                    }
+
+                    .simplebar-content {
+
+                        display: flex;
+                        flex-direction: column;
+
+                        .betterdocs-toc {
+                            padding: 0 0;
+                            display: inline-flex;
+                            flex-direction: column;
+                            position: sticky;
+                            top: 0px;
+                            max-height: 100vh;
+                            overflow-y: auto;
+                            flex: 1;
+
+                            .toc-title {
+                                color: #667085;
+                                font-size: 16px;
+                                line-height: 26px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    font-size: 14px;
+                                    line-height: 22px;
+                                }
+                            }
+
+                            ul {
+                                padding-left: 18px;
+
+                                display: flex;
+                                flex-direction: column;
+                                gap: 12px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    gap: 8px;
+                                }
+
+                                &.betterdocs-hierarchial-toc {
+                                    position: relative;
+                                    padding-top: 16px;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        padding-top: 12px;
+                                    }
+
+                                    &::before {
+                                        content: '';
+                                        position: absolute;
+                                        top: 0;
+                                        left: 6px;
+                                        width: 1px;
+                                        height: 100%;
+                                        background: #D0D5DD;
+
+                                    }
+                                }
+
+                                li {
+                                    padding: 0;
+                                    a {
+                                        display: inline-flex;
+                                        font-size: 14px;
+                                        line-height: 22px;
+                                        color: #667085;
+                                        font-weight: 500;
+                                        padding: 8px;
+
+                                        @media only screen and (max-width: 1280px) {
+                                            font-size: 12px;
+                                            line-height: 18px;
+                                        }
+
+                                        &.active {
+                                            color: #344054;
+                                            &::after {
+                                                content: "";
+                                                position: absolute;
+                                                left: 5px;
+                                                width: 4px;
+                                                height: 2em;
+                                                background: #A1DCC0;
+                                                border-radius: 4px;
+											}
+                                        }
+
+                                        &::before {
+                                            display: none;
+                                        }
+                                    }
+
+                                    ul {
+                                        li {
+                                            a {
+                                                &.active {
+                                                    &::after {
+                                                        content: "";
+                                                        position: absolute;
+                                                        left: 5px;
+                                                        width: 4px;
+                                                        height: 2em;
+                                                        background: #A1DCC0;
+                                                        border-radius: 4px;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                            &.toc-list-number {
+                                ul {
+                                    li {
+                                        a {
+                                            &:before {
+                                                display: block;
+                                                margin-right: 2px;
+
+											}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-article-reactions {
+                            margin-top: 24px;
+                            padding: 32px 24px;
+                            background-color: #F9FAFB;
+                            border-radius: 4px;
+
+                            @media only screen and (max-width: 1280px) {
+                                margin-top: 30px;
+                                padding: 22px 18px;
+                            }
+
+                            .betterdocs-article-reactions-sidebar {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 12px;
+
+                                @media only screen and (max-width: 1280px) {
+                                    gap: 8px;
+                                }
+
+                                .betterdocs-reactions-title-tag {
+                                    font-size: 1em;
+                                    margin: 0;
+                                    color: #667085;
+                                }
+
+                                .betterdocs-article-reaction-links {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 12px;
+                                    list-style: none;
+
+                                    @media only screen and (max-width: 1280px) {
+                                        gap: 8px;
+                                    }
+
+                                    li {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        gap: 4px;
+                                        padding: 8px;
+                                        border-radius: 4px;
+                                        background-color: transparent;
+                                        transition: ease-in-out .35s;
+                                        cursor: pointer;
+
+                                        a {
+                                            display: inline-flex;
+
+                                            svg {
+                                                width: 16px;
+                                                height: 16px;
+
+                                                @media only screen and (max-width: 1280px) {
+                                                    width: 14px;
+                                                    height: 14px;
+                                                }
+                                            }
+
+                                            img {
+                                                max-width: 16px;
+                                            }
+                                        }
+
+                                        &:hover {
+                                            background-color: #EAECF0;
+                                        }
+
+                                        .betterdocs-tooltip {
+                                            font-size: 14px;
+                                            color: #667085;
+
+                                            @media only screen and (max-width: 1280px) {
+                                                font-size: 12px;
+                                            }
+                                        }
+                                    }
+                                    &.layout-3 {
+                                        li {
+                                            a {
+                                                display: flex;
+                                                align-items: center;
+                                                gap: 5px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .betterdocs-social-share {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 12px;
+                            margin-top: 40px;
+                            padding: 32px 24px;
+                            background-color: #F9FAFB;
+                            border-radius: 4px;
+
+                            @media only screen and (max-width: 1280px) {
+                                gap: 8px;
+                                margin-top: 18px;
+                                padding: 22px 18px;
+                            }
+
+                            .betterdocs-social-share-heading .betterdocs-social-share-title-tag {
+                                font-size: 1em;
+                                margin: 0;
+                                color: #667085;
+                            }
+
+                            .betterdocs-social-share-links {
+                                gap: 8px;
+                                align-items: center;
+                                justify-content: flex-start;
+
+                                li {
+                                    width: 24px;
+                                    height: 24px;
+                                    padding: 0;
+                                    flex: unset;
+                                    cursor: pointer;
+                                    img {
+                                        vertical-align: inherit;
+                                    }
+                                    @media only screen and (max-width: 1280px) {
+                                        width: 20px;
+                                        height: 20px;
+                                    }
+
+                                    a {
+                                        width: 24px;
+                                        height: 24px;
+                                        display: inline-flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        border-radius: 50%;
+                                        background: #EAECF0;
+
+                                        @media only screen and (max-width: 1280px) {
+                                            width: 20px;
+                                            height: 20px;
+                                        }
+
+                                        img {
+                                            width: 15px;
+                                            height: 15px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    button {
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.betterdocs-author-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 16px;
+    margin-bottom: 32px;
+    border-top: 1px solid #EAECF0;
+    border-bottom: 1px solid #EAECF0;
+
+    @media only screen and (max-width: 1280px) {
+        gap: 20px;
+        padding: 12px;
+        margin-top: 18px;
+    }
+
+    .betterdocs-author {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        @media only screen and (max-width: 1280px) {
+            gap: 12px;
+        }
+
+        .author-avatar {
+            img {
+                max-width: 100%;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+
+                @media only screen and (max-width: 1280px) {
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+
+        >span {
+            font-size: 16px;
+            color: #667085;
+
+            @media only screen and (max-width: 1280px) {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .update-date {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 0;
+        padding-top: 0;
+        border-top: none;
+        color: #475467;
+        font-size: 14px;
+        line-height: 20px;
+    }
+}
+
+.betterdocs-shortcode {
+    &>.layout-flex {
+        @at-root .betterdocs-category-list-view-wrapper#{&} {
+            flex-direction: column;
+        }
+    }
+}
+
+.betterdocs-single-layout-8.betterdocs-single-layout-9 {
+    .betterdocs-content-wrapper {
+        .betterdocs-full-sidebar-right {
+            .right-sidebar-toc-container {
+                .simplebar-content {
+
+                    display: flex;
+                    flex-direction: column;
+
+                    .betterdocs-toc {
+                        padding: 0 0;
+                        display: inline-flex;
+                        flex-direction: column;
+                        position: sticky;
+                        top: 0px;
+                        max-height: 50vh;
+                        overflow-y: auto;
+                        flex: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.betterdocs-single-layout-8.betterdocs-single-layout-10 {
+	.betterdocs-content-wrapper {
+		.betterdocs-full-sidebar-right {
+			max-width: 270px;
+			.right-sidebar-toc-container {
+				.simplebar-content {
+					.betterdocs-toc {
+						.toc-title {
+							padding: 0 8px;
+						}
+						ul {
+							padding-left: 0;
+							&.betterdocs-hierarchial-toc {
+								&::before {
+									display: none;
+								}
+							}
+							li {
+								padding: 0;
+								a {
+									&:hover, &.active {
+										background-color: #E8FFF4;
+									}
+									&.active {
+										&::after {
+											display: none;
+										}
+									}
+								}
+							}
+						}
+						&.toc-list-number {
+							ul {
+								li {
+									a {
+										&:before {
+											display: none;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.betterdocs-mobile-nav {
+    display: none;
+    @include responsive-from("tablet") {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 12px;
+        margin-top: 18px;
+        margin-bottom: 32px;
+        border-top: 1px solid #EAECF0;
+        border-bottom: 1px solid #EAECF0;
+    }
+    .betterdocs-sidebar-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: left;
+            color: #667085;
+        }
+    }
+    .betterdocs-mobile-nav-icon-svg {
+        height: 32px;
+        width: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #EAECF0;
+        border-radius: 50%;
+        margin-right: 9px;
+    }
+}
+.betterdocs-mobile-sidebar-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.5); // Optional: To darken the background when sidebar is open
+    display: none;
+    .betterdocs-sidebar-layout-1,
+    .betterdocs-full-sidebar-left,
+    .betterdocs-sidebar.betterdocs-sidebar-layout-6 {
+        display: block;
+        left: -300px;  // Start from off-screen position
+        right: auto;
+        position: fixed;
+        width: 300px;
+        top: 0;
+        bottom: 0;
+        background-color: #fff;
+        z-index: 2;
+        box-shadow: rgba(0, 0, 0, .25) 0 25px 50px -6px;
+        overflow-y: auto;
+    }
+}
+
+.betterdocs-mobile-toc-wrapper {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.5); // Optional: To darken the background when sidebar is open
+    display: none;
+
+    .betterdocs-full-sidebar-right {
+        display: block;
+        right: -300px;  // Start from off-screen position
+        left: auto;
+        position: fixed;
+        width: 300px;
+        top: 0;
+        bottom: 0;
+        background-color: #fff;
+        z-index: 2;
+        box-shadow: rgba(0, 0, 0, .25) 0 25px 50px -6px;
+        overflow-y: auto;
+    }
+}
+.admin-bar {
+    .betterdocs-mobile-sidebar-wrapper {
+        .betterdocs-sidebar-layout-1,
+        .betterdocs-full-sidebar-left,
+        .betterdocs-sidebar.betterdocs-sidebar-layout-6,
+        .betterdocs-mobile-toc-wrapper .betterdocs-full-sidebar-right {
+            padding-top: 46px !important;
+        }
+    }
+    .betterdocs-mobile-toc-wrapper {
+        .betterdocs-full-sidebar-right {
+            padding-top: 56px !important;
+            .betterdocs-toc {
+                padding-right: 20px !important;
+            }
+        }
+    }
+}

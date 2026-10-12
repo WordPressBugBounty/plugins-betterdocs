@@ -1,0 +1,931 @@
+// ── Brand tokens (match Claude design) ───────────────────────────────────────
+$bd-teal-light:        #e0f6f0;
+$bd-teal-dark:         #009067;
+$bd-pagination-active: #00B884;   // active page button background
+$bd-row-selected-bg:   rgb(241, 250, 245); // checked row background (light mode)
+
+// Doc Categories / Tags root wrapper. These screens dropped .betterdocs-faq-wrapper
+// (they use no .bd-faq-* styles), so re-declare the column layout it provided.
+.bd-doc-categories-wrapper,
+.bd-doc-tags-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+// Count badge rendered in the header row next to page title
+.bd-dc-header-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--text-color-100, #f1f4f8);
+    color: var(--text-color-600);
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 28px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+// Shared page root wrapper
+.bd-dc-root {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+// Buttons (shared across categories + tags)
+.bd-dc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &.bd-dc-btn-primary {
+        background: var(--base-color-700, #00b884);
+        color: #fff;
+        &:hover:not(:disabled) { background: #009e71; }
+        &:disabled { opacity: 0.65; cursor: not-allowed; }
+    }
+
+    &.bd-dc-btn-ghost {
+        background: transparent;
+        border-color: var(--text-color-200);
+        color: var(--text-color-700);
+        &:hover { background: var(--text-color-100); }
+    }
+}
+
+// White card container
+.bd-dc-tree-card {
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-200, #e5e7eb);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+// ── Toolbar (language tabs + bulk actions) ────────────────────────────────────
+// Shares the table-header's background and sits flush above it (no divider) so the
+// two read as one connected band atop the white rows — matches the Claude design.
+.bd-dc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 20px;
+    background: var(--page-background, #f4f6f8);
+    border-bottom: 0;
+    min-height: 52px;
+}
+
+// Doc Categories: the toolbar is a direct child of .bd-dc-root (a row ABOVE the
+// card), not part of the card band. Transparent, no padding, gap below the card.
+// (Doc Tags / Knowledge Base keep the in-card band — their toolbar is nested
+//  inside .bd-dc-tree-card, so this direct-child selector doesn't match them.)
+.bd-dc-root > .bd-dc-toolbar {
+    background: transparent;
+    padding: 0;
+    min-height: 0;
+    margin-bottom: 16px;
+}
+
+.bd-dc-toolbar-left,
+.bd-dc-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+// When there is no language plugin the toolbar-left is not rendered, so the
+// bulk actions sit on the LEFT (the toolbar's `justify-content: space-between`
+// places a lone child at the start). With a language plugin they stay right.
+
+.bd-dc-selected-label {
+    font-size: 12px;
+    color: var(--text-color-600);
+    font-weight: 500;
+}
+
+// Language tabs — design "SegmentedTabs": white pill-group on the gray band.
+.bd-dc-lang-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bd-dc-lang-tabs-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-color-500);
+}
+
+.bd-dc-lang-tabs-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    flex-wrap: wrap;
+    background: var(--base-background, #fff);
+    border: 1px solid var(--text-color-200);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.bd-dc-lang-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 13px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color-600);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s ease, color 0.12s ease;
+
+    &:hover {
+        color: var(--text-color-900);
+    }
+
+    &.bd-dc-lang-tab--active {
+        background-color: var(--text-color-50);
+        color: var(--base-color-700);
+    }
+}
+
+// Count pill inside a tab — green when its tab is active, neutral otherwise.
+.bd-dc-lang-tab-count {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--text-color-100, #f1f4f8);
+    color: var(--text-color-500);
+}
+
+.bd-dc-lang-tab--active .bd-dc-lang-tab-count {
+    background: #fff;
+    color: var(--base-color-700);
+}
+
+// Bulk actions dropdown + Apply button
+.bd-dc-bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+// Bulk-action picker — reuses the FAQ Builder "Order" dropdown (react-select,
+// `.betterdocs-dropdown-*`) so the open menu list matches the FAQ Builder.
+// The base FAQ-order styles are scoped under `.betterdocs-dashboard-header`
+// (a different DOM container), so they don't reach the toolbar — pull them in
+// here via the shared mixin instead. See utils/_mixin.scss.
+.bd-dc-bulk-order {
+    @include betterdocs-dropdown-styles;
+
+    // No leading icon here (the FAQ Order dropdown has a sort glyph) — drop the
+    // icon gutter the shared style reserves on the control's left edge. Match the
+    // mixin's selector depth (`.betterdocs-dropdown-select .betterdocs-dropdown__control`)
+    // so this override actually wins on specificity.
+    .betterdocs-dropdown-select .betterdocs-dropdown__control {
+        padding-left: 0;
+    }
+}
+
+// Rely on the .bd-dc-bulk-actions gap before the Apply button rather than the
+// mixin's header-spacing margin.
+.bd-dc-bulk-actions .betterdocs-dropdown-wrapper {
+    margin-right: 0;
+}
+
+// Apply button — styled as an outlined action button
+.bd-dc-btn-apply {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 6px;
+    border: none;
+    background: rgb(241, 244, 248);
+    color: var(--text-color-800, #1d2939);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 2px #1018280d;
+    transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+        background: #e7ecf2;
+    }
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+}
+
+// Table header row — match the All Docs list-table header (transparent bg,
+// subtle bottom border, capitalized).
+.bd-dc-table-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: transparent;
+    border-bottom: 1px solid var(--text-color-150);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.06em;
+    color: var(--text-color-500);
+
+    .bd-dc-col-name    { flex: 1; min-width: 0; }
+    .bd-dc-col-count   { width: 70px; text-align: center; flex-shrink: 0; }
+    .bd-dc-col-actions { width: 130px; text-align: right; flex-shrink: 0; }
+}
+
+// Grip spacer in tree header — mirrors .bd-dc-grip width (15px icon + 4+4px padding = 23px)
+// so the header checkbox aligns with row checkboxes
+.bd-dc-grip-spacer {
+    width: 23px;
+    flex-shrink: 0;
+}
+
+// In the tree header, indent "Name & Description" to align with depth-0 category names.
+// Offset = connector-depth0(8px) + gap(8px) + chevron(22px) + gap(8px) = 46px
+.bd-dc-table-header--tree .bd-dc-col-name {
+    padding-left: 46px;
+}
+
+// Table body
+.bd-dc-table-body {
+    display: flex;
+    flex-direction: column;
+}
+
+// Individual row — 64px min-height
+.bd-dc-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--text-color-100, #eaecf0);
+    transition: background 0.12s ease;
+    min-height: 64px;
+    position: relative;
+    box-sizing: border-box;
+
+    &:last-child { border-bottom: none; }
+
+    &:hover { background: var(--page-background, #f5f6fb); }
+
+    // Visible teal separator keeps rows distinct when all are selected
+    &.bd-dc-row--selected {
+        background: $bd-row-selected-bg;
+        border-bottom-color: #c5ede0;
+    }
+
+    &.bd-dc-row--drop-before::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: $bd-teal-dark;
+        border-radius: 2px;
+        z-index: 1;
+    }
+    &.bd-dc-row--drop-after::after {
+        content: "";
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 2px;
+        background: $bd-teal-dark;
+        border-radius: 2px;
+        z-index: 1;
+    }
+    &.bd-dc-row--drop-inside {
+        outline: 2px solid lighten($bd-teal-dark, 20%);
+        outline-offset: -2px;
+        border-radius: 4px;
+    }
+
+    // Brief flash on a just-created row so the admin can spot it after the
+    // list auto-jumps to its page.
+    &.bd-dc-row--highlight {
+        animation: bd-dc-row-flash 2s ease-out;
+    }
+}
+
+@keyframes bd-dc-row-flash {
+    0%   { background: var(--base-color-100, #d1fadf); }
+    70%  { background: var(--base-color-100, #d1fadf); }
+    100% { background: transparent; }
+}
+
+// Grip handle
+.bd-dc-grip {
+    cursor: grab;
+    color: var(--text-color-300);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 4px;
+    &:hover { color: var(--text-color-500); background: var(--text-color-100); }
+}
+
+// Custom checkbox — scoped under .bd-dc-tree-card to beat WP core input styles
+.bd-dc-tree-card .bd-dc-checkbox {
+    flex-shrink: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid var(--text-color-300, #d0d5dd);
+    border-radius: 3px;
+    background: var(--base-background, #fff);
+    cursor: pointer;
+    position: relative;
+    margin: 0;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: border-color 0.12s ease, background 0.12s ease;
+
+    &:focus,
+    &:active,
+    &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: $bd-teal-dark;
+    }
+
+    &:hover { border-color: $bd-teal-dark; }
+
+    &:checked {
+        background: $bd-teal-dark;
+        border-color: $bd-teal-dark;
+        box-shadow: none !important;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 9px;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg);
+        }
+    }
+
+    &:indeterminate {
+        background: $bd-teal-dark;
+        border-color: $bd-teal-dark;
+        box-shadow: none !important;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 7px;
+            height: 2px;
+            background: #fff;
+        }
+    }
+}
+
+// ── CSS tree connector lines ──────────────────────────────────────────────────
+// align-self: stretch makes the span fill the full row height so absolute
+// children can draw lines from top:0 to bottom:0.
+.bd-dc-connector {
+    position: relative;
+    flex-shrink: 0;
+    align-self: stretch;
+    display: inline-block;
+}
+
+.bd-dc-connector-vline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: var(--text-color-200, #e2e8f0);
+}
+
+.bd-dc-connector-lshape {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1.5px;
+    background: var(--text-color-200, #e2e8f0);
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 1.5px;
+        background: var(--text-color-200, #e2e8f0);
+    }
+
+    &.bd-dc-connector-lshape--last {
+        background: linear-gradient(
+            to bottom,
+            var(--text-color-200, #e2e8f0) 50%,
+            transparent 50%
+        );
+    }
+}
+
+// Chevron — light teal background, dark teal icon, rotates 90° when expanded
+.bd-dc-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--text-color-100, #f1f5f9);
+    border: 1px solid var(--text-color-150, #e9ecef);
+    cursor: pointer;
+    color: var(--text-color-500, #64748b);
+    // rotate right-pointing > to down-pointing ∨ when open
+    transition: transform 0.15s ease, background 0.12s ease;
+    padding: 0;
+
+    &.bd-dc-chevron--open { transform: rotate(90deg); }
+}
+
+.bd-dc-chevron-placeholder {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+// Category icon thumbnail (sits between the chevron and the name cell)
+.bd-dc-row-icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--base-background, #f1f5f9);
+    border: 1px solid var(--text-color-200, #e2e8f0);
+    margin-right: 4px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+// Name / slug / description cell
+.bd-dc-cell-name {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 0;
+}
+
+.bd-dc-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color-900);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+
+    &:hover { color: $bd-teal-dark; }
+}
+
+.bd-dc-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+
+.bd-dc-slug-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: var(--text-color-100, #f1f5f9);
+    color: var(--text-color-500, #64748b);
+    font-size: 11px;
+    font-family: monospace;
+    white-space: nowrap;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid var(--text-color-150, #e9ecef);
+    flex-shrink: 0;
+}
+
+.bd-dc-children-count {
+    font-size: 11px;
+    color: var(--text-color-400, #94a3b8);
+    white-space: nowrap;
+    margin-left: 6px;
+    flex-shrink: 0;
+}
+
+.bd-dc-desc {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-color-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+
+    &.bd-dc-desc--empty { color: var(--text-color-300, #cbd5e1); }
+}
+
+// Count badge
+.bd-dc-cell-count {
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+// Plain text (matches the All Docs list-table cells) — no pill/badge.
+.bd-dc-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-850);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+// Row action buttons — always visible
+.bd-dc-cell-actions {
+    width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+// Row action buttons, shared by Doc Categories, Doc Tags, Multiple KB (Pro)
+// and API Docs (Pro). Colours match the AI Chatbot Logs row actions so a
+// delete/edit control reads the same wherever it appears:
+//   resting  --text-color-500
+//   hover    tinted by intent — green for constructive, red for delete
+//
+// Every value is a real token, and all four flip with dark mode
+// (--base-color-75 #ecfdf3 → #1f283d, --danger-50 #fff1f3 → #190207,
+// --text-color-500 #98a2b3 → #d0d5dd), which is why there is no longer a
+// dark-mode override block for these buttons further down this file.
+//
+// Note the previous rule used `--error-50` / `--error-600`, which are not
+// tokens in this design system — every use fell through to the hardcoded
+// hex fallback. The real names are `--danger-*`.
+.bd-dc-row-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 30px;
+    padding: 0;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: var(--text-color-500);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover {
+        background: var(--base-color-75);
+        color: var(--base-color-700);
+    }
+
+    &.bd-dc-row-action-delete:hover {
+        background: var(--danger-50);
+        color: var(--danger-600);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+// LEFT: "Showing X–Y of Z" + divider + "Rows per page [select]"
+// RIGHT: [«][‹] [1][2][3] [›][»]
+.bd-dc-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0px;
+    min-height: 56px;
+}
+
+// Left cluster
+.bd-dc-pagination-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bd-dc-pagination-info {
+    font-size: 13px;
+    color: var(--text-color-600);
+    white-space: nowrap;
+
+    strong {
+        font-weight: 600;
+        color: var(--text-color-900);
+    }
+}
+
+// Thin vertical divider between info and rows-per-page
+.bd-dc-pagination-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--text-color-200, #e2e8f0);
+    flex-shrink: 0;
+}
+
+.bd-dc-rows-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bd-dc-rows-label {
+    font-size: 12px;
+    color: var(--text-color-500);
+    white-space: nowrap;
+    user-select: none;
+}
+
+// Wrapper provides position:relative for the chevron overlay
+.bd-dc-per-page-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+// Scoped under .bd-dc-pagination to beat WP core select styles
+// !important on height/min-height to override .wp-core-ui select { min-height: 40px }
+// appearance: none — custom chevron is overlaid via .bd-dc-per-page-chevron
+.bd-dc-pagination .bd-dc-per-page-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    line-height: 32px !important;
+    padding: 0 28px 0 12px !important;
+    border: 1px solid var(--text-color-200, #e2e8f0) !important;
+    border-radius: 8px;
+    background: var(--base-background, #fff);
+    color: var(--text-color-700);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none !important;
+    box-shadow: none !important;
+    min-width: 60px;
+    transition: border-color 0.12s ease;
+    vertical-align: middle;
+
+    &:hover {
+        border-color: $bd-teal-dark !important;
+    }
+
+    &:focus,
+    &:active,
+    &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: $bd-teal-dark !important;
+    }
+}
+
+.bd-dc-per-page-chevron {
+    position: absolute;
+    right: 8px;
+    pointer-events: none;
+    color: var(--text-color-400);
+    display: flex;
+    align-items: center;
+}
+
+// Right cluster: nav buttons
+.bd-dc-pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+// Base nav button (first/prev/next/last arrows) and page-number buttons
+.bd-dc-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--text-color-200, #e2e8f0);
+    background: var(--base-background, #fff);
+    color: var(--text-color-500);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+
+    &:focus,
+    &:active,
+    &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    &:hover:not(:disabled):not(.bd-dc-page-btn--active) {
+        background: var(--page-background, #f5f6fb);
+        color: var(--text-color-900);
+        border-color: var(--text-color-300, #d0d5dd);
+    }
+
+    &.bd-dc-page-btn--active {
+        background: $bd-pagination-active;
+        color: #fff;
+        border-color: $bd-pagination-active;
+        cursor: default;
+    }
+
+    &:disabled {
+        color: var(--text-color-300, #d0d5dd);
+        cursor: not-allowed;
+        background: var(--base-background, #fff);
+    }
+}
+
+// Page-number buttons may be wider (e.g. "10", "100")
+.bd-dc-page-btn--num {
+    min-width: 34px;
+    width: auto;
+    padding: 0 10px;
+}
+
+// Ellipsis between page groups
+.bd-dc-page-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+    color: var(--text-color-400);
+    user-select: none;
+    cursor: default;
+}
+
+// Loader / error / empty
+.bd-dc-loader,
+.bd-dc-error,
+.bd-dc-empty {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--text-color-500);
+    font-size: 14px;
+}
+.bd-dc-error { color: var(--error-600, #dc2626); }
+
+// ── Dark mode overrides ───────────────────────────────────────────────────────
+// CSS variables in _common.scss handle most theming automatically.
+// This block overrides elements that use hardcoded SCSS variables ($bd-teal-light,
+// $bd-row-selected-bg, $bd-pagination-active) which don't adapt on their own.
+.betterdocs-admin.betterdocs-dark-mode {
+    // Selected row: replace light teal bg with a subtle dark teal
+    .bd-dc-row {
+        &.bd-dc-row--selected {
+            background: rgba(0, 184, 132, 0.08);
+            border-bottom-color: rgba(0, 184, 132, 0.18);
+        }
+        &.bd-dc-row--drop-inside {
+            outline-color: rgba(0, 184, 132, 0.45);
+        }
+    }
+
+    // Slug badge — bg/border are already CSS vars but reinforce for clarity
+    .bd-dc-slug-badge {
+        background: var(--text-color-100);
+        border-color: var(--text-color-200);
+    }
+
+    // Checkbox: use a slightly lighter dark bg so it's distinct from the row
+    .bd-dc-tree-card .bd-dc-checkbox {
+        background: var(--text-color-100);
+        border-color: var(--text-color-300);
+    }
+
+    // Per-page select in pagination
+    .bd-dc-pagination .bd-dc-per-page-select {
+        background: var(--text-color-50, #101113) !important;
+        border-color: var(--text-color-100, #22242a) !important;
+        color: var(--text-color-700) !important;
+    }
+
+    // Nav page buttons
+    .bd-dc-page-btn {
+        background: var(--base-background);
+        border-color: var(--text-color-100);
+
+        &:hover:not(:disabled):not(.bd-dc-page-btn--active) {
+            background: var(--text-color-100);
+            color: var(--text-color-900);
+            border-color: var(--text-color-300);
+        }
+    }
+
+    // Apply button
+    .bd-dc-btn-apply {
+        background: var(--text-color-100);
+        border-color: var(--text-color-300);
+        color: var(--text-color-700);
+
+        &:hover:not(:disabled) {
+            background: var(--text-color-50);
+        }
+    }
+
+    // Connector lines — var(--text-color-200) is #0A0A0B in dark mode (invisible);
+    // use --text-color-300 (#36405a) for visible parent/child indicator lines.
+    .bd-dc-connector-vline {
+        background: var(--text-color-300, #36405a);
+    }
+
+    .bd-dc-connector-lshape {
+        background: var(--text-color-300, #36405a);
+
+        &::after {
+            background: var(--text-color-300, #36405a);
+        }
+
+        &.bd-dc-connector-lshape--last {
+            background: linear-gradient(
+                to bottom,
+                var(--text-color-300, #36405a) 50%,
+                transparent 50%
+            );
+        }
+    }
+
+    // (No .bd-dc-row-action override here any more — the base rule is written
+    // entirely in tokens that already flip for dark mode, so duplicating it
+    // only risked the two copies drifting apart.)
+
+    // Grip handle — lighter so it's visible on dark rows
+    .bd-dc-grip {
+        color: var(--text-color-500);
+    }
+}

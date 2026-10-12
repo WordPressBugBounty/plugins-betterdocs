@@ -1,0 +1,61 @@
+// CHECKED:
+
+.betterdocs-footer {
+    padding: 10px 20px 30px;
+    @include for(
+        ".betterdocs-category-grid-wrapper > .betterdocs-category-grid-inner-wrapper"
+    ) {
+        &:last-child {
+            flex-grow: 1;
+        }
+    }
+    button,
+    a {
+        display: inline-flex;
+        font-size: 16px;
+        color: #528ffe;
+        border: 1px solid #528ffe;
+        border-radius: 50px;
+        padding: 10px 20px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        &:focus,
+        &:hover {
+            background-color: #528ffe;
+            color: #fff;
+            border-color: #528ffe;
+        }
+    }
+    @include for(".betterdocs-category-grid-list-inner-wrapper.layout-6") {
+        padding: 0px;
+        button,
+        a {
+            border: none;
+            padding: 0;
+            display: inline-flex;
+            justify-content: stretch;
+            align-items: center;
+            text-decoration: none;
+            margin: 0;
+            font-weight: 600;
+            font-size: 15px;
+            line-height: 50px;
+            color: #523be9;
+            transition: all 0.2s ease-in-out;
+            border-radius: initial;
+            gap: 5px;
+            &:hover,
+            &:focus {
+                cursor: pointer;
+                background-color: initial;
+                outline: none;
+            }
+            &:hover{
+                gap: 9px;
+            }
+        }
+    }
+}
