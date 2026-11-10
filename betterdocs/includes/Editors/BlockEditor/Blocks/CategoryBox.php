@@ -116,7 +116,8 @@ class CategoryBox extends Block {
 				'layout-4',
 				'single-kb'
 			];
-			$column                 = is_tax( 'doc_category' ) ? 3 : $attributes['layout4Col'];
+			// At least one column, or the modulo below is a DivisionByZeroError (#256).
+			$column                 = is_tax( 'doc_category' ) ? 3 : max( 1, (int) $attributes['layout4Col'] );
 			$term_count             = $this->get_terms_count_conditionally( $terms_object );
 			$reminder               = $term_count % $column;
 			$styles                .= "--column: $column;";
@@ -181,7 +182,7 @@ class CategoryBox extends Block {
 		}
 
 		if ( $attributes['layout'] == 'layout-4' ) {
-			$column                   = is_tax( 'doc_category' ) ? 3 : $attributes['layout4Col'];
+			$column                   = is_tax( 'doc_category' ) ? 3 : max( 1, (int) $attributes['layout4Col'] );
 			$term_count               = $this->get_terms_count_conditionally( $terms_object );
 			$reminder                 = $term_count % $column;
 			$_params['show_icon']     = $this->attributes['showIcon'];

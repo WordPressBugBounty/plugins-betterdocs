@@ -42,7 +42,7 @@ class DeleteFAQGroup extends AbilityBase {
 		$this->id          = 'betterdocs/delete-faq-group';
 		$this->label       = __( 'Delete FAQ group', 'betterdocs' );
 		$this->description = __( 'Delete a BetterDocs FAQ group. By default its questions survive without a group; with with_all_faqs true every FAQ in the group is permanently deleted, including drafts. Docs that referenced the group stop showing it.', 'betterdocs' );
-		$this->capability  = 'edit_others_docs';
+		$this->capability  = 'read_faq_builder';
 	}
 
 	/**

@@ -310,6 +310,30 @@ trait ShapesFAQs {
 	}
 
 	/**
+	 * Is this a WooCommerce Product FAQ?
+	 *
+	 * Product FAQs share the `betterdocs_faq` post type but belong to the
+	 * storefront, not the FAQ Builder these tools manage, so the tools treat
+	 * them as absent rather than letting an agent edit or delete them.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @param int $id Post id.
+	 * @return bool
+	 */
+	protected function is_product_faq( $id ) {
+		if ( 'product' === get_post_meta( (int) $id, '_betterdocs_faq_scope', true ) ) {
+			return true;
+		}
+
+		$terms = taxonomy_exists( 'betterdocs_product_faq_category' )
+			? wp_get_object_terms( (int) $id, 'betterdocs_product_faq_category', [ 'fields' => 'ids' ] )
+			: [];
+
+		return is_array( $terms ) && ! empty( $terms );
+	}
+
+	/**
 	 * Load one FAQ as a REST item, refusing anything that is not an FAQ.
 	 *
 	 * @since 4.9.0
@@ -321,7 +345,7 @@ trait ShapesFAQs {
 		$id   = (int) $id;
 		$post = $id > 0 ? get_post( $id ) : null;
 
-		if ( ! $post || self::FAQ_POST_TYPE !== $post->post_type ) {
+		if ( ! $post || self::FAQ_POST_TYPE !== $post->post_type || $this->is_product_faq( $id ) ) {
 			return AbilityError::not_found( 'FAQ', $id );
 		}
 
@@ -384,8 +408,8 @@ trait ShapesFAQs {
 	 * Not `wp_insert_term()`: that runs no capability check at all, and not
 	 * `POST wp/v2/betterdocs_faq_category` either, which is gated on
 	 * `edit_doc_terms` and would refuse a user these tools are meant to serve
-	 * (the FAQ Builder's own gate is `edit_others_posts || edit_others_docs` —
-	 * ADR-005). The route also carries the side effects the Builder depends on:
+	 * (the FAQ Builder's own gate is `read_faq_builder`, #257). The route also
+	 * carries the side effects the Builder depends on:
 	 * `created_betterdocs_faq_category` stamps the new group's `order` and
 	 * `status` meta.
 	 *
@@ -495,6 +519,11 @@ trait ShapesFAQs {
 
 		switch ( $code ) {
 			case 'rest_forbidden':
+				// What the FAQ Builder's own routes answer when their
+				// permission callback refuses: they ask for read_faq_builder,
+				// the capability that opens the FAQ Builder screen (#257).
+				return AbilityError::capability_missing( 'read_faq_builder', $what );
+
 			case 'rest_forbidden_context':
 			case 'rest_cannot_create':
 			case 'rest_cannot_edit':
@@ -502,8 +531,8 @@ trait ShapesFAQs {
 			case 'rest_cannot_delete':
 			case 'rest_cannot_read':
 			case 'rest_cannot_update':
-				// Every FAQ route is gated on the one additive capability
-				// BetterDocs adds there, so there is only one capability to name.
+				// The `wp/v2/betterdocs_faq` reads and status changes, which
+				// the docs capabilities govern.
 				return AbilityError::capability_missing( 'edit_others_docs', $what );
 
 			case 'rest_cannot_publish':

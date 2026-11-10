@@ -111,6 +111,9 @@ class Sidebar extends Block {
 		if ( $term_args['orderby'] == 'doc_category_order' ) {
 			$term_args['meta_key'] = 'doc_category_order';
 			$term_args['orderby']  = 'meta_value_num';
+			// Keep categories without the base order key, ordered by the current
+			// language's key first (Query::betterdocs_order_terms_clauses(), #306).
+			$term_args['betterdocs_order'] = true;
 		}
 		return $term_args;
 	}

@@ -3,7 +3,9 @@
 namespace WPDeveloper\BetterDocs\Insights;
 
 use WPDeveloper\BetterDocs\Utils\Base;
+use WPDeveloper\BetterDocs\Utils\UsageCounter;
 use WPDeveloper\BetterDocs\Admin\ReportEmail;
+use WPDeveloper\BetterDocs\AI\ProviderFactory;
 
 /**
  * Exit if accessed directly
@@ -66,6 +68,11 @@ class Collector extends Base {
 		'enable_ai_actions',
 		'enable_markdown_endpoint',
 		'enable_listen',
+		// 4.9.0 MCP server, 4.9.1 print template, 4.8.0 lazy sidebar.
+		'enable_mcp',
+		'print_enable_logo',
+		'print_enable_footer',
+		'archive_lazy_load_descendants',
 	];
 
 	public function __construct() {
@@ -90,6 +97,8 @@ class Collector extends Base {
 				'bd_builders'   => $this->builders(),
 				'bd_ai'         => $this->ai(),
 				'bd_config'     => $this->config_posture(),
+				'bd_mcp'        => $this->mcp(),
+				'bd_usage'      => $this->usage(),
 			];
 			set_transient( self::CACHE_KEY, $cached, DAY_IN_SECONDS );
 		}
@@ -115,7 +124,12 @@ class Collector extends Base {
 		$settings = betterdocs()->settings;
 		$flags    = [];
 		foreach ( self::FEATURE_FLAGS as $key ) {
-			$flags[ $key ] = (int) (bool) $settings->get( $key, false );
+			// No default argument: Settings::get() returns a passed default in
+			// place of the setting's own when it was never saved, so `false`
+			// here reported every on-by-default feature as off until an admin
+			// saved settings (enable_listen, collect_analytics_data, …).
+			// Corrected in Free 4.9.6 / Pro 4.4.0.
+			$flags[ $key ] = (int) (bool) $settings->get( $key );
 		}
 		return $flags;
 	}
@@ -137,7 +151,32 @@ class Collector extends Base {
 			'glossaries'             => $this->term_count( 'glossaries' ),
 			'betterdocs_faq_category' => $this->term_count( 'betterdocs_faq_category' ),
 			'avg_docs_per_category'  => $doc_category > 0 ? round( $docs / $doc_category, 2 ) : 0,
+			// Product FAQ for WooCommerce (4.6.0): published FAQs on the Product tab.
+			'product_faqs'           => $this->product_faq_count(),
+			// GIFs served as video (4.9.4): GIF attachments linked to an MP4.
+			'gif_videos'             => $this->meta_count( '_betterdocs_gif_video' ),
 		];
+	}
+
+	protected function product_faq_count() {
+		global $wpdb;
+		return (int) $wpdb->get_var(
+			"SELECT COUNT( DISTINCT p.ID ) FROM {$wpdb->posts} p
+			 INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+			 WHERE p.post_type = 'betterdocs_faq' AND p.post_status = 'publish'
+			   AND pm.meta_key = '_betterdocs_faq_scope' AND pm.meta_value = 'product'"
+		);
+	}
+
+	/** Posts carrying a non-empty meta key (one indexed COUNT). */
+	protected function meta_count( $meta_key ) {
+		global $wpdb;
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT( DISTINCT post_id ) FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value <> '' AND meta_value <> '0'",
+				$meta_key
+			)
+		);
 	}
 
 	/**
@@ -230,8 +269,9 @@ class Collector extends Base {
 			 WHERE pm.meta_key = '_elementor_edit_mode' AND p.post_type = 'docs' LIMIT 1"
 		);
 
-		$gutenberg = 0;
-		$shortcode = 0;
+		$gutenberg    = 0;
+		$shortcode    = 0;
+		$code_snippet = 0;
 		$recent    = get_posts(
 			[
 				'post_type'        => 'docs',
@@ -250,15 +290,20 @@ class Collector extends Base {
 			if ( ! $shortcode && strpos( (string) $post->post_content, '[betterdocs' ) !== false ) {
 				$shortcode = 1;
 			}
-			if ( $gutenberg && $shortcode ) {
+			// Code Snippet / Code Snippet Tab blocks (4.8.2), same sample.
+			if ( ! $code_snippet && strpos( (string) $post->post_content, '<!-- wp:betterdocs/code-snippet' ) !== false ) {
+				$code_snippet = 1;
+			}
+			if ( $gutenberg && $shortcode && $code_snippet ) {
 				break;
 			}
 		}
 
 		return [
-			'elementor' => $elementor,
-			'gutenberg' => $gutenberg,
-			'shortcode' => $shortcode,
+			'elementor'    => $elementor,
+			'gutenberg'    => $gutenberg,
+			'shortcode'    => $shortcode,
+			'code_snippet' => $code_snippet,
 		];
 	}
 
@@ -281,14 +326,22 @@ class Collector extends Base {
 			&& betterdocs()->is_pro_active()
 		);
 
+		// 4.8.0 multi-platform: which platform/model the AI Content Suite runs on,
+		// and whether that platform's key is set. `autowrite_key_set` below only
+		// ever looked at the OpenAI key, so it reads 0 on Gemini and Claude sites.
+		$platform = (string) $settings->get( 'ai_platform', 'openai' );
+
 		return [
-			'write_with_ai'         => (int) (bool) $settings->get( 'enable_write_with_ai', false ),
-			'article_summary'       => (int) (bool) $settings->get( 'enable_article_summary', false ),
+			'platform'              => $platform,
+			'model'                 => (string) $settings->get( 'ai_model' ),
+			'platform_key_set'      => (int) ! empty( $settings->get( ProviderFactory::key_field_for( $platform ), '' ) ),
+			'write_with_ai'         => (int) (bool) $settings->get( 'enable_write_with_ai' ),
+			'article_summary'       => (int) (bool) $settings->get( 'enable_article_summary' ),
 			'chatbot'               => (int) (bool) $settings->get( 'enable_ai_chatbot', false ),
 			'autowrite_key_set'     => (int) ! empty( $settings->get( 'ai_autowrite_api_key', '' ) ),
 			'chatbot_key_set'       => (int) ! empty( $settings->get( 'ai_chatbot_api_key', '' ) ),
-			'write_with_ai_model'   => (string) $settings->get( 'write_with_ai_model', '' ),
-			'article_summary_model' => (string) $settings->get( 'article_summary_model', '' ),
+			'write_with_ai_model'   => (string) $settings->get( 'write_with_ai_model' ),
+			'article_summary_model' => (string) $settings->get( 'article_summary_model' ),
 			// AI adoption toggles introduced with the 4.6.3 AI surfaces.
 			'sample_docs'           => (int) (bool) $settings->get( 'enable_ai_sample_docs', true ),
 			'docs_ai_suite'         => (int) (bool) $settings->get( 'enable_docs_ai_suite', true ),
@@ -307,14 +360,66 @@ class Collector extends Base {
 
 		return [
 			'layout'              => (string) $settings->get( 'layout', '' ),
-			'permalink_structure' => (string) $settings->get( 'permalink_structure', '' ),
-			'reporting_frequency' => (string) $settings->get( 'reporting_frequency', '' ),
-			'posts_number'        => (int) $settings->get( 'posts_number', 0 ),
-			'column_number'       => (int) $settings->get( 'column_number', 0 ),
+			'permalink_structure' => (string) $settings->get( 'permalink_structure' ),
+			'reporting_frequency' => (string) $settings->get( 'reporting_frequency' ),
+			'posts_number'        => (int) $settings->get( 'posts_number' ),
+			'column_number'       => (int) $settings->get( 'column_number' ),
 			// Analytics Overview (4.6.3) posture — key-set booleans only, never secrets.
 			'ga4_configured'      => (int) ! empty( $settings->get( 'ga4_api_secret', '' ) ),
 			'geoip_configured'    => (int) ! empty( $settings->get( 'maxmind_license_key', '' ) ),
 			'dark_mode'           => (int) (bool) $settings->get( 'dark_mode', false ),
+		];
+	}
+
+	/**
+	 * MCP server (4.9.0) adoption: is it on, how many editors registered, how
+	 * many are connected now, and which kinds. Editor names are matched to a
+	 * fixed list; the free-text client name itself is never shipped.
+	 */
+	protected function mcp() {
+		$state   = get_option( 'betterdocs_mcp_oauth', [] );
+		$state   = is_array( $state ) ? $state : [];
+		$clients = isset( $state['clients'] ) && is_array( $state['clients'] ) ? $state['clients'] : [];
+		$refresh = isset( $state['refresh'] ) && is_array( $state['refresh'] ) ? $state['refresh'] : [];
+
+		$now    = time();
+		$active = 0;
+		foreach ( $refresh as $entry ) {
+			if ( is_array( $entry ) && (int) ( $entry['expires'] ?? 0 ) >= $now ) {
+				++$active;
+			}
+		}
+
+		$editors = [ 'claude' => 0, 'cursor' => 0, 'vscode' => 0, 'windsurf' => 0, 'chatgpt' => 0, 'other' => 0 ];
+		$match   = [ 'claude' => 'claude', 'cursor' => 'cursor', 'vscode' => 'code', 'windsurf' => 'windsurf', 'chatgpt' => 'chatgpt' ];
+		foreach ( $clients as $client ) {
+			$name = strtolower( (string) ( is_array( $client ) ? ( $client['client_name'] ?? $client['name'] ?? '' ) : '' ) );
+			$kind = 'other';
+			foreach ( $match as $editor => $needle ) {
+				if ( '' !== $name && false !== strpos( $name, $needle ) ) {
+					$kind = $editor;
+					break;
+				}
+			}
+			++$editors[ $kind ];
+		}
+
+		return [
+			'enabled'            => (int) (bool) betterdocs()->settings->get( 'enable_mcp', false ),
+			'clients'            => count( $clients ),
+			'active_connections' => $active,
+			'editors'            => $editors,
+		];
+	}
+
+	/**
+	 * How often non-AI reader features are used ({@see UsageCounter}): running
+	 * total plus last 7 / 30 days.
+	 */
+	protected function usage() {
+		return [
+			// Markdown copies served: Copy page, View as Markdown, AI fetchers.
+			'markdown_views' => UsageCounter::get( 'markdown_views' ),
 		];
 	}
 }

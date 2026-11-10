@@ -41,7 +41,7 @@ class DeleteFAQ extends AbilityBase {
 		$this->id          = 'betterdocs/delete-faq';
 		$this->label       = __( 'Delete FAQ', 'betterdocs' );
 		$this->description = __( 'Delete a BetterDocs FAQ. This is permanent on a standard site: WordPress sends only posts and pages to the trash, so a custom post type like an FAQ is removed outright. The answer reports whether it was trashed or deleted.', 'betterdocs' );
-		$this->capability  = 'edit_others_docs';
+		$this->capability  = 'read_faq_builder';
 	}
 
 	/**
@@ -106,7 +106,7 @@ class DeleteFAQ extends AbilityBase {
 		$id   = isset( $input['id'] ) ? (int) $input['id'] : 0;
 		$post = $id > 0 ? get_post( $id ) : null;
 
-		if ( ! $post || self::FAQ_POST_TYPE !== $post->post_type ) {
+		if ( ! $post || self::FAQ_POST_TYPE !== $post->post_type || $this->is_product_faq( $id ) ) {
 			return AbilityError::not_found( 'FAQ', $id );
 		}
 

@@ -542,6 +542,13 @@ input.betterdocs-template-field {
 	border-radius: 2px;
 }
 
+// Informational: the token fields were raised to the selected model's minimum.
+.betterdocs-min-token-notice.betterdocs-min-token-raised {
+	background: #ecfdf3;
+	border-left-color: #12b76a;
+	color: #05603a;
+}
+
 .adv-btn-right {
 	text-align: right;
 }

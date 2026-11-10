@@ -7,12 +7,11 @@ use WPDeveloper\BetterDocs\Utils\AIHelper;
 /**
  * OpenAI Chat Completions provider.
  *
- * Adds the GPT-5 family handling on top of the shared OpenAI-compatible base:
- * GPT-5 models require `max_completion_tokens`, reject a custom temperature, and
- * bill internal reasoning against the output budget — so we send a low
- * `reasoning_effort` to avoid empty completions. The original GPT-5 generation
- * accepts `minimal`; the gpt-5.x point releases (e.g. gpt-5.5) dropped it and
- * need `none` instead (see default_reasoning_effort()).
+ * Adds the reasoning-model handling on top of the shared OpenAI-compatible base:
+ * GPT-5 and GPT-6 models require `max_completion_tokens`, reject a custom
+ * temperature, and bill internal reasoning against the output budget — so we
+ * send a low `reasoning_effort` to avoid empty completions. Each generation
+ * accepts a different lowest effort (see default_reasoning_effort()).
  *
  * @since 4.4.0
  */
@@ -34,12 +33,12 @@ class OpenAIProvider extends OpenAICompatibleProvider {
      * {@inheritDoc}
      */
     protected function build_payload( $model, $messages, $max_tokens, $temperature = null ) {
-        if ( 0 === strpos( (string) $model, 'gpt-5' ) ) {
+        if ( AIHelper::is_reasoning_model( $model ) ) {
             return array(
                 'model'                 => $model,
                 'messages'              => $messages,
                 'max_completion_tokens' => (int) $max_tokens,
-                'reasoning_effort'      => apply_filters( 'betterdocs_openai_gpt5_reasoning_effort', $this->default_reasoning_effort( $model ), $model, $max_tokens ),
+                'reasoning_effort'      => $this->reasoning_effort( $model, $max_tokens ),
             );
         }
 
@@ -104,21 +103,129 @@ class OpenAIProvider extends OpenAICompatibleProvider {
     }
 
     /**
-     * Default reasoning_effort for a gpt-5* model.
+     * The reasoning_effort to send for a GPT-5 or GPT-6 model.
      *
-     * The original GPT-5 generation (gpt-5, gpt-5-mini, gpt-5-nano) accepts
-     * 'minimal'. The gpt-5.x point releases (e.g. gpt-5.5) dropped 'minimal'
-     * from the API and only accept none|low|medium|high; sending 'minimal'
-     * returns a 400 "Unsupported value: 'reasoning_effort'". For those we
-     * default to 'none' — no reasoning tokens, the fastest option, leaving the
-     * whole token budget for visible output (closest to gpt-5 'minimal'
-     * behaviour). Override per model via the
-     * betterdocs_openai_gpt5_reasoning_effort filter.
+     * Each generation has its own filter, because they accept different values:
+     * a site forcing 'minimal' for GPT-5 must not break GPT-6, which rejects it
+     * with a 400. GPT-6 values are also clamped to what the model accepts (see
+     * clamp_gpt6_reasoning_effort()), so a filter can never send one that fails.
+     *
+     * @since 4.9.6
+     *
+     * @param string $model      OpenAI model identifier.
+     * @param int    $max_tokens Output token budget for the request.
+     * @return string reasoning_effort value.
+     */
+    protected function reasoning_effort( $model, $max_tokens ) {
+        $default = $this->default_reasoning_effort( $model );
+
+        if ( AIHelper::is_gpt6( $model ) ) {
+            /**
+             * Filter the reasoning_effort sent to GPT-6 models (gpt-6-luna,
+             * gpt-6-astra, gpt-6.1-sol, ...).
+             *
+             * The value is clamped afterwards: 'minimal' does not exist for
+             * GPT-6 and becomes the model's lowest accepted effort, 'none' becomes
+             * 'low' on models that cannot turn reasoning off (gpt-6-astra and the
+             * gpt-6.x point releases), and anything unrecognised falls back to
+             * the default.
+             *
+             * @since 4.9.6
+             *
+             * @param string $effort     Default effort: 'none' for gpt-6-luna, 'low' otherwise.
+             * @param string $model      OpenAI model identifier.
+             * @param int    $max_tokens Output token budget for the request.
+             */
+            $effort = apply_filters( 'betterdocs_openai_gpt6_reasoning_effort', $default, $model, $max_tokens );
+
+            return self::clamp_gpt6_reasoning_effort( $effort, $model );
+        }
+
+        /**
+         * Filter the reasoning_effort sent to GPT-5 models (gpt-5, gpt-5-mini,
+         * gpt-5-nano and the gpt-5.x point releases). GPT-6 has its own filter,
+         * betterdocs_openai_gpt6_reasoning_effort.
+         *
+         * @param string $effort     Default effort.
+         * @param string $model      OpenAI model identifier.
+         * @param int    $max_tokens Output token budget for the request.
+         */
+        return apply_filters( 'betterdocs_openai_gpt5_reasoning_effort', $default, $model, $max_tokens );
+    }
+
+    /**
+     * Whether a GPT-6 model always reasons, so 'none' is rejected: gpt-6-astra
+     * and the gpt-6.x point releases (gpt-6.1-sol, ...).
+     *
+     * @since 4.9.6
+     *
+     * @param string $model OpenAI model identifier.
+     * @return bool
+     */
+    protected static function gpt6_always_reasons( $model ) {
+        $model = (string) $model;
+        return 0 === strpos( $model, 'gpt-6-astra' ) || (bool) preg_match( '/^gpt-6\.\d/', $model );
+    }
+
+    /**
+     * Clamp a reasoning_effort to a value the given GPT-6 model accepts.
+     *
+     * - 'minimal' (GPT-5 vocabulary only) → the model's lowest effort: 'none'
+     *   on gpt-6-luna, 'low' on models that always reason.
+     * - 'none' on a model that always reasons → 'low'.
+     * - 'low', 'medium', 'high', 'xhigh' pass through.
+     * - Anything else (empty, a typo, a non-string) → the model's default.
+     *
+     * @since 4.9.6
+     *
+     * @param mixed  $effort Requested effort, typically a filter's return value.
+     * @param string $model  OpenAI GPT-6 model identifier.
+     * @return string A reasoning_effort the model accepts.
+     */
+    public static function clamp_gpt6_reasoning_effort( $effort, $model ) {
+        $always_reasons = self::gpt6_always_reasons( $model );
+        $lowest         = $always_reasons ? 'low' : 'none';
+        $effort         = is_string( $effort ) ? strtolower( trim( $effort ) ) : '';
+
+        if ( 'minimal' === $effort ) {
+            return $lowest;
+        }
+
+        if ( 'none' === $effort && $always_reasons ) {
+            return 'low';
+        }
+
+        if ( in_array( $effort, array( 'none', 'low', 'medium', 'high', 'xhigh' ), true ) ) {
+            return $effort;
+        }
+
+        return $lowest;
+    }
+
+    /**
+     * Default reasoning_effort for a GPT-5 or GPT-6 model — the lowest value
+     * each model accepts, since anything unsupported is a 400 "Unsupported
+     * value: 'reasoning_effort'".
+     *
+     * - gpt-5, gpt-5-mini, gpt-5-nano: 'minimal'.
+     * - gpt-5.x point releases and gpt-6-luna: 'none' — no reasoning
+     *   tokens, the whole budget left for visible output.
+     * - gpt-6-astra and gpt-6.1-sol (and later point releases): reasoning
+     *   cannot be turned off and 'minimal' is gone, so 'low'.
+     *
+     * Override via betterdocs_openai_gpt5_reasoning_effort (GPT-5) or
+     * betterdocs_openai_gpt6_reasoning_effort (GPT-6, clamped).
      *
      * @param string $model OpenAI model identifier.
      * @return string reasoning_effort value.
      */
     protected function default_reasoning_effort( $model ) {
-        return AIHelper::is_gpt5_point_release( $model ) ? 'none' : 'minimal';
+        $model = (string) $model;
+
+        if ( self::gpt6_always_reasons( $model ) ) {
+            return 'low';
+        }
+
+        return ( AIHelper::is_gpt6( $model ) || AIHelper::is_gpt5_point_release( $model ) ) ? 'none' : 'minimal';
     }
 }

@@ -29,8 +29,10 @@ if ( $post !== null ) {
 
 if ( empty( $toc_title ) ) {
 	$toc_title = betterdocs()->settings->get( 'toc_title', __( 'Table of Contents', 'betterdocs' ) );
-	$toc_title = esc_html( stripslashes( $toc_title ) );
 }
+// Escape every title, not just the settings fallback: the shortcode parser
+// turns a toc_title of "\x3cimg …\x3e" back into markup after kses ran (#296).
+$toc_title = esc_html( stripslashes( (string) $toc_title ) );
 
 if ( $collapsible_on_mobile == '1' ) {
 	$wrapper_classes[] = 'collapsible-sm';
@@ -44,7 +46,7 @@ if ( $list_number == '1' ) {
 
 <div class="<?php echo esc_attr( implode( ' ', $wrapper_classes ) ); ?>">
 	<span class="toc-title">
-		<?php echo $toc_title . $collapsible_arrow; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Title Is Escaped Above & Svg's Cannot Be Escaped ?>
+		<?php echo $toc_title . $collapsible_arrow; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Title Is Escaped Above On Every Path & Svg's Cannot Be Escaped ?>
 	</span>
 
 	<?php echo $toc_data->print( $toc_data->items, $hierarchy, 1 ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	-- Already Escaped Above, Svg Is Not Needed For Escaping ?>

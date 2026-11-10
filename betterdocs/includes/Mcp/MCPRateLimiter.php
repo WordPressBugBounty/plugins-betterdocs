@@ -116,6 +116,55 @@ final class MCPRateLimiter {
 	}
 
 	/**
+	 * Count one request against a per-IP budget, and say whether it is allowed.
+	 *
+	 * Separate from the failed-login counter: the OAuth registration and token
+	 * endpoints are unauthenticated by design, so every request counts, not just
+	 * failures. A fixed window, like the lockout (@since 4.9.6).
+	 *
+	 * @since 4.9.6
+	 *
+	 * @param string $bucket Short name for the endpoint, e.g. `register`.
+	 * @param int    $max    Requests allowed per window.
+	 * @param int    $window Window length in seconds.
+	 * @return bool Whether this request is within the budget.
+	 */
+	public static function allow( $bucket, $max, $window ) {
+		/**
+		 * Filter the per-IP request budget of an unauthenticated OAuth endpoint.
+		 *
+		 * @since 4.9.6
+		 *
+		 * @param array  $limits `[ max_requests, window_seconds ]`.
+		 * @param string $bucket `register` or `token`.
+		 */
+		$limits = (array) apply_filters( 'betterdocs_mcp_oauth_rate_limit', [ (int) $max, (int) $window ], (string) $bucket );
+		$max    = isset( $limits[0] ) ? max( 1, (int) $limits[0] ) : (int) $max;
+		$window = isset( $limits[1] ) ? max( 1, (int) $limits[1] ) : (int) $window;
+
+		$key   = self::PREFIX . sanitize_key( (string) $bucket ) . '_' . md5( self::client_ip() );
+		$entry = get_transient( $key );
+
+		if ( is_array( $entry ) && isset( $entry['count'], $entry['until'] ) && (int) $entry['until'] > time() ) {
+			++$entry['count'];
+			set_transient( $key, $entry, max( 1, (int) $entry['until'] - time() ) );
+
+			return $entry['count'] <= $max;
+		}
+
+		set_transient(
+			$key,
+			[
+				'count' => 1,
+				'until' => time() + $window
+			],
+			$window
+		);
+
+		return true;
+	}
+
+	/**
 	 * Clear the counter for the current client — call on a successful auth.
 	 *
 	 * @since 4.9.0

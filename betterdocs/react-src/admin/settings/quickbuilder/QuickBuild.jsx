@@ -80,7 +80,16 @@ const QuickBuild = (props) => {
         apiFetch
             .post("settings", { ...context.values, _active_tab: activeTab })
             .then((res) => {
-                if (res?.success) {
+                if (res?.success && res?.data?.notice === "builtin_doc_page_restored") {
+                    // The server switched the built-in docs page back on (no custom
+                    // Docs Page selected): reflect that in the form and tell the user.
+                    const setFieldValue = context?.setFieldValue || builder?.setFieldValue;
+                    if (typeof setFieldValue === "function") {
+                        setFieldValue("builtin_doc_page", true);
+                    }
+                    setToolbarMenuUrl({ ...context.values, builtin_doc_page: true });
+                    toastAlert("warning", res.data.message, { autoClose: 8000 });
+                } else if (res?.success) {
                     toastAlert(
                         "success",
                         __('Changes Saved Successfully.', "betterdocs")

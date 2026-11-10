@@ -127,6 +127,13 @@ class Rewrite extends Base {
 		$old_docs_page     = isset( $_old_settings['docs_page'] ) ? $_old_settings['docs_page'] : '';
 		$current_docs_page = isset( $_settings['docs_page'] ) ? $_settings['docs_page'] : '';
 
+		// Switches the doc_category rewrite rules between flat and hierarchical
+		// (PostType::enable_nested_hierarchy_doc_category_slug()), so the stored
+		// rules must be rebuilt; without that, hierarchical category URLs didn't
+		// resolve until something else flushed (#238).
+		$old_hierarchy_slugs     = ! empty( $_old_settings['enable_category_hierarchy_slugs'] );
+		$current_hierarchy_slugs = ! empty( $_settings['enable_category_hierarchy_slugs'] );
+
 		/**
 		 * This block of code decides whether it needs to be flushed or not.
 		 * Flush happens after register the post type.
@@ -138,6 +145,7 @@ class Rewrite extends Base {
 			case $current_docs_page !== $old_docs_page:
 			case $_settings['tag_slug'] !== $_old_settings['tag_slug']:
 			case $_settings['category_slug'] !== $_old_settings['category_slug']:
+			case $current_hierarchy_slugs !== $old_hierarchy_slugs:
 				$this->database->set_transient( 'betterdocs_flush_rewrite_rules', true );
 				break;
 		}

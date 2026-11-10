@@ -27,6 +27,18 @@ class ArticleQualityScore extends Base {
 	 */
 	private $ai_helper;
 
+	/**
+	 * Longest text, in characters, sent to the AI for one analysis. The editor
+	 * sends its unsaved content, so without a cap the prompt was any size.
+	 */
+	const MAX_CONTENT_LENGTH = 20000;
+
+	/**
+	 * Analyses one user may run per RATE_WINDOW seconds.
+	 */
+	const RATE_LIMIT  = 10;
+	const RATE_WINDOW = 600;
+
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 		$this->ai_helper = new AIHelper( $settings );
@@ -358,6 +370,16 @@ class ArticleQualityScore extends Base {
 			wp_send_json_error( [ 'message' => __( 'Invalid nonce', 'betterdocs' ) ] );
 		}
 
+		if ( ! $this->is_enabled() ) {
+			wp_send_json_error( [ 'message' => __( 'BetterDocs AI features are turned off.', 'betterdocs' ) ] );
+		}
+
+		// The analysis spends the site's AI key, so it takes the same capability
+		// as the REST AI routes (WriteWithAI, AIEdit, DocsAISuite), not just edit_post (#297).
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Insufficient permissions', 'betterdocs' ) ] );
+		}
+
 		$post_id = isset( $_POST['post_id'] ) ? intval( wp_unslash( $_POST['post_id'] ) ) : 0;
 
 		if ( empty( $post_id ) ) {
@@ -400,6 +422,14 @@ class ArticleQualityScore extends Base {
 			wp_send_json_error( [ 'message' => __( 'Content is too short for meaningful analysis. Please add more content (at least 50 characters) and try again.', 'betterdocs' ) ] );
 		}
 
+		if ( mb_strlen( $clean_content ) > self::MAX_CONTENT_LENGTH ) {
+			$clean_content = mb_substr( $clean_content, 0, self::MAX_CONTENT_LENGTH );
+		}
+
+		if ( ! $this->consume_rate_limit() ) {
+			wp_send_json_error( [ 'message' => __( 'Too many analyses in a short time. Please wait a few minutes and try again.', 'betterdocs' ) ] );
+		}
+
 		// Perform AI analysis
 		$analysis_result = $this->ai_helper->analyze_article_quality( $clean_content, $title );
 
@@ -422,6 +452,44 @@ class ArticleQualityScore extends Base {
 			'message' => __( 'Docs analyzed successfully', 'betterdocs' ),
 			'data' => $analysis_result
 		] );
+	}
+
+	/**
+	 * Whether any BetterDocs AI feature for docs is on. Quality Score has no
+	 * toggle of its own, so it follows these: with all of them off, the site's
+	 * AI key is not used for it.
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return (bool) $this->settings->get( 'enable_write_with_ai', true )
+			|| (bool) $this->settings->get( 'enable_docs_ai_suite', true )
+			|| (bool) $this->settings->get( 'enable_article_summary', false );
+	}
+
+	/**
+	 * Count one analysis against the current user's limit.
+	 *
+	 * @return bool False when the user has used up RATE_LIMIT analyses in the
+	 *              current RATE_WINDOW.
+	 */
+	private function consume_rate_limit() {
+		$key    = 'betterdocs_quality_score_rate_' . get_current_user_id();
+		$bucket = get_transient( $key );
+		$now    = time();
+
+		if ( ! is_array( $bucket ) || empty( $bucket['until'] ) || $bucket['until'] <= $now ) {
+			$bucket = [ 'count' => 0, 'until' => $now + self::RATE_WINDOW ];
+		}
+
+		if ( $bucket['count'] >= self::RATE_LIMIT ) {
+			return false;
+		}
+
+		$bucket['count']++;
+		set_transient( $key, $bucket, $bucket['until'] - $now );
+
+		return true;
 	}
 
 /**

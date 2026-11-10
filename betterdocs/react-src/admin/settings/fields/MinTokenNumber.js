@@ -28,11 +28,11 @@ const MinTokenNumber = (props) => {
 	);
 
 	const currentModel = String(builderContext.values?.[props.model_field] ?? '');
-	// gpt-5.x point releases (e.g. gpt-5.5) need a heavier token floor and longer
-	// server limits than the base gpt-5 family, so they get their own map key.
-	const isPointRelease = /^gpt-5\.\d/.test(currentModel);
-	const family = isPointRelease
-		? 'gpt-5.5'
+	// GPT-6 and the gpt-5.x point releases need a heavier token floor and longer
+	// server limits than the base gpt-5 family, so they share their own map key.
+	const isHeavy = /^gpt-(?:6|5\.\d)/.test(currentModel);
+	const family = isHeavy
+		? 'gpt-6'
 		: currentModel.indexOf('gpt-5') === 0
 			? 'gpt-5'
 			: 'gpt-4';
@@ -50,7 +50,7 @@ const MinTokenNumber = (props) => {
 					{sprintf(
 						/* translators: 1: minimum number of tokens, 2: model identifier */
 						__(
-							'Recommended minimum is %1$d tokens for %2$s. Lower values can cause empty or truncated responses.',
+							'Minimum is %1$d tokens for %2$s. Settings can’t be saved below it, and lower values cause empty or cut-off responses.',
 							'betterdocs'
 						),
 						minToken,
@@ -58,10 +58,10 @@ const MinTokenNumber = (props) => {
 					)}
 				</div>
 			)}
-			{isPointRelease && (
+			{isHeavy && (
 				<div className="betterdocs-min-token-notice betterdocs-server-time-notice" role="alert">
 					{__(
-						'GPT-5.5 produces large, slow responses. Raise your server limits before using it — increase PHP max execution time / your web-server timeout (e.g. 300 seconds) and memory_limit, or generation may time out before it finishes.',
+						'This model produces large, slow responses. Raise your server limits before using it — increase PHP max execution time / your web-server timeout (e.g. 300 seconds) and memory_limit, or generation may time out before it finishes.',
 						'betterdocs'
 					)}
 				</div>

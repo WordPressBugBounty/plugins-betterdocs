@@ -117,6 +117,9 @@ class CategorySlateLayout extends Block {
         if ( 'doc_category_order' === $attributes['orderBy'] ) {
             $terms_object['meta_key'] = 'doc_category_order';
             $terms_object['orderby']  = 'meta_value_num';
+            // Keep categories without the base order key, ordered by the current
+            // language's key first (Query::betterdocs_order_terms_clauses(), #306).
+            $terms_object['betterdocs_order'] = true;
         }
 
         $includes = $this->string_to_array( $attributes['includeCategories'] );

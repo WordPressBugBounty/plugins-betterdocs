@@ -214,7 +214,8 @@ class SetupWizard extends Base {
 			'is_pro_active' => betterdocs()->is_pro_active(),
 			'logoURL'       => betterdocs()->assets->icon( 'betterdocs-icon.svg', true ),
 			'layout'        => 'vertical',
-			'values'        => betterdocs()->is_pro_active() ? betterdocs()->settings->get_all() : array_merge( betterdocs()->settings->get_all(), $this->pro_settings_default_values() ),
+			// Secrets are masked; Settings::save_settings() keeps the stored value when a mask comes back.
+			'values'        => Settings::mask_secret_values( betterdocs()->is_pro_active() ? betterdocs()->settings->get_all() : array_merge( betterdocs()->settings->get_all(), $this->pro_settings_default_values() ) ),
 			'config'        => [
 				'save_locally'    => true,
 				'save'            => true,

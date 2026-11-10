@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WP_Query;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
+use WPDeveloper\BetterDocs\Utils\Helper;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class Query extends Base {
@@ -42,6 +43,11 @@ class Query extends Base {
         // count update — fires edited_term_taxonomy, not any of the above. Without this
         // the recount fixes the DB while we keep serving the cached counts (#166).
         add_action( 'edited_term_taxonomy', array( $this, 'flush_term_counts_cache_on_term_taxonomy' ), 10, 2 );
+
+        // "BetterDocs Order" for doc categories: order by the order meta without
+        // dropping the categories that lack it (#306). Runs before Pro's
+        // access-control terms_clauses filters (priority 11).
+        add_filter( 'terms_clauses', array( $this, 'betterdocs_order_terms_clauses' ), 5, 3 );
 
         /**
          * These below filters are hooked for navigation only.
@@ -181,6 +187,78 @@ class Query extends Base {
         $term_query->query_vars[ 'orderby' ] = 'meta_value_num';
     }
 
+    /**
+     * Order doc categories by "BetterDocs Order" without dropping any (#306).
+     *
+     * terms_query() and parse_terms_args() mark these queries with
+     * `betterdocs_order` and keep `meta_key = doc_category_order` in the args,
+     * because Pro's access control and third-party filters recognise a
+     * BetterDocs-ordered query by that meta_key. WordPress turns the meta_key
+     * into an INNER JOIN, which hides every category without the base key:
+     * categories created outside wp-admin (#236), and on multilingual sites the
+     * ones that only have `doc_category_order_{lang}`.
+     *
+     * Here that join becomes a LEFT JOIN, and the ORDER BY reads the current
+     * language's key first, then the base key, then puts unordered categories
+     * last (by name). This mirrors PostType::set_tax_order() in wp-admin.
+     *
+     * @param array    $clauses    Term query SQL clauses.
+     * @param string[] $taxonomies Queried taxonomies.
+     * @param array    $args       Term query vars.
+     * @return array
+     */
+    public function betterdocs_order_terms_clauses( $clauses, $taxonomies, $args ) {
+        if ( empty( $args[ 'betterdocs_order' ] ) || ! in_array( 'doc_category', (array) $taxonomies, true ) ) {
+            return $clauses;
+        }
+
+        global $wpdb;
+        $base_key = 'doc_category_order';
+
+        // WP_Meta_Query gives the meta_key clause the bare table name as its alias.
+        $inner_join = " INNER JOIN {$wpdb->termmeta} ON ( t.term_id = {$wpdb->termmeta}.term_id )";
+        if ( isset( $args[ 'meta_key' ] ) && $base_key === $args[ 'meta_key' ] && false !== strpos( $clauses[ 'join' ], $inner_join ) ) {
+            $left_join          = $wpdb->prepare( " LEFT JOIN {$wpdb->termmeta} ON ( t.term_id = {$wpdb->termmeta}.term_id AND {$wpdb->termmeta}.meta_key = %s )", $base_key );
+            $clauses[ 'join' ]  = str_replace( $inner_join, $left_join, $clauses[ 'join' ] );
+            $clauses[ 'where' ] = str_replace( $wpdb->prepare( "{$wpdb->termmeta}.meta_key = %s", $base_key ), '1=1', $clauses[ 'where' ] );
+        }
+
+        // Count queries have no ORDER BY, and an explicit order (e.g. 'include') wins.
+        if ( empty( $clauses[ 'orderby' ] ) || ( isset( $args[ 'orderby' ] ) && 'meta_value_num' !== $args[ 'orderby' ] ) ) {
+            return $clauses;
+        }
+
+        $value    = $this->term_order_value_sql( $base_key );
+        $language = Helper::is_multilingual_active() ? Helper::get_current_admin_language() : null;
+        if ( $language && 'all' !== $language ) {
+            $value = "COALESCE( {$this->term_order_value_sql( $base_key . '_' . $language )}, {$value} )";
+        }
+
+        $direction = ( isset( $args[ 'order' ] ) && 'DESC' === strtoupper( $args[ 'order' ] ) ) ? 'DESC' : 'ASC';
+
+        $clauses[ 'orderby' ] = "ORDER BY ( {$value} ) IS NULL, CAST( {$value} AS SIGNED ) {$direction}, t.name";
+        $clauses[ 'order' ]   = 'ASC';
+
+        return $clauses;
+    }
+
+    /**
+     * SQL for one term order meta value of the current row (`t`), or NULL when
+     * the term has none. A subquery, so a duplicated meta row can't duplicate
+     * the term in the results.
+     *
+     * @param string $meta_key Term meta key.
+     * @return string
+     */
+    private function term_order_value_sql( $meta_key ) {
+        global $wpdb;
+
+        return $wpdb->prepare(
+            "( SELECT NULLIF( bd_order.meta_value, '' ) FROM {$wpdb->termmeta} AS bd_order WHERE bd_order.term_id = t.term_id AND bd_order.meta_key = %s ORDER BY bd_order.meta_id ASC LIMIT 1 )",
+            $meta_key
+        );
+    }
+
     public function parse_query( &$query ) {
         // dump( is_single(), $query->query_vars );
         // if ( is_single() && isset( $query->query_vars['post_type'] ) && $query->query_vars['post_type'] == 'docs' ) {
@@ -246,8 +324,24 @@ class Query extends Base {
         $meta_key    = \WPDeveloper\BetterDocs\Utils\Helper::get_meta_key_with_fallback( '_docs_order', $term_id );
         $_docs_order = get_term_meta( $term_id, $meta_key, true );
 
-        $query     = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}term_relationships WHERE term_taxonomy_id = %d", $term_id );
-        $query_key = "docs_order_by_terms_{$term_id}_{$meta_key}_" . md5( $query );
+        // $term_id is a term_id: join through term_taxonomy rather than matching
+        // it against term_relationships.term_taxonomy_id. The two ids are
+        // independent sequences; where they differ (imports, split terms) this
+        // fetched another term's posts, so one added after the order was saved
+        // never appeared (#251). The taxonomy keeps a legacy shared term from
+        // pulling in another taxonomy's posts.
+        $query     = $wpdb->prepare(
+            "SELECT tr.object_id FROM {$wpdb->term_relationships} tr
+             INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             WHERE tt.term_id = %d AND tt.taxonomy = %s",
+            $term_id,
+            'doc_category'
+        );
+        // The saved order is part of the key: when a doc joins the category it is
+        // added to the order (PostType::add_doc_to_category_orders()), so the
+        // cached list can't keep hiding it for a day on a persistent object
+        // cache (#305).
+        $query_key = "docs_order_by_terms_{$term_id}_{$meta_key}_" . md5( $query . '|' . $_docs_order );
 
         if ( ( $results = $this->database->get_cache( $query_key ) ) !== false ) {
             return $results;
@@ -444,10 +538,42 @@ class Query extends Base {
         $_id_index = 'next' === $adjacent ? $_id_index + 1 : $_id_index - 1;
         $_id       = isset( $_docs_order[ $_id_index ] ) ? (int) $_docs_order[ $_id_index ] : null;
 
-        // Fix: replace only ID comparison in where clause using regex
         if ( $_id ) {
-            // This replaces any 'p.ID < N', 'p.ID > N', 'p.ID <= N', or 'p.ID >= N' etc, with 'p.ID = $_id'
-            $where = preg_replace( '/p\.ID\s*[<>!=]+\s*\d+/', 'p.ID = ' . (int) $_id, $where );
+            $where = $this->point_adjacent_where_at( $where, $_id );
+        }
+
+        return $where;
+    }
+
+    /**
+     * Make an adjacent-post WHERE clause select exactly one post.
+     *
+     * WordPress builds `(p.post_date > %s OR (p.post_date = %s AND p.ID > %d))`
+     * (older versions: `p.post_date > %s`). Replacing only the `p.ID > N`
+     * tie-breaker left the date condition in charge whenever two docs had
+     * different publish dates, so the link followed date order instead of the
+     * saved order (#237). The whole date/ID condition is replaced instead.
+     *
+     * @param string $where Adjacent-post WHERE clause.
+     * @param int    $id    The neighbour in the saved order.
+     * @return string
+     */
+    private function point_adjacent_where_at( $where, $id ) {
+        $target = 'p.ID = ' . (int) $id;
+        $date   = "p\.post_date\s*[<>]\s*'[^']*'";
+
+        $patterns = array(
+            "/\(\s*{$date}\s+OR\s+\(\s*p\.post_date\s*=\s*'[^']*'\s+AND\s+p\.ID\s*[<>]\s*\d+\s*\)\s*\)/",
+            "/{$date}/",
+            '/p\.ID\s*[<>!=]+\s*\d+/',
+        );
+
+        foreach ( $patterns as $pattern ) {
+            $count    = 0;
+            $replaced = preg_replace( $pattern, $target, $where, 1, $count );
+            if ( $count ) {
+                return $replaced;
+            }
         }
 
         return $where;
@@ -464,10 +590,12 @@ class Query extends Base {
         $_order   = ! empty( $args[ 'order' ] ) ? $args[ 'order' ] : '';
 
         if ( 'betterdocs_order' == $_orderby ) {
-            // Use base meta key - fallback logic will be handled in the terms_clauses filter
-            $args[ 'meta_key' ] = 'doc_category_order';
-            $args[ 'orderby' ]  = 'meta_value_num';
-            $args[ 'order' ]    = 'ASC';
+            // The meta_key stays for compatibility; betterdocs_order_terms_clauses()
+            // turns it into a language-aware order that keeps every category.
+            $args[ 'meta_key' ]         = 'doc_category_order';
+            $args[ 'orderby' ]          = 'meta_value_num';
+            $args[ 'order' ]            = 'ASC';
+            $args[ 'betterdocs_order' ] = true;
         } else {
             $args[ 'orderby' ] = $_orderby;
             $args[ 'order' ]   = $_order;
@@ -718,7 +846,11 @@ class Query extends Base {
             if ( isset( $args[ 'taxonomy' ] ) && 'knowledge_base' === $args[ 'taxonomy' ] ) {
                 $default_args[ 'meta_key' ] = 'kb_order';
             } else {
-                $default_args[ 'meta_key' ] = 'doc_category_order';
+                // The meta_key stays for compatibility (Pro's access control
+                // checks it); betterdocs_order_terms_clauses() turns it into a
+                // language-aware order that keeps every category (#306).
+                $default_args[ 'meta_key' ]         = 'doc_category_order';
+                $default_args[ 'betterdocs_order' ] = true;
             }
             $_orderby = 'meta_value_num';
             $_order   = 'ASC';
@@ -1172,19 +1304,31 @@ class Query extends Base {
             case 'most_questions':
             default:
                 $args[ 'orderby' ]  = 'post__in';
-                $args[ 'post__in' ] = $this->get_faq_orders( $term_id );
+                $args[ 'post__in' ] = $this->get_faq_orders( $term_id, $taxonomy );
                 break;
         }
 
         return new WP_Query( $args );
     }
 
-    public function get_faq_orders( $term_id = null ) {
+    public function get_faq_orders( $term_id = null, $taxonomy = 'betterdocs_faq_category' ) {
         global $wpdb;
         $faq_order = get_term_meta( $term_id, '_betterdocs_faq_order', true );
         $faq_order = explode( ',', $faq_order );
 
-        $query     = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}term_relationships WHERE term_taxonomy_id = %d", $term_id );
+        // $term_id is a term_id: join through term_taxonomy rather than matching
+        // it against term_relationships.term_taxonomy_id. The two ids are
+        // independent sequences; where they differ (imports, split terms) this
+        // fetched another term's posts, so one added after the order was saved
+        // never appeared (#251). Scoped to the group's own taxonomy so a FAQ
+        // group and a product FAQ group never share relationships.
+        $query     = $wpdb->prepare(
+            "SELECT tr.object_id FROM {$wpdb->term_relationships} tr
+             INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+             WHERE tt.term_id = %d AND tt.taxonomy = %s",
+            $term_id,
+            $taxonomy
+        );
         $query_key = 'betterdocs_faq_order_' . md5( $query );
 
         if ( ( $results = $this->database->get_cache( $query_key ) ) !== false ) {
@@ -1515,6 +1659,13 @@ class Query extends Base {
             return false;
         }
 
+        // Every logging path (the search-insert REST route and the admin-ajax
+        // live search handlers) is public, so the limits live here (#242).
+        $allowed = $this->can_log_search_keyword( $search_input );
+        if ( is_wp_error( $allowed ) ) {
+            return $allowed;
+        }
+
         global $wpdb;
 
         $keyword_hash = md5( $search_input );
@@ -1625,6 +1776,77 @@ class Query extends Base {
         }
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
         return $insert;
+    }
+
+    /**
+     * Bound what one visitor can write to the search keyword and log tables.
+     * Logging has to stay public (live search runs for visitors), so a bot could
+     * otherwise fill both tables: no keyword longer than a search box would hold,
+     * and a per-IP rate limit (#242). Each allowed call counts against the limit.
+     *
+     * @param string $search_input The sanitized search keyword.
+     * @return true|\WP_Error
+     */
+    public function can_log_search_keyword( $search_input ) {
+        /**
+         * Filter the longest search keyword that gets logged, in characters.
+         *
+         * @since 4.9.6
+         *
+         * @param int $max_length Default 200. 0 disables the limit.
+         */
+        $max_length = (int) apply_filters( 'betterdocs_search_log_max_length', 200 );
+        if ( $max_length > 0 && mb_strlen( $search_input ) > $max_length ) {
+            return new \WP_Error( 'betterdocs_search_log_too_long', __( 'This search is too long to log.', 'betterdocs' ), [ 'status' => 400 ] );
+        }
+
+        if ( ! $this->within_search_log_rate_limit() ) {
+            return new \WP_Error( 'betterdocs_search_log_throttled', __( 'Too many searches. Please try again in a moment.', 'betterdocs' ), [ 'status' => 429 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Count this search log against the visitor's IP and say whether it is still
+     * within the limit. Same scheme as the feedback form's rate limit.
+     *
+     * @return bool
+     */
+    private function within_search_log_rate_limit() {
+        /**
+         * Filter how many searches one IP may log, and in how many seconds.
+         *
+         * @since 4.9.6
+         *
+         * @param array $limit [ max searches, window in seconds ]. Default [ 30, 60 ].
+         */
+        $limit  = (array) apply_filters( 'betterdocs_search_log_rate_limit', [ 30, MINUTE_IN_SECONDS ] );
+        $max    = isset( $limit[0] ) ? (int) $limit[0] : 30;
+        $window = isset( $limit[1] ) ? max( 1, (int) $limit[1] ) : MINUTE_IN_SECONDS;
+
+        if ( $max <= 0 ) {
+            return true;
+        }
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- used only as an md5'd bucket key, never output or stored raw.
+        $ip    = isset( $_SERVER['REMOTE_ADDR'] ) ? (string) wp_unslash( $_SERVER['REMOTE_ADDR'] ) : '';
+        $key   = 'betterdocs_search_log_rl_' . md5( $ip );
+        $state = get_transient( $key );
+        $now   = time();
+
+        if ( ! is_array( $state ) || ! isset( $state['count'], $state['start'] ) || $now - (int) $state['start'] >= $window ) {
+            $state = [ 'count' => 0, 'start' => $now ];
+        }
+
+        if ( (int) $state['count'] >= $max ) {
+            return false;
+        }
+
+        $state['count'] = (int) $state['count'] + 1;
+        set_transient( $key, $state, max( 1, $window - ( $now - (int) $state['start'] ) ) );
+
+        return true;
     }
 
     /**

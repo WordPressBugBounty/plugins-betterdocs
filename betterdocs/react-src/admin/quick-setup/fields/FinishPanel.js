@@ -1,6 +1,6 @@
 import { __ } from "@wordpress/i18n";
 import { useBuilderContext } from "quickbuilder";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { apiFetch } from "../../utils";
 import toastAlert from "../../utils/toastAlert";
 import { getLayoutPicks, hasLayoutPicks } from "./layoutStore";
@@ -16,60 +16,83 @@ import { getLayoutPicks, hasLayoutPicks } from "./layoutStore";
 const FinishPanel = (props) => {
     const context = useBuilderContext();
     const isSubmitting = context?.isSubmitting;
+    // Guards against a second click landing before quickbuilder re-renders
+    // with `isSubmitting` set.
+    const finishingRef = useRef(false);
 
     const handleFinish = useCallback(() => {
-        if (context?.isSubmitting) {
+        if (context?.isSubmitting || finishingRef.current) {
             return;
         }
 
+        finishingRef.current = true;
         context.setSubmitting(true);
 
+        const release = () => {
+            finishingRef.current = false;
+            context.setSubmitting(false);
+        };
+
+        // The side requests must finish before we navigate away: redirecting
+        // while one is still in flight aborts it (apiFetch reports that as
+        // `fetch_error`) and can cut the sample-docs import short.
+        const sideRequests = [];
+
         if (context?.values?.enable_sample_data) {
-            apiFetch.post("create-sample-docs", { action: "create-dummy-data" });
+            sideRequests.push(
+                apiFetch.post("create-sample-docs", { action: "create-dummy-data" })
+            );
         }
 
         // Persist the chosen Customize-step layouts as theme_mods (only if the
         // user visited that step), alongside the rest of the wizard's save.
         if (hasLayoutPicks()) {
-            apiFetch.post("customize/layouts", { layouts: getLayoutPicks() });
+            sideRequests.push(
+                apiFetch.post("customize/layouts", { layouts: getLayoutPicks() })
+            );
         }
 
         // Dark mode is a client cookie (utils/darkMode), never a saved setting —
         // do NOT persist it here, or the theme would diverge from that cookie.
-        apiFetch
-            .post("settings", { ...context.values })
-            .then((res) => {
-                if (res?.success) {
+        const saveSettings = apiFetch.post("settings", { ...context.values });
+
+        Promise.all([saveSettings, ...sideRequests])
+            .then(([res]) => {
+                // Finishing without changing anything is still a finished setup.
+                if (res?.success || res?.code === "nothing_changed") {
                     document.cookie =
                         "betterdocs_insights_allowed=; expires=Thu, 01 Jan 2000 00:00:00 UTC; path=/;";
                     // Setup complete — clear the persisted sample-docs preview.
                     try {
                         localStorage.removeItem("betterdocs_setup_generated_docs");
+                        if (context?.config?.save_locally) {
+                            localStorage.removeItem("quickbuilder_active_tab");
+                        }
                     } catch (e) {}
+                    // Stay in the "Finishing…" state until the page unloads so
+                    // the button cannot be clicked again in the meantime.
                     toastAlert(
                         "success",
-                        __("Changes Saved Successfully.", "betterdocs")
+                        __("Changes Saved Successfully.", "betterdocs"),
+                        { autoClose: 1500 }
                     ).then(() => {
                         const url = new URL(window.location.href);
                         url.search = "";
                         url.searchParams.set("page", "betterdocs-admin");
                         window.location.replace(url.href);
                     });
-                } else {
-                    toastAlert(
-                        res?.code === "nothing_changed" ? "info" : "error",
-                        __(res?.message ?? "Something went wrong.", "betterdocs")
-                    );
+                    return;
                 }
+
+                toastAlert(
+                    "error",
+                    __(res?.message ?? "Something went wrong.", "betterdocs")
+                );
+                release();
             })
             .catch(() => {
                 toastAlert("error", __("Something went wrong.", "betterdocs"));
-            })
-            .finally(() => {
-                context.setSubmitting(false);
-                if (context?.config?.save_locally) {
-                    localStorage.removeItem("quickbuilder_active_tab");
-                }
+                release();
             });
     }, [context]);
 

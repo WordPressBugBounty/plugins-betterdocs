@@ -28,10 +28,18 @@ class FaqSearchedTerms extends BaseAPI {
     public function search_logic( $request ) {
         $keyword = $request->get_param( 'search' );
 
-        if ( empty( $keyword ) ) {
-            $error = new WP_Error( 400, __( 'FAQ Search Parameter Cannot Be Empty', 'betterdocs' ) );
-            return rest_ensure_response( $error );
+        // A missing, blank or non-text term is a bad request (400), not a server
+        // error: a WP_Error without a status is sent as HTTP 500. "0" is a real
+        // search term, so don't test with empty().
+        if ( ! is_scalar( $keyword ) || '' === trim( (string) $keyword ) ) {
+            return new WP_Error(
+                'betterdocs_faq_search_empty',
+                __( 'FAQ Search Parameter Cannot Be Empty', 'betterdocs' ),
+                [ 'status' => 400 ]
+            );
         }
+
+        $keyword = (string) $keyword;
 
         // Scope the search to the requested FAQ taxonomy (General vs. WooCommerce
         // Product FAQ Groups). Whitelisted so an arbitrary taxonomy can't be queried.

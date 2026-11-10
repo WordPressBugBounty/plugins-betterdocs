@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 use Error;
+use WP_Error;
 use WP_Query;
 use WP_REST_Response;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
@@ -704,7 +705,13 @@ class Docs extends BaseAPI {
 		$search_input = sanitize_text_field( $request->get_param( 's' ) );
 		$no_result    = sanitize_text_field( $request->get_param( 'no_result' ) );
 
+		// insert_search_keyword() applies the length and per-IP limits for every
+		// logging path (this route and the admin-ajax live search handlers, #242).
+		// A keyword too long to log is dropped quietly; a throttled visitor gets a 429.
 		$result = betterdocs()->query->insert_search_keyword( $search_input, $no_result );
+		if ( is_wp_error( $result ) ) {
+			return 'betterdocs_search_log_too_long' === $result->get_error_code() ? false : $result;
+		}
 
 		if ( ! empty( $search_input ) ) {
 			/**
@@ -725,10 +732,19 @@ class Docs extends BaseAPI {
 		return $result;
 	}
 
-
 	public function get_terms_name_and_slug( $request ) {
+		// Public route: serve BetterDocs taxonomies only. With no taxonomy,
+		// get_terms() returns terms from every taxonomy, and Pro's Content
+		// Restriction filter never sees doc_category / knowledge_base in that
+		// query, so restricted category and KB names reached visitors (#295).
+		$taxonomy = $request->get_param( 'taxonomy' );
+		$taxonomy = is_string( $taxonomy ) && '' !== $taxonomy ? $taxonomy : 'doc_category';
+		if ( ! in_array( $taxonomy, [ 'doc_category', 'doc_tag', 'knowledge_base' ], true ) ) {
+			return new WP_Error( 'betterdocs_invalid_taxonomy', __( 'Invalid taxonomy.', 'betterdocs' ), [ 'status' => 400 ] );
+		}
+
 		$default_params = [
-			'taxonomy'   => $request->get_param( 'taxonomy' ),
+			'taxonomy'   => $taxonomy,
 			'hide_empty' => false,
 			'fields'     => 'all',
 		];
@@ -739,7 +755,7 @@ class Docs extends BaseAPI {
 
 		// Add KB filtering if knowledge_base parameter is provided
 		$kb_slug = $request->get_param( 'knowledge_base' );
-		if ( ! empty( $kb_slug ) && $request->get_param( 'taxonomy' ) === 'doc_category' ) {
+		if ( ! empty( $kb_slug ) && 'doc_category' === $taxonomy ) {
 			// Categories can belong to multiple KBs (stored as serialized array in doc_category_knowledge_base)
 			// We need to filter categories that have the KB slug in their serialized array
 			$default_params['meta_query'] = [
@@ -753,6 +769,11 @@ class Docs extends BaseAPI {
 
 		// Retrieve all terms for the specified taxonomy, including empty ones
 		$terms = get_terms($default_params);
+
+		// knowledge_base is only registered while Multiple KB is on.
+		if ( is_wp_error( $terms ) ) {
+			return [];
+		}
 
 		// Initialize an empty array to hold the term data
 		$term_data = [];

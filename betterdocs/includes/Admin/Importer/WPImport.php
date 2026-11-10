@@ -338,15 +338,7 @@ class WPImport extends WP_Importer {
 				// If you want the resulting array to have numeric keys
 				$posts = array_values( $filtered_posts );
 			}if ( $existing_posts_array && $action == 'replace' ) {
-				foreach ( $existing_posts_array as $slug ) {
-					$post = get_page_by_path( $slug, OBJECT, 'docs' ); // Replace 'docs' with your custom post type if needed
-
-					if ( $post ) {
-						$post_id = $post->ID;
-						// Permanently delete the post (including from trash)
-						wp_delete_post( $post_id, true );
-					}
-				}
+				$this->trash_docs_replaced_by_import( $posts, $existing_posts_array );
 			}
 		}
 
@@ -693,18 +685,46 @@ class WPImport extends WP_Importer {
 			// If you want the resulting array to have numeric keys
 			$posts = array_values( $filtered_posts );
 		}if ( $existing_posts_array && $action == 'replace' ) {
-			foreach ( $existing_posts_array as $slug ) {
-				$post = get_page_by_path( $slug, OBJECT, 'docs' ); // Replace 'docs' with your custom post type if needed
+			$this->trash_docs_replaced_by_import( $posts, $existing_posts_array );
+		}
 
-				if ( $post ) {
-					$post_id = $post->ID;
-					// Permanently delete the post (including from trash)
-					wp_delete_post( $post_id, true );
+		return $posts;
+	}
+
+	/**
+	 * "Replace" for an import: move the existing docs this file brings back to
+	 * the trash, so the imported copies take their place.
+	 *
+	 * The slug list comes from the request. Every doc it named used to be
+	 * deleted permanently, whether or not the file contained it and whether or
+	 * not the user may delete it (#260). Now only docs whose slug is in the
+	 * file are touched, only those the user may delete, and they go to the
+	 * trash where they can be restored. WordPress frees a trashed doc's slug
+	 * when the imported one claims it.
+	 *
+	 * @param array $posts          Posts parsed from the file (XML or CSV rows).
+	 * @param array $existing_slugs Slugs the request asks to replace.
+	 * @return void
+	 */
+	private function trash_docs_replaced_by_import( $posts, $existing_slugs ) {
+		$file_slugs = [];
+		foreach ( (array) $posts as $post ) {
+			foreach ( [ 'post_name', 'Docs Slug' ] as $key ) {
+				if ( ! empty( $post[ $key ] ) && is_string( $post[ $key ] ) ) {
+					$file_slugs[] = sanitize_title( $post[ $key ] );
 				}
 			}
 		}
 
-		return $posts;
+		$slugs = array_intersect( array_map( 'sanitize_title', array_filter( (array) $existing_slugs, 'is_string' ) ), $file_slugs );
+
+		foreach ( array_unique( $slugs ) as $slug ) {
+			$doc = get_page_by_path( $slug, OBJECT, 'docs' );
+
+			if ( $doc && current_user_can( 'delete_post', $doc->ID ) ) {
+				wp_trash_post( $doc->ID );
+			}
+		}
 	}
 
 	/**

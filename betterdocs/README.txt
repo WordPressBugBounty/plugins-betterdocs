@@ -1,11 +1,11 @@
 === BetterDocs – AI Documentation, Knowledge Base, MCP Server, Docs, Wikis, FAQ & Chatbot ===
-Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu, jamilbd07
+Contributors: wpdevteam, re_enter_rupok, asif2bd, emsohel, priyomukul, seakashdiu
 Donate link: https://wpdeveloper.com
 Tags:  docs, documentation, knowledge base, faq, chatgpt ai writer
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 4.9.5
+Stable tag: 4.9.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -215,13 +215,11 @@ Only when you click "Generate" in AI Sample Docs. It sends your site name, tagli
 Only when you open the BetterDocs templates in Elementor's template library. It requests the template list and the template you insert; your site URL is sent as part of the request.
 [Terms](https://betterdocs.co/terms-conditions/), [Privacy Policy](https://wpdeveloper.com/privacy-policy/).
 
-**AI providers (OpenAI, Anthropic, Google Gemini, OpenRouter, DeepSeek)**
+**AI providers (OpenAI, Anthropic, Google Gemini)**
 Only for the provider you configure with your own API key, and only when an AI feature runs (Write with AI, AI editing, article summaries, FAQ generation and similar). It sends the prompt and the doc content the feature works on.
 - OpenAI (`api.openai.com`): [Terms](https://openai.com/policies/terms-of-use/), [Privacy Policy](https://openai.com/policies/privacy-policy/)
 - Anthropic (`api.anthropic.com`): [Terms](https://www.anthropic.com/legal/commercial-terms), [Privacy Policy](https://www.anthropic.com/legal/privacy)
 - Google Gemini (`generativelanguage.googleapis.com`): [Terms](https://ai.google.dev/gemini-api/terms), [Privacy Policy](https://policies.google.com/privacy)
-- OpenRouter (`openrouter.ai`): [Terms](https://openrouter.ai/terms), [Privacy Policy](https://openrouter.ai/privacy)
-- DeepSeek (`api.deepseek.com`): [Terms](https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html), [Privacy Policy](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html)
 
 **Help Scout migration (`docsapi.helpscout.net`)**
 Only when you enter your Help Scout API key and run the migration. It sends your key to read your Help Scout Docs collections, categories and articles.
@@ -286,6 +284,32 @@ Yes. BetterDocs includes an MCP server, which lets AI assistants such as Claude,
 
 
 == Changelog ==
+
+= 4.9.6 - 10/11/2026 =
+
+- New: Latest AI models in AI Content Suite — GPT-6 Luna, GPT-6.1 Sol, GPT-6 Astra, Gemini 3.5 Flash Lite, Gemini 3.8 Flash and Claude Haiku, Sonnet and Opus 5.5
+- New: Model prices and Recommended, Older and Premium badges in the AI model picker
+- New: Delete Data on Uninstall setting
+- Improvement: Sites on a retired AI model move to its closest replacement automatically
+- Fixed: Spam bots could flood the doc feedback form
+- Fixed: Write with AI and AI Doc Summarizer settings couldn't be saved on GPT-5 and GPT-6 models
+- Fixed: Saving settings with BetterDocs Pro deactivated removed Pro-only settings
+- Fixed: Previous/next doc navigation could link a doc to itself
+- Fixed: Quick Setup could need more than one click to finish
+- Fixed: Importing docs with "Replace" permanently deleted docs that weren't in the file
+- Fixed: Importing an invalid settings file wiped all settings
+- Fixed: Doc URLs returned 404 after turning on Category Hierarchy Slug
+- Fixed: A doc added to a category later could be missing from the category page
+- Fixed: All Docs showed only 10 uncategorized docs
+- Fixed: A zero column value crashed the category box shortcode
+- Fixed: Creating sample FAQs failed for an existing FAQ group and added duplicates
+- Fixed: The FAQ Builder search failed for an empty search
+- Fixed: WPML and Polylang compatibility issues with category and doc ordering
+- Fixed: Categories without a saved order were missing when using BetterDocs Order
+- Fixed: Previous/next links ignored BetterDocs Order
+- Fixed: "BetterDocs Order" appeared twice in the Category Grid block
+- Improved: Security Enhancement
+- Few minor bug fixes and improvements
 
 = 4.9.5 - 12/10/2026 =
 

@@ -103,6 +103,13 @@ class BlockEditor extends BaseEditor {
 
 		$this->assets->register( 'betterdocs-blocks-editor-controls', 'blocks/controls.css' );
 		$this->assets->register( 'betterdocs-blocks-editor', 'blocks/style-editor.css', [ 'betterdocs-blocks-editor-controls' ] );
+		// editor.js depends on the style handler, which StyleHandler only loads in the
+		// post and site editors. Anywhere else the block editor runs (widgets screen,
+		// customizer) register the handle as an empty placeholder so the dependency
+		// resolves — WP 6.9.1+ flags a missing one — without loading that script.
+		if ( ! wp_script_is( 'betterdocs-blocks-style-handler', 'registered' ) ) {
+			wp_register_script( 'betterdocs-blocks-style-handler', false, [], betterdocs()->version, true );
+		}
 		$this->assets->register( 'betterdocs-blocks-editor', 'blocks/editor.js', [ 'betterdocs-blocks-style-handler' ] );
 		$this->assets->enqueue( 'betterdocs-blocks-actions', 'blocks/actions.js', [] );
 		$this->assets->localize(

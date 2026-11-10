@@ -21,6 +21,17 @@ class DocCategories extends BaseAPI {
             'password' => array(
                 'description' => __( 'The password for password-protected docs.', 'betterdocs' ),
                 'type' => 'string'
+            ),
+            'uncategorized_per_page' => array(
+                'description' => __( 'Maximum number of uncategorized docs to return.', 'betterdocs' ),
+                'type' => 'integer',
+                'minimum' => 1,
+                'maximum' => 100
+            ),
+            'uncategorized_page' => array(
+                'description' => __( 'Page of uncategorized docs to return.', 'betterdocs' ),
+                'type' => 'integer',
+                'minimum' => 1
             )
         ) );
         $this->get( 'doc-categories-kb', array( $this, 'doc_categories_kb_response' ) );
@@ -158,12 +169,13 @@ class DocCategories extends BaseAPI {
         $terms    = get_terms( $terms_query );
         $response = array();
 
-        // Determine allowed post statuses based on user permissions
+        // Statuses to query. Anyone who can write docs may own docs in any of
+        // them; which of those docs they may actually see is decided per doc by
+        // can_list_doc() below.
         $post_status = array( 'publish' );
         if ( current_user_can( 'read_private_docs' ) ) {
             $post_status[] = 'private';
         }
-        // Admin users with edit_docs capability should see all post statuses
         if ( current_user_can( 'edit_docs' ) ) {
             $post_status = array( 'publish', 'draft', 'pending', 'private', 'future' );
         }
@@ -200,6 +212,10 @@ class DocCategories extends BaseAPI {
             while ( $posts->have_posts() ):
                 $posts->the_post();
                 $post_obj = get_post( get_the_ID() );
+
+                if ( ! $this->can_list_doc( $post_obj ) ) {
+                    continue;
+                }
 
                 // Double-check password protection for individual posts
                 if ( ! empty( $post_obj->post_password ) ) {
@@ -242,12 +258,38 @@ class DocCategories extends BaseAPI {
 
         $_post__not_in = $wpdb->get_col( $_post__not_in_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- query is prepared above.
 
+        $total_uncategorized = 0;
+
         if ( ! empty( $_post__not_in ) ) {
-            $uncategorized_docs       = array();
+            $uncategorized_docs = array();
+
+            // The All Docs grid (doc editors) needs the whole Uncategorized column
+            // to drag docs into categories and save their order, so editors get
+            // every uncategorized doc, like the per-category lists above. Without
+            // posts_per_page the default of 10 applied and the rest never showed
+            // (#235). The route is public, so other callers get at most 100 per
+            // request; anyone can page with uncategorized_per_page (max 100) and
+            // uncategorized_page, and total_uncategorized gives the full count.
+            $uncategorized_per_page = (int) $request->get_param( 'uncategorized_per_page' );
+            if ( $uncategorized_per_page > 0 ) {
+                $uncategorized_per_page = min( $uncategorized_per_page, 100 );
+            } elseif ( current_user_can( 'edit_docs' ) ) {
+                $uncategorized_per_page = -1;
+            } else {
+                $uncategorized_per_page = 100;
+            }
+
             $uncategorized_query_args = array(
                 'post_type' => 'docs',
                 'post_status' => $post_status,
-                'post__in' => $_post__not_in
+                'post__in' => $_post__not_in,
+                'posts_per_page' => $uncategorized_per_page,
+                'paged' => max( 1, (int) $request->get_param( 'uncategorized_page' ) ),
+                // Newest first, with the id as a tie-break so pages don't overlap.
+                'orderby' => array(
+                    'date' => 'DESC',
+                    'ID' => 'DESC'
+                )
             );
 
             // Exclude password-protected posts unless user has permission
@@ -256,6 +298,7 @@ class DocCategories extends BaseAPI {
             }
 
             $_uncategorized_docs_query = new \WP_Query( $uncategorized_query_args );
+            $total_uncategorized       = (int) $_uncategorized_docs_query->found_posts;
 
             if ( ! $_uncategorized_docs_query->have_posts() ) {
                 wp_reset_postdata();
@@ -263,6 +306,10 @@ class DocCategories extends BaseAPI {
             while ( $_uncategorized_docs_query->have_posts() ):
                 $_uncategorized_docs_query->the_post();
                 $post_obj = get_post( get_the_ID() );
+
+                if ( ! $this->can_list_doc( $post_obj ) ) {
+                    continue;
+                }
 
                 // Double-check password protection for individual posts
                 if ( ! empty( $post_obj->post_password ) ) {
@@ -288,7 +335,8 @@ class DocCategories extends BaseAPI {
 
         return array(
             'data' => $response,
-            'total_terms' => $total_terms
+            'total_terms' => $total_terms,
+            'total_uncategorized' => $total_uncategorized
         );
     }
 
@@ -338,6 +386,31 @@ class DocCategories extends BaseAPI {
         }
 
         return $data;
+    }
+
+    /**
+     * Whether the current user may see this doc in the listing.
+     *
+     * Published docs are listed for everyone. Anything else follows WordPress's
+     * own rules, as /wp/v2/docs does: a private doc needs read_post (own, or
+     * read_private_docs) and a draft, pending or scheduled doc needs edit_post
+     * (own, or edit_others_docs). Querying every status for anyone with
+     * edit_docs listed other people's unpublished and private docs to
+     * Contributors and Authors (#234).
+     *
+     * @param \WP_Post $post
+     * @return bool
+     */
+    private function can_list_doc( $post ) {
+        if ( 'publish' === $post->post_status ) {
+            return true;
+        }
+
+        if ( 'private' === $post->post_status ) {
+            return current_user_can( 'read_post', $post->ID );
+        }
+
+        return current_user_can( 'edit_post', $post->ID );
     }
 
     /**

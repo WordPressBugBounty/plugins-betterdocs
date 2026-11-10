@@ -6,7 +6,7 @@ namespace WPDeveloper\BetterDocs\AI\Contracts;
  * Contract every AI chat provider must fulfil.
  *
  * A provider wraps a single platform's chat-completion API (OpenAI, Gemini,
- * Claude, DeepSeek, OpenRouter, …). The rest of BetterDocs talks to providers
+ * Claude). The rest of BetterDocs talks to providers
  * only through this interface, so adding a platform is a new class — not a new
  * conditional sprinkled across the content-suite features.
  *

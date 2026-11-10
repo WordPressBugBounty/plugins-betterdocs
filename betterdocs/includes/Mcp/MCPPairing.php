@@ -119,7 +119,9 @@ final class MCPPairing {
 	public static function connect_url() {
 		$token = self::site_token();
 
-		if ( '' === $token ) {
+		// The path form is off unless a site opts back in (see
+		// MCPManager::maybe_handle_pretty_endpoint()), so do not hand out a URL that fails.
+		if ( '' === $token || ! apply_filters( 'betterdocs_mcp_allow_path_token', false ) ) {
 			return '';
 		}
 

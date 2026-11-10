@@ -41,7 +41,7 @@ class CreateFAQGroup extends AbilityBase {
 		$this->id          = 'betterdocs/create-faq-group';
 		$this->label       = __( 'Create FAQ group', 'betterdocs' );
 		$this->description = __( 'Create a BetterDocs FAQ group (the FAQ Builder calls it a category). A name that already exists is returned as it is, with created:false, so the call is safe to repeat. FAQ groups are what bd-attach-faq puts on a doc.', 'betterdocs' );
-		$this->capability  = 'edit_others_docs';
+		$this->capability  = 'read_faq_builder';
 	}
 
 	/**

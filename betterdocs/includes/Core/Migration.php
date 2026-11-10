@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use WP_Query;
 use WPDeveloper\BetterDocs\Utils\Base;
 use WPDeveloper\BetterDocs\Utils\Database;
+use WPDeveloper\BetterDocs\Utils\AIHelper;
 use WPDeveloper\BetterDocs\Dependencies\DI\Container;
 
 class Migration extends Base {
@@ -39,6 +40,7 @@ class Migration extends Base {
 		$this->fix_search_table_collation();
 		$this->backfill_search_keyword_hash();
 		$this->reset_formerly_locked_analytics_settings();
+		$this->migrate_retired_ai_models();
 
 		/**
 		 * Settings Migration
@@ -248,5 +250,72 @@ class Migration extends Base {
 		}
 
 		$this->database->save( 'betterdocs_unlocked_analytics_settings_migrated', '1' );
+	}
+
+	/**
+	 * Move AI settings off models and platforms that are no longer offered.
+	 *
+	 * ProviderFactory already falls back to the platform default for a stored
+	 * model the catalogue no longer lists, but that silently drops a site on a
+	 * removed top-tier model to the cheapest default. Map each removed model to
+	 * its successor instead. DeepSeek and OpenRouter are no longer supported, so
+	 * a site on either moves to OpenAI and their stored keys are deleted.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return void
+	 */
+	public function migrate_retired_ai_models() {
+		if ( $this->database->get( 'betterdocs_retired_ai_models_migrated', false ) ) {
+			return;
+		}
+
+		$settings = $this->database->get( 'betterdocs_settings', [] );
+
+		if ( is_array( $settings ) ) {
+			$replacements = \WPDeveloper\BetterDocs\AI\ModelRegistry::successors();
+			$changed = false;
+
+			foreach ( [ 'ai_model', 'write_with_ai_model', 'article_summary_model' ] as $key ) {
+				if ( isset( $settings[ $key ] ) && is_string( $settings[ $key ] ) && isset( $replacements[ $settings[ $key ] ] ) ) {
+					$settings[ $key ] = $replacements[ $settings[ $key ] ];
+					$changed          = true;
+				}
+			}
+
+			if ( isset( $settings['ai_platform'] ) && in_array( $settings['ai_platform'], [ 'deepseek', 'openrouter' ], true ) ) {
+				$settings['ai_platform'] = 'openai';
+				$settings['ai_model']    = 'gpt-4o-mini';
+				$changed                 = true;
+			}
+
+			// A successor can need a larger token budget than the retired model
+			// (gpt-4.1-nano kept 2500 / 1500; gpt-6-luna needs 10000). Settings
+			// rejects a save below the model's minimum, so raise the stored budgets
+			// now, or the AI Content Suite tab could not be saved after the update.
+			if ( $changed && ! empty( $settings['ai_model'] ) && is_string( $settings['ai_model'] ) ) {
+				foreach ( [ 'write_with_ai' => 'ai_autowrite_max_token', 'article_summary' => 'article_summary_max_token' ] as $context => $token_key ) {
+					$min = AIHelper::get_min_tokens( $context, $settings['ai_model'] );
+					// A missing key falls back to the 2500 / 1500 defaults, which are
+					// below the minimum too.
+					if ( $min > 0 && ( ! isset( $settings[ $token_key ] ) || (int) $settings[ $token_key ] < $min ) ) {
+						$settings[ $token_key ] = $min;
+					}
+				}
+			}
+
+			foreach ( [ 'ai_api_key_deepseek', 'ai_api_key_openrouter' ] as $key ) {
+				if ( array_key_exists( $key, $settings ) ) {
+					unset( $settings[ $key ] );
+					$changed = true;
+				}
+			}
+
+			if ( $changed ) {
+				$this->database->save( 'betterdocs_settings', $settings );
+			}
+		}
+
+		$this->database->save( 'betterdocs_retired_ai_models_migrated', '1' );
 	}
 }

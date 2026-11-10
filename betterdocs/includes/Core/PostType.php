@@ -216,12 +216,15 @@ class PostType extends Base {
 	public function modify_doc_category_rest_query( $args, $request ) {
 		$order_by = $request->get_param( 'orderby' );
 		if ( isset( $order_by ) && 'doc_category_order' === $order_by ) {
-			// Get language-specific meta key for multilingual sites
-			$meta_key = $this->get_category_order_meta_key();
+			// Same as the front-end "BetterDocs Order": Query::betterdocs_order_terms_clauses()
+			// orders by the language key, then the base key, and keeps categories
+			// that have neither. Joining on the language key alone dropped the rest,
+			// so the block editor's preview and category picker missed them (#306).
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- ordering by user-assigned doc_category_order meta is core feature.
-			$args['meta_key'] = $meta_key;
-			$args['orderby']  = 'meta_value_num';
-			$args['order']    = $request->get_param( 'order' ) ?: 'ASC';
+			$args['meta_key']         = 'doc_category_order';
+			$args['orderby']          = 'meta_value_num';
+			$args['order']            = $request->get_param( 'order' ) ?: 'ASC';
+			$args['betterdocs_order'] = true;
 		}
 
 		return $this->maybe_all_languages_args( $args, $request );
@@ -356,6 +359,9 @@ class PostType extends Base {
 		add_action( 'new_to_auto-draft', [ $this, 'auto_add_category' ] );
 		add_action( 'save_post_docs', [ $this, 'save_docs' ] );
 		add_action( 'rest_after_insert_docs', [ $this, 'save_docs' ] );
+		// Any way a doc joins a category (WPML translations, imports, REST, WP-CLI),
+		// not only a save with the category already set (#305).
+		add_action( 'set_object_terms', [ $this, 'add_doc_to_new_category_orders' ], 10, 6 );
 
 		// Doc Category Taxonomy EXTRA Fields
 		add_action( 'admin_enqueue_scripts', [ $this, 'scripts' ] );
@@ -736,6 +742,13 @@ class PostType extends Base {
 			// Get language-specific meta key for multilingual sites
 			$meta_key = $this->get_category_order_meta_key();
 			update_term_meta( $term_id, $meta_key, $max_order );
+
+			// Also give the category the base key when it has none. Readers that
+			// only know the base key, and WPML (which copies only the base key
+			// to translations), otherwise treat it as unordered (#306).
+			if ( 'doc_category_order' !== $meta_key && '' === (string) get_term_meta( $term_id, 'doc_category_order', true ) ) {
+				update_term_meta( $term_id, 'doc_category_order', $max_order );
+			}
 		}
 	}
 
@@ -1083,12 +1096,36 @@ class PostType extends Base {
 			usleep( 100000 ); // 100ms delay to prevent race conditions
 		}
 
+		$doc_ids = [];
 		if ( isset( $_POST['docs_ordering_data'] ) && is_array( $_POST['docs_ordering_data'] ) ) {
 			// Unslash and sanitize each element in the array
-			$docs_ordering_data = implode( ',', array_map( 'intval', array_map( 'sanitize_text_field', wp_unslash( $_POST['docs_ordering_data'] ) ) ) );
-		} else {
-			$docs_ordering_data = ''; // Default to an empty string if not set
+			$doc_ids = array_map( 'intval', array_map( 'sanitize_text_field', wp_unslash( $_POST['docs_ordering_data'] ) ) );
 		}
+
+		// Keep only ids of docs that exist: the order used to be saved verbatim,
+		// non-existent ids included (#233). The posts are loaded in batches first
+		// so the check costs a few queries, not one per doc.
+		$doc_ids = array_values(
+			array_filter(
+				array_unique( $doc_ids ),
+				function ( $doc_id ) {
+					return $doc_id > 0;
+				}
+			)
+		);
+
+		foreach ( array_chunk( $doc_ids, 500 ) as $chunk ) {
+			_prime_post_caches( $chunk, false, false );
+		}
+
+		$doc_ids = array_values(
+			array_filter(
+				$doc_ids,
+				function ( $doc_id ) {
+					return 'docs' === get_post_type( $doc_id );
+				}
+			)
+		);
 
 		$term_id = isset( $_POST['list_term_id'] ) ? intval( wp_unslash( $_POST['list_term_id'] ) ) : 0;
 
@@ -1101,6 +1138,33 @@ class PostType extends Base {
 		if ( is_wp_error( $term ) || ! $term ) {
 			wp_send_json_error( __( 'Invalid category.', 'betterdocs' ) );
 		}
+
+		// Reordering moves every doc in the list, so a user who cannot manage
+		// doc categories must be able to edit each of them. edit_docs alone let a
+		// Contributor reorder other people's published docs (#233). The 403
+		// makes the All Docs grid refetch and drop the rejected drag.
+		if ( ! current_user_can( 'manage_doc_terms' ) ) {
+			// An empty list would clear the category's order for everyone.
+			if ( empty( $doc_ids ) ) {
+				wp_send_json_error( __( 'You don\'t have permission to reorder the docs in this category.', 'betterdocs' ), 403 );
+			}
+
+			foreach ( $doc_ids as $doc_id ) {
+				if ( ! current_user_can( 'edit_post', $doc_id ) ) {
+					wp_send_json_error( __( 'You don\'t have permission to reorder the docs in this category.', 'betterdocs' ), 403 );
+				}
+			}
+
+			// The saved order is the category's post__in, so a partial list
+			// would hide every doc it leaves out. Rearrange only the docs sent.
+			$doc_ids = $this->merge_into_docs_order( $term_id, $doc_ids );
+
+			if ( false === $doc_ids ) {
+				wp_send_json_error( __( 'You can only reorder docs that are in this category.', 'betterdocs' ), 403 );
+			}
+		}
+
+		$docs_ordering_data = implode( ',', $doc_ids );
 
 		// Always write the language-specific key when a language is detected.
 		// Falling back to the base key on first save lets WPML's "copy from
@@ -1126,6 +1190,85 @@ class PostType extends Base {
 		}
 
 		wp_send_json_error( __( 'Something went wrong.', 'betterdocs' ) );
+	}
+
+	/**
+	 * A category's saved doc order, read the way the front end reads it.
+	 *
+	 * @param int $term_id doc_category term ID.
+	 * @return int[]
+	 */
+	private function get_saved_docs_order( $term_id ) {
+		$saved = (string) get_term_meta( $term_id, Helper::get_meta_key_with_fallback( '_docs_order', $term_id ), true );
+
+		return array_values( array_filter( array_map( 'intval', explode( ',', $saved ) ) ) );
+	}
+
+	/**
+	 * The doc order a category shows now: its saved order, with the category's
+	 * docs that the order lacks in front (as Query::get_docs_order_by_terms()
+	 * lists them). Without a saved order the category lists by menu_order.
+	 *
+	 * @param int $term_id doc_category term ID.
+	 * @return int[]|false Doc IDs, or false if the category's docs can't be read.
+	 */
+	private function get_current_docs_order( $term_id ) {
+		$members = get_objects_in_term( $term_id, 'doc_category' );
+		if ( is_wp_error( $members ) ) {
+			return false;
+		}
+
+		$members = array_map( 'intval', $members );
+		$order   = $this->get_saved_docs_order( $term_id );
+
+		if ( empty( $order ) ) {
+			foreach ( array_chunk( $members, 500 ) as $chunk ) {
+				_prime_post_caches( $chunk, false, false );
+			}
+
+			usort(
+				$members,
+				function ( $a, $b ) {
+					$a_order = (int) get_post_field( 'menu_order', $a );
+					$b_order = (int) get_post_field( 'menu_order', $b );
+
+					return $a_order === $b_order ? $a - $b : $a_order - $b_order;
+				}
+			);
+		}
+
+		return array_values( array_unique( array_merge( array_diff( $members, $order ), $order ) ) );
+	}
+
+	/**
+	 * Fold a partial doc order into the category's current order (#233).
+	 *
+	 * The submitted docs are rearranged among the positions they already hold;
+	 * every other doc keeps its place. A user who can't manage doc categories
+	 * can then reorder their own docs without dropping anyone else's from the
+	 * order, which the front end uses as post__in.
+	 *
+	 * @param int   $term_id doc_category term ID.
+	 * @param int[] $doc_ids Docs in their new order, all in this category.
+	 * @return int[]|false The full order, or false if a doc isn't in the category.
+	 */
+	private function merge_into_docs_order( $term_id, $doc_ids ) {
+		$order = $this->get_current_docs_order( $term_id );
+
+		if ( false === $order || array_diff( $doc_ids, $order ) ) {
+			return false;
+		}
+
+		$sent  = array_flip( $doc_ids );
+		$queue = $doc_ids;
+
+		foreach ( $order as $index => $doc_id ) {
+			if ( isset( $sent[ $doc_id ] ) ) {
+				$order[ $index ] = array_shift( $queue );
+			}
+		}
+
+		return $order;
 	}
 
 	/**
@@ -1159,6 +1302,13 @@ class PostType extends Base {
 			wp_send_json_error( __( 'Invalid document.', 'betterdocs' ) );
 		}
 
+		// Changing a doc's categories is editing that doc. edit_docs alone let a
+		// Contributor or Author move other people's docs between categories,
+		// which WordPress itself refuses them (#233).
+		if ( ! current_user_can( 'edit_post', $object_id ) ) {
+			wp_send_json_error( __( 'You don\'t have permission to edit this doc.', 'betterdocs' ), 403 );
+		}
+
 		// Verify the term exists
 		$term = get_term( $term_id, 'doc_category' );
 		if ( is_wp_error( $term ) || ! $term ) {
@@ -1187,6 +1337,27 @@ class PostType extends Base {
 		$terms_added = wp_set_post_terms( $object_id, $term_ids, 'doc_category' );
 
 		if ( ! is_wp_error( $terms_added ) ) {
+			// Keep the saved orders in step with the move. The destination's
+			// order is its post__in, so if the grid's follow-up reorder is
+			// refused the doc would be in the category but shown nowhere (#233);
+			// it goes in front, as save_docs() does. The source drops it, since
+			// a reorder by a user who can't manage categories never drops ids.
+			$save_key = Helper::get_meta_key_for_save( '_docs_order' );
+			$order    = $this->get_saved_docs_order( $term_id );
+
+			if ( ! empty( $order ) && ! in_array( $object_id, $order, true ) ) {
+				array_unshift( $order, $object_id );
+				update_term_meta( $term_id, $save_key, implode( ',', $order ) );
+			}
+
+			if ( $prev_term_id && $prev_term_id !== $term_id ) {
+				$prev_order = $this->get_saved_docs_order( $prev_term_id );
+
+				if ( in_array( $object_id, $prev_order, true ) ) {
+					update_term_meta( $prev_term_id, $save_key, implode( ',', array_diff( $prev_order, [ $object_id ] ) ) );
+				}
+			}
+
 			// Clear relevant caches
 			clean_post_cache( $object_id );
 			wp_send_json_success( __( 'Successfully updated.', 'betterdocs' ) );
@@ -1219,20 +1390,91 @@ class PostType extends Base {
 
 		update_post_meta( $post_id, '_betterdocs_est_reading_text', $est_reading_text );
 
-		if ( ! empty( $term_list ) ) {
+		if ( ! empty( $term_list ) && ! is_wp_error( $term_list ) ) {
 			foreach ( $term_list as $term_id ) {
-				$term_meta = get_term_meta( $term_id, '_docs_order', true );
-				if ( ! empty( $term_meta ) ) {
-					$_term_meta_array = explode( ',', $term_meta );
+				$this->add_doc_to_category_orders( $post_id, $term_id );
+			}
+		}
+	}
 
-					if ( ! in_array( $post_id, $_term_meta_array ) ) {
-						array_unshift( $_term_meta_array, $post_id );
-						$_docs_order_data = filter_var_array( wp_unslash( $_term_meta_array ), FILTER_SANITIZE_NUMBER_INT );
-						update_term_meta( $term_id, '_docs_order', implode( ',', $_docs_order_data ) );
-					}
-				} else {
-					update_term_meta( $term_id, '_docs_order', implode( ',', [ $post_id ] ) );
+	/**
+	 * set_object_terms: add a doc to the saved order of each category it just
+	 * joined (#305).
+	 *
+	 * save_docs() only sees the categories a doc has when it is saved. WPML
+	 * assigns a translation's categories after inserting the post, and imports,
+	 * REST and WP-CLI can set them without a save, so those docs were never
+	 * added. "BetterDocs Order" passes the order as post__in, so a doc missing
+	 * from it is hidden.
+	 *
+	 * @param int    $object_id  Object ID.
+	 * @param array  $terms      Terms as passed to wp_set_object_terms().
+	 * @param array  $tt_ids     Term taxonomy IDs the object now has.
+	 * @param string $taxonomy   Taxonomy slug.
+	 * @param bool   $append     Whether the terms were appended.
+	 * @param array  $old_tt_ids Term taxonomy IDs the object had before.
+	 */
+	public function add_doc_to_new_category_orders( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
+		if ( 'doc_category' !== $taxonomy || 'docs' !== get_post_type( $object_id ) ) {
+			return;
+		}
+
+		$added = array_diff( array_map( 'intval', (array) $tt_ids ), array_map( 'intval', (array) $old_tt_ids ) );
+
+		foreach ( $added as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', $tt_id, 'doc_category' );
+			if ( $term instanceof \WP_Term ) {
+				$this->add_doc_to_category_orders( (int) $object_id, (int) $term->term_id );
+			}
+		}
+	}
+
+	/**
+	 * Put a doc at the front of a category's saved doc orders, if it isn't there.
+	 *
+	 * Covers the base `_docs_order` (created when the category has none, as
+	 * before) and every non-empty `_docs_order_{lang}`. The front end reads the
+	 * language order when it has one (Helper::get_meta_key_with_fallback()), so
+	 * adding the doc to the base order only left it out on multilingual sites
+	 * (#305). Every order of a category lists that category's docs, so the doc
+	 * goes into each of them; empty language orders are left alone, since the
+	 * reader falls back to the base order for those.
+	 *
+	 * @param int $post_id Doc ID.
+	 * @param int $term_id doc_category term ID.
+	 */
+	public function add_doc_to_category_orders( $post_id, $term_id ) {
+		$post_id = (int) $post_id;
+		$term_id = (int) $term_id;
+
+		if ( $post_id <= 0 || $term_id <= 0 ) {
+			return;
+		}
+
+		$meta = get_term_meta( $term_id );
+		$keys = [ '_docs_order' ];
+
+		foreach ( array_keys( is_array( $meta ) ? $meta : [] ) as $key ) {
+			if ( preg_match( '/^_docs_order_[a-z0-9_-]+$/i', $key ) ) {
+				$keys[] = $key;
+			}
+		}
+
+		foreach ( $keys as $key ) {
+			$saved = (string) get_term_meta( $term_id, $key, true );
+
+			if ( '' === trim( $saved ) ) {
+				if ( '_docs_order' === $key ) {
+					update_term_meta( $term_id, $key, (string) $post_id );
 				}
+				continue;
+			}
+
+			$order = array_values( array_filter( array_map( 'intval', explode( ',', $saved ) ) ) );
+
+			if ( ! in_array( $post_id, $order, true ) ) {
+				array_unshift( $order, $post_id );
+				update_term_meta( $term_id, $key, implode( ',', $order ) );
 			}
 		}
 	}

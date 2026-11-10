@@ -70,6 +70,38 @@ final class SettingsSchema {
 	];
 
 	/**
+	 * Setting keys an agent may read but never write. They decide who can see
+	 * what (content restriction, Internal KB), who holds which BetterDocs
+	 * capabilities (role management), and where visitor data and reports are
+	 * sent (recipients, redirect targets). One call from a prompt-injected agent
+	 * could otherwise make an internal knowledge base public, hand subscribers
+	 * settings access, or copy visitor mail to an outside address — so these
+	 * stay with a person in the admin UI. Pro and add-ons extend the list through
+	 * `betterdocs_mcp_not_writable_setting_keys` (see `admin_only_keys()`).
+	 *
+	 * @since 4.9.6
+	 */
+	const ADMIN_UI_ONLY_KEYS = [
+		// Content restriction / Internal KB.
+		'enable_content_restriction',
+		'internal_knowledge_base_type',
+		'content_visibility',
+		'restrict_template',
+		'restrict_category',
+		'restrict_kb',
+		'restricted_redirect_url',
+		// Role management.
+		'article_roles',
+		'settings_roles',
+		'analytics_roles',
+		'faq_roles',
+		// Where reports and visitor feedback are sent.
+		'reporting_email',
+		'email_address',
+		'feedback_url'
+	];
+
+	/**
 	 * Credential-shaped setting keys the MCP surface must never read back, on
 	 * top of `Settings::sensitive_api_key_fields()` — which lists only the AI
 	 * provider keys. `recaptcha_secret_key` is Pro's server-side reCAPTCHA
@@ -81,7 +113,17 @@ final class SettingsSchema {
 	 * @since 4.9.0
 	 */
 	const MCP_SECRET_KEYS = [
-		'recaptcha_secret_key'
+		'recaptcha_secret_key',
+		// Stored in the same option by the HelpScout migration and by Pro's Git
+		// integration, GA4 and GeoIP. None is in the settings tree today, but a
+		// future field must not be able to expose them, and the settings export
+		// leaves every key on this list out (@since 4.9.6).
+		'helpscout_api_key',
+		'git_access_token',
+		'git_webhook_secret',
+		'github_client_secret',
+		'ga4_api_secret',
+		'maxmind_license_key'
 	];
 
 	/**
@@ -136,11 +178,10 @@ final class SettingsSchema {
 	/**
 	 * Keys whose change makes WordPress rewrite rules stale.
 	 *
-	 * The first six are what `Core\Rewrite::flush_rewrite_rules()` compares
-	 * (measured at `Rewrite.php` L134–144) before setting the
-	 * `betterdocs_flush_rewrite_rules` transient. The last two change which
-	 * taxonomies register at all, from the next request, and pretty knowledge
-	 * base URLs need a flush after them.
+	 * The first seven are what `Core\Rewrite::save_permalink_structure()`
+	 * compares before setting the `betterdocs_flush_rewrite_rules` transient.
+	 * The last two change which taxonomies register at all, from the next
+	 * request, and pretty knowledge base URLs need a flush after them.
 	 *
 	 * @since 4.9.0
 	 */
@@ -151,6 +192,7 @@ final class SettingsSchema {
 		'docs_page',
 		'tag_slug',
 		'category_slug',
+		'enable_category_hierarchy_slugs',
 		'multiple_kb',
 		'disable_root_slug_mkb'
 	];
@@ -293,6 +335,29 @@ final class SettingsSchema {
 	}
 
 	/**
+	 * Every setting key that holds a credential (see `secret_keys()`).
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return string[]
+	 */
+	public static function secret_setting_keys() {
+		return self::secret_keys();
+	}
+
+	/**
+	 * Is this key readable but only writable from the admin UI?
+	 *
+	 * @since 4.9.6
+	 *
+	 * @param string $key Setting key.
+	 * @return bool
+	 */
+	public static function is_admin_ui_only( $key ) {
+		return in_array( (string) $key, self::admin_only_keys(), true );
+	}
+
+	/**
 	 * May this key be written with this value?
 	 *
 	 * Every refusal is typed and says what would work instead, because the
@@ -319,6 +384,17 @@ final class SettingsSchema {
 				sprintf(
 					/* translators: %s: setting key. */
 					__( '"%s" is not a BetterDocs setting; call bd-get-settings-schema for the keys this site accepts.', 'betterdocs' ),
+					$key
+				)
+			);
+		}
+
+		if ( ! empty( $entry['admin_only'] ) ) {
+			return AbilityError::invalid_input(
+				$key,
+				sprintf(
+					/* translators: %s: setting key. */
+					__( '"%s" controls access, roles or where site data is sent, so it can only be changed by a person in the BetterDocs settings screen, not through MCP.', 'betterdocs' ),
 					$key
 				)
 			);
@@ -600,8 +676,9 @@ final class SettingsSchema {
 	 * @return array
 	 */
 	private static function entry_for( $key, $type, array $field, $tab, $section, array $defaults ) {
-		$json_type = self::TYPE_MAP[ $type ];
-		$secret    = self::is_secret( $key );
+		$json_type  = self::TYPE_MAP[ $type ];
+		$secret     = self::is_secret( $key );
+		$admin_only = self::is_admin_ui_only( $key );
 
 		// `get_default()` is authoritative: it is what `Settings::get()` returns
 		// when nothing is stored, whatever the tree's own `default` says.
@@ -621,7 +698,8 @@ final class SettingsSchema {
 			'enum'                => self::enum_of( $field ),
 			'min'                 => isset( $field['min'] ) ? (int) $field['min'] : null,
 			'max'                 => isset( $field['max'] ) ? (int) $field['max'] : null,
-			'writable'            => empty( $field['disabled'] ),
+			'writable'            => empty( $field['disabled'] ) && ! $admin_only,
+			'admin_only'          => $admin_only,
 			'readable'            => ! $secret,
 			'rewrite_consequence' => in_array( $key, self::REWRITE_KEYS, true ),
 			'notes'               => []
@@ -663,7 +741,9 @@ final class SettingsSchema {
 			$notes[] = __( 'Write-only: this value is never read back, only replaced.', 'betterdocs' );
 		}
 
-		if ( ! $entry['writable'] ) {
+		if ( ! empty( $entry['admin_only'] ) ) {
+			$notes[] = __( 'Read-only over MCP: it controls access, roles or where site data is sent, so only a person can change it in the settings screen.', 'betterdocs' );
+		} elseif ( ! $entry['writable'] ) {
 			$notes[] = __( 'Disabled on this site, so it cannot be written.', 'betterdocs' );
 		}
 
@@ -873,6 +953,28 @@ final class SettingsSchema {
 		 * @param string[] $keys Setting keys treated as secret.
 		 */
 		$keys = (array) apply_filters( 'betterdocs_mcp_secret_setting_keys', $keys );
+
+		return array_values( array_unique( array_map( 'strval', $keys ) ) );
+	}
+
+	/**
+	 * The keys MCP may read but never write.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return string[]
+	 */
+	private static function admin_only_keys() {
+		/**
+		 * Filters the setting keys MCP may read but never write: settings that
+		 * decide access, capabilities or where site data is sent. Pro and
+		 * add-ons extend it for the keys their own settings add.
+		 *
+		 * @since 4.9.6
+		 *
+		 * @param string[] $keys Setting keys that stay with the admin UI.
+		 */
+		$keys = (array) apply_filters( 'betterdocs_mcp_not_writable_setting_keys', self::ADMIN_UI_ONLY_KEYS );
 
 		return array_values( array_unique( array_map( 'strval', $keys ) ) );
 	}

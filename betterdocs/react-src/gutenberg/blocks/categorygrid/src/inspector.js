@@ -180,14 +180,9 @@ const Inspector = ({
 		});
 	};
 
-	// control POSTS_ORDER_BY for pro plugin
-	let posts_order_by = [
-        ...POSTS_ORDER_BY,
-        {
-            label: __("BetterDocs Order", "betterdocs"),
-            value: "betterdocs_order",
-        },
-	];
+	// POSTS_ORDER_BY already ends with "BetterDocs Order"; appending it again
+	// listed the option twice (#304).
+	let posts_order_by = [...POSTS_ORDER_BY];
 
 	return (
 		<InspectorControls key="controls">

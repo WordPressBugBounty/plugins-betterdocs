@@ -4,7 +4,7 @@ namespace WPDeveloper\BetterDocs\AI\Providers;
 
 /**
  * Base for platforms that speak the OpenAI Chat Completions wire format
- * (OpenAI itself, DeepSeek, OpenRouter, …). Subclasses only declare their id,
+ * (OpenAI today). Subclasses only declare their id,
  * label, and base URL; everything else — payload, auth, parsing, key
  * validation — is shared here.
  *
@@ -54,7 +54,7 @@ abstract class OpenAICompatibleProvider extends BaseProvider {
     }
 
     /**
-     * Optional extra headers (OpenRouter uses these for attribution).
+     * Optional extra headers a subclass needs on every request.
      *
      * @return array
      */
@@ -116,10 +116,10 @@ abstract class OpenAICompatibleProvider extends BaseProvider {
         if ( ! empty( $data['error'] ) ) {
             $message = isset( $data['error']['message'] ) ? $data['error']['message'] : __( 'Unknown API error.', 'betterdocs' );
             // Classify by HTTP status so a rate limit reads as one. Every platform on
-            // this wire format (OpenAI, DeepSeek, OpenRouter) answers a quota/rate
-            // rejection with 429 and a retired model with 404, but their raw text
-            // differs per vendor — without this the REST layer relayed that text
-            // verbatim as a bare `ai_upstream` 502 and the user never learned it was
+            // this wire format answers a quota/rate rejection with 429 and a retired
+            // model with 404, but the raw text differs per vendor — without this the
+            // REST layer relayed that text verbatim as a bare `ai_upstream` 502 and
+            // the user never learned it was
             // a rate limit they could simply wait out.
             return new \WP_Error( 'provider_error', $this->classify_http_error( $status, $message, $model ) );
         }

@@ -3,5 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 esc_html_e( 'Name', 'betterdocs' ); ?></strong>: <?php echo esc_html( $name ); ?> <br>
+<?php if ( ! empty( $email ) ) : ?>
+<strong><?php esc_html_e( 'Email', 'betterdocs' ); ?></strong>: <a href="mailto:<?php echo esc_attr( $email ); ?>"><?php echo esc_html( $email ); ?></a> <br>
+<?php endif; ?>
 <strong><?php esc_html_e( 'Docs', 'betterdocs' ); ?></strong>: <?php echo esc_html( $article ); ?> <br>
 <?php echo esc_html( $message_text ); ?>

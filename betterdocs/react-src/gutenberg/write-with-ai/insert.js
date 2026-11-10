@@ -6,6 +6,7 @@
 
 import { dispatch, select } from "@wordpress/data";
 import { rawHandler } from "@wordpress/blocks";
+import { sanitizeHtml } from "../../utils/sanitizeHtml";
 
 const escapeHtml = (str) =>
     String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -19,14 +20,17 @@ const stripCodeFences = (htmlString) => {
         .replace(/\n?\s*```\s*$/, "");
 };
 
+// Every helper below parses the AI response with innerHTML on a detached <div>,
+// where an <img onerror> still fires, so the body is sanitised here — the one
+// place the raw response enters — before anything parses or previews it.
 const getBodyContent = (htmlString) => {
     if (!htmlString) return "";
     const cleaned = stripCodeFences(htmlString);
     const match = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
     if (match) {
-        return match[1].replace(/<p>\s+/g, "<p>");
+        return sanitizeHtml(match[1].replace(/<p>\s+/g, "<p>"));
     }
-    return cleaned;
+    return sanitizeHtml(cleaned);
 };
 
 // Pull the AI-generated title out of the raw response: the first <h1>'s text.

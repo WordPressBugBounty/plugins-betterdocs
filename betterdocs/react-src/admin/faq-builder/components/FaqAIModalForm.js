@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
 import { normalizeAIError } from "../../../utils/aiErrorMessage";
+import { sanitizeHtml } from "../../../utils/sanitizeHtml";
 import Modal from "react-modal";
 
 import { getSettingsData, generateFaqAnswer } from "../utils/function";
@@ -88,8 +89,8 @@ const FaqAIModalForm = ({
 
 		// Mirror the server-side ProviderFactory::key_field_for(): the key lives in
 		// the field for the *selected* AI platform, not always OpenAI. OpenAI keeps
-		// the legacy `ai_autowrite_api_key`; every other platform (gemini, claude,
-		// deepseek, …) uses `ai_api_key_<platform>`. Checking only the OpenAI field
+		// the legacy `ai_autowrite_api_key`; every other platform (gemini,
+		// claude) uses `ai_api_key_<platform>`. Checking only the OpenAI field
 		// blocked "Write with AI" whenever another provider was configured.
 		const platform = settings.ai_platform || 'openai';
 		const field = platform === 'openai' ? 'ai_autowrite_api_key' : `ai_api_key_${platform}`;
@@ -110,7 +111,9 @@ const FaqAIModalForm = ({
 			// The prompt build, model selection and "Answer:" cleanup now happen
 			// server-side; the OpenAI API key never leaves the server.
 			const res = await generateFaqAnswer({ question, keywords });
-			const answer = res?.data?.answer || "";
+			// Sanitised on entry: this answer is previewed, handed to the TinyMCE
+			// editor via aiValue and saved as the FAQ's post_content.
+			const answer = sanitizeHtml(res?.data?.answer || "");
 
 			setIsLoading(false);
 
@@ -259,7 +262,7 @@ const FaqAIModalForm = ({
 								{__("Generated FAQ", "betterdocs")}
 							</label>
 							<div className="betterdocs-ai-content-wrapper">
-								<p className="betterdocs-ai-content" dangerouslySetInnerHTML={{ __html: generatedAnswer }} />
+								<p className="betterdocs-ai-content" dangerouslySetInnerHTML={{ __html: sanitizeHtml(generatedAnswer) }} />
 							</div>
 						</div>
 					)}

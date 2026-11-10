@@ -84,27 +84,36 @@ class AIHelper {
      * @return int Minimum recommended max_tokens for that pair.
      */
     public static function get_min_tokens( $context, $model ) {
-        $family = self::token_family( $model );
-        $map = apply_filters( 'betterdocs_ai_min_tokens', array(
-            'write_with_ai'   => array( 'gpt-4' => 2500, 'gpt-5' => 4500, 'gpt-5.5' => 10000 ),
-            'article_summary' => array( 'gpt-4' => 1500, 'gpt-5' => 2500, 'gpt-5.5' => 10000 ),
-        ) );
+        $family   = self::token_family( $model );
+        $defaults = array(
+            'write_with_ai'   => array( 'gpt-4' => 2500, 'gpt-5' => 4500, 'gpt-6' => 10000 ),
+            'article_summary' => array( 'gpt-4' => 1500, 'gpt-5' => 2500, 'gpt-6' => 10000 ),
+        );
+        $map = apply_filters( 'betterdocs_ai_min_tokens', $defaults );
+        // Before 4.9.6 the heavy tier was keyed 'gpt-5.5'. The shipped map never
+        // has that key, so its presence means a site filter set it; honour it
+        // unless the same filter also changed the new 'gpt-6' value.
+        if ( 'gpt-6' === $family && isset( $map[ $context ]['gpt-5.5'] )
+            && ( ! isset( $map[ $context ]['gpt-6'] ) || (int) $map[ $context ]['gpt-6'] === (int) ( $defaults[ $context ]['gpt-6'] ?? 0 ) ) ) {
+            $family = 'gpt-5.5';
+        }
         return isset( $map[ $context ][ $family ] ) ? (int) $map[ $context ][ $family ] : 0;
     }
 
     /**
      * Map a model id to its token-floor family key.
      *
-     * gpt-5.x point releases (gpt-5.5, gpt-5.1, ...) generate much larger, slower
-     * responses and need a heavier floor than the base gpt-5 family, so they get
-     * their own 'gpt-5.5' key. Plain gpt-5* stays 'gpt-5'; everything else 'gpt-4'.
+     * GPT-6 and the gpt-5.x point releases (gpt-5.1, gpt-5.5, ...) generate much
+     * larger, slower responses and need a heavier floor than the base gpt-5
+     * family, so they share the 'gpt-6' key. Plain gpt-5* stays 'gpt-5';
+     * everything else 'gpt-4'.
      *
      * @param string $model OpenAI model identifier.
      * @return string Family key used in the min-token map.
      */
     private static function token_family( $model ) {
-        if ( self::is_gpt5_point_release( $model ) ) {
-            return 'gpt-5.5';
+        if ( self::is_gpt6( $model ) || self::is_gpt5_point_release( $model ) ) {
+            return 'gpt-6';
         }
         return ( 0 === strpos( (string) $model, 'gpt-5' ) ) ? 'gpt-5' : 'gpt-4';
     }
@@ -121,6 +130,32 @@ class AIHelper {
     }
 
     /**
+     * Whether a model belongs to the GPT-6 family (gpt-6-luna, gpt-6.1-sol, ...).
+     *
+     * @since 4.9.6
+     *
+     * @param string $model OpenAI model identifier.
+     * @return bool
+     */
+    public static function is_gpt6( $model ) {
+        return 0 === strpos( (string) $model, 'gpt-6' );
+    }
+
+    /**
+     * Whether an OpenAI model is a reasoning model that takes
+     * `max_completion_tokens` and `reasoning_effort` and rejects a custom
+     * `temperature` (the GPT-5 and GPT-6 families).
+     *
+     * @since 4.9.6
+     *
+     * @param string $model OpenAI model identifier.
+     * @return bool
+     */
+    public static function is_reasoning_model( $model ) {
+        return 0 === strpos( (string) $model, 'gpt-5' ) || self::is_gpt6( $model );
+    }
+
+    /**
      * Return the threshold map for one context, in {family => min} shape, so
      * Settings.php can serialize it onto a field for the React notice to read.
      *
@@ -129,9 +164,9 @@ class AIHelper {
      */
     public static function get_min_tokens_map( $context ) {
         return array(
-            'gpt-4'   => self::get_min_tokens( $context, 'gpt-4o' ),
-            'gpt-5'   => self::get_min_tokens( $context, 'gpt-5' ),
-            'gpt-5.5' => self::get_min_tokens( $context, 'gpt-5.5' ),
+            'gpt-4' => self::get_min_tokens( $context, 'gpt-4o' ),
+            'gpt-5' => self::get_min_tokens( $context, 'gpt-5' ),
+            'gpt-6' => self::get_min_tokens( $context, 'gpt-6' ),
         );
     }
 

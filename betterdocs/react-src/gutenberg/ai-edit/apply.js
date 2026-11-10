@@ -1,13 +1,22 @@
 import { dispatch, select } from "@wordpress/data";
 import { create, insert, toHTMLString } from "@wordpress/rich-text";
 import { rawHandler } from "@wordpress/blocks";
+import { sanitizeHtml } from "../../utils/sanitizeHtml";
+
+// The preview sanitises only what it shows, so the raw AI result is sanitised
+// again here, right before it becomes blocks: an <img onerror> or javascript:
+// link hidden from the preview must not reach the post either.
+const toBlocks = (resultHtml) => {
+    const html = sanitizeHtml(resultHtml);
+    return html ? rawHandler({ HTML: html }) : [];
+};
 
 export const applyBlockReplace = (clientId, resultHtml) => {
     if (!clientId || !resultHtml) {
         return false;
     }
 
-    const newBlocks = rawHandler({ HTML: resultHtml });
+    const newBlocks = toBlocks(resultHtml);
     if (!newBlocks || !newBlocks.length) {
         return false;
     }
@@ -21,7 +30,7 @@ export const applyInsertAfter = (clientId, resultHtml) => {
         return false;
     }
 
-    const newBlocks = rawHandler({ HTML: resultHtml });
+    const newBlocks = toBlocks(resultHtml);
     if (!newBlocks || !newBlocks.length) {
         return false;
     }
@@ -37,10 +46,11 @@ export const applyInsertAfter = (clientId, resultHtml) => {
     return true;
 };
 
+// DOMParser gives an inert document, so markup in the AI result (an <img
+// onerror>, say) cannot run while we read its text.
 const plainFromHtml = (html) => {
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    const body = new DOMParser().parseFromString(String(html || ""), "text/html").body;
+    return (body && body.textContent) || "";
 };
 
 export const applyInlineReplace = (clientId, inlineContext, resultText) => {

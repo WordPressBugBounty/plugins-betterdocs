@@ -325,6 +325,11 @@ class MarkdownEndpoint {
 			header( 'Access-Control-Allow-Origin: *' );
 		}
 
+		// Insights: how often the Markdown copy is actually read (Copy page, View
+		// as Markdown, AI assistants fetching <doc>.md). Sampled/buffered: this
+		// runs for every anonymous fetch, so it must not write an option each time.
+		\WPDeveloper\BetterDocs\Utils\UsageCounter::record_sampled( 'markdown_views' );
+
 		echo $markdown; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- plain-text Markdown body.
 		exit;
 	}

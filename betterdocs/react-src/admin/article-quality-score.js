@@ -16,6 +16,23 @@ jQuery(document).ready(function($) {
         return __('Poor', 'betterdocs');
     }
 
+    // The analysis is AI output, and the doc being scored is text a contributor
+    // controls, so every value is treated as untrusted before it is concatenated
+    // into the results markup (the PHP render of the same panel escapes too).
+    function escapeHtml(value) {
+        return String(value === null || value === undefined ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function toScore(value) {
+        const n = Number(value);
+        return Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : 0;
+    }
+
     function showResults(container, data) {
         const $container = $(container);
         const $results = $container.find('.quality-results');
@@ -29,7 +46,7 @@ jQuery(document).ready(function($) {
         const analysisData = data.data || data;
 
         // Build results HTML
-        const score = analysisData.overall_score || 0;
+        const score = toScore(analysisData.overall_score);
         const scores = analysisData.scores || {};
         const feedback = analysisData.feedback || {};
         const strengths = feedback.strengths || [];
@@ -79,10 +96,10 @@ jQuery(document).ready(function($) {
             resultsHTML += '<h3 class="section-title">' + __('Score Breakdown', 'betterdocs') + '</h3>';
             resultsHTML += '<div class="score-breakdown-list">';
             Object.keys(scores).forEach(function(criterion) {
-                const criterionScore = scores[criterion];
+                const criterionScore = toScore(scores[criterion]);
                 resultsHTML += '<div class="score-item">';
                 resultsHTML += '<div class="score-name-group">';
-                resultsHTML += '<span class="score-name">' + criterion.charAt(0).toUpperCase() + criterion.slice(1) + '</span>';
+                resultsHTML += '<span class="score-name">' + escapeHtml(criterion.charAt(0).toUpperCase() + criterion.slice(1)) + '</span>';
                 resultsHTML += '<span class="score-percentage">' + criterionScore + '%</span>';
                 resultsHTML += '</div>';
                 resultsHTML += '<div class="score-bar-group">';
@@ -115,7 +132,7 @@ jQuery(document).ready(function($) {
 				resultsHTML += '<path d="M5 8.88L6.67619 10.8L10.8667 6" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>';
 				resultsHTML += '</svg>';
                 resultsHTML += '</div>';
-                resultsHTML += '<span class="improvement-text">' + suggestion + '</span>';
+                resultsHTML += '<span class="improvement-text">' + escapeHtml(suggestion) + '</span>';
                 resultsHTML += '</div>';
             });
             resultsHTML += '</div>';

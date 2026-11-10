@@ -6,8 +6,6 @@ use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\AI\Providers\OpenAIProvider;
 use WPDeveloper\BetterDocs\AI\Providers\GeminiProvider;
 use WPDeveloper\BetterDocs\AI\Providers\ClaudeProvider;
-use WPDeveloper\BetterDocs\AI\Providers\DeepSeekProvider;
-use WPDeveloper\BetterDocs\AI\Providers\OpenRouterProvider;
 
 /**
  * Resolves the active AI provider from settings and constructs it with the
@@ -66,8 +64,6 @@ class ProviderFactory {
             'openai'     => OpenAIProvider::class,
             'gemini'     => GeminiProvider::class,
             'claude'     => ClaudeProvider::class,
-            'deepseek'   => DeepSeekProvider::class,
-            'openrouter' => OpenRouterProvider::class,
         ) );
     }
 

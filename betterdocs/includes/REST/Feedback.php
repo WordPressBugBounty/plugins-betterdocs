@@ -55,8 +55,19 @@ class Feedback extends BaseAPI {
 			[
 				'id'       => [
 					'type'              => 'integer',
+					// Reactions belong to docs the reader can see: published ones, and
+					// private ones for users allowed to read them. Any existing post used
+					// to be accepted, so visitors could record reactions on drafts and
+					// Pages (#242).
 					'validate_callback' => function ( $param, $request, $key ) {
-						return ! empty( $param ) && is_numeric( $param ) && get_post( $param ) !== null;
+						if ( empty( $param ) || ! is_numeric( $param ) || 'docs' !== get_post_type( (int) $param ) ) {
+							return false;
+						}
+
+						$status = get_post_status( (int) $param );
+
+						return 'publish' === $status
+							|| ( 'private' === $status && current_user_can( 'read_post', (int) $param ) );
 					},
 					'required'          => false,
 					'default'           => null

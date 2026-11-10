@@ -73,9 +73,10 @@ class CategoryBoxThree extends CategoryBox {
 		$term_count = is_wp_error( $_terms ) ? 0 : count( $_terms );
 		$styles     = '';
 
-		if ( $this->isset( 'column' ) ) {
-			$_c = intval( $this->attributes['column'] );
-		} else {
+		// At least one column: a non-number or 0 ("abc" → 0) made the modulo below a
+		// DivisionByZeroError that took the whole page down (#256).
+		$_c = $this->isset( 'column' ) ? intval( $this->attributes['column'] ) : 4;
+		if ( $_c < 1 ) {
 			$_c = 4;
 		}
 

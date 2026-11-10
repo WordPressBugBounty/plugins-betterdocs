@@ -30,7 +30,9 @@ use WPDeveloper\BetterDocs\Abilities\Traits\ShapesDocs;
  * match while `WP_REST_Posts_Controller` drops the items the caller may not
  * read, so a page legitimately comes back shorter than `total` suggests. The
  * headers are still the right source — `total_pages` is what a client loops
- * over — and the tool description says the two can differ.
+ * over — and the tool description says the two can differ. For callers
+ * without `edit_others_docs` the query itself is scoped to readable docs
+ * (`scope_to_readable()`), so their totals never count hidden ones.
  *
  * The listing runs in **view** context, not edit: in edit context the same
  * controller returns only the docs the caller may *edit*, so an author asking
@@ -225,7 +227,9 @@ class ListDocs extends AbilityBase {
 			$params[ $taxonomy ] = $ids;
 		}
 
+		$scope    = $this->scope_to_readable();
 		$response = $this->dispatch_response( 'GET', '/docs', $params, 'wp/v2' );
+		$scope();
 
 		if ( $response->is_error() ) {
 			$error = $response->as_error();
@@ -252,5 +256,63 @@ class ListDocs extends AbilityBase {
 			'page'        => $page,
 			'per_page'    => $per_page
 		];
+	}
+
+	/**
+	 * Keep the query to docs the caller may read, so `total` counts nothing
+	 * they cannot see.
+	 *
+	 * `X-WP-Total` counts every SQL match, and the controller only drops the
+	 * unreadable items afterwards — so an author could ask for
+	 * `{status: "private", search: "…"}` and learn from `total` that a hidden
+	 * doc with that word exists. For a caller without `edit_others_docs`,
+	 * other people's unpublished docs are excluded in SQL (private ones stay
+	 * when they hold `read_private_docs`); editors see everything anyway.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return callable Removes the scoping filters again.
+	 */
+	private function scope_to_readable() {
+		if ( current_user_can( 'edit_others_docs' ) ) {
+			return static function () {};
+		}
+
+		$user_id      = get_current_user_id();
+		$read_private = current_user_can( 'read_private_docs' );
+
+		$where = static function ( $where, $query ) use ( $user_id, $read_private ) {
+			if ( ! $query instanceof \WP_Query || ! $query->get( 'betterdocs_mcp_readable' ) ) {
+				return $where;
+			}
+
+			global $wpdb;
+
+			$visible = [ "{$wpdb->posts}.post_status = 'publish'" ];
+
+			if ( $read_private ) {
+				$visible[] = "{$wpdb->posts}.post_status = 'private'";
+			}
+
+			if ( $user_id ) {
+				$visible[] = $wpdb->prepare( "{$wpdb->posts}.post_author = %d", $user_id );
+			}
+
+			return $where . ' AND ( ' . implode( ' OR ', $visible ) . ' )';
+		};
+
+		$flag = static function ( $args ) {
+			$args['betterdocs_mcp_readable'] = true;
+
+			return $args;
+		};
+
+		add_filter( 'rest_docs_query', $flag, PHP_INT_MAX );
+		add_filter( 'posts_where', $where, PHP_INT_MAX, 2 );
+
+		return static function () use ( $flag, $where ) {
+			remove_filter( 'rest_docs_query', $flag, PHP_INT_MAX );
+			remove_filter( 'posts_where', $where, PHP_INT_MAX );
+		};
 	}
 }

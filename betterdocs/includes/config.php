@@ -13,7 +13,7 @@ use WPDeveloper\BetterDocs\Core\Settings;
 use WPDeveloper\BetterDocs\AI\ProviderFactory;
 return [
 	Enqueue::class => new Enqueue( BETTERDOCS_ABSURL, BETTERDOCS_ABSPATH, BETTERDOCS_VERSION ),
-	// Resolves the active AI platform (OpenAI / Gemini / Claude / DeepSeek / OpenRouter).
+	// Resolves the active AI platform (OpenAI / Gemini / Claude).
 	// Pro / add-ons can swap providers via the `betterdocs_ai_providers` filter, or
 	// replace the whole factory via the `betterdocs_container_config` filter.
 	ProviderFactory::class => function ( $container ) {

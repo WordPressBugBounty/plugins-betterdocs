@@ -42,7 +42,40 @@ class CreateFAQ extends AbilityBase {
 		$this->id          = 'betterdocs/create-faq';
 		$this->label       = __( 'Create FAQ', 'betterdocs' );
 		$this->description = __( 'Create a BetterDocs FAQ — one question and its answer — optionally in a group. The answer is markdown by default and is stored as HTML. group_name creates the group when it does not exist yet; group_id must already exist.', 'betterdocs' );
-		$this->capability  = 'edit_others_docs';
+		$this->capability  = 'read_faq_builder';
+	}
+
+	/**
+	 * The second capability an FAQ write needs.
+	 *
+	 * The FAQ is written through the FAQ Builder's route, which asks for
+	 * `read_faq_builder`, but it is read back (and a status other than publish
+	 * applied) through `wp/v2/betterdocs_faq` in edit context, which the docs
+	 * capabilities govern. Both are checked before anything is written, so a
+	 * role that has the FAQ Builder but no docs access is refused up front
+	 * instead of creating the FAQ and then failing (#257).
+	 *
+	 * @var string
+	 */
+	const DOCS_CAPABILITY = 'edit_others_docs';
+
+	/**
+	 * @return bool
+	 */
+	public function permission_callback() {
+		return parent::permission_callback() && current_user_can( self::DOCS_CAPABILITY );
+	}
+
+	/**
+	 * @param array $input Validated input.
+	 * @return array|\WP_Error
+	 */
+	public function execute_wrapper( $input ) {
+		if ( $this->is_enabled() && current_user_can( $this->capability ) && ! current_user_can( self::DOCS_CAPABILITY ) ) {
+			return AbilityError::capability_missing( self::DOCS_CAPABILITY, $this->permission_phrase() );
+		}
+
+		return parent::execute_wrapper( $input );
 	}
 
 	/**

@@ -398,7 +398,7 @@ PROMPT;
 
     /**
      * Assemble the chat options passed to the active provider. Document
-     * generation is long-running on every platform: reasoning models (gpt-5*)
+     * generation is long-running on every platform: reasoning models (gpt-5*, gpt-6*)
      * and larger non-OpenAI models (e.g. Claude Opus) routinely need well over
      * the old 50s default to return a full doc, which timed them out mid-
      * generation. Give every request a generous ceiling; fast models simply
@@ -599,7 +599,7 @@ PROMPT;
             return false;
         }
 
-        foreach ( array( 'gpt-4o', 'gpt-4.1', 'gpt-4-turbo', 'gpt-4-vision', 'chatgpt-4o', 'gpt-5', 'o1', 'o3', 'o4' ) as $family ) {
+        foreach ( array( 'gpt-4o', 'gpt-4.1', 'gpt-4-turbo', 'gpt-4-vision', 'chatgpt-4o', 'gpt-5', 'gpt-6', 'o1', 'o3', 'o4' ) as $family ) {
             if ( false !== strpos( $model, $family ) ) {
                 return true;
             }
@@ -785,7 +785,7 @@ PROMPT;
      *
      * @param string     $system_prompt System instruction for the model.
      * @param string     $user_prompt   User message / content payload.
-     * @param float|null $temperature   Optional sampling temperature (ignored for gpt-5*).
+     * @param float|null $temperature   Optional sampling temperature (ignored for gpt-5* and gpt-6*).
      * @return array{success:bool,content?:string,error?:string,model:string,...}
      */
     public function generate_openai_response_raw( $system_prompt, $user_prompt, $temperature = null ) {

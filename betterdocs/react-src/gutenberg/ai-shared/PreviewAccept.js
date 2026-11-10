@@ -5,6 +5,7 @@
 // modal (replace preview). Nothing is written anywhere except via onKeep.
 
 import { __ } from "@wordpress/i18n";
+import { sanitizeHtml } from "../../utils/sanitizeHtml";
 import {
     AIPill, Banner, Spinner, WorkingDots, TextBtn, GhostBtn, PrimaryBtn,
     IcRefresh, IcCheck,
@@ -43,8 +44,9 @@ export const ERR_LABEL = {
 // Rough word/section counts straight off the generated HTML string.
 const htmlStats = (html) => {
     if (!html) return { words: 0, sections: 0 };
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
+    // DOMParser builds an inert document: unlike innerHTML on a detached <div>,
+    // an <img onerror> in the AI response cannot fire while we count words.
+    const tmp = new DOMParser().parseFromString(html, "text/html").body;
     const text = (tmp.textContent || "").trim();
     const words = text ? text.split(/\s+/).length : 0;
     const sections = tmp.querySelectorAll("h2").length;
@@ -79,10 +81,11 @@ export const LoadingState = ({ label = __("Generating", "betterdocs") }) => {
     );
 };
 
-// Rendered HTML preview surface (the "DocPreview" equivalent).
+// Rendered HTML preview surface (the "DocPreview" equivalent). The HTML is the
+// raw AI response, so it is sanitised before it touches the DOM.
 const DocHtml = ({ html }) => (
     <div className="bd-ai-doc-preview" style={{ fontSize: 14, lineHeight: 1.7, color: "var(--ink-2)", animation: "bd-ai-blockIn .4s ease both" }}
-        dangerouslySetInnerHTML={{ __html: html }} />
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />
 );
 
 // The core body. `mode` is "doc" (rendered HTML) or "replace" (text in/out).
@@ -145,7 +148,7 @@ export const PreviewAccept = ({
                         <div>
                             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.4, textTransform: "uppercase", color: "var(--text-color-700, #344054)", marginBottom: 6 }}>{__("Suggested replacement", "betterdocs")}</div>
                             <div className="bd-ai-doc-preview" style={{ fontSize: 14.5, color: "var(--ink-2)", lineHeight: 1.7, animation: "bd-ai-blockIn .4s ease both" }}
-                                dangerouslySetInnerHTML={{ __html: suggestion }} />
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(suggestion) }} />
                         </div>
                     </div>
                 )}

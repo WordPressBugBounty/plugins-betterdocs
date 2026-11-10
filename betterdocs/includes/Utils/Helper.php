@@ -549,8 +549,11 @@ class Helper extends Base {
 					$current_language = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
 				}
 
-				// Check WPML admin language cookie (persists during AJAX)
-				if ( ! $current_language && isset( $_COOKIE['_icl_current_admin_language'] ) ) {
+				// Check WPML admin language cookie (persists during AJAX). It belongs to
+				// wp-admin: on the front end the page's own language must win, or a
+				// logged-in admin sees another language's order (#304).
+				if ( ! $current_language && isset( $_COOKIE['_icl_current_admin_language'] )
+					&& ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) ) {
 					$current_language = sanitize_text_field( wp_unslash( $_COOKIE['_icl_current_admin_language'] ) );
 				}
 

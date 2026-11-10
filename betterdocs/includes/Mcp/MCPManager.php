@@ -400,9 +400,36 @@ final class MCPManager {
 			$request->set_header( 'authorization', $auth );
 		}
 
-		// A token in the path is surfaced as a Bearer header, so there is one
-		// place that reads a credential. A real header, if also sent, wins.
+		// A token in the URL lands in web-server, proxy, CDN and WAF access logs
+		// and in browser history, and the pairing token never expires and acts as
+		// an administrator. Every connection recipe sends it in the Authorization
+		// header, so the URL forms are off: the query string never, and the path
+		// form only when a site opts back in for an old client (@since 4.9.6).
 		$path_token = isset( $vars[ self::TOKEN_QUERY_VAR ] ) ? (string) $vars[ self::TOKEN_QUERY_VAR ] : '';
+		$from_query = isset( $_GET[ self::TOKEN_QUERY_VAR ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- presence check only; the value is never used.
+
+		/**
+		 * Filters whether the legacy token-in-path URL
+		 * (`/betterdocs/mcp/<token>`) is still accepted.
+		 *
+		 * @since 4.9.6
+		 *
+		 * @param bool $allow Default false.
+		 */
+		$allow_path = (bool) apply_filters( 'betterdocs_mcp_allow_path_token', false );
+
+		if ( '' !== $path_token && ( $from_query || ! $allow_path ) ) {
+			status_header( 401 );
+			header( 'Content-Type: application/json; charset=utf-8' );
+			header( 'Cache-Control: no-store, private' );
+			echo wp_json_encode(
+				[
+					'error'   => 'token_in_url',
+					'message' => 'Send the BetterDocs MCP token in the Authorization header (Authorization: Bearer <token>) to ' . MCPPairing::site_endpoint() . ' instead of in the URL, and rotate the token under BetterDocs → MCP if this URL was shared or logged.'
+				]
+			);
+			exit;
+		}
 
 		if ( '' !== $path_token && '' === (string) $request->get_header( 'authorization' ) ) {
 			$request->set_header( 'authorization', 'Bearer ' . $path_token );
@@ -1624,6 +1651,17 @@ final class MCPManager {
 			);
 		}
 
+		// Registration is open by design, so it is budgeted per IP: a flood
+		// would otherwise evict real users' pending registrations and rewrite
+		// the OAuth option on every request.
+		if ( ! MCPRateLimiter::allow( 'register', 20, HOUR_IN_SECONDS ) ) {
+			return new \WP_Error(
+				'rate_limited',
+				__( 'Too many client registrations from this address. Try again later.', 'betterdocs' ),
+				[ 'status' => 429 ]
+			);
+		}
+
 		$body = $request->get_json_params();
 
 		if ( ! is_array( $body ) ) {
@@ -1664,6 +1702,19 @@ final class MCPManager {
 		if ( empty( $body ) ) {
 			$json = $request->get_json_params();
 			$body = is_array( $json ) ? $json : [];
+		}
+
+		if ( ! MCPRateLimiter::allow( 'token', 60, 10 * MINUTE_IN_SECONDS ) ) {
+			return self::token_error( 'slow_down', __( 'Too many token requests from this address. Try again later.', 'betterdocs' ), 429 );
+		}
+
+		// Every OAuth parameter is a string. Nested values ("code[]=x") used to
+		// reach strval() and emit "Array to string conversion" warnings from
+		// unauthenticated requests; they are refused instead.
+		foreach ( $body as $value ) {
+			if ( ! is_scalar( $value ) && null !== $value ) {
+				return self::token_error( 'invalid_request', __( 'Token request parameters must be strings.', 'betterdocs' ), 400 );
+			}
 		}
 
 		$body = array_map( 'strval', $body );

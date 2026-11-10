@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use WP_Error;
 use WP_User;
+use WPDeveloper\BetterDocs\Abilities\Settings\SettingsSchema;
 use WPDeveloper\BetterDocs\Admin\Builder\GlobalFields;
 use WPDeveloper\BetterDocs\Admin\Builder\Rules;
 use WPDeveloper\BetterDocs\AI\ModelRegistry;
@@ -103,6 +104,55 @@ class Settings extends Base {
     }
 
     /**
+     * Every settings key that holds a credential: the AI provider keys above
+     * plus the secrets Pro and the add-ons keep in the same option (reCAPTCHA
+     * secret, Git tokens, GA4 API secret, MaxMind licence key — see
+     * SettingsSchema::secret_setting_keys()). These are masked wherever the
+     * option is handed to the browser (settings screen, REST) and a masked
+     * value submitted back is never persisted.
+     *
+     * @since 4.9.6
+     *
+     * @return array<int,string>
+     */
+    public static function secret_setting_keys() {
+        $keys = self::sensitive_api_key_fields();
+
+        // 4.8.0 stored the OpenAI key under its per-platform name before 4.8.1 went back to
+        // `ai_autowrite_api_key`; sites upgraded through 4.8.0 can still hold it.
+        $keys[] = 'ai_api_key_openai';
+
+        if ( class_exists( SettingsSchema::class ) ) {
+            $keys = array_merge( $keys, SettingsSchema::secret_setting_keys() );
+        }
+
+        return array_values( array_unique( array_map( 'strval', $keys ) ) );
+    }
+
+    /**
+     * Mask every secret in a flat settings array before it is handed to the
+     * browser. Empty values stay empty so the UI can still tell "not set".
+     *
+     * @since 4.9.6
+     *
+     * @param array $values Settings values.
+     * @return array
+     */
+    public static function mask_secret_values( $values ) {
+        if ( ! is_array( $values ) ) {
+            return $values;
+        }
+
+        foreach ( self::secret_setting_keys() as $secret_key ) {
+            if ( ! empty( $values[ $secret_key ] ) && is_string( $values[ $secret_key ] ) ) {
+                $values[ $secret_key ] = Helper::mask_api_key( $values[ $secret_key ] );
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * This method is responsible for enqueueing scripts in settings panel
      *
      * @param string $hook
@@ -120,8 +170,8 @@ class Settings extends Base {
 
         $settings = GlobalFields::normalize( $this->settings_args() );
 
-        // Mask sensitive API keys before they reach the browser. Non-admins still get them stripped entirely below.
-        $sensitive_api_keys = self::sensitive_api_key_fields();
+        // Mask every stored secret before it reaches the browser. Non-admins still get them stripped entirely below.
+        $sensitive_api_keys = self::secret_setting_keys();
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! empty( $settings[ 'values' ][ $api_key_field ] ) ) {
                 $settings[ 'values' ][ $api_key_field ] = Helper::mask_api_key( $settings[ 'values' ][ $api_key_field ] );
@@ -243,6 +293,7 @@ class Settings extends Base {
             'analytics_from' => 'everyone',
             'unique_visitor_count' => true,
             'exclude_bot_analytics' => true,
+            'delete_data_on_uninstall' => false,
             'child_category_exclude' => false,
             'live_search' => true,
             'advance_search' => false,
@@ -339,8 +390,6 @@ class Settings extends Base {
             'ai_model' => 'gpt-4o-mini',
             'ai_api_key_gemini' => '',
             'ai_api_key_claude' => '',
-            'ai_api_key_deepseek' => '',
-            'ai_api_key_openrouter' => '',
             'enable_estimated_reading_time' => true,
             'enable_encyclopedia' => false,
             'enable_glossaries' => false,
@@ -516,6 +565,12 @@ class Settings extends Base {
             wp_send_json_error();
         }
 
+        // dark_mode is stored in the site-wide settings, so changing it takes
+        // the settings capability, as the REST dark-mode route does (#297).
+        if ( ! current_user_can( 'edit_docs_settings' ) ) {
+            wp_send_json_error( null, 403 );
+        }
+
         if ( isset( $_POST[ 'mode' ] ) ) {
             $mode = sanitize_text_field( wp_unslash( $_POST[ 'mode' ] ) );
             if ( $this->save( 'dark_mode', rest_sanitize_boolean( $mode ) ) ) {
@@ -678,6 +733,33 @@ class Settings extends Base {
 
         $_old_settings = $this->database->get( $this->base_key, $this->get_default() );
 
+        // Role grants are an administrator's call. `edit_docs_settings` can be
+        // handed to other roles, and a holder must not be able to widen it — to
+        // themselves or to every subscriber. Drop the incoming role keys so the
+        // stored values persist (hide_roles_management() keeps them off their
+        // screen; this covers REST and MCP callers too).
+        if ( ! current_user_can( 'manage_options' ) ) {
+            foreach ( self::role_setting_keys() as $role_key ) {
+                unset( $settings[ $role_key ] );
+                if ( isset( $settings[ 'values' ] ) && is_array( $settings[ 'values' ] ) ) {
+                    unset( $settings[ 'values' ][ $role_key ] );
+                }
+            }
+        }
+
+        // While Pro is inactive its fields are locked on the settings screen, and the form submits
+        // them at the placeholder values from pro_settings_default_values() (all off). Saving those
+        // would switch off Multiple KB, Glossaries, Content Restriction … for a site that has merely
+        // paused Pro. Nobody can edit them without Pro, so keep whatever is stored.
+        if ( ! betterdocs()->is_pro_active() ) {
+            foreach ( $this->pro_only_setting_keys() as $pro_key ) {
+                unset( $settings[ $pro_key ] );
+                if ( isset( $settings[ 'values' ] ) && is_array( $settings[ 'values' ] ) ) {
+                    unset( $settings[ 'values' ][ $pro_key ] );
+                }
+            }
+        }
+
         // The frontend only ever sees masked API keys. A submitted value that still looks like a
         // mask (contains a run of asterisks — no real key does) means "unchanged": restore the
         // stored original so a mask string is never persisted. Guarding on the mask SHAPE rather
@@ -686,7 +768,7 @@ class Settings extends Base {
         // preserve the corrupted value forever (round-2 follow-up #1). When the stored value is
         // itself mask-shaped it is unrecoverable — clear it so the UI and the GeoIP/GA4 status
         // surfaces honestly report a missing key instead of failing downstream with 401s.
-        $sensitive_api_keys = self::sensitive_api_key_fields();
+        $sensitive_api_keys = self::secret_setting_keys();
         foreach ( $sensitive_api_keys as $api_key_field ) {
             if ( ! isset( $settings[ $api_key_field ] ) ) {
                 continue;
@@ -884,7 +966,8 @@ class Settings extends Base {
                                     'label' => __( 'Built-in Documentation Page', 'betterdocs' ),
                                     'enable_disable_text_active' => true,
                                     'default' => 1,
-                                    'priority' => 2
+                                    'priority' => 2,
+                                    'label_subtitle' => __( 'To use your own page instead, turn this off and select it under "Docs Page". Without a selected page, the built-in page is turned back on when you save.', 'betterdocs' )
                                 ),
                                 'enable_category_hierarchy_slugs' => array(
                                     'name' => 'enable_category_hierarchy_slugs',
@@ -1003,6 +1086,15 @@ class Settings extends Base {
                                     'enable_disable_text_active' => true,
                                     'default' => true,
                                     'priority' => 15
+                                ),
+                                'delete_data_on_uninstall' => array(
+                                    'name' => 'delete_data_on_uninstall',
+                                    'type' => 'toggle',
+                                    'label' => __( 'Delete Data on Uninstall', 'betterdocs' ),
+                                    'enable_disable_text_active' => true,
+                                    'default' => false,
+                                    'priority' => 16,
+                                    'label_subtitle' => __( 'When BetterDocs is deleted, also remove its settings, analytics and search data, scheduled tasks and the permissions it gave to user roles. Your docs, FAQs and categories are kept, and so are the BetterDocs Pro and AI Chatbot settings while those plugins are installed. Saved API keys and tokens are always removed.', 'betterdocs' )
                                 )
 
                             )
@@ -2636,14 +2728,7 @@ class Settings extends Base {
                                                         'priority' => 1,
                                                         'multiple' => false,
                                                         'default' => 'openai',
-                                                        // DeepSeek and OpenRouter are temporarily hidden from the
-                                                        // dropdown. Filter the options here, NOT ModelRegistry::platforms() —
-                                                        // sensitive_api_key_fields() loops the registry to mask each
-                                                        // platform's key field, so trimming the registry would silently
-                                                        // un-mask those keys. Re-enable later by dropping the array_diff_key.
-                                                        'options' => GlobalFields::normalize_fields(
-                                                            array_diff_key( ModelRegistry::platforms(), array_flip( array( 'deepseek', 'openrouter' ) ) )
-                                                        )
+                                                        'options' => GlobalFields::normalize_fields( ModelRegistry::platforms() )
                                                     ),
                                                     // OpenAI's key field keeps its original name so installs
                                                     // that already saved a Write with AI key keep it.
@@ -2674,24 +2759,6 @@ class Settings extends Base {
                                                         'priority' => 2,
                                                         'rules' => Rules::is( 'ai_platform', 'claude' )
                                                     ),
-                                                    'ai_api_key_deepseek' => array(
-                                                        'name' => 'ai_api_key_deepseek',
-                                                        'type' => 'text',
-                                                        'label' => __( 'DeepSeek API Key', 'betterdocs' ),
-                                                        'label_subtitle' => sprintf( /* translators: %s: DeepSeek platform URL */ __( 'Generate a key from the <a target="_blank" href="%s">DeepSeek platform</a>.', 'betterdocs' ), esc_url( 'https://platform.deepseek.com/api_keys' ) ),
-                                                        'default' => '',
-                                                        'priority' => 2,
-                                                        'rules' => Rules::is( 'ai_platform', 'deepseek' )
-                                                    ),
-                                                    'ai_api_key_openrouter' => array(
-                                                        'name' => 'ai_api_key_openrouter',
-                                                        'type' => 'text',
-                                                        'label' => __( 'OpenRouter API Key', 'betterdocs' ),
-                                                        'label_subtitle' => sprintf( /* translators: %s: OpenRouter keys URL */ __( 'Generate a key from <a target="_blank" href="%s">OpenRouter</a>.', 'betterdocs' ), esc_url( 'https://openrouter.ai/keys' ) ),
-                                                        'default' => '',
-                                                        'priority' => 2,
-                                                        'rules' => Rules::is( 'ai_platform', 'openrouter' )
-                                                    ),
                                                     'ai_model' => array(
                                                         'name' => 'ai_model',
                                                         'type' => 'platform_model_select',
@@ -2700,7 +2767,22 @@ class Settings extends Base {
                                                         'priority' => 10,
                                                         'default' => 'gpt-4o-mini',
                                                         'catalogue' => ModelRegistry::catalogue(),
-                                                        'defaults' => ModelRegistry::defaults()
+                                                        'defaults' => ModelRegistry::defaults(),
+                                                        // Price and tier per model, shown in the list (#249).
+                                                        'model_meta' => ModelRegistry::catalogue_meta(),
+                                                        'prices_as_of' => ModelRegistry::PRICES_AS_OF,
+                                                        // Per-model token floors: picking a model raises these fields
+                                                        // to its minimum so the save is never refused for it.
+                                                        'token_floors' => array(
+                                                            'ai_autowrite_max_token' => array(
+                                                                'label' => __( 'Write with AI', 'betterdocs' ),
+                                                                'map' => AIHelper::get_min_tokens_map( 'write_with_ai' )
+                                                            ),
+                                                            'article_summary_max_token' => array(
+                                                                'label' => __( 'AI Doc Summarizer', 'betterdocs' ),
+                                                                'map' => AIHelper::get_min_tokens_map( 'article_summary' )
+                                                            )
+                                                        )
                                                     )
                                                 )
                                             ),
@@ -2981,6 +3063,37 @@ class Settings extends Base {
             'enable_disable' => false,
             'enable_content_restriction' => false
         );
+    }
+
+    /**
+     * Settings keys only Pro can change: the placeholders the settings screen and
+     * the setup wizard fill in while Pro is inactive, plus every field the
+     * settings tree marks `is_pro`.
+     *
+     * @since 4.9.6
+     *
+     * @return string[]
+     */
+    protected function pro_only_setting_keys() {
+        $keys = array_keys( $this->pro_settings_default_values() );
+
+        $settings_args = $this->settings_args();
+        $collect       = function ( $fields ) use ( &$collect, &$keys ) {
+            foreach ( (array) $fields as $field ) {
+                if ( ! is_array( $field ) ) {
+                    continue;
+                }
+                if ( ! empty( $field[ 'is_pro' ] ) && ! empty( $field[ 'name' ] ) && is_string( $field[ 'name' ] ) ) {
+                    $keys[] = $field[ 'name' ];
+                }
+                if ( ! empty( $field[ 'fields' ] ) && is_array( $field[ 'fields' ] ) ) {
+                    $collect( $field[ 'fields' ] );
+                }
+            }
+        };
+        $collect( isset( $settings_args[ 'tabs' ] ) ? $settings_args[ 'tabs' ] : array() );
+
+        return array_values( array_unique( $keys ) );
     }
 
     public function import_export_settings( $settings ) {
@@ -3310,7 +3423,8 @@ class Settings extends Base {
                                                                 'on' => 'click',
                                                                 'api' => '/betterdocs/v1/export-settings',
                                                                 'data' => array(
-                                                                    'betterdocs_settings' => get_option( 'betterdocs_settings' )
+                                                                    // export_settings() reads the option itself; never print secrets into the page.
+                                                                    'betterdocs_settings' => array_diff_key( (array) get_option( 'betterdocs_settings', array() ), array_flip( self::secret_setting_keys() ) )
                                                                 ),
                                                                 'swal' => array(
                                                                     'text' => __( 'File downloaded successfully.', 'betterdocs' ),
@@ -3473,15 +3587,46 @@ class Settings extends Base {
     }
 
     public function hide_roles_management( $tabData = array() ) {
-        global $current_user;
-
-        if ( $current_user instanceof WP_User && ! in_array( 'administrator', $current_user->roles ) ) {
-            unset( $tabData[ 'fields' ][ 'title-advance-settings' ][ 'fields' ][ 'article_roles' ] );
-            unset( $tabData[ 'fields' ][ 'title-advance-settings' ][ 'fields' ][ 'settings_roles' ] );
-            unset( $tabData[ 'fields' ][ 'title-advance-settings' ][ 'fields' ][ 'analytics_roles' ] );
-            unset( $tabData[ 'fields' ][ 'title-advance-settings' ][ 'fields' ][ 'faq_roles' ] );
+        if ( current_user_can( 'manage_options' ) ) {
+            return $tabData;
         }
 
+        // The role fields sit three levels below the tab. This used to unset
+        // `fields['title-advance-settings']…`, a path that does not exist, so the
+        // fields stayed visible — and writable — for every non-admin holding
+        // `edit_docs_settings`. The section holds only the four role fields.
+        $inner = &$tabData[ 'fields' ][ 'title_advance_settings' ][ 'fields' ][ 'tab-advanced-settings' ];
+        unset( $inner[ 'fields' ][ 'global_role_management' ] );
+
+        // The tab opened on the removed section, which left the pane blank;
+        // open the first section that is still there instead.
+        if ( isset( $inner[ 'active' ] ) && 'global_role_management' === $inner[ 'active' ] && ! empty( $inner[ 'fields' ] ) && is_array( $inner[ 'fields' ] ) ) {
+            $first_key      = null;
+            $first_priority = PHP_INT_MAX;
+            foreach ( $inner[ 'fields' ] as $key => $section ) {
+                $priority = is_array( $section ) && isset( $section[ 'priority' ] ) ? (int) $section[ 'priority' ] : PHP_INT_MAX - 1;
+                if ( null === $first_key || $priority < $first_priority ) {
+                    $first_key      = $key;
+                    $first_priority = $priority;
+                }
+            }
+            $first             = $inner[ 'fields' ][ $first_key ];
+            $inner[ 'active' ] = is_array( $first ) && isset( $first[ 'name' ] ) ? $first[ 'name' ] : $first_key;
+        }
+        unset( $inner );
+
         return $tabData;
+    }
+
+    /**
+     * Setting keys only an administrator may change: who holds which
+     * BetterDocs capabilities.
+     *
+     * @since 4.9.6
+     *
+     * @return string[]
+     */
+    public static function role_setting_keys() {
+        return array( 'article_roles', 'settings_roles', 'analytics_roles', 'faq_roles' );
     }
 }

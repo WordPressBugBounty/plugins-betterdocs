@@ -9,6 +9,7 @@ use WPDeveloper\BetterDocs\Admin\Importer\Parsers\CSV_Parser;
 use WPDeveloper\BetterDocs\Admin\Importer\WPImport;
 use WPDeveloper\BetterDocs\Admin\ReportEmail;
 use WPDeveloper\BetterDocs\Admin\XMLExporter;
+use WPDeveloper\BetterDocs\Abilities\Settings\SettingsSchema;
 use WPDeveloper\BetterDocs\Core\BaseAPI;
 use WPDeveloper\BetterDocs\Dependencies\DI\DependencyException;
 use WPDeveloper\BetterDocs\Dependencies\DI\NotFoundException;
@@ -18,7 +19,24 @@ use WPDeveloper\BetterDocs\Utils\Helper;
 
 class Settings extends BaseAPI {
 
-	public function permission_check(): bool {
+	/**
+	 * Routes that read or replace the whole settings option at once. They expose
+	 * every stored secret and every key (role grants, enable_mcp) in one call,
+	 * so they stay with administrators even where `edit_docs_settings` has been
+	 * handed to other roles.
+	 */
+	const ADMIN_ONLY_ROUTES = [ 'export-settings', 'import-settings' ];
+
+	public function permission_check( $request = null ): bool {
+		if ( $request instanceof WP_REST_Request ) {
+			// Lower-cased: WordPress matches routes case-insensitively, so
+			// `/Import-Settings` reaches the same handler as `/import-settings`.
+			$route = strtolower( basename( untrailingslashit( $request->get_route() ) ) );
+			if ( in_array( $route, self::ADMIN_ONLY_ROUTES, true ) ) {
+				return current_user_can( 'manage_options' );
+			}
+		}
+
 		return current_user_can( 'edit_docs_settings' );
 	}
 
@@ -115,6 +133,15 @@ class Settings extends BaseAPI {
 
     public function export_settings( WP_REST_Request $request ): array {
         $betterdocs_settings = get_option( 'betterdocs_settings' );
+        $betterdocs_settings = is_array( $betterdocs_settings ) ? $betterdocs_settings : [];
+
+        // An export file gets shared, attached to tickets and moved between
+        // sites: never put credentials in it. Secret keys are left out
+        // entirely, and import_settings() keeps the stored ones.
+        foreach ( self::secret_setting_keys() as $secret_key ) {
+            unset( $betterdocs_settings[ $secret_key ] );
+        }
+
         $json_str            = json_encode( $betterdocs_settings, JSON_PRETTY_PRINT );
         $file_name           = 'betterdocs-settings.json';
 
@@ -131,18 +158,60 @@ class Settings extends BaseAPI {
 	public function import_settings( WP_REST_Request $request ): array {
 		$settings = $request->get_param( 'settings' );
 		// Decode the JSON data into a PHP array
-		$settings = json_decode( $settings, true );
-		$saved    = update_option( 'betterdocs_settings', $settings );
+		$settings = json_decode( (string) $settings, true );
 
-		if ( ! $saved ) {
+		// An export is a JSON object of setting keys. Drop numeric keys: a JSON
+		// list (or an object keyed "0", "1" …) is not settings, and used to be
+		// merged in as keys 0, 1 … of the option.
+		if ( is_array( $settings ) ) {
+			$settings = array_filter( $settings, 'is_string', ARRAY_FILTER_USE_KEY );
+		}
+
+		// The Import button only reports a failure when the body says
+		// `status: error`; anything else, the old `failed` included, showed
+		// "Import completed successfully." (#240).
+		if ( ! is_array( $settings ) || empty( $settings ) ) {
 			return [
-				'status' => 'failed'
+				'status'  => 'error',
+				'message' => __( 'This file is not a BetterDocs settings export. Your settings were not changed.', 'betterdocs' )
+			];
+		}
+
+		// Never take a secret from the file: exports leave secrets out, and the
+		// stored ones stay. migration_step would start a KB migration on save.
+		foreach ( self::secret_setting_keys() as $secret_key ) {
+			unset( $settings[ $secret_key ] );
+		}
+		unset( $settings['migration_step'], $settings['_active_tab'] );
+
+		// Save through the same path as the Settings screen: it merges over what is
+		// stored, applies the role, Pro-key and secret rules, and fires
+		// betterdocs::settings::saved, so imported slugs flush the rewrite rules.
+		// Writing the option directly skipped all of that.
+		$result = betterdocs()->settings->save_settings( $settings );
+
+		if ( is_wp_error( $result ) ) {
+			return [
+				'status'  => 'error',
+				'message' => $result->get_error_message()
 			];
 		}
 
 		return [
 			'status' => 'success'
 		];
+	}
+
+	/**
+	 * Every setting key that holds a credential: the AI provider keys, the MCP
+	 * secret list (which Pro and add-ons extend) and their Git/OAuth secrets.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return string[]
+	 */
+	private static function secret_setting_keys(): array {
+		return CoreSettings::secret_setting_keys();
 	}
 
 	public function import_docs( WP_REST_Request $request ): array {
@@ -305,7 +374,9 @@ class Settings extends BaseAPI {
 		// else as defense-in-depth should that capability gate ever loosen. Mirrors the
 		// admin-page localizer (Core\Settings::enqueue()) so the masked-key save round-trip
 		// stays consistent.
-		$sensitive_api_keys = CoreSettings::sensitive_api_key_fields();
+		// Every stored secret, not only the AI keys: Pro's reCAPTCHA secret, Git token,
+		// GA4 API secret and MaxMind licence key live in the same option.
+		$sensitive_api_keys = self::secret_setting_keys();
 		$can_manage         = current_user_can( 'edit_docs_settings' );
 		foreach ( $sensitive_api_keys as $api_key_field ) {
 			if ( ! isset( $settings[ $api_key_field ] ) ) {
@@ -324,11 +395,25 @@ class Settings extends BaseAPI {
 	}
 
 	public function save_settings( WP_REST_Request $request ) {
-		$result = betterdocs()->settings->save_settings( $request->get_params() );
+		$params = $request->get_params();
+		$result = betterdocs()->settings->save_settings( $params );
 		if ( is_wp_error( $result ) ) {
 			return $this->error( $result->get_error_code(), $result->get_error_message(), 400 );
 		}
 		if ( $result ) {
+			// Core\Settings::fallback_slugs() turns the built-in docs page back on when it
+			// was switched off without a custom Docs Page. Say so instead of letting the
+			// toggle silently flip back on the next load.
+			if ( array_key_exists( 'builtin_doc_page', $params ) && ! rest_sanitize_boolean( $params['builtin_doc_page'] )
+				&& rest_sanitize_boolean( betterdocs()->settings->get_raw_field( 'builtin_doc_page', true ) ) ) {
+				return $this->success(
+					[
+						'notice'  => 'builtin_doc_page_restored',
+						'message' => __( 'Settings saved, but the Built-in Documentation Page was turned back on because no Docs Page is selected. Select a page under "Docs Page" to use your own page instead.', 'betterdocs' )
+					]
+				);
+			}
+
 			return $this->success( __( 'Settings Saved!', 'betterdocs' ) );
 		}
 

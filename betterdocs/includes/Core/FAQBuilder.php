@@ -569,34 +569,23 @@ class FAQBuilder extends Base {
 	}
 
 	/**
-	 * Whether the current user may manage FAQ groups and FAQs.
+	 * Who may use the FAQ Builder's REST actions: whoever may open the FAQ
+	 * Builder. The page, its menu and the searched-terms endpoint check
+	 * read_faq_builder (granted per role by the "FAQ Builder" roles setting),
+	 * but these routes checked edit_others_posts/edit_others_docs. So an Editor
+	 * who couldn't open the screen could still change FAQs, and a role given the
+	 * screen got a 403 on every action (#257).
 	 *
-	 * Two capabilities, either of which is enough. Nothing that could reach
-	 * these routes before can be turned away now — the gate only widens.
-	 *
-	 * - `edit_others_posts` is the original gate, kept verbatim for backward
-	 *   compatibility: every site that granted FAQ Builder access by granting a
-	 *   core editor-level role keeps working exactly as it did.
-	 * - `edit_others_docs` is the BetterDocs-side answer, added in 4.9.0. The
-	 *   `betterdocs_faq` post type is registered with
-	 *   `capability_type => [ 'doc', 'docs' ]` and `map_meta_cap => true`, so
-	 *   WordPress already governs individual FAQ posts with the docs capability
-	 *   family — the routes were the one place that asked for a *core* post
-	 *   capability instead. A documentation-only role (BetterDocs' own `editor`
-	 *   bucket, or anything Pro's `article_roles` grants) could edit every FAQ
-	 *   post through `wp/v2/betterdocs_faq` and still get a 403 from the FAQ
-	 *   Builder's own API.
-	 *
-	 * It is also what lines the REST routes up with the MCP FAQ abilities, which
-	 * are gated on `edit_others_docs`: an agent that may create an FAQ through
-	 * `bd-create-faq` reaches these same routes underneath.
+	 * The FAQ abilities that write through these routes (MCP) are gated on
+	 * the same capability, so the screen, its routes and the abilities follow
+	 * one rule.
 	 *
 	 * @since 4.9.0
 	 *
 	 * @return bool
 	 */
 	private function can_manage_faqs() {
-		return current_user_can( 'edit_others_posts' ) || current_user_can( 'edit_others_docs' );
+		return current_user_can( 'read_faq_builder' );
 	}
 
 	public function register_api_endpoint() {
@@ -782,19 +771,137 @@ class FAQBuilder extends Base {
 	}
 
 	public function create_faq_sample( $params ) {
-		$sample_data = json_decode( $params->get_param( 'sample_data' ), true );
-		foreach ( $sample_data as $key => $value ) {
-			$insert_term = wp_insert_term(
-				$key,
-				'betterdocs_faq_category'
+		$sample_data = json_decode( (string) $params->get_param( 'sample_data' ), true );
+
+		if ( ! is_array( $sample_data ) || empty( $sample_data ) ) {
+			return new WP_Error( 'betterdocs_invalid_sample_data', __( 'The sample FAQ data is invalid. Please try again.', 'betterdocs' ), [ 'status' => 400 ] );
+		}
+
+		$counts = [
+			'groups_created' => 0,
+			'groups_reused'  => 0,
+			'groups_skipped' => 0,
+			'faqs_created'   => 0,
+			'faqs_skipped'   => 0
+		];
+
+		foreach ( $sample_data as $group_name => $group ) {
+			// json_decode() turns a numeric key such as "2026" into an int.
+			$group_name = trim( (string) $group_name );
+
+			if ( '' === $group_name || ! is_array( $group ) || empty( $group['posts'] ) || ! is_array( $group['posts'] ) ) {
+				++$counts['groups_skipped'];
+				continue;
+			}
+
+			// wp_insert_term() returns a WP_Error for a group that already exists,
+			// and `if ( $insert_term )` took that as success, so reading its
+			// term_id was a fatal error on the second run (#246). Reuse the
+			// existing group instead, and skip FAQs it already has.
+			$insert_term = wp_insert_term( $group_name, $this->category );
+			if ( is_wp_error( $insert_term ) ) {
+				$term_id = (int) $insert_term->get_error_data( 'term_exists' );
+				if ( ! $term_id ) {
+					++$counts['groups_skipped'];
+					continue;
+				}
+				++$counts['groups_reused'];
+			} else {
+				$term_id = (int) $insert_term['term_id'];
+				++$counts['groups_created'];
+			}
+
+			$faqs = array_filter(
+				$group['posts'],
+				function ( $faq ) {
+					return is_array( $faq ) && ! empty( $faq['post_title'] ) && is_string( $faq['post_title'] );
+				}
 			);
-			if ( $insert_term ) {
-				foreach ( $value['posts'] as $key => $value ) {
-					$this->insert_betterdocs_faq( $value['post_title'], $value['post_content'], $insert_term['term_id'] );
+			$counts['faqs_skipped'] += count( $group['posts'] ) - count( $faqs );
+
+			$existing = $this->existing_faq_titles( $term_id, wp_list_pluck( $faqs, 'post_title' ) );
+
+			foreach ( $faqs as $faq ) {
+				$title = $this->normalise_faq_title( $faq['post_title'] );
+				if ( isset( $existing[ $title ] ) ) {
+					++$counts['faqs_skipped'];
+					continue;
+				}
+
+				$post = $this->insert_betterdocs_faq( $faq['post_title'], isset( $faq['post_content'] ) ? (string) $faq['post_content'] : '', $term_id );
+				if ( $post && ! is_wp_error( $post ) ) {
+					$existing[ $title ] = true;
+					++$counts['faqs_created'];
+				} else {
+					++$counts['faqs_skipped'];
 				}
 			}
 		}
-		return true;
+
+		return rest_ensure_response( array_merge( [ 'success' => true ], $counts ) );
+	}
+
+	/**
+	 * A FAQ title as it reads, for comparing an incoming sample title with a
+	 * stored one. get_the_title() gave the display title (`&#038;`, curly
+	 * quotes), which never matched "Refund & Exchange", so every run added
+	 * that FAQ again. Stored titles can also hold `&amp;` (kses, for users
+	 * without unfiltered_html), so both sides are decoded.
+	 *
+	 * @param string $title
+	 * @return string
+	 */
+	private function normalise_faq_title( $title ) {
+		return trim( html_entity_decode( wp_strip_all_tags( (string) $title ), ENT_QUOTES, 'UTF-8' ) );
+	}
+
+	/**
+	 * Which of these titles a group's FAQs already have, keyed by normalised
+	 * title. One query per group, limited to the incoming titles, rather than
+	 * loading every FAQ in the group.
+	 *
+	 * @param int      $term_id FAQ group.
+	 * @param string[] $titles  Incoming titles.
+	 * @return array<string, true>
+	 */
+	private function existing_faq_titles( $term_id, $titles ) {
+		global $wpdb;
+
+		$candidates = [];
+		foreach ( $titles as $title ) {
+			// The forms insert_betterdocs_faq() can have stored the title in.
+			$plain        = wp_strip_all_tags( (string) $title );
+			$candidates[] = $plain;
+			$candidates[] = wp_kses_normalize_entities( $plain );
+			$candidates[] = $this->normalise_faq_title( $plain );
+		}
+		$candidates = array_values( array_unique( $candidates ) );
+
+		if ( empty( $candidates ) ) {
+			return [];
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $candidates ), '%s' ) );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- bounded lookup of the incoming titles; $placeholders is a list of %s.
+		$found = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT p.post_title FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->term_relationships} tr ON tr.object_id = p.ID
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+				WHERE tt.term_id = %d AND tt.taxonomy = %s AND p.post_type = %s
+				AND p.post_status NOT IN ( 'trash', 'auto-draft' )
+				AND p.post_title IN ( $placeholders )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				array_merge( [ (int) $term_id, $this->category, $this->post_type ], $candidates )
+			)
+		);
+
+		$existing = [];
+		foreach ( (array) $found as $title ) {
+			$existing[ $this->normalise_faq_title( $title ) ] = true;
+		}
+
+		return $existing;
 	}
 
 	/**
@@ -882,6 +989,12 @@ class FAQBuilder extends Base {
         $term_id = $params->get_param( 'term_id' );
         $delete_all_docs = $params->get_param('with_all_post');
         $taxonomy = $this->resolve_taxonomy( $params );
+
+		// wp_delete_term() answers false for a term outside the taxonomy,
+		// which was reported as a success (#258).
+		if ( ! $this->is_faq_group( (int) $term_id, $taxonomy ) ) {
+			return $this->invalid_faq_group_error();
+		}
 
         if ( $delete_all_docs ) {
             Helper::delete_specific_faq_posts_by_faq_category( $term_id, $taxonomy );
@@ -995,9 +1108,20 @@ class FAQBuilder extends Base {
 
 	public function update_faq_category_order( $params ) {
 		$faq_category_order = $params->get_param( 'faq_category_order' );
-		$faq_category_order = json_decode( $faq_category_order, true );
+		if ( is_string( $faq_category_order ) ) {
+			$faq_category_order = json_decode( $faq_category_order, true );
+		}
+
+		if ( ! is_array( $faq_category_order ) ) {
+			return new WP_Error( 'betterdocs_invalid_faq_group_order', __( 'The FAQ group order couldn\'t be read.', 'betterdocs' ), [ 'status' => 400 ] );
+		}
 
 		foreach ( $faq_category_order as $order_data ) {
+			// Only FAQ groups have an order here; skip anything else (#258).
+			if ( ! is_array( $order_data ) || ! isset( $order_data['id'], $order_data['current_position'], $order_data['updated_position'] ) || ! $this->is_faq_group( (int) $order_data['id'] ) ) {
+				continue;
+			}
+
 			if ( (int) $order_data['current_position'] != (int) $order_data['updated_position'] ) {
 				update_term_meta( $order_data['id'], 'order', ( (int) $order_data['updated_position'] ) );
 			}
@@ -1057,9 +1181,24 @@ class FAQBuilder extends Base {
 	 */
 
 	public function update_faq_order_by_category( $params ) {
-		$term_id = $params->get_param( 'term_id' );
+		$term_id = (int) $params->get_param( 'term_id' );
+
+		if ( ! $this->is_faq_group( $term_id ) ) {
+			return $this->invalid_faq_group_error();
+		}
+
+		// Keep only ids of FAQs in this group; the order used to be stored as
+		// sent. One query for the group's members, not one per id.
 		$posts   = $params->get_param( 'posts' );
-		return update_term_meta( $term_id, '_betterdocs_faq_order', $posts );
+		$members = array_map( 'intval', (array) get_objects_in_term( $term_id, get_term( $term_id )->taxonomy ) );
+		$faq_ids = array_filter(
+			array_intersect( wp_parse_id_list( is_array( $posts ) ? $posts : (string) $posts ), $members ),
+			function ( $id ) {
+				return get_post_type( $id ) === $this->post_type;
+			}
+		);
+
+		return update_term_meta( $term_id, '_betterdocs_faq_order', implode( ',', $faq_ids ) );
 	}
 
 	/**
@@ -1085,6 +1224,18 @@ class FAQBuilder extends Base {
 		$post_content = $params->get_param( 'post_content' );
 		$term_id      = $params->get_param( 'term_id' );
 		$taxonomy     = $this->resolve_taxonomy( $params );
+
+		// The group is assigned and its order meta written by id, so a term
+		// from another taxonomy got the FAQ's id in its order, and a string id
+		// was taken as a name and created a new group (#258). No group (0 or
+		// empty) is still allowed: the FAQ is created ungrouped.
+		if ( ! empty( $term_id ) ) {
+			if ( ! is_numeric( $term_id ) || ! $this->is_faq_group( (int) $term_id, $taxonomy ) ) {
+				return $this->invalid_faq_group_error();
+			}
+			$term_id = (int) $term_id;
+		}
+
 		return $this->insert_betterdocs_faq( $post_title, $post_content, $term_id, $taxonomy );
 	}
 
@@ -1170,9 +1321,43 @@ class FAQBuilder extends Base {
 	}
 
 	public function update_category_status( $params ) {
-		$term_id = $params->get_param( 'term_id' );
-		$status  = $params->get_param( 'status' );
+		$term_id = (int) $params->get_param( 'term_id' );
+		$status  = (string) $params->get_param( 'status' );
+
+		if ( ! $this->is_faq_group( $term_id ) ) {
+			return $this->invalid_faq_group_error();
+		}
+
+		// A group is shown ("1") or hidden ("0"); nothing else is stored.
+		if ( ! in_array( $status, [ '0', '1' ], true ) ) {
+			return new WP_Error( 'betterdocs_invalid_faq_group_status', __( 'An FAQ group can only be shown or hidden.', 'betterdocs' ), [ 'status' => 400 ] );
+		}
+
 		return update_term_meta( $term_id, 'status', $status );
+	}
+
+	/**
+	 * Whether a term id is an FAQ group (General or Product FAQ).
+	 *
+	 * The status and order actions took any term id, so they stored values
+	 * on unrelated terms, WordPress's own "Uncategorized" included (#258).
+	 *
+	 * @param int         $term_id
+	 * @param string|null $taxonomy Only this FAQ taxonomy; null for either.
+	 * @return bool
+	 */
+	private function is_faq_group( $term_id, $taxonomy = null ) {
+		$term       = $term_id ? get_term( (int) $term_id ) : null;
+		$taxonomies = $taxonomy ? [ $taxonomy ] : [ $this->category, $this->product_category ];
+
+		return $term instanceof \WP_Term && in_array( $term->taxonomy, $taxonomies, true );
+	}
+
+	/**
+	 * @return WP_Error
+	 */
+	private function invalid_faq_group_error() {
+		return new WP_Error( 'betterdocs_invalid_faq_group', __( 'This FAQ group doesn\'t exist.', 'betterdocs' ), [ 'status' => 400 ] );
 	}
 
 	public function fetch_faq_posts( $params ) {

@@ -943,10 +943,21 @@ class Admin extends Base {
 		remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
 
 		// Get settings and remove unnecessary keys
+		// Secrets never reach the browser in full: stripped for anyone who cannot
+		// manage settings, masked for those who can (the FAQ app only checks that
+		// an AI key is set).
 		$betterdocs_settings = get_option( 'betterdocs_settings', false );
-		if ( is_array( $betterdocs_settings ) && ! current_user_can( 'edit_docs_settings' ) ) {
-			foreach ( Settings::sensitive_api_key_fields() as $sensitive_key ) {
-				unset( $betterdocs_settings[ $sensitive_key ] );
+		if ( is_array( $betterdocs_settings ) ) {
+			$can_manage = current_user_can( 'edit_docs_settings' );
+			foreach ( Settings::secret_setting_keys() as $sensitive_key ) {
+				if ( ! isset( $betterdocs_settings[ $sensitive_key ] ) ) {
+					continue;
+				}
+				if ( ! $can_manage ) {
+					unset( $betterdocs_settings[ $sensitive_key ] );
+				} elseif ( ! empty( $betterdocs_settings[ $sensitive_key ] ) && is_string( $betterdocs_settings[ $sensitive_key ] ) ) {
+					$betterdocs_settings[ $sensitive_key ] = Helper::mask_api_key( $betterdocs_settings[ $sensitive_key ] );
+				}
 			}
 		}
 

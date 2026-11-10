@@ -88,6 +88,9 @@ final class StyleHandler extends Base {
 			$_style_handler_object['editor_type'] = 'edit-site';
 		}
 
+		// BlockEditor::enqueue() may already hold this handle as an empty placeholder
+		// (registered at admin_init, before the screen is known); swap in the real script.
+		wp_deregister_script( 'betterdocs-blocks-style-handler' );
 		betterdocs()->assets->enqueue( 'betterdocs-blocks-style-handler', 'vendor/js/style-handler.js', $_style_handler_deps );
 		betterdocs()->assets->localize( 'betterdocs-blocks-style-handler', 'betterdocs_style_handler', $_style_handler_object );
 	}

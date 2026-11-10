@@ -46,11 +46,11 @@ class ClaudeProvider extends BaseProvider {
      * Whether a model rejects the sampling parameters (`temperature`, `top_p`,
      * `top_k`) with a 400.
      *
-     * Anthropic removed them starting with Opus 4.7; Sonnet 5 rejects any
-     * non-default value. Sending `temperature` to one of these fails the whole
-     * request — not a degraded answer, a hard error — so it is stripped rather
-     * than forwarded. Older models (Sonnet 4.5, Haiku 4.5, Opus 4.5/4.6) still
-     * accept it and are unaffected.
+     * Anthropic removed them starting with Opus 4.7, and every Claude 5.x model
+     * (Haiku, Sonnet and Opus 5 / 5.5) rejects any non-default value. Sending
+     * `temperature` to one of these fails the whole request — not a degraded
+     * answer, a hard error — so it is stripped rather than forwarded. Older
+     * models (Haiku 4.5, Opus 4.5/4.6) still accept it and are unaffected.
      *
      * @param string $model
      * @return bool
@@ -58,7 +58,7 @@ class ClaudeProvider extends BaseProvider {
     protected function rejects_sampling( $model ) {
         $model = (string) $model;
 
-        if ( in_array( $model, array( 'claude-opus-5', 'claude-sonnet-5' ), true ) ) {
+        if ( $this->is_claude_5( $model ) ) {
             return true;
         }
 
@@ -71,14 +71,28 @@ class ClaudeProvider extends BaseProvider {
      *
      * This matters for `max_tokens`, which caps thinking AND the visible answer
      * together: on these models a budget sized for the answer alone can be spent
-     * mostly on reasoning and return a truncated document. Opus 4.7/4.8 do NOT
-     * think unless asked, so they are deliberately absent.
+     * mostly on reasoning and return a truncated document. Every Claude 5.x
+     * model uses adaptive thinking; Opus 4.7/4.8 do NOT think unless asked, so
+     * they are deliberately absent.
      *
      * @param string $model
      * @return bool
      */
     protected function thinks_by_default( $model ) {
-        return in_array( (string) $model, array( 'claude-opus-5', 'claude-sonnet-5' ), true );
+        return $this->is_claude_5( $model );
+    }
+
+    /**
+     * Whether a model is a Claude 5.x model (claude-haiku-5-5, claude-sonnet-5,
+     * claude-opus-5-5, ...).
+     *
+     * @since 4.9.6
+     *
+     * @param string $model
+     * @return bool
+     */
+    protected function is_claude_5( $model ) {
+        return (bool) preg_match( '/^claude-[a-z]+-5(?:-|$)/', (string) $model );
     }
 
     /**

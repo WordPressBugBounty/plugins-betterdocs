@@ -279,7 +279,7 @@ final class MCPOAuth {
 	 */
 	public static function register_client( array $body ) {
 		$redirect_uris = isset( $body['redirect_uris'] ) && is_array( $body['redirect_uris'] )
-			? array_values( array_filter( array_map( 'strval', $body['redirect_uris'] ), [ self::class, 'is_valid_redirect_uri' ] ) )
+			? array_values( array_filter( array_map( 'strval', array_filter( $body['redirect_uris'], 'is_scalar' ) ), [ self::class, 'is_valid_redirect_uri' ] ) )
 			: [];
 
 		$redirect_uris = array_values(
@@ -302,7 +302,7 @@ final class MCPOAuth {
 			);
 		}
 
-		$name = isset( $body['client_name'] ) ? sanitize_text_field( (string) $body['client_name'] ) : __( 'MCP Client', 'betterdocs' );
+		$name = isset( $body['client_name'] ) && is_scalar( $body['client_name'] ) ? sanitize_text_field( (string) $body['client_name'] ) : __( 'MCP Client', 'betterdocs' );
 
 		if ( strlen( $name ) > 128 ) {
 			$name = substr( $name, 0, 128 );
@@ -310,15 +310,16 @@ final class MCPOAuth {
 
 		$client_id = 'bd_' . bin2hex( random_bytes( 16 ) );
 
-		$state                          = self::state();
-		$state['clients'][ $client_id ] = [
-			'redirect_uris' => $redirect_uris,
-			'name'          => $name,
-			'created'       => time()
-		];
-		$state['clients']               = self::prune_clients( $state );
-
-		self::save( $state );
+		self::mutate(
+			static function ( &$state ) use ( $client_id, $redirect_uris, $name ) {
+				$state['clients'][ $client_id ] = [
+					'redirect_uris' => $redirect_uris,
+					'name'          => $name,
+					'created'       => time()
+				];
+				$state['clients']               = self::prune_clients( $state );
+			}
+		);
 
 		return [
 			'client_id'                  => $client_id,
@@ -356,11 +357,20 @@ final class MCPOAuth {
 
 		$client = self::client( $client_id );
 
+		// Errors are only redirected to a client a person has approved before.
+		// Registration is open, so redirecting for any registered client turned
+		// /authorize into an open redirect to whatever host the registrant
+		// chose (RFC 9700 §4.11). Unapproved clients get the error page.
+		$redirectable = null !== $client && ! empty( $client['consented'] );
+
 		if ( null === $client ) {
 			return new \WP_Error( 'invalid_client', __( 'Unknown client_id.', 'betterdocs' ), [ 'status' => 400 ] );
 		}
 
-		if ( ! in_array( $redirect_uri, $client['redirect_uris'], true ) ) {
+		// Re-checked here as well as at registration, so a client registered
+		// under the older, looser policy cannot keep using a plain-http
+		// callback on a public host.
+		if ( ! in_array( $redirect_uri, $client['redirect_uris'], true ) || ! self::is_valid_redirect_uri( $redirect_uri ) ) {
 			return new \WP_Error( 'invalid_redirect_uri', __( 'redirect_uri does not match a registered value.', 'betterdocs' ), [ 'status' => 400 ] );
 		}
 
@@ -370,7 +380,7 @@ final class MCPOAuth {
 				__( 'Only response_type=code is supported.', 'betterdocs' ),
 				[
 					'status'       => 400,
-					'redirectable' => true
+					'redirectable' => $redirectable
 				]
 			);
 		}
@@ -384,7 +394,7 @@ final class MCPOAuth {
 				__( 'PKCE with code_challenge_method=S256 is required.', 'betterdocs' ),
 				[
 					'status'       => 400,
-					'redirectable' => true
+					'redirectable' => $redirectable
 				]
 			);
 		}
@@ -416,10 +426,8 @@ final class MCPOAuth {
 	 * @return string The authorization code.
 	 */
 	public static function issue_code( array $req, $user_id ) {
-		$code  = bin2hex( random_bytes( 32 ) );
-		$state = self::state();
-
-		$state['codes'][ self::hash( $code ) ] = [
+		$code   = bin2hex( random_bytes( 32 ) );
+		$record = [
 			'client_id'    => isset( $req['client_id'] ) ? (string) $req['client_id'] : '',
 			'redirect_uri' => isset( $req['redirect_uri'] ) ? (string) $req['redirect_uri'] : '',
 			'challenge'    => isset( $req['code_challenge'] ) ? (string) $req['code_challenge'] : '',
@@ -428,7 +436,17 @@ final class MCPOAuth {
 			'expires'      => time() + self::CODE_TTL
 		];
 
-		self::save( $state );
+		self::mutate(
+			static function ( &$state ) use ( $code, $record ) {
+				$state['codes'][ self::hash( $code ) ] = $record;
+
+				// A person has now approved this client once, so later
+				// /authorize errors may be redirected back to it.
+				if ( isset( $state['clients'][ $record['client_id'] ] ) && is_array( $state['clients'][ $record['client_id'] ] ) ) {
+					$state['clients'][ $record['client_id'] ]['consented'] = time();
+				}
+			}
+		);
 
 		return $code;
 	}
@@ -493,8 +511,17 @@ final class MCPOAuth {
 			$last = isset( $state['clients'][ $client_id ]['last_used'] ) ? (int) $state['clients'][ $client_id ]['last_used'] : 0;
 
 			if ( $now - $last >= self::LAST_USED_THROTTLE ) {
-				$state['clients'][ $client_id ]['last_used'] = $now;
-				self::save( $state );
+				// Merge only this one field into freshly read state, so a
+				// revocation made since the read above is never written back.
+				self::mutate(
+					static function ( &$fresh ) use ( $client_id, $now ) {
+						if ( isset( $fresh['clients'][ $client_id ] ) && is_array( $fresh['clients'][ $client_id ] ) ) {
+							$fresh['clients'][ $client_id ]['last_used'] = $now;
+						} else {
+							$fresh = null;
+						}
+					}
+				);
 			}
 		}
 
@@ -530,7 +557,13 @@ final class MCPOAuth {
 	 * @return void
 	 */
 	public static function revoke_all() {
+		$locked = self::lock();
+
 		delete_option( self::OPTION );
+
+		if ( $locked ) {
+			self::unlock();
+		}
 	}
 
 	/**
@@ -714,19 +747,29 @@ final class MCPOAuth {
 		$redirect_uri = isset( $body['redirect_uri'] ) ? (string) $body['redirect_uri'] : '';
 		$verifier     = isset( $body['code_verifier'] ) ? (string) $body['code_verifier'] : '';
 
-		$state = self::state();
 		$chash = self::hash( $code );
 
-		if ( '' === $code || ! isset( $state['codes'][ $chash ] ) ) {
+		// Single-use, and burned *before* verification: a code that failed
+		// PKCE must not be available for a second attempt. Claimed under the
+		// lock, so two parallel exchanges cannot both read it (@since 4.9.6).
+		$entry = '' === $code ? null : self::mutate(
+			static function ( &$state ) use ( $chash ) {
+				if ( ! isset( $state['codes'][ $chash ] ) ) {
+					$state = null;
+
+					return null;
+				}
+
+				$claimed = $state['codes'][ $chash ];
+				unset( $state['codes'][ $chash ] );
+
+				return $claimed;
+			}
+		);
+
+		if ( ! is_array( $entry ) ) {
 			return self::oauth_error( 'invalid_grant', __( 'Unknown or expired authorization code.', 'betterdocs' ) );
 		}
-
-		$entry = $state['codes'][ $chash ];
-
-		// Single-use, and burned *before* verification: a code that failed
-		// PKCE must not be available for a second attempt.
-		unset( $state['codes'][ $chash ] );
-		self::save( $state );
 
 		if ( (int) $entry['expires'] < time() ) {
 			return self::oauth_error( 'invalid_grant', __( 'Authorization code expired.', 'betterdocs' ) );
@@ -760,28 +803,117 @@ final class MCPOAuth {
 		$refresh   = isset( $body['refresh_token'] ) ? (string) $body['refresh_token'] : '';
 		$client_id = isset( $body['client_id'] ) ? (string) $body['client_id'] : '';
 
-		$state = self::state();
-		$rhash = self::hash( $refresh );
-
-		if ( '' === $refresh || ! isset( $state['refresh'][ $rhash ] ) ) {
-			return self::oauth_error( 'invalid_grant', __( 'Unknown refresh token.', 'betterdocs' ) );
+		// OAuth 2.1 §4.3.1: a public client must identify itself on refresh.
+		if ( '' === $refresh || '' === $client_id ) {
+			return self::oauth_error( 'invalid_request', __( 'refresh_token and client_id are required.', 'betterdocs' ) );
 		}
 
-		$entry = $state['refresh'][ $rhash ];
+		$rhash = self::hash( $refresh );
 
-		if ( '' !== $client_id && ! hash_equals( (string) $entry['client_id'], $client_id ) ) {
+		$outcome = self::mutate(
+			static function ( &$state ) use ( $rhash, $client_id ) {
+				if ( ! isset( $state['refresh'][ $rhash ] ) ) {
+					// A rotated refresh token presented again means two parties
+					// hold it — the client and whoever copied it. Which one is
+					// genuine cannot be known, so the whole grant goes: every
+					// token this client holds for this user (OAuth 2.1 §4.3.1).
+					if ( isset( $state['used_refresh'][ $rhash ] ) ) {
+						$used = $state['used_refresh'][ $rhash ];
+
+						// A replay within seconds of the rotation is the same client
+						// racing itself (two windows sharing one sign-in, or a retry
+						// after a lost response), not a stolen token: refuse it but
+						// keep the connection. Later replays still revoke the grant.
+						if ( isset( $used['rotated_at'] ) && ( time() - (int) $used['rotated_at'] ) < self::refresh_reuse_grace() ) {
+							$state = null;
+
+							return 'reused_in_grace';
+						}
+
+						foreach ( [ 'tokens', 'refresh', 'codes' ] as $bucket ) {
+							foreach ( $state[ $bucket ] as $key => $record ) {
+								if ( is_array( $record )
+									&& isset( $record['client_id'], $record['user_id'] )
+									&& (string) $record['client_id'] === (string) $used['client_id']
+									&& (int) $record['user_id'] === (int) $used['user_id'] ) {
+									unset( $state[ $bucket ][ $key ] );
+								}
+							}
+						}
+
+						unset( $state['used_refresh'][ $rhash ] );
+
+						return 'reused';
+					}
+
+					$state = null;
+
+					return 'unknown';
+				}
+
+				$entry = $state['refresh'][ $rhash ];
+
+				if ( ! hash_equals( (string) $entry['client_id'], $client_id ) ) {
+					$state = null;
+
+					return 'mismatch';
+				}
+
+				unset( $state['refresh'][ $rhash ] );
+
+				if ( isset( $entry['access_hash'] ) ) {
+					unset( $state['tokens'][ $entry['access_hash'] ] );
+				}
+
+				// Remember the rotated token until it would have expired, so a
+				// replay is recognised rather than just refused.
+				$state['used_refresh'][ $rhash ] = [
+					'client_id' => (string) $entry['client_id'],
+					'user_id'   => (int) $entry['user_id'],
+					'expires'    => isset( $entry['expires'] ) ? (int) $entry['expires'] : time() + self::REFRESH_TTL,
+					'rotated_at' => time()
+				];
+
+				return $entry;
+			}
+		);
+
+		if ( 'mismatch' === $outcome ) {
 			return self::oauth_error( 'invalid_grant', __( 'client_id mismatch.', 'betterdocs' ) );
 		}
 
-		unset( $state['refresh'][ $rhash ] );
-
-		if ( isset( $entry['access_hash'] ) ) {
-			unset( $state['tokens'][ $entry['access_hash'] ] );
+		if ( 'reused_in_grace' === $outcome ) {
+			return self::oauth_error( 'invalid_grant', __( 'This refresh token was just used. Use the tokens from that response.', 'betterdocs' ) );
 		}
 
-		self::save( $state );
+		if ( 'reused' === $outcome ) {
+			return self::oauth_error( 'invalid_grant', __( 'This refresh token was already used, so every token for this connection has been revoked. Reconnect to continue.', 'betterdocs' ) );
+		}
 
-		return self::mint_tokens( (string) $entry['client_id'], (string) $entry['scope'], (int) $entry['user_id'] );
+		if ( ! is_array( $outcome ) ) {
+			return self::oauth_error( 'invalid_grant', __( 'Unknown refresh token.', 'betterdocs' ) );
+		}
+
+		return self::mint_tokens( (string) $outcome['client_id'], (string) $outcome['scope'], (int) $outcome['user_id'] );
+	}
+
+	/**
+	 * Seconds after a refresh token is rotated during which presenting it again
+	 * is refused without revoking the grant.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return int
+	 */
+	private static function refresh_reuse_grace() {
+		/**
+		 * Filters the refresh-token reuse grace window, in seconds.
+		 *
+		 * @since 4.9.6
+		 *
+		 * @param int $seconds Default 60. 0 revokes on any reuse.
+		 */
+		return max( 0, (int) apply_filters( 'betterdocs_mcp_refresh_reuse_grace', 60 ) );
 	}
 
 	/**
@@ -802,25 +934,25 @@ final class MCPOAuth {
 		$ahash   = self::hash( $access );
 		$rhash   = self::hash( $refresh );
 
-		$state = self::state();
+		self::mutate(
+			static function ( &$state ) use ( $ahash, $rhash, $client_id, $scope, $user_id ) {
+				$state['tokens'][ $ahash ] = [
+					'client_id' => $client_id,
+					'scope'     => $scope,
+					'user_id'   => $user_id,
+					'expires'   => time() + self::ACCESS_TTL,
+					'refresh'   => $rhash
+				];
 
-		$state['tokens'][ $ahash ] = [
-			'client_id' => $client_id,
-			'scope'     => $scope,
-			'user_id'   => $user_id,
-			'expires'   => time() + self::ACCESS_TTL,
-			'refresh'   => $rhash
-		];
-
-		$state['refresh'][ $rhash ] = [
-			'access_hash' => $ahash,
-			'client_id'   => $client_id,
-			'scope'       => $scope,
-			'user_id'     => $user_id,
-			'expires'     => time() + self::REFRESH_TTL
-		];
-
-		self::save( $state );
+				$state['refresh'][ $rhash ] = [
+					'access_hash' => $ahash,
+					'client_id'   => $client_id,
+					'scope'       => $scope,
+					'user_id'     => $user_id,
+					'expires'     => time() + self::REFRESH_TTL
+				];
+			}
+		);
 
 		return [
 			'access_token'  => $access,
@@ -840,23 +972,26 @@ final class MCPOAuth {
 	 * @return bool Whether anything was removed.
 	 */
 	private static function revoke_where( callable $matches ) {
-		$state   = self::state();
-		$removed = false;
+		return (bool) self::mutate(
+			static function ( &$state ) use ( $matches ) {
+				$removed = false;
 
-		foreach ( [ 'tokens', 'refresh', 'codes' ] as $bucket ) {
-			foreach ( $state[ $bucket ] as $key => $entry ) {
-				if ( is_array( $entry ) && $matches( $entry ) ) {
-					unset( $state[ $bucket ][ $key ] );
-					$removed = true;
+				foreach ( [ 'tokens', 'refresh', 'codes' ] as $bucket ) {
+					foreach ( $state[ $bucket ] as $key => $entry ) {
+						if ( is_array( $entry ) && $matches( $entry ) ) {
+							unset( $state[ $bucket ][ $key ] );
+							$removed = true;
+						}
+					}
 				}
+
+				if ( ! $removed ) {
+					$state = null;
+				}
+
+				return $removed;
 			}
-		}
-
-		if ( $removed ) {
-			self::save( $state );
-		}
-
-		return $removed;
+		);
 	}
 
 	/**
@@ -878,7 +1013,10 @@ final class MCPOAuth {
 			'clients' => isset( $stored['clients'] ) && is_array( $stored['clients'] ) ? $stored['clients'] : [],
 			'codes'   => isset( $stored['codes'] ) && is_array( $stored['codes'] ) ? $stored['codes'] : [],
 			'tokens'  => isset( $stored['tokens'] ) && is_array( $stored['tokens'] ) ? $stored['tokens'] : [],
-			'refresh' => isset( $stored['refresh'] ) && is_array( $stored['refresh'] ) ? $stored['refresh'] : []
+			'refresh' => isset( $stored['refresh'] ) && is_array( $stored['refresh'] ) ? $stored['refresh'] : [],
+			// Hashes of rotated refresh tokens, kept to their original expiry
+			// so a replay is detected (@since 4.9.6).
+			'used_refresh' => isset( $stored['used_refresh'] ) && is_array( $stored['used_refresh'] ) ? $stored['used_refresh'] : []
 		];
 
 		$now = time();
@@ -891,9 +1029,11 @@ final class MCPOAuth {
 			}
 		}
 
-		foreach ( $state['refresh'] as $key => $entry ) {
-			if ( isset( $entry['expires'] ) && (int) $entry['expires'] < $now ) {
-				unset( $state['refresh'][ $key ] );
+		foreach ( [ 'refresh', 'used_refresh' ] as $bucket ) {
+			foreach ( $state[ $bucket ] as $key => $entry ) {
+				if ( isset( $entry['expires'] ) && (int) $entry['expires'] < $now ) {
+					unset( $state[ $bucket ][ $key ] );
+				}
 			}
 		}
 
@@ -910,6 +1050,104 @@ final class MCPOAuth {
 	 */
 	private static function save( array $state ) {
 		update_option( self::OPTION, $state, false );
+	}
+
+	/**
+	 * Read-modify-write the state under a lock.
+	 *
+	 * Every record lives in one option, so two requests that each read it, change
+	 * their own part and save it whole overwrite each other: a token check saving
+	 * `last_used` wrote back tokens an admin had just revoked, and two exchanges
+	 * of one code could both succeed. Every write goes through here instead: take
+	 * the lock, re-read the option from the database (not a cached copy), apply
+	 * the change, save, release (@since 4.9.6).
+	 *
+	 * @since 4.9.6
+	 *
+	 * @param callable $change Receives the state by reference; its return value
+	 *                         is passed through. Setting the state to null skips
+	 *                         the save.
+	 * @return mixed What `$change` returned.
+	 */
+	private static function mutate( callable $change ) {
+		$locked = self::lock();
+
+		if ( function_exists( 'wp_cache_delete' ) ) {
+			wp_cache_delete( self::OPTION, 'options' );
+		}
+		$state  = self::state();
+		$result = $change( $state );
+
+		if ( is_array( $state ) ) {
+			self::save( $state );
+		}
+
+		if ( $locked ) {
+			self::unlock();
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Take the state lock: an `INSERT IGNORE` on a unique option name, which is
+	 * atomic in MySQL (add_option() is not — it upserts). A lock older than ten
+	 * seconds is treated as abandoned by a crashed request. Gives up after about
+	 * two seconds so a stuck lock degrades to the old behaviour rather than
+	 * hanging every OAuth request.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return bool Whether the lock is held.
+	 */
+	private static function lock() {
+		global $wpdb;
+
+		if ( ! is_object( $wpdb ) || ! method_exists( $wpdb, 'query' ) ) {
+			return false;
+		}
+
+		$name = self::OPTION . '_lock';
+
+		for ( $i = 0; $i < 40; $i++ ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- an atomic lock row; no WordPress API offers one.
+			$got = $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $name, (string) time() ) );
+
+			if ( 1 === (int) $got ) {
+				return true;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- reading the lock row itself.
+			$since = (int) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $name ) );
+
+			if ( $since > 0 && $since < time() - 10 ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- clearing an abandoned lock.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $name, (string) $since ) );
+				continue;
+			}
+
+			usleep( 50000 );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Release the state lock.
+	 *
+	 * @since 4.9.6
+	 *
+	 * @return void
+	 */
+	private static function unlock() {
+		global $wpdb;
+
+		if ( ! is_object( $wpdb ) || ! method_exists( $wpdb, 'query' ) ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- releasing the lock row.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", self::OPTION . '_lock' ) );
 	}
 
 	/**
@@ -938,7 +1176,8 @@ final class MCPOAuth {
 		return [
 			'redirect_uris' => isset( $client['redirect_uris'] ) && is_array( $client['redirect_uris'] ) ? array_map( 'strval', $client['redirect_uris'] ) : [],
 			'name'          => isset( $client['name'] ) ? (string) $client['name'] : 'MCP Client',
-			'created'       => isset( $client['created'] ) ? (int) $client['created'] : 0
+			'created'       => isset( $client['created'] ) ? (int) $client['created'] : 0,
+			'consented'     => isset( $client['consented'] ) ? (int) $client['consented'] : 0
 		];
 	}
 
@@ -1101,7 +1340,21 @@ final class MCPOAuth {
 		// business being one of them either.
 		$scheme = strtolower( $matches[1] );
 
-		return ! in_array( $scheme, [ 'javascript', 'data', 'vbscript', 'file' ], true );
+		if ( in_array( $scheme, [ 'javascript', 'data', 'vbscript', 'file' ], true ) ) {
+			return false;
+		}
+
+		// OAuth 2.1 §2.3.1 / RFC 8252: a plain-http callback is only safe on the
+		// loopback interface. Anywhere else the code travels in clear text, and
+		// an open registration could aim it at any host (@since 4.9.6). https
+		// and native-app custom schemes (cursor://, vscode://) stay allowed.
+		if ( 'http' === $scheme ) {
+			$host = strtolower( (string) wp_parse_url( $uri, PHP_URL_HOST ) );
+
+			return in_array( trim( $host, '[]' ), [ 'localhost', '127.0.0.1', '::1' ], true );
+		}
+
+		return true;
 	}
 
 	/**

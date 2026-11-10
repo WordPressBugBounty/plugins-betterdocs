@@ -283,6 +283,12 @@ class GetStatus extends AbilityBase {
 			? $health['runtime']['abilities_api']
 			: [];
 
+		// `path` is the absolute server path of the file that declares the
+		// Abilities API. Only administrators see it (#297).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			unset( $owner['path'] );
+		}
+
 		$multiple_kb  = ! empty( $pro['multiple_kb'] );
 		$glossaries   = taxonomy_exists( 'glossaries' );
 		$counts       = $this->counts();

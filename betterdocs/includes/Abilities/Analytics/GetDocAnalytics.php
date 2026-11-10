@@ -174,6 +174,14 @@ class GetDocAnalytics extends AbilityBase {
 			return $doc;
 		}
 
+		// require_doc() checks the post type only. Without this, anyone with
+		// analytics access read the title, URL and stats of other users'
+		// drafts, private and trashed docs by walking IDs. Answer exactly as
+		// for a missing doc so the response does not confirm it exists.
+		if ( ! current_user_can( 'read_post', $doc_id ) ) {
+			return AbilityError::not_found( 'doc', $doc_id );
+		}
+
 		$start = $this->date_input( $input, 'start_date' );
 
 		if ( is_wp_error( $start ) ) {
